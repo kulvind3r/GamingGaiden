@@ -13,6 +13,16 @@ th {
   padding: 10px;
 }
 
+/* Limit heights of rows with data cells to 50px */
+tr td {
+  height: 50px
+}
+
+td img {
+  max-width: 100%; /* Limit image width to the cell's width */
+  max-height: 100%; /* Limit image height to the cell's height */
+}
+
 /* Style alternate table rows with background color */
 tr:nth-child(even) {
   background-color: #f2f2f2;
@@ -26,7 +36,7 @@ td {
 
 /* Define specific styles for the first column (Icon) */
 td:first-child {
-  width: 32px;
+  width: 50px;
   text-align: center;
 }
 

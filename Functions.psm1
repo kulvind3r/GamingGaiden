@@ -45,6 +45,21 @@ function SQLEscapedMatchPattern($pattern) {
 	return $pattern -replace "'", "''"
 }
 
+function ResizeImage($ImagePath, $GameName) {
+	$WIA = New-Object -com wia.imagefile
+	$WIA.LoadFile($ImagePath)
+	$WIP = New-Object -ComObject wia.imageprocess
+	$Scale = $WIP.FilterInfos.Item("Scale").FilterId                    
+	$WIP.Filters.Add($Scale)
+	$WIP.Filters[1].Properties("MaximumWidth") = 100
+	$WIP.Filters[1].Properties("MaximumHeight") = 200
+	$WIP.Filters[1].Properties("PreserveAspectRatio") = $true
+
+	$ScaledImage = $WIP.Apply($WIA)
+	$ScaledImage.SaveFile("$env:TEMP\$GameName.png")
+	return "$env:TEMP\$GameName.png"
+}
+
 function IsExeEmulator($DetectedExe) {
 	
 	Log "Checking if Detected Exe is an Emulator"
@@ -150,13 +165,16 @@ function RegisterEmulatedGame(){
         [string]$GamePlatform
     )
 
+    $GameIconBytes = (Get-Content -Path ".\icons\default.png" -Encoding byte -Raw);
+
     $RegisterGameQuery = "INSERT INTO GAMES (name, exe_name, icon, play_time, last_play_date, completed, platform)" +
-						"VALUES (@GameName, @GameExeName, 'NULL', @GamePlayTime, @GameLastPlayDate, 'FALSE', @GamePlatform)"
+						"VALUES (@GameName, @GameExeName, @GameIconBytes, @GamePlayTime, @GameLastPlayDate, 'FALSE', @GamePlatform)"
 
 	Log "Registering $GameName in Database"
     Invoke-SqliteQuery -Query $RegisterGameQuery -SQLiteConnection $DBConnection -SqlParameters @{
         GameName = $GameName.Trim()
         GameExeName = $GameExeName.Trim()
+		GameIconBytes = $GameIconBytes
         GamePlayTime = $GamePlayTime
         GameLastPlayDate = $GameLastPlayDate
         GamePlatform = $GamePlatform.Trim()

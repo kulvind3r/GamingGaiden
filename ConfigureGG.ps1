@@ -91,8 +91,39 @@ function RegisterEmulatedPlatform{
     user_prompt "Platform Successfully Registered. Returning to Menu."; countdown
 }
 
-function UpdatePlayTime{
-    Write-Output "TBD 2"
+function UpdateGameIcon{
+
+    $GamesList = (Invoke-SqliteQuery -Query "select name from games" -SQLiteConnection $DBConnection).name
+
+    user_prompt "All Registered Games"    
+    $sno = 1; foreach ($Game in $GamesList) { Write-Host "$sno. $Game";  $sno++; }
+    $GameNo = Read-Host -Prompt "Enter Serial No of the game you want to update"
+    $GameName = $GamesList[$GameNo-1]
+
+    user_prompt "Select an image file"; countdown
+    $FileBrowser = New-Object System.Windows.Forms.OpenFileDialog -Property @{ 
+        InitialDirectory = [Environment]::GetFolderPath('Desktop')
+        Filter           = 'Icon (*.ico)|*.ico|PNG (*.png)|*.png|JPEG (*.jpg)|*.jpg'
+        Title = "Select Game Icon File"
+        ShowHelp = $true
+    }
+
+    $FileBrowser.ShowDialog() | Out-Null
+
+    $GameIconPath = (Get-Item $FileBrowser.FileName).FullName
+    $ResizedImagePath = ResizeImage $GameIconPath $GameName
+    $GameIconBytes = (Get-Content -Path $ResizedImagePath -Encoding byte -Raw);
+    Remove-Item $ResizedImagePath
+
+    $GameNamePattern = SQLEscapedMatchPattern($GameName.Trim())
+
+    $UpdateGameIconQuery = "UPDATE games SET icon = @GameIconBytes WHERE name LIKE '{0}'" -f $GameNamePattern
+
+    Invoke-SqliteQuery -Query $UpdateGameIconQuery -SQLiteConnection $DBConnection -SqlParameters @{ 
+        GameIconBytes = $GameIconBytes
+    }
+    
+    user_prompt "Icon Successfully Updated. Returning to Menu."; countdown
 }
 
 function UpdateGame{
@@ -117,7 +148,7 @@ try {
         user_prompt "What would you like to configure?"
         Write-Host "1. Register a new game"
         Write-Host "2. Register an Emulated Platform. e.g. SNES, Playstation 2 etc"
-        Write-Host "3. Update an existing game"
+        Write-Host "3. Update a game Icon"
         Write-Host "4. Remove an existing game from record"
         Write-Host "5. Exit"
         $UserChoice = Read-Host -Prompt "Enter your choice 1-4?"
@@ -125,7 +156,7 @@ try {
             switch ($UserChoice) {
                 1 { Clear-Host; RegisterGame }
                 2 { Clear-Host; RegisterEmulatedPlatform }
-                3 { Clear-Host; UpdateGame }
+                3 { Clear-Host; UpdateGameIcon }
                 4 { Clear-Host; RemoveGame }
             }
         
