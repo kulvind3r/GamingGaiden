@@ -1,15 +1,22 @@
 ﻿class Game
 {
-	[ValidateNotNullOrEmpty()][string]$IconUri
+	[ValidateNotNullOrEmpty()][string]$Icon
     [ValidateNotNullOrEmpty()][string]$Name
+	[ValidateNotNullOrEmpty()][string]$Platform
     [ValidateNotNullOrEmpty()][string]$Playtime
-    [ValidateNotNullOrEmpty()][string]$LastPlayDate
 
-    Game($IconUri, $Name, $Playtime, $LastPlayDate) {
-       $this.IconUri = $IconUri
+	# Convert-ToHtml doesn't have easy way to change column name
+	# Have to use CSS to change column names.
+	# Keeping Original Column Names short helps alignment when changed via CSS.
+    [ValidateNotNullOrEmpty()][string]$LP
+	
+
+    Game($IconUri, $Name, $Platform, $Playtime, $LastPlayDate) {
+       $this.Icon = $IconUri
 	   $this.Name = $Name
+	   $this.Platform = $Platform
        $this.Playtime = $Playtime
-	   $this.LastPlayDate = $LastPlayDate
+	   $this.LP = $LastPlayDate
     }
 }
 
@@ -307,13 +314,14 @@ function RenderGameList() {
 	$WorkingDirectory = (Get-Location).Path
 	mkdir -f $WorkingDirectory/ui/gameicons
 	
-	$GetAllGamesQuery = "SELECT name, icon, play_time, last_play_date FROM games"
+	$GetAllGamesQuery = "SELECT name, icon, platform, play_time, last_play_date FROM games"
 	
 	$GamesRaw = (Invoke-SqliteQuery -Query $GetAllGamesQuery -SQLiteConnection $DBConnection)
 	
 	$Games = @()
 	foreach ($RawGame in $GamesRaw) {
 		$Name = $RawGame.name
+		$Platform = $RawGame.platform
 		
 		$PlayTimeInMinutes = $RawGame.play_time
 		$PlayTimeHrs = [Int]($PlayTimeInMinutes / 60).ToString()
@@ -327,7 +335,7 @@ function RenderGameList() {
 		$IconBitmap.Save("$WorkingDirectory\ui\gameicons\$Name.png",[System.Drawing.Imaging.ImageFormat]::Png)
 		$IconUri = "<img src=`".\gameicons\$Name.png`">"
 		
-		$CurrentGame = [Game]::new($IconUri, $Name, $PlayTime, $LastPlayDate)
+		$CurrentGame = [Game]::new($IconUri, $Name, $Platform, $PlayTime, $LastPlayDate)
 
 		$Games += $CurrentGame 
 	}

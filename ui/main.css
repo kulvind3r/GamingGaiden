@@ -1,7 +1,7 @@
 /* Reset default table styles */
 table {
   border-collapse: collapse;
-  width: 97%;
+  width: 97.5%;
   margin: 20px;
 }
 
@@ -13,14 +13,23 @@ th {
   padding: 10px;
 }
 
+/* hide the text in the first colum header */
+th:first-child {
+  color: #333;
+}
+
+th:last-child {
+  color: #333;
+}
+
+th:last-child:before {
+  color: #fff;
+  content: "Last Played On";
+}
+
 /* Limit heights of rows with data cells to 50px */
 tr td {
   height: 50px
-}
-
-td img {
-  max-width: 100%; /* Limit image width to the cell's width */
-  max-height: 100%; /* Limit image height to the cell's height */
 }
 
 /* Style alternate table rows with background color */
@@ -34,6 +43,11 @@ td {
   border: 1px solid #ccc;
 }
 
+td img {
+  max-width: 100%; /* Limit image width to the cell's width */
+  max-height: 100%; /* Limit image height to the cell's height */
+}
+
 /* Define specific styles for the first column (Icon) */
 td:first-child {
   width: 50px;
@@ -44,11 +58,6 @@ td:first-child {
 td:nth-child(2) {
   font-weight: bold;
   text-transform: uppercase;
-}
-
-/* Style the LastPlayDate cell */
-td:nth-child(4) {
-  font-style: italic;
 }
 
 /* Add hover effect on table rows */
