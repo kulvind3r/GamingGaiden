@@ -1,0 +1,47 @@
+/* Reset default table styles */
+table {
+  border-collapse: collapse;
+  width: 97%;
+  margin: 20px;
+}
+
+/* Style the table headers (th) */
+th {
+  background-color: #333;
+  color: #fff;
+  font-weight: bold;
+  padding: 10px;
+}
+
+/* Style alternate table rows with background color */
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* Style table data cells (td) */
+td {
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+
+/* Define specific styles for the first column (Icon) */
+td:first-child {
+  width: 32px;
+  text-align: center;
+}
+
+/* Define specific styles for the 2nd column (Name) */
+td:nth-child(2) {
+  font-weight: bold;
+  text-transform: uppercase;
+}
+
+/* Style the LastPlayDate cell */
+td:nth-child(4) {
+  font-style: italic;
+}
+
+/* Add hover effect on table rows */
+tr:hover {
+  background-color: #ddd;
+}
