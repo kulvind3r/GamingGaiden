@@ -3,6 +3,54 @@
 <head>
   <title>Gameplay Gaiden</title>
   <link rel="stylesheet" type="text/css" href="./main.css">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
+  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
+  <script type="text/javascript">
+    $(document).ready(
+      function() {
+        $('table').each(
+          function(){
+            var tHead = $(this).find('tr:first').html();
+            $(this).find('colgroup').remove();
+            $(this).find('tr:first').remove();
+            $(this).find('tbody').before('<thead>' + tHead + '</thead>');
+          }
+        );
+        
+        $('table').DataTable({
+          columnDefs: [
+            {
+                "targets": 3,
+                render: function (data, type, row, meta) {
+                  if (type === "display") {
+                    var hours = parseInt(parseInt(data) / 60);
+                    var minutes = parseInt(data) % 60;
+                    return hours + " Hr " + minutes + " Min";
+                  }
+                  return data;
+                }
+            },
+            {
+                "targets": 4,
+                render: function (data, type, row, meta) {
+                  if (type === "display") {
+                    var utcSeconds = parseInt(data);
+                    var date = new Date(0);
+                    date.setUTCSeconds(utcSeconds);
+                    return date.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
+                  }
+                  return data;
+                }
+            }
+          ],
+          "ordering": true,
+          "paging": false,
+          "searching": true
+        });
+      }
+    );
+  </script>
 </head>
 <body>
   INSERT_TABLE

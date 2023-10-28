@@ -4,11 +4,7 @@
     [ValidateNotNullOrEmpty()][string]$Name
 	[ValidateNotNullOrEmpty()][string]$Platform
     [ValidateNotNullOrEmpty()][string]$Playtime
-
-	# Convert-ToHtml doesn't have easy way to change column name
-	# Have to use CSS to change column names.
-	# Keeping Original Column Names short helps alignment when changed via CSS.
-    [ValidateNotNullOrEmpty()][string]$LP
+    [ValidateNotNullOrEmpty()][string]$Last_Played_On
 	
 
     Game($IconUri, $Name, $Platform, $Playtime, $LastPlayDate) {
@@ -16,7 +12,7 @@
 	   $this.Name = $Name
 	   $this.Platform = $Platform
        $this.Playtime = $Playtime
-	   $this.LP = $LastPlayDate
+	   $this.Last_Played_On = $LastPlayDate
     }
 }
 
@@ -316,32 +312,25 @@ function RenderGameList() {
 	
 	$GetAllGamesQuery = "SELECT name, icon, platform, play_time, last_play_date FROM games"
 	
-	$GamesRaw = (Invoke-SqliteQuery -Query $GetAllGamesQuery -SQLiteConnection $DBConnection)
+	$GameRecords = (Invoke-SqliteQuery -Query $GetAllGamesQuery -SQLiteConnection $DBConnection)
 	
 	$Games = @()
-	foreach ($RawGame in $GamesRaw) {
-		$Name = $RawGame.name
-		$Platform = $RawGame.platform
+	foreach ($GameRecord in $GameRecords) {
+		$Name = $GameRecord.name
 		
-		$PlayTimeInMinutes = $RawGame.play_time
-		$PlayTimeHrs = [Int]($PlayTimeInMinutes / 60).ToString()
-		$PlayTimeMin = [Int]($PlayTimeInMinutes % 60).ToString()
-		$PlayTime = "$PlayTimeHrs Hr $PlayTimeMin Min"
-		
-		$LastPlayDate = ((Get-Date -Date "01-01-1970") + ([System.TimeSpan]::FromSeconds(($RawGame.last_play_date)))).ToLongDateString()
-		
-		$IconByteStream = [System.IO.MemoryStream]::new($RawGame.icon)
+		$IconByteStream = [System.IO.MemoryStream]::new($GameRecord.icon)
 		$IconBitmap = [System.Drawing.Bitmap]::FromStream($IconByteStream)
 		$IconBitmap.Save("$WorkingDirectory\ui\gameicons\$Name.png",[System.Drawing.Imaging.ImageFormat]::Png)
 		$IconUri = "<img src=`".\gameicons\$Name.png`">"
 		
-		$CurrentGame = [Game]::new($IconUri, $Name, $Platform, $PlayTime, $LastPlayDate)
+		$CurrentGame = [Game]::new($IconUri, $Name, $GameRecord.platform, $GameRecord.play_time, $GameRecord.last_play_date)
 
-		$Games += $CurrentGame 
+		$Games += $CurrentGame
 	}
 	
 	$Table = $Games | ConvertTo-Html -Fragment
 	$report = (Get-Content $WorkingDirectory/ui/index.html.template) -replace "INSERT_TABLE",$Table
+	$report = $report -replace "Last_Played_On", "Last Played On"
 	[System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $WorkingDirectory/ui/index.html
 
 	$DBConnection.Close()

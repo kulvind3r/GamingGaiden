@@ -1,8 +1,16 @@
+/* Page Style */
+body {
+  background-color: #667292;
+}
+
 /* Reset default table styles */
 table {
-  border-collapse: collapse;
-  width: 97.5%;
-  margin: 20px;
+  width: 97.5% !important;
+  border: 1px solid #333;
+}
+
+td {
+  border: 1px solid #333;
 }
 
 /* Style the table headers (th) */
@@ -10,21 +18,30 @@ th {
   background-color: #333;
   color: #fff;
   font-weight: bold;
+  text-align: center !important;
   padding: 10px;
+}
+
+#DataTables_Table_0_filter {
+  width: 100%;  
+  margin-bottom: 9px;
+}
+
+#DataTables_Table_0_filter > label:first-child {
+  text-align: center;
+  text-transform: uppercase;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
+
+#DataTables_Table_0_filter > label:first-child input{
+  width: 40%;
 }
 
 /* hide the text in the first colum header */
 th:first-child {
   color: #333;
-}
-
-th:last-child {
-  color: #333;
-}
-
-th:last-child:before {
-  color: #fff;
-  content: "Last Played On";
 }
 
 /* Limit heights of rows with data cells to 50px */
@@ -34,13 +51,7 @@ tr td {
 
 /* Style alternate table rows with background color */
 tr:nth-child(even) {
-  background-color: #f2f2f2;
-}
-
-/* Style table data cells (td) */
-td {
-  padding: 10px;
-  border: 1px solid #ccc;
+  background-color: #bccad6 !important;
 }
 
 td img {
@@ -62,5 +73,5 @@ td:nth-child(2) {
 
 /* Add hover effect on table rows */
 tr:hover {
-  background-color: #ddd;
+  background-color: #555 !important;
 }
