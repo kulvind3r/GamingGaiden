@@ -1,7 +1,6 @@
 *.log
 *.code-workspace
 *.db
-icons/*.png
 ui/gameicons/*
 ui/index.html
 tasks.json
