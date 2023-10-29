@@ -53,6 +53,14 @@ th {
   color: azure !important;
 }
 
+#DataTables_Table_0_paginate:not(.disabled) {
+  color: azure !important;
+}
+
+#DataTables_Table_0_paginate .disabled {
+  color: #667292 !important;
+}
+
 /* hide the text in the first colum header */
 th:first-child {
   color: #333;
