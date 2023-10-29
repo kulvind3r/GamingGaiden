@@ -315,6 +315,7 @@ function RenderGameList() {
 	$GameRecords = (Invoke-SqliteQuery -Query $GetAllGamesQuery -SQLiteConnection $DBConnection)
 	
 	$Games = @()
+	$TotalPlayTime = $null;
 	foreach ($GameRecord in $GameRecords) {
 		$Name = $GameRecord.name
 		
@@ -326,11 +327,16 @@ function RenderGameList() {
 		$CurrentGame = [Game]::new($IconUri, $Name, $GameRecord.platform, $GameRecord.play_time, $GameRecord.last_play_date)
 
 		$Games += $CurrentGame
+		$TotalPlayTime += $GameRecord.play_time
 	}
 	
 	$Table = $Games | ConvertTo-Html -Fragment
-	$report = (Get-Content $WorkingDirectory/ui/index.html.template) -replace "INSERT_TABLE",$Table
+	$report = (Get-Content $WorkingDirectory/ui/index.html.template) -replace "_GAMESTABLE_",$Table
 	$report = $report -replace "Last_Played_On", "Last Played On"
+	$report = $report -replace "_TOTALGAMECOUNT_", $Games.length
+
+	$Minutes = $null; $Hours = [math]::divrem($TotalPlayTime, 60, [ref]$Minutes);
+	$report = $report -replace "_TOTALPLAYTIME_", ("{0} Hr {1} Min" -f $Hours, $Minutes)
 	[System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $WorkingDirectory/ui/index.html
 
 	$DBConnection.Close()

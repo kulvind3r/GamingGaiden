@@ -17,7 +17,7 @@
             $(this).find('tbody').before('<thead>' + tHead + '</thead>');
           }
         );
-        
+
         $('table').DataTable({
           columnDefs: [
             {
@@ -44,16 +44,22 @@
                 }
             }
           ],
+          order: [[4, 'desc']],
           "ordering": true,
           "paging": false,
           "searching": true
         });
+
+        $('#DataTables_Table_0_wrapper')[0].insertAdjacentHTML("afterbegin",'<div id="AllGames">All Games\n_TOTALGAMECOUNT_</div>');
+        
+        $('#DataTables_Table_0_wrapper')[0].insertAdjacentHTML("afterbegin",'<div id="TotalPlaytime">Total Playtime\n_TOTALPLAYTIME_</div>');
+        
       }
     );
   </script>
 </head>
 <body>
-  INSERT_TABLE
+  _GAMESTABLE_
 </body>
 </html>
 
