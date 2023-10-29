@@ -100,10 +100,10 @@ function UpdateGameIcon{
     $GameNo = Read-Host -Prompt "Enter Serial No of the game you want to update"
     $GameName = $GamesList[$GameNo-1]
 
-    user_prompt "Select an image file"; countdown
+    user_prompt "Select an image file";
     $FileBrowser = New-Object System.Windows.Forms.OpenFileDialog -Property @{ 
         InitialDirectory = [Environment]::GetFolderPath('Desktop')
-        Filter           = 'Icon (*.ico)|*.ico|PNG (*.png)|*.png|JPEG (*.jpg)|*.jpg'
+        Filter           = 'PNG (*.png)|*.png|JPEG (*.jpg)|*.jpg'
         Title = "Select Game Icon File"
         ShowHelp = $true
     }

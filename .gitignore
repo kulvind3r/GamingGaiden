@@ -2,5 +2,6 @@
 *.code-workspace
 *.db
 ui/gameicons/*
+!ui/gameicons/default.png
 ui/index.html
 tasks.json

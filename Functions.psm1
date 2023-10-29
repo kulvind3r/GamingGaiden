@@ -21,8 +21,7 @@ function Log($MSG) {
 	Write-Output "$Timestamp : $MSG" >> ".\GameplayGaiden.log"
 }
 
-function countdown {
-    $seconds = 3
+function countdown($seconds = 2) {
     1..$seconds | ForEach-Object {
         $remainingSeconds = ($seconds+1) - $_
         Write-Host "`r$remainingSeconds" -NoNewline -ForegroundColor Red
@@ -49,6 +48,7 @@ function SQLEscapedMatchPattern($pattern) {
 }
 
 function ResizeImage($ImagePath, $GameName) {
+	$ImageFileName = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($GameName))
 	$WIA = New-Object -com wia.imagefile
 	$WIA.LoadFile($ImagePath)
 	$WIP = New-Object -ComObject wia.imageprocess
@@ -59,8 +59,8 @@ function ResizeImage($ImagePath, $GameName) {
 	$WIP.Filters[1].Properties("PreserveAspectRatio") = $true
 
 	$ScaledImage = $WIP.Apply($WIA)
-	$ScaledImage.SaveFile("$env:TEMP\$GameName.png")
-	return "$env:TEMP\$GameName.png"
+	$ScaledImage.SaveFile("$env:TEMP\$ImageFileName.png")
+	return "$env:TEMP\$ImageFileName.png"
 }
 
 function IsExeEmulator($DetectedExe) {
@@ -318,11 +318,16 @@ function RenderGameList() {
 	$TotalPlayTime = $null;
 	foreach ($GameRecord in $GameRecords) {
 		$Name = $GameRecord.name
-		
-		$IconByteStream = [System.IO.MemoryStream]::new($GameRecord.icon)
-		$IconBitmap = [System.Drawing.Bitmap]::FromStream($IconByteStream)
-		$IconBitmap.Save("$WorkingDirectory\ui\gameicons\$Name.png",[System.Drawing.Imaging.ImageFormat]::Png)
-		$IconUri = "<img src=`".\gameicons\$Name.png`">"
+
+		$IconUri = "<img src=`".\gameicons\default.png`">"
+		if ($null -ne $GameRecord.icon)
+		{
+			$ImageFileName = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($Name))
+			$IconByteStream = [System.IO.MemoryStream]::new($GameRecord.icon)
+			$IconBitmap = [System.Drawing.Bitmap]::FromStream($IconByteStream)
+			$IconBitmap.Save("$WorkingDirectory\ui\gameicons\$ImageFileName.png",[System.Drawing.Imaging.ImageFormat]::Png)
+			$IconUri = "<img src=`".\gameicons\$ImageFileName.png`">"
+		}
 		
 		$CurrentGame = [Game]::new($IconUri, $Name, $GameRecord.platform, $GameRecord.play_time, $GameRecord.last_play_date)
 
