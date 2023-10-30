@@ -139,7 +139,7 @@ try {
     Import-Module PSSQLite
     Import-Module -Name ".\Functions.psm1"
 
-    $Database = ".\GameplayGaiden.db"
+    $Database = ".\GamingGaiden.db"
     Log "Connecting to database for configuration"
     $DBConnection = New-SQLiteConnection -DataSource $Database
 
@@ -168,7 +168,7 @@ try {
 }
 catch {
     $Timestamp = (Get-date -f %d-%M-%y`|%H:%m:%s)
-    Write-Output "$Timestamp : A User or System error has caused an exception. Please Try again. Check log for exception details" >> ".\GameplayGaiden.log"
-    Write-Output "$Timestamp : Exception: $($_.Exception.Message)" >> ".\GameplayGaiden.log"
+    Write-Output "$Timestamp : A User or System error has caused an exception. Please Try again. Check log for exception details" >> ".\GamingGaiden.log"
+    Write-Output "$Timestamp : Exception: $($_.Exception.Message)" >> ".\GamingGaiden.log"
     Start-Sleep -s 5; exit 1;
 }

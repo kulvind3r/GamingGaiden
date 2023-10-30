@@ -18,7 +18,7 @@
 
 function Log($MSG) {
 	$Timestamp = (Get-date -f %d-%M-%y`|%H:%m:%s)
-	Write-Output "$Timestamp : $MSG" >> ".\GameplayGaiden.log"
+	Write-Output "$Timestamp : $MSG" >> ".\GamingGaiden.log"
 }
 
 function countdown($seconds = 2) {
@@ -311,7 +311,7 @@ function MonitorGame($DetectedExe, $RecordingNotifyIcon) {
 
 function RenderGameList() {
 
-	$Database = ".\GameplayGaiden.db"
+	$Database = ".\GamingGaiden.db"
 	Log "Connecting to database for Rendering game list"
 	$DBConnection = New-SQLiteConnection -DataSource $Database
 	

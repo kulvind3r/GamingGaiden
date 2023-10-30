@@ -1,7 +1,7 @@
 Import-Module PSSQLite
 
 try {
-    $Database = ".\GameplayGaiden.db"
+    $Database = ".\GamingGaiden.db"
     $DBConnection = New-SQLiteConnection -DataSource $Database
 
     $CreateGamesTableQuery="CREATE TABLE IF NOT EXISTS games (
@@ -27,7 +27,7 @@ try {
 }
 catch {
     $Timestamp = (Get-date -f %d-%M-%y`|%H:%m:%s)
-    Write-Output "$Timestamp : A User or System error has caused an exception. Database Setup could not be finished. Check Log for Details." >> ".\GameplayGaiden.log"
-    Write-Output "$Timestamp : Exception: $($_.Exception.Message)" >> ".\GameplayGaiden.log"
+    Write-Output "$Timestamp : A User or System error has caused an exception. Database Setup could not be finished. Check Log for Details." >> ".\GamingGaiden.log"
+    Write-Output "$Timestamp : Exception: $($_.Exception.Message)" >> ".\GamingGaiden.log"
     Start-Sleep -s 5; exit 1;
 }
