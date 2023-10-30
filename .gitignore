@@ -1,6 +1,7 @@
 *.log
 *.code-workspace
 *.db
+*.mp4
 ui/gameicons/*
 !ui/gameicons/default.png
 ui/index.html
