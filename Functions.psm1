@@ -266,7 +266,7 @@ function DetectGame() {
     return $DetectedExe
 }
 
-function MonitorGame($DetectedExe) {
+function MonitorGame($DetectedExe, $RecordingNotifyIcon) {
 
 	Log "Starting monitoring for $DetectedExe"
 
@@ -276,12 +276,20 @@ function MonitorGame($DetectedExe) {
 	{
 		$IsEmulatedGame = $true
 		$EmulatedGameDetails = findEmulatedGameDetails $DetectedExe
-
 		if ($EmulatedGameDetails -eq $false)
 		{
 			Log "Something went wrong. Detected Emulated Game's Name was of 0 char length. Exiting Monitoring Loop. Going back to Detection"
 			return
 		}
+		$RecordingNotifyIcon.Text = ("Tracking {0}" -f $EmulatedGameDetails.Name)
+	}
+	else
+	{
+		$DetectedExePattern = SQLEscapedMatchPattern($DetectedExe.Trim())
+		$GetGameNameQuery = "SELECT name FROM games WHERE exe_name LIKE '{0}'" -f $DetectedExePattern
+
+		$GameName = (Invoke-SqliteQuery -Query $GetGameNameQuery -SQLiteConnection $DBConnection).name
+		$RecordingNotifyIcon.Text = "Tracking $GameName"
 	}
 
     $CurrentPlayTime = 0

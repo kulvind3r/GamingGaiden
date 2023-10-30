@@ -30,10 +30,9 @@ try {
 			$RecordingNotifyIcon.Text = "Tracking Game"; $RecordingNotifyIcon.Icon = $RecordingIcon;
 
 			while ($true) {
-				$DetectedGame = DetectGame
+				$DetectedExe = DetectGame
 				$RecordingNotifyIcon.Visible = $true
-				$RecordingNotifyIcon.Text = "Tracking $DetectedGame"
-				MonitorGame $DetectedGame
+				MonitorGame $DetectedExe $RecordingNotifyIcon
 				$RecordingNotifyIcon.Visible = $false
 			}
 		}
