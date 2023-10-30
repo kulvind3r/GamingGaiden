@@ -2,7 +2,7 @@
 *.code-workspace
 *.db
 *.mp4
-ui/gameicons/*
-!ui/gameicons/default.png
+ui/resources/images/*
+!ui/resources/images/default.png
 ui/index.html
 tasks.json

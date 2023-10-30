@@ -2,10 +2,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Gameplay Gaiden</title>
-  <link rel="stylesheet" type="text/css" href="./main.css">
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.css" />
-  <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.js"></script>
+  <link rel="stylesheet" href="./resources/css/main.css">
+  <link rel="stylesheet" href="./resources/css/jquery.dataTables.css" />
+  <script src="./resources/js/jquery-3.7.1.min.js"></script>
+  <script src="./resources/js/jquery.dataTables.js"></script>
   <script type="text/javascript">
     $(document).ready(
       function() {
@@ -53,9 +53,7 @@
         });
 
         $('#DataTables_Table_0_wrapper')[0].insertAdjacentHTML("afterbegin",'<div id="AllGames">All Games\n_TOTALGAMECOUNT_</div>');
-        
         $('#DataTables_Table_0_wrapper')[0].insertAdjacentHTML("afterbegin",'<div id="TotalPlaytime">Total Playtime\n_TOTALPLAYTIME_</div>');
-        
       }
     );
   </script>

@@ -316,7 +316,7 @@ function RenderGameList() {
 	$DBConnection = New-SQLiteConnection -DataSource $Database
 	
 	$WorkingDirectory = (Get-Location).Path
-	mkdir -f $WorkingDirectory/ui/gameicons
+	mkdir -f $WorkingDirectory\ui\resources\images
 	
 	$GetAllGamesQuery = "SELECT name, icon, platform, play_time, last_play_date FROM games"
 	
@@ -327,14 +327,14 @@ function RenderGameList() {
 	foreach ($GameRecord in $GameRecords) {
 		$Name = $GameRecord.name
 
-		$IconUri = "<img src=`".\gameicons\default.png`">"
+		$IconUri = "<img src=`".\resources\images\default.png`">"
 		if ($null -ne $GameRecord.icon)
 		{
 			$ImageFileName = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($Name))
 			$IconByteStream = [System.IO.MemoryStream]::new($GameRecord.icon)
 			$IconBitmap = [System.Drawing.Bitmap]::FromStream($IconByteStream)
-			$IconBitmap.Save("$WorkingDirectory\ui\gameicons\$ImageFileName.png",[System.Drawing.Imaging.ImageFormat]::Png)
-			$IconUri = "<img src=`".\gameicons\$ImageFileName.png`">"
+			$IconBitmap.Save("$WorkingDirectory\ui\resources\images\$ImageFileName.png",[System.Drawing.Imaging.ImageFormat]::Png)
+			$IconUri = "<img src=`".\resources\images\$ImageFileName.png`">"
 		}
 		
 		$CurrentGame = [Game]::new($IconUri, $Name, $GameRecord.platform, $GameRecord.play_time, $GameRecord.last_play_date)
@@ -344,13 +344,14 @@ function RenderGameList() {
 	}
 	
 	$Table = $Games | ConvertTo-Html -Fragment
-	$report = (Get-Content $WorkingDirectory/ui/index.html.template) -replace "_GAMESTABLE_",$Table
+	$Minutes = $null; $Hours = [math]::divrem($TotalPlayTime, 60, [ref]$Minutes);
+
+	$report = (Get-Content $WorkingDirectory\ui\templates\index.html.template) -replace "_GAMESTABLE_", $Table
 	$report = $report -replace "Last_Played_On", "Last Played On"
 	$report = $report -replace "_TOTALGAMECOUNT_", $Games.length
-
-	$Minutes = $null; $Hours = [math]::divrem($TotalPlayTime, 60, [ref]$Minutes);
 	$report = $report -replace "_TOTALPLAYTIME_", ("{0} Hr {1} Min" -f $Hours, $Minutes)
-	[System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $WorkingDirectory/ui/index.html
+	
+	[System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $WorkingDirectory\ui\index.html
 
 	$DBConnection.Close()
 }
