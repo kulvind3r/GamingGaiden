@@ -25,7 +25,7 @@ function ToBase64($String) {
 }
 
 function ResizeImage($ImagePath, $GameName) {
-	$ImageFileName = ToBase64($GameName)
+	$ImageFileName = ToBase64 $GameName
 	$WIA = New-Object -com wia.imagefile
 	$WIA.LoadFile($ImagePath)
 	$WIP = New-Object -ComObject wia.imageprocess

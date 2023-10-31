@@ -110,7 +110,7 @@ function UpdateGameIcon{
     $GameIconFile = FileBrowserDialog "Select Game Icon File" 'PNG (*.png)|*.png|JPEG (*.jpg)|*.jpg'
     $GameIconPath = $GameIconFile.FullName
     
-    $ResizedImagePath = ResizeImage $GameIconPath $GameName
+    $ResizedImagePath = ResizeImage $GameIconPath $SelectedGame
     $GameIconBytes = (Get-Content -Path $ResizedImagePath -Encoding byte -Raw);
     Remove-Item $ResizedImagePath
 
