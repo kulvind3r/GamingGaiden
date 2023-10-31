@@ -1,16 +1,6 @@
 #Requires -Version 5.1
 #Requires -Modules PSSQLite
 
-function DoesEntityExists($Table, $Column, $EntityName){
-    Log "Checking if $EntityName Exists in $Table"
-
-    $ValidateEntityQuery = "SELECT * FROM {0} WHERE {1} LIKE '{2}'" -f $Table, $Column, $EntityName
-
-    $EntityFound = (Invoke-SqliteQuery -Query $ValidateEntityQuery -SQLiteConnection $DBConnection)
-
-    return $EntityFound
-}
-
 function RegisterGame{
     $GameName = Read-Host -Prompt "Enter Name for the Game"
 
@@ -30,18 +20,10 @@ function RegisterGame{
     }
     
     user_prompt "Select game executable"
-    $FileBrowser = FileBrowserDialog "Select Game Executable File" 'Executable (*.exe)|*.exe'
-    $result = $FileBrowser.ShowDialog()
-    
-    if ($result -ne [System.Windows.Forms.DialogResult]::OK) {
-        user_prompt "Operation cancelled or closed abruptly. Returning"; countdown
-        return
-    }
+    $GameExeFile = FileBrowserDialog "Select Game Executable File" 'Executable (*.exe)|*.exe'
+    $GameExeName = $GameExeFile.BaseName
 
-    $GameExePath = Get-Item $FileBrowser.FileName
-    $GameExeName = (Get-Item $FileBrowser.FileName).BaseName
-
-    $GameIcon = [System.Drawing.Icon]::ExtractAssociatedIcon($GameExePath)
+    $GameIcon = [System.Drawing.Icon]::ExtractAssociatedIcon($GameExeFile)
     $GameIcon.ToBitmap().save("$env:TEMP\icon.bmp")
     $GameIconBytes = (Get-Content -Path "$env:TEMP\icon.bmp" -Encoding byte -Raw);
     
@@ -81,29 +63,15 @@ function RegisterEmulatedPlatform{
     }
 
     user_prompt "Select Emulator Executable"
-    $FileBrowser = FileBrowserDialog "Select Emulator Executable File" 'Executable (*.exe)|*.exe'
-    $result = $FileBrowser.ShowDialog()
-
-    if ($result -ne [System.Windows.Forms.DialogResult]::OK) {
-        user_prompt "Operation cancelled or closed abruptly. Returning"; countdown
-        return
-    }
-
-    $EmulatorExeName = (Get-Item $FileBrowser.FileName).BaseName
+    $EmulatorExeFile = FileBrowserDialog "Select Emulator Executable File" 'Executable (*.exe)|*.exe'
+    $EmulatorExeName = $EmulatorExeFile.BaseName
 
     $CoreName = ""
     if ($EmulatorExeName.ToLower() -eq "retroarch")
     {
         user_prompt "Retroarch detected, select core file for the platform"; countdown
-        $FileBrowser = New-Object System.Windows.Forms.OpenFileDialog -Property @{ 
-            InitialDirectory = [Environment]::GetFolderPath('Desktop')
-            Filter           = 'Executable (*.dll)|*.dll'
-            Title = "Select Retroarch Core"
-            ShowHelp = $true
-        }
-        $FileBrowser.ShowDialog() | Out-Null
-
-        $CoreName = (Get-Item $FileBrowser.FileName).Name
+        $CoreFile = FileBrowserDialog "Select Retroarch Core" 'DLL (*.dll)|*.dll'
+        $CoreName = $CoreFile.Name
     }
 
     $RomExtensions = Read-Host -Prompt "Enter all rom file extensions separated by ',' for the Emulated Platform e.g. zip,chd,iso etc"
@@ -132,15 +100,9 @@ function UpdateGameIcon{
     $GameName = $GamesList[$GameNo-1]
 
     user_prompt "Select an image file";
-    $FileBrowser = FileBrowserDialog "Select Game Icon File" 'PNG (*.png)|*.png|JPEG (*.jpg)|*.jpg'
-    $result = $FileBrowser.ShowDialog()
-
-    if ($result -ne [System.Windows.Forms.DialogResult]::OK) {
-        user_prompt "Operation cancelled or closed abruptly. Returning"; countdown
-        return
-    }
-
-    $GameIconPath = (Get-Item $FileBrowser.FileName).FullName
+    $GameIconFile = FileBrowserDialog "Select Game Icon File" 'PNG (*.png)|*.png|JPEG (*.jpg)|*.jpg'
+    $GameIconPath = $GameIconFile.FullName
+    
     $ResizedImagePath = ResizeImage $GameIconPath $GameName
     $GameIconBytes = (Get-Content -Path $ResizedImagePath -Encoding byte -Raw);
     Remove-Item $ResizedImagePath
@@ -167,7 +129,9 @@ function RemoveGame{
 try {
     Add-Type -AssemblyName System.Windows.Forms
     Import-Module PSSQLite
-    Import-Module -Name ".\Functions.psm1"
+    Import-Module -Name ".\modules\HelperFunctions.psm1"
+    Import-Module -Name ".\modules\QueryFunctions.psm1"
+    Import-Module -Name ".\modules\UIFunctions.psm1"
 
     $Database = ".\GamingGaiden.db"
     Log "Connecting to database for configuration"

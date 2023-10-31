@@ -10,7 +10,9 @@
 try {
 	Import-Module PSSQLite
 	Import-Module ThreadJob
-	Import-Module -Name ".\Functions.psm1"
+	Import-Module -Name ".\modules\HelperFunctions.psm1"
+	Import-Module -Name ".\modules\UIFunctions.psm1"
+
 	
 	Log "Executing Database Setup"
 	Start-Process -FilePath "powershell" -ArgumentList "-File","`".\SetupDatabase.ps1`"" -WindowStyle Hidden
@@ -19,7 +21,11 @@ try {
 	#------------------------------------------
 	# Setup tracker Job Script and Job Function
 	$TrackerJobInitializationScript = {
-		Import-Module -Name ".\Functions.psm1"; 
+		Import-Module -Name ".\modules\ProcessFunctions.psm1";
+		Import-Module -Name ".\modules\HelperFunctions.psm1";
+		Import-Module -Name ".\modules\QueryFunctions.psm1";
+		Import-Module -Name ".\modules\StorageFunctions.psm1";
+		Import-Module -Name ".\modules\UIFunctions.psm1"
 		Import-Module PSSQLite;
 
 		$Database = ".\GamingGaiden.db"
@@ -28,10 +34,7 @@ try {
 
 	$TrackerJobScript = {
 		try {
-			$RecordingNotifyIcon = New-Object System.Windows.Forms.NotifyIcon
-			$RecordingIcon = [System.Drawing.Icon]::new(".\icons\recording.ico")
-			$RecordingNotifyIcon.Text = "Tracking Game"; $RecordingNotifyIcon.Icon = $RecordingIcon;
-
+			$RecordingNotifyIcon = CreateNotifyIcon "Tracking Game" ".\icons\recording.ico"
 			while ($true) {
 				$DetectedExe = DetectGame
 				$RecordingNotifyIcon.Visible = $true
@@ -57,10 +60,8 @@ try {
 
 	#------------------------------------------
 	# Setup Tray Icon
-	$RunningIcon = [System.Drawing.Icon]::new(".\icons\running.ico")
-
-	$AppNotifyIcon = New-Object System.Windows.Forms.NotifyIcon
-	$AppNotifyIcon.Text = "Gaming Gaiden"; $AppNotifyIcon.Icon = $RunningIcon; $AppNotifyIcon.Visible = $true
+	$AppNotifyIcon = CreateNotifyIcon "Gaming Gaiden" ".\icons\running.ico"
+	$AppNotifyIcon.Visible = $true
 
 	$ConfigureMenuItem = CreateMenuItem $true "Configure"
 	$ShowListMenuItem = CreateMenuItem $true "Show List"
