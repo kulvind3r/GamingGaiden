@@ -15,7 +15,7 @@ try {
 
 	
 	Log "Executing Database Setup"
-	Start-Process -FilePath "powershell" -ArgumentList "-File","`".\SetupDatabase.ps1`"" -WindowStyle Hidden
+	Start-Process -FilePath "powershell" -ArgumentList "-File","`".\SetupDatabase.ps1`"" -WindowStyle Hidden -Wait
 	Log "Database Setup Complete"
 
 	#------------------------------------------
@@ -83,7 +83,7 @@ try {
 		Log "Stopping TrackerJob to start configuration. Any ongoing gameplay session will be lost."
 		Stop-Job "TrackerJob"
 		Log "Launching configuration script"
-		Start-Process -FilePath "powershell" -ArgumentList "-File","`".\ConfigureGG.ps1`"" -WindowStyle Normal
+		Start-Process -FilePath "powershell" -ArgumentList "-File","`".\ConfigureGG.ps1`"" -WindowStyle Normal -Wait
 		Log "Starting TrackerJob again after configuration."
 		StartTrackerJob
 	})
