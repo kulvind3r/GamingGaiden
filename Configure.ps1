@@ -1,3 +1,7 @@
+param (
+    $Action
+)
+
 #Requires -Version 5.1
 #Requires -Modules PSSQLite
 
@@ -45,7 +49,7 @@ function RegisterGame{
 }
 
 function RegisterEmulatedPlatform{
-    $PlatformName = Read-Host -Prompt "Enter Name for the Emulated Platform (Console)"
+    $PlatformName = Read-Host -Prompt "Enter Name for the Emulated Platform (Console) e.g NES, Gamecube, Playstation 2 etc"
 
     if ($PlatformName.Length -eq 0)
     {
@@ -136,25 +140,13 @@ try {
     $Database = ".\GamingGaiden.db"
     Log "Connecting to database for configuration"
     $DBConnection = New-SQLiteConnection -DataSource $Database
-
-    do {
-        Clear-Host
-        user_prompt "What would you like to configure?"
-        Write-Host "1. Register a new game"
-        Write-Host "2. Register an Emulated Platform. e.g. SNES, Playstation 2 etc"
-        Write-Host "3. Update a game Icon"
-        Write-Host "4. Remove an existing game from record"
-        Write-Host "5. Exit"
-        $UserChoice = Read-Host -Prompt "Enter your choice 1-4?"
         
-            switch ($UserChoice) {
-                1 { Clear-Host; RegisterGame }
-                2 { Clear-Host; RegisterEmulatedPlatform }
-                3 { Clear-Host; UpdateGameIcon }
-                4 { Clear-Host; RemoveGame }
-            }
-        
-    } while($UserChoice -ne 5)
+    switch ($Action) {
+        "RegisterGame" { Clear-Host; RegisterGame }
+        "RegisterEmulatedPlatform" { Clear-Host; RegisterEmulatedPlatform }
+        "UpdateGameIcon" { Clear-Host; UpdateGameIcon }
+        4 { Clear-Host; RemoveGame }
+    }
 
     user_prompt "Closing Configuration Session."; countdown
 

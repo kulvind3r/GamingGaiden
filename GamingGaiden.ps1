@@ -19,7 +19,7 @@ try {
 	Log "Database Setup Complete"
 
 	#------------------------------------------
-	# Setup tracker Job Script and Job Function
+	# Setup tracker Job Scripts and Other Functions
 	$TrackerJobInitializationScript = {
 		Import-Module -Name ".\modules\ProcessFunctions.psm1";
 		Import-Module -Name ".\modules\HelperFunctions.psm1";
@@ -56,6 +56,18 @@ try {
 	function  StartTrackerJob {
 		Start-ThreadJob -InitializationScript $TrackerJobInitializationScript -ScriptBlock $TrackerJobScript -Name "TrackerJob"
 	}
+
+	function  RebootTrackerJob {
+		Stop-Job "TrackerJob" -ErrorAction silentlycontinue
+		StartTrackerJob
+	}
+
+	function  ConfigureAction($Action) {
+		Log "Executing Configuration Action: $Action"
+	   	Start-Process -FilePath "powershell" -ArgumentList "-File","`".\Configure.ps1`"", "$Action" -WindowStyle Normal -Wait
+	   	Log "Rebooting Tracker Job to apply new configuration"
+		RebootTrackerJob
+	}
 	#------------------------------------------
 
 	#------------------------------------------
@@ -63,29 +75,30 @@ try {
 	$AppNotifyIcon = CreateNotifyIcon "Gaming Gaiden" ".\icons\running.ico"
 	$AppNotifyIcon.Visible = $true
 
-	$ConfigureMenuItem = CreateMenuItem $true "Configure"
-	$ShowListMenuItem = CreateMenuItem $true "Show List"
-	$ExitMenuItem = CreateMenuItem $true "Exit"
-	$RestartTrackerMenuItem = CreateMenuItem $true "Restart Tracker"
-
-	$AppContextMenu = New-Object System.Windows.Forms.ContextMenu
-	$AppNotifyIcon.ContextMenu = $AppContextMenu
-	$AppNotifyIcon.ContextMenu.MenuItems.AddRange(@($ShowListMenuItem, $RestartTrackerMenuItem, $ConfigureMenuItem, $ExitMenuItem))
-
+	$ShowListMenuItem = CreateMenuItem "My Games"
+	$ExitMenuItem = CreateMenuItem "Exit"
+	$RestartTrackerMenuItem = CreateMenuItem "Restart Tracker"
+	
+	$ConfigureSubMenuItem = CreateMenuItem "Configure"
+	$RegGameMenuItem = CreateMenuItem "Register Game"
+	$RegPlatformMenuItem = CreateMenuItem "Register Emulator"
+	$UpdateGameIconMenuItem = CreateMenuItem "Update Game Icon"
+	
+	$ConfigureSubMenuItem.DropDownItems.Add($RegGameMenuItem)
+	$ConfigureSubMenuItem.DropDownItems.Add($RegPlatformMenuItem)
+	$ConfigureSubMenuItem.DropDownItems.Add($UpdateGameIconMenuItem)
+	
+	$AppContextMenu = New-Object System.Windows.Forms.ContextMenuStrip
+	$AppContextMenu.Items.AddRange(@($ShowListMenuItem, $ConfigureSubMenuItem, $RestartTrackerMenuItem, $ExitMenuItem))
+	$AppNotifyIcon.ContextMenuStrip = $AppContextMenu
+	
+	#------------------------------------------
+	# Setup Tray Icon Actions
 	$AppNotifyIcon.Add_Click({                    
 		If ($_.Button -eq [Windows.Forms.MouseButtons]::Left) {
 			$AppNotifyIcon.GetType().GetMethod("ShowContextMenu",[System.Reflection.BindingFlags]::Instance `
 			-bor [System.Reflection.BindingFlags]::NonPublic).Invoke($AppNotifyIcon,$null)
 		}
-	})
-
-	$ConfigureMenuItem.Add_Click({
-		Log "Stopping TrackerJob to start configuration. Any ongoing gameplay session will be lost."
-		Stop-Job "TrackerJob"
-		Log "Launching configuration script"
-		Start-Process -FilePath "powershell" -ArgumentList "-File","`".\ConfigureGG.ps1`"" -WindowStyle Normal -Wait
-		Log "Starting TrackerJob again after configuration."
-		StartTrackerJob
 	})
 
 	$ShowListMenuItem.Add_Click({
@@ -94,11 +107,13 @@ try {
 		Invoke-Item ".\ui\index.html"
 	})
 
-	$RestartTrackerMenuItem.Add_Click({
-		Log "Restarting Tracker Job"
-		Stop-Job "TrackerJob" -ErrorAction silentlycontinue
-		StartTrackerJob
-	})
+	$RestartTrackerMenuItem.Add_Click({ RebootTrackerJob })
+
+	$RegGameMenuItem.Add_Click({ ConfigureAction "RegisterGame"; })
+
+	$RegPlatformMenuItem.Add_Click({ ConfigureAction "RegisterEmulatedPlatform"; })
+
+	$UpdateGameIconMenuItem.Add_Click({ ConfigureAction "UpdateGameIcon"; })
 
 	$ExitMenuItem.Add_Click({ $AppNotifyIcon.Visible = $false; Stop-Job -Name "TrackerJob"; [System.Windows.Forms.Application]::Exit(); })
 	#------------------------------------------

@@ -16,10 +16,8 @@ class Game
     }
 }
 
-function CreateMenuItem($Enabled, $Text) {
-
-    $MenuItem = New-Object System.Windows.Forms.MenuItem
-    $MenuItem.Enabled = $Enabled
+function CreateMenuItem($Text) {
+    $MenuItem = New-Object System.Windows.Forms.ToolStripMenuItem
     $MenuItem.Text = "$Text"
     
     return $MenuItem
