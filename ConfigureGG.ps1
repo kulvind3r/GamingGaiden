@@ -1,3 +1,6 @@
+#Requires -Version 5.1
+#Requires -Modules PSSQLite
+
 function RegisterGame{
     $GameName = Read-Host -Prompt "Enter Name for the Game"
 

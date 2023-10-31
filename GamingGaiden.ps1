@@ -1,4 +1,7 @@
-﻿[System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms')    | out-null
+﻿#Requires -Version 5.1
+#Requires -Modules PSSQLite, ThreadJob
+
+[System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms')    | out-null
 [System.Reflection.Assembly]::LoadWithPartialName('presentationframework')   | out-null
 [System.Reflection.Assembly]::LoadWithPartialName('System.Drawing')          | out-null
 [System.Reflection.Assembly]::LoadWithPartialName('System.Web')          	 | out-null
@@ -6,9 +9,9 @@
 
 try {
 	Import-Module PSSQLite
-	Import-Module -Name ".\Functions.psm1"
 	Import-Module ThreadJob
-
+	Import-Module -Name ".\Functions.psm1"
+	
 	Log "Executing Database Setup"
 	Start-Process -FilePath "powershell" -ArgumentList "-File","`".\SetupDatabase.ps1`"" -WindowStyle Hidden
 	Log "Database Setup Complete"

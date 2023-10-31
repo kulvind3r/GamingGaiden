@@ -1,6 +1,9 @@
-Import-Module PSSQLite
+#Requires -Version 5.1
+#Requires -Modules PSSQLite
 
 try {
+    Import-Module PSSQLite
+    
     $Database = ".\GamingGaiden.db"
     $DBConnection = New-SQLiteConnection -DataSource $Database
 
