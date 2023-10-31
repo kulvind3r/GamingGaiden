@@ -12,7 +12,6 @@ try {
 	Import-Module ThreadJob
 	Import-Module -Name ".\modules\HelperFunctions.psm1"
 	Import-Module -Name ".\modules\UIFunctions.psm1"
-
 	
 	Log "Executing Database Setup"
 	Start-Process -FilePath "powershell" -ArgumentList "-File","`".\SetupDatabase.ps1`"" -WindowStyle Hidden -Wait
@@ -62,9 +61,9 @@ try {
 		StartTrackerJob
 	}
 
-	function  ConfigureAction($Action) {
+	function  ConfigureAction($Action, $WindowStyle = "Normal") {
 		Log "Executing Configuration Action: $Action"
-	   	Start-Process -FilePath "powershell" -ArgumentList "-File","`".\Configure.ps1`"", "$Action" -WindowStyle Normal -Wait
+	   	Start-Process -FilePath "powershell" -ArgumentList "-File","`".\Configure.ps1`"", "$Action" -WindowStyle $WindowStyle -Wait
 	   	Log "Rebooting Tracker Job to apply new configuration"
 		RebootTrackerJob
 	}
@@ -113,7 +112,7 @@ try {
 
 	$RegPlatformMenuItem.Add_Click({ ConfigureAction "RegisterEmulatedPlatform"; })
 
-	$UpdateGameIconMenuItem.Add_Click({ ConfigureAction "UpdateGameIcon"; })
+	$UpdateGameIconMenuItem.Add_Click({ ConfigureAction "UpdateGameIcon" "Hidden"; })
 
 	$ExitMenuItem.Add_Click({ $AppNotifyIcon.Visible = $false; Stop-Job -Name "TrackerJob"; [System.Windows.Forms.Application]::Exit(); })
 	#------------------------------------------

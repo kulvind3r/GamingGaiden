@@ -43,8 +43,10 @@ function FileBrowserDialog($Title, $Filters) {
 	$result = $FileBrowser.ShowDialog()
     
     if ($result -ne [System.Windows.Forms.DialogResult]::OK) {
-        user_prompt "Operation cancelled or closed abruptly. Returning"; countdown
-        return
+        user_prompt "Operation cancelled or closed abruptly. Returning";
+		Log "Operation cancelled or closed abruptly. Exiting"; 
+		countdown
+        exit 1
     }
 	
 	return (Get-Item $FileBrowser.FileName)

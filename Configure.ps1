@@ -96,13 +96,16 @@ function RegisterEmulatedPlatform{
 
 function UpdateGameIcon{
 
-    $GamesList = (Invoke-SqliteQuery -Query "select name from games" -SQLiteConnection $DBConnection).name
-
-    user_prompt "All Registered Games"    
-    $sno = 1; foreach ($Game in $GamesList) { Write-Host "$sno. $Game";  $sno++; }
-    $GameNo = Read-Host -Prompt "Enter Serial No of the game you want to update"
-    $GameName = $GamesList[$GameNo-1]
-
+    $GamesList = (Invoke-SqliteQuery -Query "SELECT name FROM games ORDER BY last_play_date DESC" -SQLiteConnection $DBConnection).name
+    $SelectedGame = $GamesList | Out-GridView -Title "Select a Game" -OutputMode Single
+    if ($null -eq $SelectedGame)
+    {
+        user_prompt "Operation cancelled or closed abruptly. Returning";
+        Log "Operation cancelled or closed abruptly. Returning";
+        countdown
+        return
+    }
+    
     user_prompt "Select an image file";
     $GameIconFile = FileBrowserDialog "Select Game Icon File" 'PNG (*.png)|*.png|JPEG (*.jpg)|*.jpg'
     $GameIconPath = $GameIconFile.FullName
@@ -111,7 +114,7 @@ function UpdateGameIcon{
     $GameIconBytes = (Get-Content -Path $ResizedImagePath -Encoding byte -Raw);
     Remove-Item $ResizedImagePath
 
-    $GameNamePattern = SQLEscapedMatchPattern($GameName.Trim())
+    $GameNamePattern = SQLEscapedMatchPattern($SelectedGame.Trim())
 
     $UpdateGameIconQuery = "UPDATE games SET icon = @GameIconBytes WHERE name LIKE '{0}'" -f $GameNamePattern
 
