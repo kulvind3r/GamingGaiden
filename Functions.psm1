@@ -63,6 +63,17 @@ function ResizeImage($ImagePath, $GameName) {
 	return "$env:TEMP\$ImageFileName.png"
 }
 
+function FileBrowserDialog($Title, $Filters) {
+	$FileBrowser = New-Object System.Windows.Forms.OpenFileDialog -Property @{ 
+        InitialDirectory = [Environment]::GetFolderPath('Desktop')
+        Filter = $Filters
+        Title = $Title
+        ShowHelp = $true
+    }
+	
+	return $FileBrowser
+}
+
 function IsExeEmulator($DetectedExe) {
 	
 	Log "Checking if Detected Exe is an Emulator"

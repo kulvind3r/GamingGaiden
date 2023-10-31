@@ -1,6 +1,16 @@
 #Requires -Version 5.1
 #Requires -Modules PSSQLite
 
+function DoesEntityExists($Table, $Column, $EntityName){
+    Log "Checking if $EntityName Exists in $Table"
+
+    $ValidateEntityQuery = "SELECT * FROM {0} WHERE {1} LIKE '{2}'" -f $Table, $Column, $EntityName
+
+    $EntityFound = (Invoke-SqliteQuery -Query $ValidateEntityQuery -SQLiteConnection $DBConnection)
+
+    return $EntityFound
+}
+
 function RegisterGame{
     $GameName = Read-Host -Prompt "Enter Name for the Game"
 
@@ -9,15 +19,24 @@ function RegisterGame{
         user_prompt "Game Name cannot be empty. Please try again"; countdown
         return
     }
-    
-    user_prompt "Select game executable"; countdown
-    $FileBrowser = New-Object System.Windows.Forms.OpenFileDialog -Property @{ 
-        InitialDirectory = [Environment]::GetFolderPath('Desktop')
-        Filter           = 'Executable (*.exe)|*.exe'
-        Title = "Select Game Executable File"
-        ShowHelp = $true
+
+    $EntityFound = DoesEntityExists "games" "name" $GameName
+    if ($null -ne $EntityFound)
+    {
+        user_prompt "Game already exists"
+        "Name: '{0}'   Platform: '{1}'   PlayTime: '{2}' Min   Last Played On: '{3}'" -f $EntityFound.name, $EntityFound.platform, $EntityFound.play_time, $EntityFound.last_play_date
+        countdown
+        return
     }
-    $FileBrowser.ShowDialog() | Out-Null
+    
+    user_prompt "Select game executable"
+    $FileBrowser = FileBrowserDialog "Select Game Executable File" 'Executable (*.exe)|*.exe'
+    $result = $FileBrowser.ShowDialog()
+    
+    if ($result -ne [System.Windows.Forms.DialogResult]::OK) {
+        user_prompt "Operation cancelled or closed abruptly. Returning"; countdown
+        return
+    }
 
     $GameExePath = Get-Item $FileBrowser.FileName
     $GameExeName = (Get-Item $FileBrowser.FileName).BaseName
@@ -52,14 +71,23 @@ function RegisterEmulatedPlatform{
         return
     }
 
-    user_prompt "Select Emulator Executable"; countdown
-    $FileBrowser = New-Object System.Windows.Forms.OpenFileDialog -Property @{ 
-        InitialDirectory = [Environment]::GetFolderPath('Desktop')
-        Filter           = 'Executable (*.exe)|*.exe'
-        Title = "Select Emulator Executable File"
-        ShowHelp = $true
+    $EntityFound = DoesEntityExists "emulated_platforms" "name"  $PlatformName 
+    if ($null -ne $EntityFound)
+    {
+        user_prompt "Platform already exists"
+        "Name: '{0}'   Exe: '{1}'   Core: '{2}'   Rom Extensions: '{3}'" -f $EntityFound.name, $EntityFound.exe_name, $EntityFound.core, $EntityFound.rom_extensions
+        countdown
+        return
     }
-    $FileBrowser.ShowDialog() | Out-Null
+
+    user_prompt "Select Emulator Executable"
+    $FileBrowser = FileBrowserDialog "Select Emulator Executable File" 'Executable (*.exe)|*.exe'
+    $result = $FileBrowser.ShowDialog()
+
+    if ($result -ne [System.Windows.Forms.DialogResult]::OK) {
+        user_prompt "Operation cancelled or closed abruptly. Returning"; countdown
+        return
+    }
 
     $EmulatorExeName = (Get-Item $FileBrowser.FileName).BaseName
 
@@ -104,14 +132,13 @@ function UpdateGameIcon{
     $GameName = $GamesList[$GameNo-1]
 
     user_prompt "Select an image file";
-    $FileBrowser = New-Object System.Windows.Forms.OpenFileDialog -Property @{ 
-        InitialDirectory = [Environment]::GetFolderPath('Desktop')
-        Filter           = 'PNG (*.png)|*.png|JPEG (*.jpg)|*.jpg'
-        Title = "Select Game Icon File"
-        ShowHelp = $true
-    }
+    $FileBrowser = FileBrowserDialog "Select Game Icon File" 'PNG (*.png)|*.png|JPEG (*.jpg)|*.jpg'
+    $result = $FileBrowser.ShowDialog()
 
-    $FileBrowser.ShowDialog() | Out-Null
+    if ($result -ne [System.Windows.Forms.DialogResult]::OK) {
+        user_prompt "Operation cancelled or closed abruptly. Returning"; countdown
+        return
+    }
 
     $GameIconPath = (Get-Item $FileBrowser.FileName).FullName
     $ResizedImagePath = ResizeImage $GameIconPath $GameName
