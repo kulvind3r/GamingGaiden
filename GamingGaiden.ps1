@@ -6,6 +6,7 @@
 [System.Reflection.Assembly]::LoadWithPartialName('System.Drawing')          | out-null
 [System.Reflection.Assembly]::LoadWithPartialName('System.Web')          	 | out-null
 [System.Reflection.Assembly]::LoadWithPartialName('WindowsFormsIntegration') | out-null
+[System.Reflection.assembly]::loadwithpartialname("microsoft.visualbasic") | Out-Null
 
 try {
 	Import-Module PSSQLite
@@ -64,7 +65,7 @@ try {
 
 	function  ConfigureAction($Action, $WindowStyle = "Normal") {
 		Log "Executing Configuration Action: $Action"
-	   	Start-Process -FilePath "powershell" -ArgumentList "-File","`".\Configure.ps1`"", "$Action" -WindowStyle $WindowStyle -Wait
+	   	Start-Process -FilePath "powershell" -ArgumentList "-File","`".\Configure.ps1`"", "$Action" -NoNewWindow
 	   	Log "Rebooting Tracker Job to apply new configuration"
 		RebootTrackerJob
 	}
@@ -112,11 +113,11 @@ try {
 		$AppNotifyIcon.ShowBalloonTip(3000, "Gaming Gaiden", "Tracker Restarted", [System.Windows.Forms.ToolTipIcon]::Info)
 	})
 
-	$RegGameMenuItem.Add_Click({ ConfigureAction "RegisterGame"; })
+	$RegGameMenuItem.Add_Click({ ConfigureAction "RegisterGame" })
 
 	$RegPlatformMenuItem.Add_Click({ ConfigureAction "RegisterEmulatedPlatform"; })
 
-	$UpdateGameIconMenuItem.Add_Click({ ConfigureAction "UpdateGameIcon" "Hidden"; })
+	$UpdateGameIconMenuItem.Add_Click({ ConfigureAction "UpdateGameIcon" })
 
 	$ExitMenuItem.Add_Click({ $AppNotifyIcon.Visible = $false; Stop-Job -Name "TrackerJob"; [System.Windows.Forms.Application]::Exit(); })
 	#------------------------------------------

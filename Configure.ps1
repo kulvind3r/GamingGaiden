@@ -6,24 +6,19 @@ param (
 #Requires -Modules PSSQLite
 
 function RegisterGame{
-    $GameName = Read-Host -Prompt "Enter Name for the Game"
-
-    if ($GameName.Length -eq 0)
-    {
-        user_prompt "Game Name cannot be empty. Please try again"; countdown
-        return
-    }
+    
+    Log "Starting Game Registration"
+    
+    $GameName = UserInputDialog "Register Game" "Enter Name for the Game"
 
     $EntityFound = DoesEntityExists "games" "name" $GameName
     if ($null -ne $EntityFound)
     {
-        user_prompt "Game already exists"
-        "Name: '{0}'   Platform: '{1}'   PlayTime: '{2}' Min   Last Played On: '{3}'" -f $EntityFound.name, $EntityFound.platform, $EntityFound.play_time, $EntityFound.last_play_date
-        countdown
+        ShowMessage "Game already exists" "OK" "Asterisk"
+        Log "Game Already Exists. returning"
         return
     }
     
-    user_prompt "Select game executable"
     $GameExeFile = FileBrowserDialog "Select Game Executable File" 'Executable (*.exe)|*.exe'
     $GameExeName = $GameExeFile.BaseName
 
@@ -45,41 +40,36 @@ function RegisterGame{
     }
     Remove-Item "$env:TEMP\icon.bmp";
 
-    user_prompt "Game Successfully Registered. Returning to Menu."; countdown
+    ShowMessage "Game Successfully Registered" "OK" "Asterisk"
 }
 
 function RegisterEmulatedPlatform{
-    $PlatformName = Read-Host -Prompt "Enter Name for the Emulated Platform (Console) e.g NES, Gamecube, Playstation 2 etc"
 
-    if ($PlatformName.Length -eq 0)
-    {
-        user_prompt "Platform Name cannot be empty. Please try again"; countdown
-        return
-    }
+    Log "Starting emulated platform registration"
+
+    $PlatformName = UserInputDialog "Register Platform" "Enter Platform Name: NES, Gamecube, Playstation 2 etc"
 
     $EntityFound = DoesEntityExists "emulated_platforms" "name"  $PlatformName 
     if ($null -ne $EntityFound)
     {
-        user_prompt "Platform already exists"
-        "Name: '{0}'   Exe: '{1}'   Core: '{2}'   Rom Extensions: '{3}'" -f $EntityFound.name, $EntityFound.exe_name, $EntityFound.core, $EntityFound.rom_extensions
-        countdown
+        ShowMessage "Platform already exists" "OK" "Asterisk"
+        Log "Platform already exists. returning"
         return
     }
 
-    user_prompt "Select Emulator Executable"
-    $EmulatorExeFile = FileBrowserDialog "Select Emulator Executable File" 'Executable (*.exe)|*.exe'
+    $EmulatorExeFile = FileBrowserDialog "Select Emulator Executable" 'Executable (*.exe)|*.exe'
     $EmulatorExeName = $EmulatorExeFile.BaseName
 
     $CoreName = ""
     if ($EmulatorExeName.ToLower() -eq "retroarch")
     {
-        user_prompt "Retroarch detected, select core file for the platform"; countdown
+        ShowMessage "Retroarch detected. Please Select Core for Platform." "OK" "Asterisk"
         $CoreFile = FileBrowserDialog "Select Retroarch Core" 'DLL (*.dll)|*.dll'
         $CoreName = $CoreFile.Name
     }
 
-    $RomExtensions = Read-Host -Prompt "Enter all rom file extensions separated by ',' for the Emulated Platform e.g. zip,chd,iso etc"
-
+    $RomExtensions = UserInputDialog "Rom Extensions" "Enter all rom file extensions for Platform: zip,chd,iso..."
+    
     $RegisterEmulatedPlatformQuery = "INSERT INTO Emulated_Platforms (name, exe_name, core, rom_extensions)" +
 						"VALUES (@PlatformName, @EmulatorExeName, @CoreName, @RomExtensions)"
 
@@ -91,18 +81,19 @@ function RegisterEmulatedPlatform{
         RomExtensions = $RomExtensions.Trim()
     }
 
-    user_prompt "Platform Successfully Registered. Returning to Menu."; countdown
+    ShowMessage "Platform Successfully Registered" "OK" "Asterisk"
 }
 
 function UpdateGameIcon{
+    
+    Log "Starting Game Icon Update"
 
     $GamesList = (Invoke-SqliteQuery -Query "SELECT name FROM games ORDER BY last_play_date DESC" -SQLiteConnection $DBConnection).name
     $SelectedGame = $GamesList | Out-GridView -Title "Select a Game" -OutputMode Single
     if ($null -eq $SelectedGame)
     {
-        Log "Operation cancelled or closed abruptly. Returning";
-        countdown
-        return
+        Log "Icon Update Operation cancelled or closed abruptly. Returning";
+        exit 1
     }
     
     $GameIconFile = FileBrowserDialog "Select Game Icon File" 'PNG (*.png)|*.png|JPEG (*.jpg)|*.jpg'
@@ -132,7 +123,9 @@ function RemoveGame{
 }
 
 try {
-    Add-Type -AssemblyName System.Windows.Forms
+
+    [System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms')  | out-null
+    [System.Reflection.assembly]::loadwithpartialname("microsoft.visualbasic") | Out-Null
     Import-Module PSSQLite
     Import-Module -Name ".\modules\HelperFunctions.psm1"
     Import-Module -Name ".\modules\QueryFunctions.psm1"
@@ -148,9 +141,7 @@ try {
         "UpdateGameIcon" { Clear-Host; UpdateGameIcon }
         4 { Clear-Host; RemoveGame }
     }
-
-    user_prompt "Closing Configuration Session."; countdown
-
+    
     $DBConnection.Close()
 }
 catch {
