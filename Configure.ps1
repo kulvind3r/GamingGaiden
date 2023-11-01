@@ -114,8 +114,45 @@ function UpdateGameIcon{
     ShowMessage "Icon Successfully Updated." "OK" "Asterisk"
 }
 
-function UpdateGame{
-    Write-Output "TBD 3"
+function UpdatePlayTime{
+    Log "Starting PlayTime Update"
+
+    $GamesList = (Invoke-SqliteQuery -Query "SELECT name FROM games ORDER BY last_play_date DESC" -SQLiteConnection $DBConnection).name
+    $SelectedGame = $GamesList | Out-GridView -Title "Select a Game" -OutputMode Single
+    if ($null -eq $SelectedGame)
+    {
+        Log "Update Playtime Operation cancelled or closed abruptly. Returning";
+        exit 1
+    }
+
+    $PlayTimeDelta = UserInputDialog "Input PlayTime" "To Add Playtime enter '+ HH:MM'.`r`nTo Deduct Playtime enter '- HH:MM'"
+    
+    if ( -Not ($PlayTimeDelta -match '^\+ \d\d:\d\d$|^\- \d\d:\d\d$') ) {
+        ShowMessage "Incorrect Playtime Format. Expected '+ HH:MM' or '- HH:MM'. Read Input dialog carefully." "OK" "Error"
+        Log "Incorrect Playtime format entered. Exiting"
+        exit 1
+    }
+
+    $Action = $PlayTimeDelta[0]
+    $Hours = $PlayTimeDelta.Split(" ")[1].Split(":")[0]
+    $Minutes = $PlayTimeDelta.Split(" ")[1].Split(":")[1]
+    $PlayTimeDeltaInMinutes = ([int]$Hours * 60) + [int]$Minutes
+
+    $GameNamePattern = SQLEscapedMatchPattern($SelectedGame.Trim())
+    $GetGamePlayTimeQuery = "SELECT play_time FROM games WHERE name LIKE '{0}'" -f $GameNamePattern
+    $RecordedGamePlayTime = (Invoke-SqliteQuery -Query $GetGamePlayTimeQuery -SQLiteConnection $DBConnection).play_time
+
+    $UpdatedPlayTime = $null
+    switch ($Action) {
+        '-' { $UpdatedPlayTime = $RecordedGamePlayTime - $PlayTimeDeltaInMinutes }
+        '+' { $UpdatedPlayTime = $RecordedGamePlayTime + $PlayTimeDeltaInMinutes }
+    }
+
+    $UpdateGamePlayTimeQuery = "UPDATE games SET play_time = @UpdatedPlayTime WHERE name LIKE '{0}'" -f $GameNamePattern
+
+    Invoke-SqliteQuery -Query $UpdateGamePlayTimeQuery -SQLiteConnection $DBConnection -SqlParameters @{ UpdatedPlayTime = $UpdatedPlayTime }
+
+    ShowMessage "Playtime Updated. " "OK" "Asterisk"
 }
 
 function RemoveGame{
@@ -139,7 +176,7 @@ try {
         "RegisterGame" { Clear-Host; RegisterGame }
         "RegisterEmulatedPlatform" { Clear-Host; RegisterEmulatedPlatform }
         "UpdateGameIcon" { Clear-Host; UpdateGameIcon }
-        4 { Clear-Host; RemoveGame }
+        "UpdatePlayTime" { Clear-Host; UpdatePlayTime }
     }
     
     $DBConnection.Close()
