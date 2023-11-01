@@ -13,6 +13,7 @@ try {
 	Import-Module -Name ".\modules\HelperFunctions.psm1"
 	Import-Module -Name ".\modules\UIFunctions.psm1"
 	
+	ResetLog
 	Log "Executing Database Setup"
 	Start-Process -FilePath "powershell" -ArgumentList "-File","`".\SetupDatabase.ps1`"" -WindowStyle Hidden -Wait
 	Log "Database Setup Complete"

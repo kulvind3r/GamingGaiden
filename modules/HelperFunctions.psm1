@@ -1,3 +1,9 @@
+function ResetLog($MSG) {
+	Remove-Item ".\GamingGaiden.log" -ErrorAction silentlycontinue
+	$Timestamp = (Get-date -f %d-%M-%y`|%H:%m:%s)
+	Write-Output "$Timestamp : Cleared log at application boot" >> ".\GamingGaiden.log"
+}
+
 function Log($MSG) {
 	$Timestamp = (Get-date -f %d-%M-%y`|%H:%m:%s)
 	Write-Output "$Timestamp : $MSG" >> ".\GamingGaiden.log"
