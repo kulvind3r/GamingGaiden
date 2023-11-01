@@ -100,13 +100,11 @@ function UpdateGameIcon{
     $SelectedGame = $GamesList | Out-GridView -Title "Select a Game" -OutputMode Single
     if ($null -eq $SelectedGame)
     {
-        user_prompt "Operation cancelled or closed abruptly. Returning";
         Log "Operation cancelled or closed abruptly. Returning";
         countdown
         return
     }
     
-    user_prompt "Select an image file";
     $GameIconFile = FileBrowserDialog "Select Game Icon File" 'PNG (*.png)|*.png|JPEG (*.jpg)|*.jpg'
     $GameIconPath = $GameIconFile.FullName
     
@@ -122,7 +120,7 @@ function UpdateGameIcon{
         GameIconBytes = $GameIconBytes
     }
     
-    user_prompt "Icon Successfully Updated. Returning to Menu."; countdown
+    ShowMessage "Icon Successfully Updated." "OK" "Asterisk"
 }
 
 function UpdateGame{

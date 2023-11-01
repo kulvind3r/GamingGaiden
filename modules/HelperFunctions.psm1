@@ -24,6 +24,10 @@ function ToBase64($String) {
 	return [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($String))
 }
 
+function ShowMessage($Msg, $Buttons, $Type){
+	[System.Windows.Forms.MessageBox]::Show($Msg,'Gaming Gaiden', $Buttons, $Type)
+}
+
 function ResizeImage($ImagePath, $GameName) {
 	$ImageFileName = ToBase64 $GameName
 	$WIA = New-Object -com wia.imagefile

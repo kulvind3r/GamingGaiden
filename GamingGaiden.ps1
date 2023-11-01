@@ -106,7 +106,10 @@ try {
 		Invoke-Item ".\ui\index.html"
 	})
 
-	$RestartTrackerMenuItem.Add_Click({ RebootTrackerJob })
+	$RestartTrackerMenuItem.Add_Click({ 
+		RebootTrackerJob; 
+		$AppNotifyIcon.ShowBalloonTip(3000, "Gaming Gaiden", "Tracker Restarted", [System.Windows.Forms.ToolTipIcon]::Info)
+	})
 
 	$RegGameMenuItem.Add_Click({ ConfigureAction "RegisterGame"; })
 
