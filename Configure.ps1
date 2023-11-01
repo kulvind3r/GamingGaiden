@@ -156,7 +156,55 @@ function UpdatePlayTime{
 }
 
 function RemoveGame{
-    Write-Output "TBD 4"
+    Log "Starting Game Removal"
+
+    $GamesList = (Invoke-SqliteQuery -Query "SELECT name FROM games ORDER BY last_play_date DESC" -SQLiteConnection $DBConnection).name
+    $SelectedGame = $GamesList | Out-GridView -Title "Select a Game" -OutputMode Single
+    if ($null -eq $SelectedGame)
+    {
+        Log "Game removal operation cancelled or closed abruptly. Returning";
+        exit 1
+    }
+
+    $ConfirmDelete = UserInputDialog "Confirm Removal" "All Data about $SelectedGame will be lost.`r`nAre you sure? Type 'Yes' to confirm."
+
+    if ( -Not ($ConfirmDelete.ToLower() -eq "yes")){
+        ShowMessage "Confirmation Denied. No Action Taken." "OK" "Asterisk"
+        exit 1
+    }
+
+    $GameNamePattern = SQLEscapedMatchPattern($SelectedGame.Trim())
+    $RemoveGameQuery = "DELETE FROM games WHERE name LIKE '{0}'" -f $GameNamePattern
+
+    Invoke-SqliteQuery -Query $RemoveGameQuery -SQLiteConnection $DBConnection
+
+    ShowMessage "Game Removed." "OK" "Asterisk"
+}
+
+function RemovePlatform{
+    Log "Starting Platform Removal"
+
+    $PlatformsList = (Invoke-SqliteQuery -Query "SELECT name FROM emulated_platforms" -SQLiteConnection $DBConnection).name
+    $SelectedPlatform = $PlatformsList | Out-GridView -Title "Select a Platform" -OutputMode Single
+    if ($null -eq $SelectedPlatform)
+    {
+        Log "Platform removal operation cancelled or closed abruptly. Returning";
+        exit 1
+    }
+
+    $ConfirmDelete = UserInputDialog "Confirm Removal" "All Data about $SelectedPlatform will be lost.`r`nAre you sure? Type 'Yes' to confirm."
+
+    if ( -Not ($ConfirmDelete.ToLower() -eq "yes")){
+        ShowMessage "Confirmation Denied. No Action Taken." "OK" "Asterisk"
+        exit 1
+    }
+
+    $PlatformNamePattern = SQLEscapedMatchPattern($SelectedPlatform.Trim())
+    $RemovePlatformQuery = "DELETE FROM emulated_platforms WHERE name LIKE '{0}'" -f $PlatformNamePattern
+
+    Invoke-SqliteQuery -Query $RemovePlatformQuery -SQLiteConnection $DBConnection
+
+    ShowMessage "Platform Removed." "OK" "Asterisk"
 }
 
 try {
@@ -177,6 +225,8 @@ try {
         "RegisterEmulatedPlatform" { Clear-Host; RegisterEmulatedPlatform }
         "UpdateGameIcon" { Clear-Host; UpdateGameIcon }
         "UpdatePlayTime" { Clear-Host; UpdatePlayTime }
+        "RemoveGame" { Clear-Host; RemoveGame }
+        "RemovePlatform" { Clear-Host; RemovePlatform }
     }
     
     $DBConnection.Close()
