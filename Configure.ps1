@@ -166,7 +166,7 @@ function RemoveGame{
         exit 1
     }
 
-    $ConfirmDelete = UserInputDialog "Confirm Removal" "All Data about $SelectedGame will be lost.`r`nAre you sure? Type 'Yes' to confirm."
+    $ConfirmDelete = UserInputDialog "Confirm Removal" "All Data about '$SelectedGame' will be lost.`r`nAre you sure? Type 'Yes' to confirm."
 
     if ( -Not ($ConfirmDelete.ToLower() -eq "yes")){
         ShowMessage "Confirmation Denied. No Action Taken." "OK" "Asterisk"
@@ -178,7 +178,7 @@ function RemoveGame{
 
     Invoke-SqliteQuery -Query $RemoveGameQuery -SQLiteConnection $DBConnection
 
-    ShowMessage "Game Removed." "OK" "Asterisk"
+    ShowMessage "Removed '$SelectedGame' from Database." "OK" "Asterisk"
 }
 
 function RemovePlatform{
@@ -192,7 +192,7 @@ function RemovePlatform{
         exit 1
     }
 
-    $ConfirmDelete = UserInputDialog "Confirm Removal" "All Data about $SelectedPlatform will be lost.`r`nAre you sure? Type 'Yes' to confirm."
+    $ConfirmDelete = UserInputDialog "Confirm Removal" "All Data about '$SelectedPlatform' platform will be lost.`r`nAre you sure? Type 'Yes' to confirm."
 
     if ( -Not ($ConfirmDelete.ToLower() -eq "yes")){
         ShowMessage "Confirmation Denied. No Action Taken." "OK" "Asterisk"
@@ -204,7 +204,7 @@ function RemovePlatform{
 
     Invoke-SqliteQuery -Query $RemovePlatformQuery -SQLiteConnection $DBConnection
 
-    ShowMessage "Platform Removed." "OK" "Asterisk"
+    ShowMessage "Removed '$SelectedPlatform' platform from Database." "OK" "Asterisk"
 }
 
 try {
