@@ -56,18 +56,24 @@ try {
 
 	function  StartTrackerJob {
 		Start-ThreadJob -InitializationScript $TrackerJobInitializationScript -ScriptBlock $TrackerJobScript -Name "TrackerJob"
+		$StopTrackerMenuItem.Enabled = $true
+		$StartTrackerMenuItem.Enabled = $false
+		Log "Started Tracker"
 	}
 
-	function  RebootTrackerJob {
+	function  StopTrackerJob {
 		Stop-Job "TrackerJob" -ErrorAction silentlycontinue
-		StartTrackerJob
+		$StopTrackerMenuItem.Enabled = $false
+		$StartTrackerMenuItem.Enabled = $true
+		Log "Stopped Tracker"
 	}
 
 	function  ConfigureAction($Action, $WindowStyle = "Normal") {
 		Log "Executing Configuration Action: $Action"
 	   	Start-Process -FilePath "powershell" -ArgumentList "-File","`".\Configure.ps1`"", "$Action" -NoNewWindow
 	   	Log "Rebooting Tracker Job to apply new configuration"
-		RebootTrackerJob
+		StopTrackerJob
+		StartTrackerJob
 	}
 	#------------------------------------------
 
@@ -78,7 +84,8 @@ try {
 
 	$ShowListMenuItem = CreateMenuItem "My Games"
 	$ExitMenuItem = CreateMenuItem "Exit"
-	$RestartTrackerMenuItem = CreateMenuItem "Restart Tracker"
+	$StartTrackerMenuItem = CreateMenuItem "Start Tracker"
+	$StopTrackerMenuItem = CreateMenuItem "Stop Tracker"
 	
 	$ConfigureSubMenuItem = CreateMenuItem "Configure"
 	$RegGameMenuItem = CreateMenuItem "Register Game"
@@ -96,7 +103,7 @@ try {
 	$ConfigureSubMenuItem.DropDownItems.Add($RemovePlatformMenuItem)
 	
 	$AppContextMenu = New-Object System.Windows.Forms.ContextMenuStrip
-	$AppContextMenu.Items.AddRange(@($ShowListMenuItem, $ConfigureSubMenuItem, $RestartTrackerMenuItem, $ExitMenuItem))
+	$AppContextMenu.Items.AddRange(@($ShowListMenuItem, $ConfigureSubMenuItem, $StartTrackerMenuItem, $StopTrackerMenuItem,  $ExitMenuItem))
 	$AppNotifyIcon.ContextMenuStrip = $AppContextMenu
 	
 	#------------------------------------------
@@ -114,9 +121,14 @@ try {
 		Invoke-Item ".\ui\index.html"
 	})
 
-	$RestartTrackerMenuItem.Add_Click({ 
-		RebootTrackerJob; 
-		$AppNotifyIcon.ShowBalloonTip(3000, "Gaming Gaiden", "Tracker Restarted", [System.Windows.Forms.ToolTipIcon]::Info)
+	$StartTrackerMenuItem.Add_Click({ 
+		StartTrackerJob;
+		$AppNotifyIcon.ShowBalloonTip(3000, "Gaming Gaiden", "Tracker Started.", [System.Windows.Forms.ToolTipIcon]::Info)
+	})
+
+	$StopTrackerMenuItem.Add_Click({ 
+		StopTrackerJob
+		$AppNotifyIcon.ShowBalloonTip(3000, "Gaming Gaiden", "Tracker Stopped.", [System.Windows.Forms.ToolTipIcon]::Info)
 	})
 
 	$RegGameMenuItem.Add_Click({ ConfigureAction "RegisterGame" })
