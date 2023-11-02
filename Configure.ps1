@@ -88,13 +88,8 @@ function UpdateGameIcon{
     
     Log "Starting Game Icon Update"
 
-    $GamesList = (Invoke-SqliteQuery -Query "SELECT name FROM games ORDER BY last_play_date DESC" -SQLiteConnection $DBConnection).name
-    $SelectedGame = $GamesList | Out-GridView -Title "Select a Game" -OutputMode Single
-    if ($null -eq $SelectedGame)
-    {
-        Log "Icon Update Operation cancelled or closed abruptly. Returning";
-        exit 1
-    }
+    $GamesList = (Invoke-SqliteQuery -Query "SELECT name FROM games" -SQLiteConnection $DBConnection).name
+    $SelectedGame = RenderListBoxForm "Select a Game" $GamesList
     
     $GameIconFile = FileBrowserDialog "Select Game Icon File" 'PNG (*.png)|*.png|JPEG (*.jpg)|*.jpg'
     $GameIconPath = $GameIconFile.FullName
@@ -117,13 +112,8 @@ function UpdateGameIcon{
 function UpdatePlayTime{
     Log "Starting PlayTime Update"
 
-    $GamesList = (Invoke-SqliteQuery -Query "SELECT name FROM games ORDER BY last_play_date DESC" -SQLiteConnection $DBConnection).name
-    $SelectedGame = $GamesList | Out-GridView -Title "Select a Game" -OutputMode Single
-    if ($null -eq $SelectedGame)
-    {
-        Log "Update Playtime Operation cancelled or closed abruptly. Returning";
-        exit 1
-    }
+    $GamesList = (Invoke-SqliteQuery -Query "SELECT name FROM games" -SQLiteConnection $DBConnection).name
+    $SelectedGame = RenderListBoxForm "Select a Game" $GamesList
 
     $PlayTimeDelta = UserInputDialog "Input PlayTime" "To Add Playtime enter '+ HH:MM'.`r`nTo Deduct Playtime enter '- HH:MM'"
     
@@ -158,13 +148,8 @@ function UpdatePlayTime{
 function RemoveGame{
     Log "Starting Game Removal"
 
-    $GamesList = (Invoke-SqliteQuery -Query "SELECT name FROM games ORDER BY last_play_date DESC" -SQLiteConnection $DBConnection).name
-    $SelectedGame = $GamesList | Out-GridView -Title "Select a Game" -OutputMode Single
-    if ($null -eq $SelectedGame)
-    {
-        Log "Game removal operation cancelled or closed abruptly. Returning";
-        exit 1
-    }
+    $GamesList = (Invoke-SqliteQuery -Query "SELECT name FROM games" -SQLiteConnection $DBConnection).name
+    $SelectedGame = RenderListBoxForm "Select a Game" $GamesList
 
     UserConfirmationDialog "Confirm Game Removal" "All Data about '$SelectedGame' will be lost.`r`nAre you sure?"
 
@@ -176,16 +161,11 @@ function RemoveGame{
     ShowMessage "Removed '$SelectedGame' from Database." "OK" "Asterisk"
 }
 
-function RemovePlatform{
+function RemovePlatform{ 
     Log "Starting Platform Removal"
 
     $PlatformsList = (Invoke-SqliteQuery -Query "SELECT name FROM emulated_platforms" -SQLiteConnection $DBConnection).name
-    $SelectedPlatform = $PlatformsList | Out-GridView -Title "Select a Platform" -OutputMode Single
-    if ($null -eq $SelectedPlatform)
-    {
-        Log "Platform removal operation cancelled or closed abruptly. Returning";
-        exit 1
-    }
+    $SelectedPlatform = RenderListBoxForm "Select a Platform" $PlatformsList
 
     UserConfirmationDialog "Confirm Platform Removal" "All Data about '$SelectedPlatform' will be lost.`r`nAre you sure?"
     
