@@ -103,3 +103,14 @@ function findEmulatedGameDetails($DetectedEmulatorExe) {
 
 	return New-Object PSObject -Property @{ Name = $EmulatedGameName; Exe = $DetectedEmulatorExe ; Platform = $EmulatedGamePlatform }
 }
+
+function findGameDetails($Game) {
+	Log "Finding Details of $Game"
+
+	$pattern = SQLEscapedMatchPattern $Game.Trim()
+	$GetGameDetailsQuery = "SELECT name, exe_name, platform, play_time, completed, icon FROM games WHERE name LIKE '{0}'" -f $pattern
+
+	$GameDetails = Invoke-SqliteQuery -Query $GetGameDetailsQuery -SQLiteConnection $DBConnection
+
+	return $GameDetails
+}

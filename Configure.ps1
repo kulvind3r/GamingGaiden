@@ -5,7 +5,7 @@ param (
 #Requires -Version 5.1
 #Requires -Modules PSSQLite
 
-function RegisterGame{
+function RegisterGame {
     
     Log "Starting Game Registration"
     
@@ -43,7 +43,7 @@ function RegisterGame{
     ShowMessage "Game Successfully Registered" "OK" "Asterisk"
 }
 
-function RegisterEmulatedPlatform{
+function RegisterEmulatedPlatform {
 
     Log "Starting emulated platform registration"
 
@@ -84,7 +84,7 @@ function RegisterEmulatedPlatform{
     ShowMessage "Platform Successfully Registered" "OK" "Asterisk"
 }
 
-function UpdateGameIcon{
+function UpdateGameIcon {
     
     Log "Starting Game Icon Update"
 
@@ -109,7 +109,7 @@ function UpdateGameIcon{
     ShowMessage "Icon Successfully Updated." "OK" "Asterisk"
 }
 
-function UpdatePlayTime{
+function UpdatePlayTime {
     Log "Starting PlayTime Update"
 
     $GamesList = (Invoke-SqliteQuery -Query "SELECT name FROM games" -SQLiteConnection $DBConnection).name
@@ -145,7 +145,7 @@ function UpdatePlayTime{
     ShowMessage "Playtime Updated. " "OK" "Asterisk"
 }
 
-function RemoveGame{
+function RemoveGame {
     Log "Starting Game Removal"
 
     $GamesList = (Invoke-SqliteQuery -Query "SELECT name FROM games" -SQLiteConnection $DBConnection).name
@@ -161,7 +161,7 @@ function RemoveGame{
     ShowMessage "Removed '$SelectedGame' from Database." "OK" "Asterisk"
 }
 
-function RemovePlatform{ 
+function RemovePlatform { 
     Log "Starting Platform Removal"
 
     $PlatformsList = (Invoke-SqliteQuery -Query "SELECT name FROM emulated_platforms" -SQLiteConnection $DBConnection).name
@@ -175,6 +175,17 @@ function RemovePlatform{
     Invoke-SqliteQuery -Query $RemovePlatformQuery -SQLiteConnection $DBConnection
 
     ShowMessage "Removed '$SelectedPlatform' platform from Database." "OK" "Asterisk"
+}
+
+function EditGame {
+    Log "Starting Game Editing"
+
+    $GamesList = (Invoke-SqliteQuery -Query "SELECT name FROM games" -SQLiteConnection $DBConnection).name
+    $SelectedGame = RenderListBoxForm "Select a Game" $GamesList
+
+    $SelectedGameDetails = findGameDetails $SelectedGame
+    
+    RenderEditGameForm $SelectedGameDetails
 }
 
 try {
@@ -193,6 +204,7 @@ try {
     switch ($Action) {
         "RegisterGame" { Clear-Host; RegisterGame }
         "RegisterEmulatedPlatform" { Clear-Host; RegisterEmulatedPlatform }
+        "EditGame" { Clear-Host; EditGame }
         "UpdateGameIcon" { Clear-Host; UpdateGameIcon }
         "UpdatePlayTime" { Clear-Host; UpdatePlayTime }
         "RemoveGame" { Clear-Host; RemoveGame }

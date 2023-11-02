@@ -9,6 +9,10 @@ function Log($MSG) {
 	Write-Output "$Timestamp : $MSG" >> ".\GamingGaiden.log"
 }
 
+function CleanupTempFiles(){
+	Remove-Item -Force "$env:TEMP\GG-*.png"
+}
+
 function countdown($seconds = 2) {
     1..$seconds | ForEach-Object {
         $remainingSeconds = ($seconds+1) - $_
@@ -30,6 +34,18 @@ function ToBase64($String) {
 	return [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($String))
 }
 
+function PlayTimeMinsToString($PlayTime) {
+	$Minutes = $null; $Hours = [math]::divrem($PlayTime, 60, [ref]$Minutes);
+
+	return ("{0} Hr {1} Min" -f $Hours, $Minutes)
+}
+
+function BytesToBitmap($ImageBytes) {
+	$IconByteStream = [System.IO.MemoryStream]::new($ImageBytes)
+	$IconBitmap = [System.Drawing.Bitmap]::FromStream($IconByteStream)
+	return $IconBitmap
+}
+
 function ResizeImage($ImagePath, $GameName) {
 	$ImageFileName = ToBase64 $GameName
 	$WIA = New-Object -com wia.imagefile
@@ -42,6 +58,7 @@ function ResizeImage($ImagePath, $GameName) {
 	$WIP.Filters[1].Properties("PreserveAspectRatio") = $true
 
 	$ScaledImage = $WIP.Apply($WIA)
-	$ScaledImage.SaveFile("$env:TEMP\$ImageFileName.png")
-	return "$env:TEMP\$ImageFileName.png"
+	$ScaledImagePath = "$env:TEMP\GG-{0}-$ImageFileName.png" -f $(Get-Random)
+	$ScaledImage.SaveFile($ScaledImagePath)
+	return $ScaledImagePath
 }

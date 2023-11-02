@@ -70,7 +70,7 @@ try {
 
 	function  ConfigureAction($Action, $WindowStyle = "Normal") {
 		Log "Executing Configuration Action: $Action"
-	   	Start-Process -FilePath "powershell" -ArgumentList "-File","`".\Configure.ps1`"", "$Action" -NoNewWindow
+	   	Start-Process -FilePath "powershell" -ArgumentList "-File","`".\Configure.ps1`"", "$Action" -NoNewWindow -Wait
 	   	Log "Rebooting Tracker Job to apply new configuration"
 		StopTrackerJob
 		StartTrackerJob
@@ -90,6 +90,7 @@ try {
 	$ConfigureSubMenuItem = CreateMenuItem "Configure"
 	$RegGameMenuItem = CreateMenuItem "Register Game"
 	$RegPlatformMenuItem = CreateMenuItem "Register Emulator"
+	$EditGameMenuItem = CreateMenuItem "Edit Game"
 	$UpdateGameIconMenuItem = CreateMenuItem "Update Game Icon"
 	$UpdatePlayTimeMenuItem = CreateMenuItem "Update Play Time"
 	$RemoveGameMenuItem = CreateMenuItem "Remove Game"
@@ -97,6 +98,7 @@ try {
 	
 	$ConfigureSubMenuItem.DropDownItems.Add($RegGameMenuItem)
 	$ConfigureSubMenuItem.DropDownItems.Add($RegPlatformMenuItem)
+	$ConfigureSubMenuItem.DropDownItems.Add($EditGameMenuItem)
 	$ConfigureSubMenuItem.DropDownItems.Add($UpdateGameIconMenuItem)
 	$ConfigureSubMenuItem.DropDownItems.Add($UpdatePlayTimeMenuItem)
 	$ConfigureSubMenuItem.DropDownItems.Add($RemoveGameMenuItem)
@@ -131,11 +133,13 @@ try {
 		$AppNotifyIcon.ShowBalloonTip(3000, "Gaming Gaiden", "Tracker Stopped.", [System.Windows.Forms.ToolTipIcon]::Info)
 	})
 
-	$RegGameMenuItem.Add_Click({ ConfigureAction "RegisterGame" })
+	$RegGameMenuItem.Add_Click({ ConfigureAction "RegisterGame"; CleanupTempFiles })
 
 	$RegPlatformMenuItem.Add_Click({ ConfigureAction "RegisterEmulatedPlatform"; })
 
-	$UpdateGameIconMenuItem.Add_Click({ ConfigureAction "UpdateGameIcon" })
+	$EditGameMenuItem.Add_Click({ ConfigureAction "EditGame"; CleanupTempFiles })
+
+	$UpdateGameIconMenuItem.Add_Click({ ConfigureAction "UpdateGameIcon"; CleanupTempFiles })
 	
 	$UpdatePlayTimeMenuItem.Add_Click({ ConfigureAction "UpdatePlayTime" })
 

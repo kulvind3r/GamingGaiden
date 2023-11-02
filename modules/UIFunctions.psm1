@@ -149,9 +149,8 @@ function RenderGameList() {
 		$IconUri = "<img src=`".\resources\images\default.png`">"
 		if ($null -ne $GameRecord.icon)
 		{
-			$ImageFileName = ToBase64($Name)
-			$IconByteStream = [System.IO.MemoryStream]::new($GameRecord.icon)
-			$IconBitmap = [System.Drawing.Bitmap]::FromStream($IconByteStream)
+			$ImageFileName = ToBase64 $Name
+			$IconBitmap = BytesToBitmap $GameRecord.icon
 			$IconBitmap.Save("$WorkingDirectory\ui\resources\images\$ImageFileName.png",[System.Drawing.Imaging.ImageFormat]::Png)
 			$IconUri = "<img src=`".\resources\images\$ImageFileName.png`">"
 		}
@@ -162,15 +161,140 @@ function RenderGameList() {
 		$TotalPlayTime += $GameRecord.play_time
 	}
 	
-	$Table = $Games | ConvertTo-Html -Fragment
-	$Minutes = $null; $Hours = [math]::divrem($TotalPlayTime, 60, [ref]$Minutes);
+	$TotalPlayTimeString = PlayTimeMinsToString $TotalPlayTime
 
+	$Table = $Games | ConvertTo-Html -Fragment
+	
 	$report = (Get-Content $WorkingDirectory\ui\templates\index.html.template) -replace "_GAMESTABLE_", $Table
 	$report = $report -replace "Last_Played_On", "Last Played On"
 	$report = $report -replace "_TOTALGAMECOUNT_", $Games.length
-	$report = $report -replace "_TOTALPLAYTIME_", ("{0} Hr {1} Min" -f $Hours, $Minutes)
+	$report = $report -replace "_TOTALPLAYTIME_", $TotalPlayTimeString
 	
 	[System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $WorkingDirectory\ui\index.html
 
 	$DBConnection.Close()
+}
+
+function RenderEditGameForm($SelectedGame) {
+
+	# Create a form
+	$form = New-Object System.Windows.Forms.Form
+	$form.Text = "Gameplay Gaiden: Edit Game"
+	$form.Size = New-Object Drawing.Size(580, 255)
+	$form.StartPosition = 'CenterScreen'
+	$form.FormBorderStyle = 'FixedDialog'
+
+	# Create labels and text fields for Name, Platform, and PlayTime
+	$labelName = New-Object System.Windows.Forms.Label
+	$labelName.AutoSize = $true
+	$labelName.Location = New-Object Drawing.Point(170, 20)
+	$labelName.Text = "Name:"
+	$form.Controls.Add($labelName)
+
+	$textName = New-Object System.Windows.Forms.TextBox
+	$textName.Size = New-Object System.Drawing.Size(300,20)
+	$textName.Location = New-Object Drawing.Point(245, 20)
+	$textName.Text = $SelectedGame.name
+	$form.Controls.Add($textName)
+
+	$labelExe = New-Object System.Windows.Forms.Label
+	$labelExe.AutoSize = $true
+	$labelExe.Location = New-Object Drawing.Point(170, 60)
+	$labelExe.Text = "Exe:"
+	$form.Controls.Add($labelExe)
+
+	$textExe = New-Object System.Windows.Forms.TextBox
+	$textExe.Size = New-Object System.Drawing.Size(200,20)
+	$textExe.Location = New-Object Drawing.Point(245, 60)
+	$textExe.Text = ($SelectedGame.exe_name + ".exe")
+	$form.Controls.Add($textExe)
+
+	$labelPlatform = New-Object System.Windows.Forms.Label
+	$labelPlatform.AutoSize = $true
+	$labelPlatform.Location = New-Object Drawing.Point(170, 100)
+	$labelPlatform.Text = "Platform:"
+	$form.Controls.Add($labelPlatform)
+
+	$textPlatform = New-Object System.Windows.Forms.TextBox
+	$textPlatform.Size = New-Object System.Drawing.Size(200,20)
+	$textPlatform.Location = New-Object Drawing.Point(245, 100)
+	$textPlatform.Text = $SelectedGame.platform
+	$form.Controls.Add($textPlatform)
+
+	$labelPlayTime = New-Object System.Windows.Forms.Label
+	$labelPlayTime.AutoSize = $true
+	$labelPlayTime.Location = New-Object Drawing.Point(170, 140)
+	$labelPlayTime.Text = "PlayTime:"
+	$form.Controls.Add($labelPlayTime)
+
+	$PlayTimeString = PlayTimeMinsToString $SelectedGame.play_time
+
+	$textPlayTime = New-Object System.Windows.Forms.TextBox
+	$textPlayTime.Size = New-Object System.Drawing.Size(200,20)
+	$textPlayTime.Location = New-Object Drawing.Point(245, 140)
+	$textPlayTime.Text = $PlayTimeString
+	$form.Controls.Add($textPlayTime)
+
+	$IconFileName = ToBase64 $SelectedGame.name
+	$ImagePath = "$env:TEMP\GG-{0}-$IconFileName.png" -f $(Get-Random)
+	$IconBitmap = BytesToBitmap $SelectedGame.icon
+	$IconBitmap.Save($ImagePath,[System.Drawing.Imaging.ImageFormat]::Png)
+	$IconBitmap.Dispose()
+
+	$pictureBox = New-Object Windows.Forms.PictureBox
+	$pictureBox.Location = New-Object Drawing.Point(15, 20)
+	$pictureBox.Size = New-Object Drawing.Size(140, 140)
+	$pictureBox.SizeMode = [System.Windows.Forms.PictureBoxSizeMode]::CenterImage
+	$pictureBox.Image = [System.Drawing.Image]::FromFile($ImagePath)
+	$form.Controls.Add($pictureBox)
+
+	$buttonUpdateIcon = New-Object System.Windows.Forms.Button
+	$buttonUpdateIcon.Location = New-Object Drawing.Point(48, 175)
+	$buttonUpdateIcon.Text = "Edit Icon"
+	$buttonUpdateIcon.Add_Click({
+		$openFileDialog = New-Object System.Windows.Forms.OpenFileDialog
+		$openFileDialog.Filter = 'PNG (*.png)|*.png|JPEG (*.jpg)|*.jpg'
+		$result = $openFileDialog.ShowDialog()
+		if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
+			$ImagePath = ResizeImage $openFileDialog.FileName $SelectedGame.name
+			$pictureBox.Image = [System.Drawing.Image]::FromFile($ImagePath)
+		}
+	})
+	$form.Controls.Add($buttonUpdateIcon)
+
+	$buttonUpdateExe = New-Object System.Windows.Forms.Button
+	$buttonUpdateExe.Location = New-Object Drawing.Point(470, 60)
+	$buttonUpdateExe.Text = "Edit EXE"
+	$buttonUpdateExe.Add_Click({
+		$openFileDialog = New-Object System.Windows.Forms.OpenFileDialog
+		$openFileDialog.Filter = 'Executable (*.exe)|*.exe'
+		$result = $openFileDialog.ShowDialog()
+		if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
+			# Selected file path is in $openFileDialog.FileName
+			Write-Host "Selected EXE: $($openFileDialog.FileName)"
+		}
+	})
+	$form.Controls.Add($buttonUpdateExe)
+
+	# Create OK button to save form fields
+	$buttonOK = New-Object System.Windows.Forms.Button
+	$buttonOK.Location = New-Object Drawing.Point(320, 175)
+	$buttonOK.Text = "OK"
+	$buttonOK.Add_Click({
+		# $formData = @{
+		# 	Name = $textName.Text
+		# 	Platform = $textPlatform.Text
+		# 	PlayTime = $textPlayTime.Text
+		# }
+		# $formData | Out-File -FilePath "ConfigFile.txt"
+		$form.Close()
+	})
+	$form.Controls.Add($buttonOK)
+
+	# Show the form
+	$form.ShowDialog()
+
+	# Dispose of the form
+	$form.Dispose()
+
 }
