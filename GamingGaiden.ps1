@@ -162,6 +162,9 @@ try {
 	[void][System.Windows.Forms.Application]::Run($AppContext)
 }
 catch {
+	[System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms')    | out-null
+    [System.Windows.Forms.MessageBox]::Show("Exception: $($_.Exception.Message). Check log for details",'Gaming Gaiden', "OK", "Error")
+
 	$Timestamp = (Get-date -f %d-%M-%y`|%H:%m:%s)
     Write-Output "$Timestamp : A User or System error has caused an exception. Check Log for Details." >> ".\GamingGaiden.log"
     Write-Output "$Timestamp : Exception: $($_.Exception.Message)" >> ".\GamingGaiden.log"

@@ -166,12 +166,7 @@ function RemoveGame{
         exit 1
     }
 
-    $ConfirmDelete = UserInputDialog "Confirm Removal" "All Data about '$SelectedGame' will be lost.`r`nAre you sure? Type 'Yes' to confirm."
-
-    if ( -Not ($ConfirmDelete.ToLower() -eq "yes")){
-        ShowMessage "Confirmation Denied. No Action Taken." "OK" "Asterisk"
-        exit 1
-    }
+    UserConfirmationDialog "Confirm Game Removal" "All Data about '$SelectedGame' will be lost.`r`nAre you sure?"
 
     $GameNamePattern = SQLEscapedMatchPattern($SelectedGame.Trim())
     $RemoveGameQuery = "DELETE FROM games WHERE name LIKE '{0}'" -f $GameNamePattern
@@ -192,13 +187,8 @@ function RemovePlatform{
         exit 1
     }
 
-    $ConfirmDelete = UserInputDialog "Confirm Removal" "All Data about '$SelectedPlatform' platform will be lost.`r`nAre you sure? Type 'Yes' to confirm."
-
-    if ( -Not ($ConfirmDelete.ToLower() -eq "yes")){
-        ShowMessage "Confirmation Denied. No Action Taken." "OK" "Asterisk"
-        exit 1
-    }
-
+    UserConfirmationDialog "Confirm Platform Removal" "All Data about '$SelectedPlatform' will be lost.`r`nAre you sure?"
+    
     $PlatformNamePattern = SQLEscapedMatchPattern($SelectedPlatform.Trim())
     $RemovePlatformQuery = "DELETE FROM emulated_platforms WHERE name LIKE '{0}'" -f $PlatformNamePattern
 
@@ -232,6 +222,9 @@ try {
     $DBConnection.Close()
 }
 catch {
+    [System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms')    | out-null
+    [System.Windows.Forms.MessageBox]::Show("Exception: $($_.Exception.Message). Check log for details",'Gaming Gaiden', "OK", "Error")
+
     $Timestamp = (Get-date -f %d-%M-%y`|%H:%m:%s)
     Write-Output "$Timestamp : A User or System error has caused an exception. Please Try again. Check log for exception details" >> ".\GamingGaiden.log"
     Write-Output "$Timestamp : Exception: $($_.Exception.Message)" >> ".\GamingGaiden.log"

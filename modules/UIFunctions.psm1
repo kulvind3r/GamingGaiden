@@ -62,6 +62,21 @@ function UserInputDialog($Title, $Prompt) {
 	return $UserInput.Trim()
 }
 
+function ShowMessage($Msg, $Buttons, $Type){
+	[System.Windows.Forms.MessageBox]::Show($Msg,'Gaming Gaiden', $Buttons, $Type)
+}
+
+function UserConfirmationDialog($Title, $Prompt) {
+	$UserInput = [microsoft.visualbasic.interaction]::MsgBox($Prompt, "YesNo,Question", $Title).ToString()
+
+	if (-Not ($UserInput.ToLower() -eq 'yes'))
+    {
+        ShowMessage "Confirmation Denied. No Action Taken." "OK" "Asterisk"
+        Log "$Title : Action cancelled. Exiting."
+        exit 1
+    }
+}
+
 function RenderGameList() {
 
 	$Database = ".\GamingGaiden.db"
