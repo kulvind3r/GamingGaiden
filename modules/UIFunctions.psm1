@@ -1,5 +1,4 @@
-class Game
-{
+class Game {
 	[ValidateNotNullOrEmpty()][string]$Icon
     [ValidateNotNullOrEmpty()][string]$Name
 	[ValidateNotNullOrEmpty()][string]$Platform
@@ -32,22 +31,13 @@ function CreateNotifyIcon($ToolTip, $IconPath) {
 	return $NotifyIcon
 }
 
-function FileBrowserDialog($Title, $Filters) {
+function OpenFileDialog($Title, $Filters) {
 	$FileBrowser = New-Object System.Windows.Forms.OpenFileDialog -Property @{ 
         InitialDirectory = [Environment]::GetFolderPath('Desktop')
         Filter = $Filters
         Title = $Title
-        ShowHelp = $true
     }
-
-	$result = $FileBrowser.ShowDialog()
-    
-    if ($result -ne [System.Windows.Forms.DialogResult]::OK) {
-		Log "$Title : Operation cancelled or closed abruptly. Exiting"; 
-        exit 1
-    }
-	
-	return (Get-Item $FileBrowser.FileName)
+	return $FileBrowser
 }
 
 function UserInputDialog($Title, $Prompt) {
@@ -67,14 +57,7 @@ function ShowMessage($Msg, $Buttons, $Type){
 }
 
 function UserConfirmationDialog($Title, $Prompt) {
-	$UserInput = [microsoft.visualbasic.interaction]::MsgBox($Prompt, "YesNo,Question", $Title).ToString()
-
-	if (-Not ($UserInput.ToLower() -eq 'yes'))
-    {
-        ShowMessage "Confirmation Denied. No Action Taken." "OK" "Asterisk"
-        Log "$Title : Action cancelled. Exiting."
-        exit 1
-    }
+	return [microsoft.visualbasic.interaction]::MsgBox($Prompt, "YesNo,Question", $Title).ToString()
 }
 
 function RenderListBoxForm($Prompt, $List) {
@@ -195,6 +178,7 @@ function RenderEditGameForm($SelectedGame) {
 	$textName.Size = New-Object System.Drawing.Size(300,20)
 	$textName.Location = New-Object Drawing.Point(245, 20)
 	$textName.Text = $SelectedGame.name
+	$textName.ReadOnly = $true
 	$form.Controls.Add($textName)
 
 	$labelExe = New-Object System.Windows.Forms.Label
@@ -248,15 +232,19 @@ function RenderEditGameForm($SelectedGame) {
 	$pictureBox.Image = [System.Drawing.Image]::FromFile($ImagePath)
 	$form.Controls.Add($pictureBox)
 
+	$pictureBoxImagePath = New-Object System.Windows.Forms.TextBox
+	$pictureBoxImagePath.hide()
+	$form.Controls.Add($pictureBoxImagePath)
+
 	$buttonUpdateIcon = New-Object System.Windows.Forms.Button
 	$buttonUpdateIcon.Location = New-Object Drawing.Point(48, 175)
 	$buttonUpdateIcon.Text = "Edit Icon"
 	$buttonUpdateIcon.Add_Click({
-		$openFileDialog = New-Object System.Windows.Forms.OpenFileDialog
-		$openFileDialog.Filter = 'PNG (*.png)|*.png|JPEG (*.jpg)|*.jpg'
+		$openFileDialog = OpenFileDialog "Select Game Icon File" 'PNG (*.png)|*.png|JPEG (*.jpg)|*.jpg'
 		$result = $openFileDialog.ShowDialog()
 		if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
 			$ImagePath = ResizeImage $openFileDialog.FileName $SelectedGame.name
+			$pictureBoxImagePath.Text = $ImagePath
 			$pictureBox.Image = [System.Drawing.Image]::FromFile($ImagePath)
 		}
 	})
@@ -264,37 +252,57 @@ function RenderEditGameForm($SelectedGame) {
 
 	$buttonUpdateExe = New-Object System.Windows.Forms.Button
 	$buttonUpdateExe.Location = New-Object Drawing.Point(470, 60)
-	$buttonUpdateExe.Text = "Edit EXE"
+	$buttonUpdateExe.Text = "Edit Exe"
 	$buttonUpdateExe.Add_Click({
-		$openFileDialog = New-Object System.Windows.Forms.OpenFileDialog
-		$openFileDialog.Filter = 'Executable (*.exe)|*.exe'
+		$openFileDialog = OpenFileDialog "Select Executable" 'Executable (*.exe)|*.exe'
 		$result = $openFileDialog.ShowDialog()
 		if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
-			# Selected file path is in $openFileDialog.FileName
-			Write-Host "Selected EXE: $($openFileDialog.FileName)"
+			$textExe.Text = (Get-Item $openFileDialog.FileName).Name
 		}
 	})
 	$form.Controls.Add($buttonUpdateExe)
 
-	# Create OK button to save form fields
+	$buttonRemove = New-Object System.Windows.Forms.Button
+	$buttonRemove.Location = New-Object Drawing.Point(470, 100)
+	$buttonRemove.Text = "Delete"
+	$buttonRemove.Add_Click({
+		$GameName = $textName.Text
+		$UserInput = UserConfirmationDialog "Confirm Game Removal" "All Data about '$GameName' will be lost.`r`nAre you sure?"
+		if ($UserInput.ToLower() -eq 'yes')
+		{
+			RemoveGame $GameName
+			ShowMessage "Removed '$GameName' from Database." "OK" "Asterisk"
+			Log "Removed '$GameName' from Database."
+			$form.Close()
+		}
+	})
+	$form.Controls.Add($buttonRemove)
+
 	$buttonOK = New-Object System.Windows.Forms.Button
-	$buttonOK.Location = New-Object Drawing.Point(320, 175)
+	$buttonOK.Location = New-Object Drawing.Point(245, 175)
 	$buttonOK.Text = "OK"
 	$buttonOK.Add_Click({
-		# $formData = @{
-		# 	Name = $textName.Text
-		# 	Platform = $textPlatform.Text
-		# 	PlayTime = $textPlayTime.Text
-		# }
-		# $formData | Out-File -FilePath "ConfigFile.txt"
+
+		$PlayTimeInMin = PlayTimeStringToMin $textPlayTime.Text
+		$GameExeName = $textExe.Text -replace ".exe"
+		
+		UpdateGameOnEdit -GameName $textName.Text -GameExeName $GameExeName -GameIconPath $pictureBoxImagePath.Text -GamePlayTime $PlayTimeInMin -GameCompleteStatus 'FALSE' -GamePlatform $textPlatform.Text
+
 		$form.Close()
 	})
 	$form.Controls.Add($buttonOK)
+
+	$buttonCancel = New-Object System.Windows.Forms.Button
+	$buttonCancel.Location = New-Object Drawing.Point(370, 175)
+	$buttonCancel.Text = "Cancel"
+	$buttonCancel.Add_Click({
+		$form.Close()
+	})
+	$form.Controls.Add($buttonCancel)
 
 	# Show the form
 	$form.ShowDialog()
 
 	# Dispose of the form
 	$form.Dispose()
-
 }

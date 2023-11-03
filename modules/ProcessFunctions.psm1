@@ -31,27 +31,30 @@ function MonitorGame($DetectedExe, $RecordingNotifyIcon) {
 
 	Log "Starting monitoring for $DetectedExe"
 
-	$IsEmulatedGame = $null
-	$EmulatedGameDetails = $null 
+	$EmulatedGameDetails = $null
+	$GameName = $null
+	$EntityFound = $null
+	$UpdatedPlayTime = 0
+	$UpdatedLastPlayDate = (Get-Date -UFormat %s).Split('.').Get(0)
+
 	if (IsExeEmulator($DetectedExe))
 	{
-		$IsEmulatedGame = $true
 		$EmulatedGameDetails = findEmulatedGameDetails $DetectedExe
 		if ($EmulatedGameDetails -eq $false)
 		{
 			Log "Something went wrong. Detected Emulated Game's Name was of 0 char length. Exiting Monitoring Loop. Going back to Detection"
 			return
 		}
-		$RecordingNotifyIcon.Text = ("Tracking {0}" -f $EmulatedGameDetails.Name)
+		$GameName = $EmulatedGameDetails.Name
+		$EntityFound = DoesEntityExists "games" "name" $GameName
 	}
 	else
 	{
 		$DetectedExePattern = SQLEscapedMatchPattern($DetectedExe.Trim())
 		$GetGameNameQuery = "SELECT name FROM games WHERE exe_name LIKE '{0}'" -f $DetectedExePattern
-
 		$GameName = (Invoke-SqliteQuery -Query $GetGameNameQuery -SQLiteConnection $DBConnection).name
-		$RecordingNotifyIcon.Text = "Tracking $GameName"
 	}
+	$RecordingNotifyIcon.Text = "Tracking $GameName"
 
     $CurrentPlayTime = 0
     while(Get-Process $DetectedExe)
@@ -60,12 +63,19 @@ function MonitorGame($DetectedExe, $RecordingNotifyIcon) {
         Start-Sleep -s 10
     }
 
-	if ($IsEmulatedGame)
+	if ($null -ne $EntityFound)
 	{
-		updateEmulatedGame $EmulatedGameDetails $CurrentPlayTime
+		Log "Game Already Exists. Updating PlayTime and Last Played Date"
+		
+		$RecordedGamePlayTime = GetPlayTime $GameName
+		$UpdatedPlayTime = $RecordedGamePlayTime + $CurrentPlayTime
+
+		UpdateGameOnSession -GameName $GameName -GamePlayTime $UpdatedPlayTime -GameLastPlayDate $UpdatedLastPlayDate
 	}
 	else
 	{
-		updateGame $DetectedExe $CurrentPlayTime
+		Log "Game Doesn't Exists. Registerting New Game"
+		SaveGame -GameName $GameName -GameExeName $DetectedExe -$GameIconPath "./icons/default.png" `
+				 -GamePlayTime $UpdatedPlayTime -GameLastPlayDate $UpdatedLastPlayDate -GameCompleteStatus 'FALSE' -GamePlatform $EmulatedGameDetails.Platform
 	}
 }

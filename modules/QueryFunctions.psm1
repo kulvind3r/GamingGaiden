@@ -13,11 +13,21 @@
 function DoesEntityExists($Table, $Column, $EntityName){
     Log "Checking if $EntityName Exists in $Table"
 
-    $ValidateEntityQuery = "SELECT * FROM {0} WHERE {1} LIKE '{2}'" -f $Table, $Column, $EntityName
+	$EntityNamePattern = SQLEscapedMatchPattern($EntityName.Trim())
+    $ValidateEntityQuery = "SELECT * FROM {0} WHERE {1} LIKE '{2}'" -f $Table, $Column, $EntityNamePattern
 
     $EntityFound = (Invoke-SqliteQuery -Query $ValidateEntityQuery -SQLiteConnection $DBConnection)
 
     return $EntityFound
+}
+
+function GetPlayTime($GameName) {
+	$GameNamePattern = SQLEscapedMatchPattern($GameName.Trim())
+	$GetGamePlayTimeQuery = "SELECT play_time FROM games WHERE name LIKE '{0}'" -f $GameNamePattern
+
+	$RecordedGamePlayTime = (Invoke-SqliteQuery -Query $GetGamePlayTimeQuery -SQLiteConnection $DBConnection).play_time
+
+	return $RecordedGamePlayTime
 }
 
 function findEmulatedGame($DetectedEmulatorExe, $EmulatorCommandLine){
@@ -40,7 +50,7 @@ function findEmulatedGame($DetectedEmulatorExe, $EmulatorCommandLine){
 
 	$EmulatedGame = [regex]::Replace($RomName, '\([^)]*\)', "")
 
-	return $EmulatedGame
+	return $EmulatedGame.Trim()
 }
 
 function findEmulatedGameCore($DetectedEmulatorExe, $EmulatorCommandLine) {

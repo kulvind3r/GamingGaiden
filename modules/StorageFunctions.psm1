@@ -1,16 +1,18 @@
-function RegisterEmulatedGame(){
+function SaveGame(){
     param(
         [string]$GameName,
         [string]$GameExeName,
-        [string]$GamePlayTime,
+		[string]$GameIconPath,
+		[string]$GamePlayTime,
         [string]$GameLastPlayDate,
+        [string]$GameCompleteStatus,
         [string]$GamePlatform
     )
 
-    $GameIconBytes = (Get-Content -Path ".\icons\default.png" -Encoding byte -Raw);
+    $GameIconBytes = (Get-Content -Path $GameIconPath -Encoding byte -Raw);
 
     $RegisterGameQuery = "INSERT INTO GAMES (name, exe_name, icon, play_time, last_play_date, completed, platform)" +
-						"VALUES (@GameName, @GameExeName, @GameIconBytes, @GamePlayTime, @GameLastPlayDate, 'FALSE', @GamePlatform)"
+						"VALUES (@GameName, @GameExeName, @GameIconBytes, @GamePlayTime, @GameLastPlayDate, @GameCompleteStatus, @GamePlatform)"
 
 	Log "Registering $GameName in Database"
     Invoke-SqliteQuery -Query $RegisterGameQuery -SQLiteConnection $DBConnection -SqlParameters @{
@@ -19,59 +21,88 @@ function RegisterEmulatedGame(){
 		GameIconBytes = $GameIconBytes
         GamePlayTime = $GamePlayTime
         GameLastPlayDate = $GameLastPlayDate
+        GameCompleteStatus = $GameCompleteStatus
         GamePlatform = $GamePlatform.Trim()
     }
 }
 
-function updateEmulatedGame($EmulatedGameDetails, $CurrentPlayTime) {
-	
-	$UpdatedLastPlayDate = (Get-Date -UFormat %s).Split('.').Get(0)
-	$GameName = $EmulatedGameDetails.Name
+function SavePlatform(){
+
+    param(
+        [string]$PlatformName,
+        [string]$EmulatorExeName,
+		[string]$CoreName,
+		[string]$RomExtensions
+    )
+
+    $RegisterEmulatedPlatformQuery = "INSERT INTO Emulated_Platforms (name, exe_name, core, rom_extensions)" +
+                                    "VALUES (@PlatformName, @EmulatorExeName, @CoreName, @RomExtensions)"
+
+    Log "Registering $PlatformName in Database"
+    Invoke-SqliteQuery -Query $RegisterEmulatedPlatformQuery -SQLiteConnection $DBConnection -SqlParameters @{
+        PlatformName = $PlatformName.Trim()
+        EmulatorExeName = $EmulatorExeName.Trim()
+        CoreName = $CoreName.Trim()
+        RomExtensions = $RomExtensions.Trim()
+    }
+}
+
+function UpdateGameOnSession() {
+	param(
+        [string]$GameName,
+        [string]$GamePlayTime,
+        [string]$GameLastPlayDate
+    )
 
 	$GameNamePattern = SQLEscapedMatchPattern($GameName.Trim())
 
-	$GetEmulatedGameDetailsQuery = "SELECT COUNT(*) as '' FROM games WHERE name LIKE '{0}'" -f $GameNamePattern
-	$GamesFound = (Invoke-SqliteQuery -Query $GetEmulatedGameDetailsQuery -SQLiteConnection $DBConnection).Column1
+	$UpdateGamePlayTimeQuery = "UPDATE games SET play_time = @UpdatedPlayTime, last_play_date = @UpdatedLastPlayDate WHERE name LIKE '{0}'" -f $GameNamePattern
 
-	if ($GamesFound -gt 0){
-		Log "$GameName is already registered. Updating Play Time and Last Played Date"
-		
-		$GetGamePlayTimeQuery = "SELECT play_time FROM games WHERE name LIKE '{0}'" -f $GameNamePattern
-    	$RecordedGamePlayTime = (Invoke-SqliteQuery -Query $GetGamePlayTimeQuery -SQLiteConnection $DBConnection).play_time
-
-    	$UpdatedPlayTime = $RecordedGamePlayTime + $CurrentPlayTime
-
-		$UpdateGamePlayTimeQuery = "UPDATE games SET play_time = @UpdatedPlayTime, last_play_date = @UpdatedLastPlayDate WHERE name LIKE '{0}'" -f $GameNamePattern
-
-		Invoke-SqliteQuery -Query $UpdateGamePlayTimeQuery -SQLiteConnection $DBConnection -SqlParameters @{ 
-			UpdatedPlayTime = $UpdatedPlayTime
-			UpdatedLastPlayDate = $UpdatedLastPlayDate
-		}		
+    Log "Updating $GameName Playtime to $GamePlayTime in Database"
+	Invoke-SqliteQuery -Query $UpdateGamePlayTimeQuery -SQLiteConnection $DBConnection -SqlParameters @{ 
+		UpdatedPlayTime = $GamePlayTime
+		UpdatedLastPlayDate = $GameLastPlayDate
 	}
-	else
-	{
-		Log "$GameName not found. Registering"
-		RegisterEmulatedGame -GameName $GameName -GameExeName $EmulatedGameDetails.Exe `
-							-GamePlayTime $CurrentPlayTime -GameLastPlayDate $UpdatedLastPlayDate -GamePlatform $EmulatedGameDetails.Platform
-	}
-
 }
 
-function updateGame($DetectedExe, $CurrentPlayTime) {
-	$DetectedExePattern = SQLEscapedMatchPattern($DetectedExe.Trim())
-	$GetGamePlayTimeQuery = "SELECT play_time FROM games WHERE exe_name LIKE '{0}'" -f $DetectedExePattern
+function UpdateGameOnEdit() {
+    param(
+        [string]$GameName,
+        [string]$GameExeName,
+		[string]$GameIconPath,
+		[string]$GamePlayTime,
+        [string]$GameCompleteStatus,
+        [string]$GamePlatform
+    )
 
-    $RecordedGamePlayTime = (Invoke-SqliteQuery -Query $GetGamePlayTimeQuery -SQLiteConnection $DBConnection).play_time
+    $GameIconBytes = (Get-Content -Path $GameIconPath -Encoding byte -Raw);
 
-	Log "Found Recorded Play Time of $RecordedGamePlayTime minutes for $DetectedExe Exe. Adding $CurrentPlayTime minutes of current session"
+	$GameNamePattern = SQLEscapedMatchPattern($GameName.Trim())
 
-    $UpdatedPlayTime = $RecordedGamePlayTime + $CurrentPlayTime
-	$UpdatedLastPlayDate = (Get-Date -UFormat %s).Split('.').Get(0)
+	$UpdateGamePlayTimeQuery = "UPDATE games SET exe_name = @GameExeName, icon = @GameIconBytes, play_time = @GamePlayTime, completed = @GameCompleteStatus, platform = @GamePlatform WHERE name LIKE '{0}'" -f $GameNamePattern
 
-    $UpdateGamePlayTimeQuery = "UPDATE games SET play_time = @UpdatedPlayTime, last_play_date = @UpdatedLastPlayDate WHERE exe_name LIKE '{0}'" -f $DetectedExe
-
-    Invoke-SqliteQuery -Query $UpdateGamePlayTimeQuery -SQLiteConnection $DBConnection -SqlParameters @{ 
-		UpdatedPlayTime = $UpdatedPlayTime
-		UpdatedLastPlayDate = $UpdatedLastPlayDate
+    Log "Editing $GameName in Database"
+	Invoke-SqliteQuery -Query $UpdateGamePlayTimeQuery -SQLiteConnection $DBConnection -SqlParameters @{
+        GameExeName = $GameExeName.Trim()
+		GameIconBytes = $GameIconBytes
+        GamePlayTime = $GamePlayTime
+        GameCompleteStatus = $GameCompleteStatus
+        GamePlatform = $GamePlatform.Trim()
 	}
+}
+
+function RemoveGame($GameName) {
+    $GameNamePattern = SQLEscapedMatchPattern($GameName.Trim())
+    $RemoveGameQuery = "DELETE FROM games WHERE name LIKE '{0}'" -f $GameNamePattern
+
+    Log "Removing $GameName from Database"
+    Invoke-SqliteQuery -Query $RemoveGameQuery -SQLiteConnection $DBConnection
+}
+
+function RemovePlatform($PlatformName) {
+    $PlatformNamePattern = SQLEscapedMatchPattern($PlatformName.Trim())
+    $RemovePlatformQuery = "DELETE FROM emulated_platforms WHERE name LIKE '{0}'" -f $PlatformNamePattern
+
+    Log "Removing $PlatformName from Database"
+    Invoke-SqliteQuery -Query $RemovePlatformQuery -SQLiteConnection $DBConnection
 }

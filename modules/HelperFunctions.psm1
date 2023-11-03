@@ -13,19 +13,6 @@ function CleanupTempFiles(){
 	Remove-Item -Force "$env:TEMP\GG-*.png"
 }
 
-function countdown($seconds = 2) {
-    1..$seconds | ForEach-Object {
-        $remainingSeconds = ($seconds+1) - $_
-        Write-Host "`r$remainingSeconds" -NoNewline -ForegroundColor Red
-        Start-Sleep -Seconds 1
-    }
-    Write-Host "`r" -NoNewline
-}
-
-function user_prompt($msg) {
-    Write-Host $msg -ForegroundColor Green
-}
-
 function SQLEscapedMatchPattern($pattern) {
 	return $pattern -replace "'", "''"
 }
@@ -38,6 +25,19 @@ function PlayTimeMinsToString($PlayTime) {
 	$Minutes = $null; $Hours = [math]::divrem($PlayTime, 60, [ref]$Minutes);
 
 	return ("{0} Hr {1} Min" -f $Hours, $Minutes)
+}
+
+function PlayTimeStringToMin($PlayTime) {
+	if ( -Not ($PlayTime -match '^[0-9]{0,5} Hr [0-5][0-9] Min$') ) {
+        ShowMessage "Incorrect Playtime Format. Enter exactly 'x Hr y Min'." "OK" "Error"
+        Log "Incorrect Playtime format entered. Exiting"
+        exit 1
+    }
+
+	$Hours = $PlayTime.Split(" ")[0]
+	$Minutes = $PlayTime.Split(" ")[2]
+
+	return ([int]$Hours * 60) + [int]$Minutes
 }
 
 function BytesToBitmap($ImageBytes) {

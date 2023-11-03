@@ -19,26 +19,27 @@ function RegisterGame {
         return
     }
     
-    $GameExeFile = FileBrowserDialog "Select Game Executable File" 'Executable (*.exe)|*.exe'
+    $GameExeFile = ""
+    $openFileDialog = OpenFileDialog "Select Game Executable" 'Executable (*.exe)|*.exe'
+    $result = $openFileDialog.ShowDialog()
+    if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
+        $GameExeFile = Get-Item $openFileDialog.FileName
+    }
+    else {
+        ShowMessage "Game Reigstration Cancelled" "Ok" "Asterisk"
+        Log "Game Reigstration Cancelled"
+        exit 1
+    }
     $GameExeName = $GameExeFile.BaseName
-
+    $IconFileName = ToBase64 $GameName
+    $GameIconPath="$env:TEMP\GG-{0}-$IconFileName.png" -f $(Get-Random)
     $GameIcon = [System.Drawing.Icon]::ExtractAssociatedIcon($GameExeFile)
-    $GameIcon.ToBitmap().save("$env:TEMP\icon.bmp")
-    $GameIconBytes = (Get-Content -Path "$env:TEMP\icon.bmp" -Encoding byte -Raw);
+    $GameIcon.ToBitmap().save($GameIconPath)
     
     $GameLastPlayDate = (Get-Date -UFormat %s).Split('.').Get(0)
 
-    $RegisterGameQuery = "INSERT INTO GAMES (name, exe_name, icon, play_time, last_play_date, completed, platform)" +
-						"VALUES (@GameName, @GameExeName, @GameIconBytes, 0, @GameLastPlayDate, 'FALSE', 'PC')"
-
-	Log "Registering $GameExeName in Database"
-    Invoke-SqliteQuery -Query $RegisterGameQuery -SQLiteConnection $DBConnection -SqlParameters @{
-        GameName = $GameName.Trim()
-        GameExeName = $GameExeName.Trim()
-        GameIconBytes = $GameIconBytes
-        GameLastPlayDate = $GameLastPlayDate
-    }
-    Remove-Item "$env:TEMP\icon.bmp";
+    SaveGame -GameName $GameName -GameExeName $GameExeName -GameIconPath $GameIconPath `
+				-GamePlayTime 0 -GameLastPlayDate $GameLastPlayDate -GameCompleteStatus 'FALSE' -GamePlatform 'PC'
 
     ShowMessage "Game Successfully Registered" "OK" "Asterisk"
 }
@@ -57,124 +58,39 @@ function RegisterEmulatedPlatform {
         return
     }
 
-    $EmulatorExeFile = FileBrowserDialog "Select Emulator Executable" 'Executable (*.exe)|*.exe'
-    $EmulatorExeName = $EmulatorExeFile.BaseName
+    $EmulatorExeName = ""
+    $openFileDialog = OpenFileDialog "Select Emulator Executable" 'Executable (*.exe)|*.exe'
+    $result = $openFileDialog.ShowDialog()
+    if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
+        $EmulatorExeName = (Get-Item $openFileDialog.FileName).BaseName
+    }
+    else {
+        ShowMessage "Emulator Reigstration Cancelled" "Ok" "Asterisk"
+        Log "Emulator Reigstration Cancelled"
+        exit 1
+    }
 
     $CoreName = ""
     if ($EmulatorExeName.ToLower() -eq "retroarch")
     {
         ShowMessage "Retroarch detected. Please Select Core for Platform." "OK" "Asterisk"
-        $CoreFile = FileBrowserDialog "Select Retroarch Core" 'DLL (*.dll)|*.dll'
-        $CoreName = $CoreFile.Name
+        $openFileDialog = OpenFileDialog "Select Retroarch Core" 'DLL (*.dll)|*.dll'
+        $result = $openFileDialog.ShowDialog()
+        if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
+            $CoreName = (Get-Item $openFileDialog.FileName).Name
+        }
+        else {
+            ShowMessage "Emulator Reigstration Cancelled" "Ok" "Asterisk"
+            Log "Emulator Reigstration Cancelled"
+            exit 1
+        }
     }
 
     $RomExtensions = UserInputDialog "Rom Extensions" "Enter all rom file extensions for Platform: zip,chd,iso..."
+
+    SavePlatform -PlatformName $PlatformName -EmulatorExeName $EmulatorExeName -CoreName $CoreName -RomExtensions $RomExtensions
     
-    $RegisterEmulatedPlatformQuery = "INSERT INTO Emulated_Platforms (name, exe_name, core, rom_extensions)" +
-						"VALUES (@PlatformName, @EmulatorExeName, @CoreName, @RomExtensions)"
-
-    Log "Registering $PlatformName in Database"
-    Invoke-SqliteQuery -Query $RegisterEmulatedPlatformQuery -SQLiteConnection $DBConnection -SqlParameters @{
-        PlatformName = $PlatformName.Trim()
-        EmulatorExeName = $EmulatorExeName.Trim()
-        CoreName = $CoreName.Trim()
-        RomExtensions = $RomExtensions.Trim()
-    }
-
     ShowMessage "Platform Successfully Registered" "OK" "Asterisk"
-}
-
-function UpdateGameIcon {
-    
-    Log "Starting Game Icon Update"
-
-    $GamesList = (Invoke-SqliteQuery -Query "SELECT name FROM games" -SQLiteConnection $DBConnection).name
-    $SelectedGame = RenderListBoxForm "Select a Game" $GamesList
-    
-    $GameIconFile = FileBrowserDialog "Select Game Icon File" 'PNG (*.png)|*.png|JPEG (*.jpg)|*.jpg'
-    $GameIconPath = $GameIconFile.FullName
-    
-    $ResizedImagePath = ResizeImage $GameIconPath $SelectedGame
-    $GameIconBytes = (Get-Content -Path $ResizedImagePath -Encoding byte -Raw);
-    Remove-Item $ResizedImagePath
-
-    $GameNamePattern = SQLEscapedMatchPattern($SelectedGame.Trim())
-
-    $UpdateGameIconQuery = "UPDATE games SET icon = @GameIconBytes WHERE name LIKE '{0}'" -f $GameNamePattern
-
-    Invoke-SqliteQuery -Query $UpdateGameIconQuery -SQLiteConnection $DBConnection -SqlParameters @{ 
-        GameIconBytes = $GameIconBytes
-    }
-    
-    ShowMessage "Icon Successfully Updated." "OK" "Asterisk"
-}
-
-function UpdatePlayTime {
-    Log "Starting PlayTime Update"
-
-    $GamesList = (Invoke-SqliteQuery -Query "SELECT name FROM games" -SQLiteConnection $DBConnection).name
-    $SelectedGame = RenderListBoxForm "Select a Game" $GamesList
-
-    $PlayTimeDelta = UserInputDialog "Input PlayTime" "To Add Playtime enter '+ HH:MM'.`r`nTo Deduct Playtime enter '- HH:MM'"
-    
-    if ( -Not ($PlayTimeDelta -match '^\+ \d\d:\d\d$|^\- \d\d:\d\d$') ) {
-        ShowMessage "Incorrect Playtime Format. Expected '+ HH:MM' or '- HH:MM'. Read Input dialog carefully." "OK" "Error"
-        Log "Incorrect Playtime format entered. Exiting"
-        exit 1
-    }
-
-    $Action = $PlayTimeDelta[0]
-    $Hours = $PlayTimeDelta.Split(" ")[1].Split(":")[0]
-    $Minutes = $PlayTimeDelta.Split(" ")[1].Split(":")[1]
-    $PlayTimeDeltaInMinutes = ([int]$Hours * 60) + [int]$Minutes
-
-    $GameNamePattern = SQLEscapedMatchPattern($SelectedGame.Trim())
-    $GetGamePlayTimeQuery = "SELECT play_time FROM games WHERE name LIKE '{0}'" -f $GameNamePattern
-    $RecordedGamePlayTime = (Invoke-SqliteQuery -Query $GetGamePlayTimeQuery -SQLiteConnection $DBConnection).play_time
-
-    $UpdatedPlayTime = $null
-    switch ($Action) {
-        '-' { $UpdatedPlayTime = $RecordedGamePlayTime - $PlayTimeDeltaInMinutes }
-        '+' { $UpdatedPlayTime = $RecordedGamePlayTime + $PlayTimeDeltaInMinutes }
-    }
-
-    $UpdateGamePlayTimeQuery = "UPDATE games SET play_time = @UpdatedPlayTime WHERE name LIKE '{0}'" -f $GameNamePattern
-
-    Invoke-SqliteQuery -Query $UpdateGamePlayTimeQuery -SQLiteConnection $DBConnection -SqlParameters @{ UpdatedPlayTime = $UpdatedPlayTime }
-
-    ShowMessage "Playtime Updated. " "OK" "Asterisk"
-}
-
-function RemoveGame {
-    Log "Starting Game Removal"
-
-    $GamesList = (Invoke-SqliteQuery -Query "SELECT name FROM games" -SQLiteConnection $DBConnection).name
-    $SelectedGame = RenderListBoxForm "Select a Game" $GamesList
-
-    UserConfirmationDialog "Confirm Game Removal" "All Data about '$SelectedGame' will be lost.`r`nAre you sure?"
-
-    $GameNamePattern = SQLEscapedMatchPattern($SelectedGame.Trim())
-    $RemoveGameQuery = "DELETE FROM games WHERE name LIKE '{0}'" -f $GameNamePattern
-
-    Invoke-SqliteQuery -Query $RemoveGameQuery -SQLiteConnection $DBConnection
-
-    ShowMessage "Removed '$SelectedGame' from Database." "OK" "Asterisk"
-}
-
-function RemovePlatform { 
-    Log "Starting Platform Removal"
-
-    $PlatformsList = (Invoke-SqliteQuery -Query "SELECT name FROM emulated_platforms" -SQLiteConnection $DBConnection).name
-    $SelectedPlatform = RenderListBoxForm "Select a Platform" $PlatformsList
-
-    UserConfirmationDialog "Confirm Platform Removal" "All Data about '$SelectedPlatform' will be lost.`r`nAre you sure?"
-    
-    $PlatformNamePattern = SQLEscapedMatchPattern($SelectedPlatform.Trim())
-    $RemovePlatformQuery = "DELETE FROM emulated_platforms WHERE name LIKE '{0}'" -f $PlatformNamePattern
-
-    Invoke-SqliteQuery -Query $RemovePlatformQuery -SQLiteConnection $DBConnection
-
-    ShowMessage "Removed '$SelectedPlatform' platform from Database." "OK" "Asterisk"
 }
 
 function EditGame {
@@ -196,6 +112,7 @@ try {
     Import-Module -Name ".\modules\HelperFunctions.psm1"
     Import-Module -Name ".\modules\QueryFunctions.psm1"
     Import-Module -Name ".\modules\UIFunctions.psm1"
+    Import-Module -Name ".\modules\StorageFunctions.psm1"
 
     $Database = ".\GamingGaiden.db"
     Log "Connecting to database for configuration"
@@ -205,8 +122,6 @@ try {
         "RegisterGame" { Clear-Host; RegisterGame }
         "RegisterEmulatedPlatform" { Clear-Host; RegisterEmulatedPlatform }
         "EditGame" { Clear-Host; EditGame }
-        "UpdateGameIcon" { Clear-Host; UpdateGameIcon }
-        "UpdatePlayTime" { Clear-Host; UpdatePlayTime }
         "RemoveGame" { Clear-Host; RemoveGame }
         "RemovePlatform" { Clear-Host; RemovePlatform }
     }
