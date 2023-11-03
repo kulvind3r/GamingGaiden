@@ -15,51 +15,6 @@ class Game {
     }
 }
 
-function CreateMenuItem($Text) {
-    $MenuItem = New-Object System.Windows.Forms.ToolStripMenuItem
-    $MenuItem.Text = "$Text"
-    
-    return $MenuItem
-}
-
-function CreateNotifyIcon($ToolTip, $IconPath) {
-	$NotifyIcon = New-Object System.Windows.Forms.NotifyIcon
-	$Icon = [System.Drawing.Icon]::new($IconPath)
-	$NotifyIcon.Text = $ToolTip; 
-	$NotifyIcon.Icon = $Icon;
-
-	return $NotifyIcon
-}
-
-function OpenFileDialog($Title, $Filters) {
-	$FileBrowser = New-Object System.Windows.Forms.OpenFileDialog -Property @{ 
-        InitialDirectory = [Environment]::GetFolderPath('Desktop')
-        Filter = $Filters
-        Title = $Title
-    }
-	return $FileBrowser
-}
-
-function UserInputDialog($Title, $Prompt) {
-	$UserInput = [microsoft.visualbasic.interaction]::InputBox($Prompt,$Title)
-
-	if ($UserInput.Length -eq 0)
-    {
-        ShowMessage "Input cannot be empty. Please try again" "OK" "Error"
-        Log "$Title : Empty input provided or closed abruptly. Exiting."
-        exit 1
-    }
-	return $UserInput.Trim()
-}
-
-function ShowMessage($Msg, $Buttons, $Type){
-	[System.Windows.Forms.MessageBox]::Show($Msg,'Gaming Gaiden', $Buttons, $Type)
-}
-
-function UserConfirmationDialog($Title, $Prompt) {
-	return [microsoft.visualbasic.interaction]::MsgBox($Prompt, "YesNo,Question", $Title).ToString()
-}
-
 function RenderListBoxForm($Prompt, $List) {
 	$form = New-Object System.Windows.Forms.Form
 	$form.Text = "Gaming Gaiden"
@@ -110,7 +65,6 @@ function RenderListBoxForm($Prompt, $List) {
 	
 	return $listBox.SelectedItem
 }
-
 function RenderGameList() {
 
 	$Database = ".\GamingGaiden.db"
