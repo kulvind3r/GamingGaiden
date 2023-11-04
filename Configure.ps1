@@ -57,6 +57,8 @@ try {
         "EditGame" { Clear-Host; EditGame }
         "EditPlatform" { Clear-Host; EditPlatform }
     }
+
+    BackupDatabase
 }
 catch {
     [System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms')    | out-null

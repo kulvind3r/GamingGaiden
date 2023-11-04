@@ -78,4 +78,6 @@ function MonitorGame($DetectedExe, $RecordingNotifyIcon) {
 		SaveGame -GameName $GameName -GameExeName $DetectedExe -$GameIconPath "./icons/default.png" `
 				 -GamePlayTime $UpdatedPlayTime -GameLastPlayDate $UpdatedLastPlayDate -GameCompleteStatus 'FALSE' -GamePlatform $EmulatedGameDetails.Platform
 	}
+
+	BackupDatabase
 }

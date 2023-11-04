@@ -94,3 +94,15 @@ function ShowMessage($Msg, $Buttons, $Type){
 function UserConfirmationDialog($Title, $Prompt) {
 	return [microsoft.visualbasic.interaction]::MsgBox($Prompt, "YesNo,Question", $Title).ToString()
 }
+
+function BackupDatabase {
+	$WorkingDirectory = (Get-Location).Path
+	mkdir -f $WorkingDirectory\backups
+	$Timestamp = Get-Date -f "dd-MM-yyyy-HH.mm.ss"
+	
+	Copy-Item ".\GamingGaiden.db" "$env:TEMP\"
+	Compress-Archive "$env:TEMP\GamingGaiden.db" ".\backups\GamingGaiden-$Timestamp.zip"
+	Remove-Item "$env:TEMP\GamingGaiden.db"
+
+	Get-ChildItem -Path .\backups -File | Sort-Object -Property CreationTime | Select-Object -SkipLast 5 | Remove-Item
+}
