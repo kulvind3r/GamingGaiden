@@ -248,11 +248,17 @@ function RenderEditGameForm($SelectedGame) {
 	$buttonOK.Text = "OK"
 	$buttonOK.Add_Click({
 
+		if($textPlatform.Text -eq "" -Or $textPlayTime.Text -eq "")
+		{
+			ShowMessage "Platform, Playtime fields cannot be empty. Try Again." "OK" "Error"
+			return
+		}
+
 		$GameName = $textName.Text
 		$PlayTimeInMin = PlayTimeStringToMin $textPlayTime.Text
 		if ($null -eq $PlayTimeInMin)
 		{
-			ShowMessage "Incorrect Playtime Format. Enter exactly 'x Hr y Min'." "OK" "Error"
+			ShowMessage "Incorrect Playtime Format. Enter exactly 'x Hr y Min'. Resetting PlayTime" "OK" "Error"
 			$textPlayTime.Text = $PlayTimeString
 			return
 		}
@@ -389,6 +395,13 @@ function RenderEditPlatformForm($SelectedPlatform) {
 	$buttonOK.Text = "OK"
 	$buttonOK.Add_Click({
 
+		if ($textRomExt.Text -eq "")
+		{
+			ShowMessage "Extensions field cannot be empty.`r`nResetting Extensions. Try again." "OK" "Error"
+			$textRomExt.Text = $SelectedPlatform.rom_extensions
+			return
+		}
+
 		$PlatformName = $textName.Text
 		$EmulatorExeName = $textExe.Text -replace ".exe"
 		$EmulatorCore = ""
@@ -494,7 +507,7 @@ function RenderAddGameForm() {
 
 	$buttonUpdateExe = New-Object System.Windows.Forms.Button
 	$buttonUpdateExe.Location = New-Object Drawing.Point(470, 60)
-	$buttonUpdateExe.Text = "Edit Exe"
+	$buttonUpdateExe.Text = "Add Exe"
 	$buttonUpdateExe.Add_Click({
 		$openFileDialog = OpenFileDialog "Select Executable" 'Executable (*.exe)|*.exe'
 		$result = $openFileDialog.ShowDialog()
@@ -530,6 +543,11 @@ function RenderAddGameForm() {
 	$buttonOK.Text = "OK"
 	$buttonOK.Add_Click({
 
+		if ($textExe.Text -eq "" -Or $textName.Text -eq "" )
+		{
+			ShowMessage "Name, Exe fields cannot be empty. Try Again." "OK" "Error"
+			return
+		}
 		$GameName = $textName.Text
 		$GameExeFile = Get-Item $textExe.Text
 		$GameExeName = $GameExeFile.BaseName
@@ -538,7 +556,7 @@ function RenderAddGameForm() {
 
 		SaveGame -GameName $GameName -GameExeName $GameExeName -GameIconPath $GameIconPath `
 	 			-GamePlayTime 0 -GameLastPlayDate $GameLastPlayDate -GameCompleteStatus 'FALSE' -GamePlatform 'PC'
-		ShowMessage "Added '$GameName' in Database." "OK" "Asterisk"
+		ShowMessage "Registered '$GameName' in Database." "OK" "Asterisk"
 
 		$form.Close()
 	})
@@ -546,6 +564,152 @@ function RenderAddGameForm() {
 
 	$buttonCancel = New-Object System.Windows.Forms.Button
 	$buttonCancel.Location = New-Object Drawing.Point(370, 175)
+	$buttonCancel.Text = "Cancel"
+	$buttonCancel.Add_Click({
+		$form.Close()
+	})
+	$form.Controls.Add($buttonCancel)
+
+	# Show the form
+	$form.ShowDialog()
+
+	# Dispose of the form
+	$form.Dispose()
+}
+
+function RenderAddPlatformForm() {
+
+	$form = New-Object System.Windows.Forms.Form
+	$form.Text = "Gameplay Gaiden: Add Emulator"
+	$form.Size = New-Object Drawing.Size(410, 255)
+	$form.StartPosition = 'CenterScreen'
+	$form.FormBorderStyle = 'FixedDialog'
+	$form.Icon = [System.Drawing.Icon]::new(".\icons\running.ico")
+	$form.Topmost = $true
+
+	$labelName = New-Object System.Windows.Forms.Label
+	$labelName.AutoSize = $true
+	$labelName.Location = New-Object Drawing.Point(10, 20)
+	$labelName.Text = "Platorm:"
+	$form.Controls.Add($labelName)
+
+	$textName = New-Object System.Windows.Forms.TextBox
+	$textName.Size = New-Object System.Drawing.Size(200,20)
+	$textName.Location = New-Object Drawing.Point(85, 20)
+	$form.Controls.Add($textName)
+
+	$labelExe = New-Object System.Windows.Forms.Label
+	$labelExe.AutoSize = $true
+	$labelExe.Location = New-Object Drawing.Point(10, 60)
+	$labelExe.Text = "Emulator Exe:"
+	$form.Controls.Add($labelExe)
+
+	$textExe = New-Object System.Windows.Forms.TextBox
+	$textExe.Size = New-Object System.Drawing.Size(200,20)
+	$textExe.Location = New-Object Drawing.Point(85, 60)
+	$textExe.ReadOnly = $true
+	$form.Controls.Add($textExe)
+
+	$labelRomExt = New-Object System.Windows.Forms.Label
+	$labelRomExt.AutoSize = $true
+	$labelRomExt.Location = New-Object Drawing.Point(10, 100)
+	$labelRomExt.Text = "Rom Extns:"
+	$form.Controls.Add($labelRomExt)
+
+	$textRomExt = New-Object System.Windows.Forms.TextBox
+	$textRomExt.Size = New-Object System.Drawing.Size(200,20)
+	$textRomExt.Location = New-Object Drawing.Point(85, 100)
+	$textRomExt.Text = ""
+	$form.Controls.Add($textRomExt)
+	
+	$labelCores = New-Object System.Windows.Forms.Label
+	$labelCores.AutoSize = $true
+	$labelCores.Location = New-Object Drawing.Point(10, 140)
+	$labelCores.Text = "Core:"
+	$labelCores.hide()
+	$form.Controls.Add($labelCores)
+
+	$textCore = New-Object System.Windows.Forms.TextBox
+	$textCore.Size = New-Object System.Drawing.Size(200,20)
+	$textCore.Location = New-Object Drawing.Point(85, 140)
+	$textCore.Text = ""
+	$textCore.ReadOnly = $true
+	$textCore.hide()
+	$form.Controls.Add($textCore)
+
+	$buttonAddCore = New-Object System.Windows.Forms.Button
+	$buttonAddCore.Location = New-Object Drawing.Point(300, 138)
+	$buttonAddCore.Text = "Add Core"
+	$buttonAddCore.hide()
+	$buttonAddCore.Add_Click({
+		$openFileDialog = OpenFileDialog "Select Retroarch Core" 'DLL (*.dll)|*.dll'
+		$result = $openFileDialog.ShowDialog()
+		if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
+			$textCore.Text = (Get-Item $openFileDialog.FileName).Name
+		}
+	})
+	$form.Controls.Add($buttonAddCore)
+
+	$buttonAddExe = New-Object System.Windows.Forms.Button
+	$buttonAddExe.Location = New-Object Drawing.Point(300, 58)
+	$buttonAddExe.Text = "Add Exe"
+	$buttonAddExe.Add_Click({
+		$openFileDialog = OpenFileDialog "Select Executable" 'Executable (*.exe)|*.exe'
+		$result = $openFileDialog.ShowDialog()
+		if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
+			$textExe.Text = $openFileDialog.FileName
+			$ExeName = (Get-Item $textExe.Text).BaseName
+			if ($ExeName.ToLower() -eq "retroarch"){
+				$labelCores.show()
+				$textCore.show()
+				$buttonAddCore.show()
+				ShowMessage "Retroarch detected. Please Select Core for Platform." "OK" "Asterisk"
+			}
+		}
+	})
+	$form.Controls.Add($buttonAddExe)
+
+	$buttonOK = New-Object System.Windows.Forms.Button
+	$buttonOK.Location = New-Object Drawing.Point(85, 175)
+	$buttonOK.Text = "OK"
+	$buttonOK.Add_Click({
+
+		if ($textExe.Text -eq "" -Or $textName.Text -eq "" -Or $textRomExt.Text -eq "")
+		{
+			ShowMessage "Name, Exe and Extensions fields cannot be empty.`r`nTry again." "OK" "Error"
+			return
+		}
+		$EmulatorExeName = (Get-Item $textExe.Text).BaseName
+		if ($EmulatorExeName.ToLower() -eq "retroarch"){
+			if ($textCore.Text -eq "")
+			{
+				ShowMessage "Retroarch detected.`r`nYou must select Core for platform. Try again." "OK" "Error"
+				return
+			}
+		}
+
+		$PlatformName = $textName.Text
+		$EntityFound = DoesEntityExists "emulated_platforms" "name"  $PlatformName
+		if ($null -ne $EntityFound)
+		{
+			ShowMessage "Platform $PlatformName already exists.`r`nUse Edit Platform setting to check existing platforms." "OK" "Error"
+			Log "Platform already exists. returning"
+			return
+		}
+
+		$EmulatorCore = $textCore.Text
+		$PlatformRomExtensions = $textRomExt.Text
+
+		SavePlatform -PlatformName $PlatformName -EmulatorExeName $EmulatorExeName -CoreName $EmulatorCore -RomExtensions $PlatformRomExtensions
+
+		ShowMessage "Registered '$PlatformName' in Database." "OK" "Asterisk"
+
+		$form.Close()
+	})
+	$form.Controls.Add($buttonOK)
+
+	$buttonCancel = New-Object System.Windows.Forms.Button
+	$buttonCancel.Location = New-Object Drawing.Point(210, 175)
 	$buttonCancel.Text = "Cancel"
 	$buttonCancel.Add_Click({
 		$form.Close()

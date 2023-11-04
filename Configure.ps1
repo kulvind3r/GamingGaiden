@@ -11,52 +11,8 @@ function AddGame {
 }
 
 function AddPlatform {
-
     Log "Starting emulated platform registration"
-
-    $PlatformName = UserInputDialog "Add Platform" "Enter Platform Name: NES, Gamecube, Playstation 2 etc"
-
-    $EntityFound = DoesEntityExists "emulated_platforms" "name"  $PlatformName 
-    if ($null -ne $EntityFound)
-    {
-        ShowMessage "Platform already exists" "OK" "Asterisk"
-        Log "Platform already exists. returning"
-        return
-    }
-
-    $EmulatorExeName = ""
-    $openFileDialog = OpenFileDialog "Select Emulator Executable" 'Executable (*.exe)|*.exe'
-    $result = $openFileDialog.ShowDialog()
-    if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
-        $EmulatorExeName = (Get-Item $openFileDialog.FileName).BaseName
-    }
-    else {
-        ShowMessage "Emulator Reigstration Cancelled" "Ok" "Asterisk"
-        Log "Emulator Reigstration Cancelled"
-        exit 1
-    }
-
-    $CoreName = ""
-    if ($EmulatorExeName.ToLower() -eq "retroarch")
-    {
-        ShowMessage "Retroarch detected. Please Select Core for Platform." "OK" "Asterisk"
-        $openFileDialog = OpenFileDialog "Select Retroarch Core" 'DLL (*.dll)|*.dll'
-        $result = $openFileDialog.ShowDialog()
-        if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
-            $CoreName = (Get-Item $openFileDialog.FileName).Name
-        }
-        else {
-            ShowMessage "Emulator Reigstration Cancelled" "Ok" "Asterisk"
-            Log "Emulator Reigstration Cancelled"
-            exit 1
-        }
-    }
-
-    $RomExtensions = UserInputDialog "Rom Extensions" "Enter all rom file extensions for Platform: zip,chd,iso..."
-
-    SavePlatform -PlatformName $PlatformName -EmulatorExeName $EmulatorExeName -CoreName $CoreName -RomExtensions $RomExtensions
-    
-    ShowMessage "Platform Successfully Registered" "OK" "Asterisk"
+    RenderAddPlatformForm
 }
 
 function EditGame {
