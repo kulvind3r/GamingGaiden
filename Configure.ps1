@@ -50,7 +50,9 @@ try {
     $Database = ".\GamingGaiden.db"
     Log "Connecting to database for configuration"
     $DBConnection = New-SQLiteConnection -DataSource $Database
-        
+    
+    $DatabaseFileHashBefore = (Get-FileHash '.\GamingGaiden.db').Hash
+
     switch ($Action) {
         "AddGame" { Clear-Host; AddGame }
         "AddPlatform" { Clear-Host; AddPlatform }
@@ -58,7 +60,11 @@ try {
         "EditPlatform" { Clear-Host; EditPlatform }
     }
 
-    BackupDatabase
+    $DatabaseFileHashAfter = (Get-FileHash '.\GamingGaiden.db').Hash
+
+    if ($DatabaseFileHashAfter -ne $DatabaseFileHashBefore){
+        BackupDatabase
+    }
 }
 catch {
     [System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms')    | out-null

@@ -31,6 +31,8 @@ function MonitorGame($DetectedExe, $RecordingNotifyIcon) {
 
 	Log "Starting monitoring for $DetectedExe"
 
+	$DatabaseFileHashBefore = (Get-FileHash '.\GamingGaiden.db').Hash
+
 	$EmulatedGameDetails = $null
 	$GameName = $null
 	$EntityFound = $null
@@ -79,5 +81,9 @@ function MonitorGame($DetectedExe, $RecordingNotifyIcon) {
 				 -GamePlayTime $UpdatedPlayTime -GameLastPlayDate $UpdatedLastPlayDate -GameCompleteStatus 'FALSE' -GamePlatform $EmulatedGameDetails.Platform
 	}
 
-	BackupDatabase
+	$DatabaseFileHashAfter = (Get-FileHash '.\GamingGaiden.db').Hash
+
+	if ($DatabaseFileHashAfter -ne $DatabaseFileHashBefore){
+        BackupDatabase
+    }
 }
