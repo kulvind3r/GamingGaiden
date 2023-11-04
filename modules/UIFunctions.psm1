@@ -154,6 +154,7 @@ function RenderEditGameForm($SelectedGame) {
 	$textExe.Size = New-Object System.Drawing.Size(200,20)
 	$textExe.Location = New-Object Drawing.Point(245, 60)
 	$textExe.Text = ($SelectedGame.exe_name + ".exe")
+	$textExe.ReadOnly = $true
 	$form.Controls.Add($textExe)
 
 	$labelPlatform = New-Object System.Windows.Forms.Label
@@ -307,6 +308,7 @@ function RenderEditPlatformForm($SelectedPlatform) {
 	$textExe.Size = New-Object System.Drawing.Size(200,20)
 	$textExe.Location = New-Object Drawing.Point(85, 60)
 	$textExe.Text = ($SelectedPlatform.exe_name + ".exe")
+	$textExe.ReadOnly = $true
 	$form.Controls.Add($textExe)
 
 	$labelRomExt = New-Object System.Windows.Forms.Label
@@ -344,6 +346,7 @@ function RenderEditPlatformForm($SelectedPlatform) {
 		$textCore.Size = New-Object System.Drawing.Size(200,20)
 		$textCore.Location = New-Object Drawing.Point(85, 140)
 		$textCore.Text = $SelectedPlatform.core
+		$textCore.ReadOnly = $true
 		$form.Controls.Add($textCore)
 
 		$buttonUpdateCore = New-Object System.Windows.Forms.Button
