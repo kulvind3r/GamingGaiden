@@ -87,18 +87,6 @@ function OpenFileDialog($Title, $Filters) {
 	return $FileBrowser
 }
 
-function UserInputDialog($Title, $Prompt) {
-	$UserInput = [microsoft.visualbasic.interaction]::InputBox($Prompt,$Title)
-
-	if ($UserInput.Length -eq 0)
-    {
-        ShowMessage "Input cannot be empty. Please try again" "OK" "Error"
-        Log "$Title : Empty input provided or closed abruptly. Exiting."
-        exit 1
-    }
-	return $UserInput.Trim()
-}
-
 function ShowMessage($Msg, $Buttons, $Type){
 	[System.Windows.Forms.MessageBox]::Show($Msg,'Gaming Gaiden', $Buttons, $Type)
 }
