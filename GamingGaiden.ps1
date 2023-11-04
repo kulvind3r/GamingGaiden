@@ -58,6 +58,7 @@ try {
 		Start-ThreadJob -InitializationScript $TrackerJobInitializationScript -ScriptBlock $TrackerJobScript -Name "TrackerJob"
 		$StopTrackerMenuItem.Enabled = $true
 		$StartTrackerMenuItem.Enabled = $false
+		$AppNotifyIcon.Icon = $IconRunning
 		Log "Started Tracker"
 	}
 
@@ -65,6 +66,7 @@ try {
 		Stop-Job "TrackerJob" -ErrorAction silentlycontinue
 		$StopTrackerMenuItem.Enabled = $false
 		$StartTrackerMenuItem.Enabled = $true
+		$AppNotifyIcon.Icon = $IconStopped
 		Log "Stopped Tracker"
 	}
 
@@ -79,6 +81,9 @@ try {
 
 	#------------------------------------------
 	# Setup Tray Icon
+	$IconRunning = [System.Drawing.Icon]::new(".\icons\running.ico")
+	$IconStopped = [System.Drawing.Icon]::new(".\icons\stopped.ico")
+
 	$AppNotifyIcon = CreateNotifyIcon "Gaming Gaiden" ".\icons\running.ico"
 	$AppNotifyIcon.Visible = $true
 
