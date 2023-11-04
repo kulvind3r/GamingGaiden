@@ -29,9 +29,8 @@ function PlayTimeMinsToString($PlayTime) {
 
 function PlayTimeStringToMin($PlayTime) {
 	if ( -Not ($PlayTime -match '^[0-9]{0,5} Hr [0-5][0-9] Min$') ) {
-        ShowMessage "Incorrect Playtime Format. Enter exactly 'x Hr y Min'." "OK" "Error"
-        Log "Incorrect Playtime format entered. Exiting"
-        exit 1
+        Log "Incorrect Playtime format entered. Returning null"
+        return $null
     }
 
 	$Hours = $PlayTime.Split(" ")[0]

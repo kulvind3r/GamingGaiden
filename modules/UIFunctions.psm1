@@ -189,16 +189,17 @@ function RenderEditGameForm($SelectedGame) {
 	$IconBitmap.Save($ImagePath,[System.Drawing.Imaging.ImageFormat]::Png)
 	$IconBitmap.Dispose()
 
+	$pictureBoxImagePath = New-Object System.Windows.Forms.TextBox
+	$pictureBoxImagePath.hide()
+	$pictureBoxImagePath.Text = $ImagePath
+	$form.Controls.Add($pictureBoxImagePath)
+
 	$pictureBox = New-Object Windows.Forms.PictureBox
 	$pictureBox.Location = New-Object Drawing.Point(15, 20)
 	$pictureBox.Size = New-Object Drawing.Size(140, 140)
 	$pictureBox.SizeMode = [System.Windows.Forms.PictureBoxSizeMode]::CenterImage
 	$pictureBox.Image = [System.Drawing.Image]::FromFile($ImagePath)
 	$form.Controls.Add($pictureBox)
-
-	$pictureBoxImagePath = New-Object System.Windows.Forms.TextBox
-	$pictureBoxImagePath.hide()
-	$form.Controls.Add($pictureBoxImagePath)
 
 	$buttonUpdateIcon = New-Object System.Windows.Forms.Button
 	$buttonUpdateIcon.Location = New-Object Drawing.Point(48, 175)
@@ -249,6 +250,12 @@ function RenderEditGameForm($SelectedGame) {
 
 		$GameName = $textName.Text
 		$PlayTimeInMin = PlayTimeStringToMin $textPlayTime.Text
+		if ($null -eq $PlayTimeInMin)
+		{
+			ShowMessage "Incorrect Playtime Format. Enter exactly 'x Hr y Min'." "OK" "Error"
+			$textPlayTime.Text = $PlayTimeString
+			return
+		}
 		$GameExeName = $textExe.Text -replace ".exe"
 		
 		UpdateGameOnEdit -GameName $GameName -GameExeName $GameExeName -GameIconPath $pictureBoxImagePath.Text -GamePlayTime $PlayTimeInMin -GameCompleteStatus 'FALSE' -GamePlatform $textPlatform.Text
