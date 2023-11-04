@@ -7,3 +7,4 @@ ui/resources/images/*
 ui/index.html
 tasks.json
 backups/*
+release/*
