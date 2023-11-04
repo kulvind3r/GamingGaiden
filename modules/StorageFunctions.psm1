@@ -11,7 +11,7 @@ function SaveGame(){
 
     $GameIconBytes = (Get-Content -Path $GameIconPath -Encoding byte -Raw);
 
-    $AddGameQuery = "INSERT INTO GAMES (name, exe_name, icon, play_time, last_play_date, completed, platform)" +
+    $AddGameQuery = "INSERT INTO games (name, exe_name, icon, play_time, last_play_date, completed, platform)" +
 						"VALUES (@GameName, @GameExeName, @GameIconBytes, @GamePlayTime, @GameLastPlayDate, @GameCompleteStatus, @GamePlatform)"
 
 	Log "Adding $GameName in Database"
@@ -35,7 +35,7 @@ function SavePlatform(){
 		[string]$RomExtensions
     )
 
-    $AddPlatformQuery = "INSERT INTO Emulated_Platforms (name, exe_name, core, rom_extensions)" +
+    $AddPlatformQuery = "INSERT INTO emulated_platforms (name, exe_name, core, rom_extensions)" +
                                     "VALUES (@PlatformName, @EmulatorExeName, @CoreName, @RomExtensions)"
 
     Log "Adding $PlatformName in Database"
