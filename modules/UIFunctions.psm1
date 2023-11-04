@@ -21,6 +21,8 @@ function RenderListBoxForm($Prompt, $List) {
 	$form.Size = New-Object System.Drawing.Size(300,360)
 	$form.StartPosition = 'CenterScreen'
 	$form.FormBorderStyle = 'FixedDialog'
+	$form.Icon = [System.Drawing.Icon]::new(".\icons\running.ico")
+	$form.Topmost = $true
 
 	$okButton = New-Object System.Windows.Forms.Button
 	$okButton.Location = New-Object System.Drawing.Point(60,280)
@@ -53,8 +55,6 @@ function RenderListBoxForm($Prompt, $List) {
 
 	$form.Controls.Add($listBox)
 
-	$form.Topmost = $true
-
 	$result = $form.ShowDialog()
 
 	if ( -Not ($result -eq [System.Windows.Forms.DialogResult]::OK))
@@ -68,6 +68,8 @@ function RenderListBoxForm($Prompt, $List) {
 		ShowMessage "You must select an item to proceed. Try Again." "OK" "Error"
 		exit 1
 	}
+
+	$form.Dispose()
 	
 	return $listBox.SelectedItem
 }
@@ -126,6 +128,8 @@ function RenderEditGameForm($SelectedGame) {
 	$form.Size = New-Object Drawing.Size(580, 255)
 	$form.StartPosition = 'CenterScreen'
 	$form.FormBorderStyle = 'FixedDialog'
+	$form.Icon = [System.Drawing.Icon]::new(".\icons\running.ico")
+	$form.Topmost = $true
 
 	$labelName = New-Object System.Windows.Forms.Label
 	$labelName.AutoSize = $true
@@ -277,6 +281,8 @@ function RenderEditPlatformForm($SelectedPlatform) {
 	$form.Size = New-Object Drawing.Size(410, 255)
 	$form.StartPosition = 'CenterScreen'
 	$form.FormBorderStyle = 'FixedDialog'
+	$form.Icon = [System.Drawing.Icon]::new(".\icons\running.ico")
+	$form.Topmost = $true
 
 	$labelName = New-Object System.Windows.Forms.Label
 	$labelName.AutoSize = $true
