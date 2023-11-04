@@ -6,42 +6,8 @@ param (
 #Requires -Modules PSSQLite
 
 function AddGame {
-    
     Log "Starting Game Registration"
-    
-    $GameName = UserInputDialog "Add Game" "Enter Name for the Game"
-
-    $EntityFound = DoesEntityExists "games" "name" $GameName
-    if ($null -ne $EntityFound)
-    {
-        ShowMessage "Game already exists" "OK" "Asterisk"
-        Log "Game Already Exists. returning"
-        return
-    }
-    
-    $GameExeFile = ""
-    $openFileDialog = OpenFileDialog "Select Game Executable" 'Executable (*.exe)|*.exe'
-    $result = $openFileDialog.ShowDialog()
-    if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
-        $GameExeFile = Get-Item $openFileDialog.FileName
-    }
-    else {
-        ShowMessage "Game Reigstration Cancelled" "Ok" "Asterisk"
-        Log "Game Reigstration Cancelled"
-        exit 1
-    }
-    $GameExeName = $GameExeFile.BaseName
-    $IconFileName = ToBase64 $GameName
-    $GameIconPath="$env:TEMP\GG-{0}-$IconFileName.png" -f $(Get-Random)
-    $GameIcon = [System.Drawing.Icon]::ExtractAssociatedIcon($GameExeFile)
-    $GameIcon.ToBitmap().save($GameIconPath)
-    
-    $GameLastPlayDate = (Get-Date -UFormat %s).Split('.').Get(0)
-
-    SaveGame -GameName $GameName -GameExeName $GameExeName -GameIconPath $GameIconPath `
-				-GamePlayTime 0 -GameLastPlayDate $GameLastPlayDate -GameCompleteStatus 'FALSE' -GamePlatform 'PC'
-
-    ShowMessage "Game Successfully Registered" "OK" "Asterisk"
+    RenderAddGameForm
 }
 
 function AddPlatform {

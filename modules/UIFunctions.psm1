@@ -276,7 +276,6 @@ function RenderEditGameForm($SelectedGame) {
 
 	# Show the form
 	$form.ShowDialog()
-
 	
 	# Dispose of the form
 	$form.Dispose()
@@ -408,6 +407,145 @@ function RenderEditPlatformForm($SelectedPlatform) {
 
 	$buttonCancel = New-Object System.Windows.Forms.Button
 	$buttonCancel.Location = New-Object Drawing.Point(210, 175)
+	$buttonCancel.Text = "Cancel"
+	$buttonCancel.Add_Click({
+		$form.Close()
+	})
+	$form.Controls.Add($buttonCancel)
+
+	# Show the form
+	$form.ShowDialog()
+
+	# Dispose of the form
+	$form.Dispose()
+}
+
+function RenderAddGameForm() {
+
+	$form = New-Object System.Windows.Forms.Form
+	$form.Text = "Gameplay Gaiden: Add Game"
+	$form.Size = New-Object Drawing.Size(580, 255)
+	$form.StartPosition = 'CenterScreen'
+	$form.FormBorderStyle = 'FixedDialog'
+	$form.Icon = [System.Drawing.Icon]::new(".\icons\running.ico")
+	$form.Topmost = $true
+
+	$labelName = New-Object System.Windows.Forms.Label
+	$labelName.AutoSize = $true
+	$labelName.Location = New-Object Drawing.Point(170, 20)
+	$labelName.Text = "Name:"
+	$form.Controls.Add($labelName)
+
+	$textName = New-Object System.Windows.Forms.TextBox
+	$textName.Size = New-Object System.Drawing.Size(300,20)
+	$textName.Location = New-Object Drawing.Point(245, 20)
+	$form.Controls.Add($textName)
+
+	$labelExe = New-Object System.Windows.Forms.Label
+	$labelExe.AutoSize = $true
+	$labelExe.Location = New-Object Drawing.Point(170, 60)
+	$labelExe.Text = "Exe:"
+	$form.Controls.Add($labelExe)
+
+	$textExe = New-Object System.Windows.Forms.TextBox
+	$textExe.Size = New-Object System.Drawing.Size(200,20)
+	$textExe.Location = New-Object Drawing.Point(245, 60)
+	$textExe.ReadOnly = $true
+	$form.Controls.Add($textExe)
+
+	$labelPlatform = New-Object System.Windows.Forms.Label
+	$labelPlatform.AutoSize = $true
+	$labelPlatform.Location = New-Object Drawing.Point(170, 100)
+	$labelPlatform.Text = "Platform:"
+	$form.Controls.Add($labelPlatform)
+
+	$textPlatform = New-Object System.Windows.Forms.TextBox
+	$textPlatform.Size = New-Object System.Drawing.Size(200,20)
+	$textPlatform.Location = New-Object Drawing.Point(245, 100)
+	$textPlatform.Text = 'PC'
+	$textPlatform.ReadOnly = $true
+	$form.Controls.Add($textPlatform)
+
+	$labelPlayTime = New-Object System.Windows.Forms.Label
+	$labelPlayTime.AutoSize = $true
+	$labelPlayTime.Location = New-Object Drawing.Point(170, 140)
+	$labelPlayTime.Text = "PlayTime:"
+	$form.Controls.Add($labelPlayTime)
+
+	$textPlayTime = New-Object System.Windows.Forms.TextBox
+	$textPlayTime.Size = New-Object System.Drawing.Size(200,20)
+	$textPlayTime.Location = New-Object Drawing.Point(245, 140)
+	$textPlayTime.Text = "0 Hr 0 Min"
+	$textPlayTime.ReadOnly = $true
+	$form.Controls.Add($textPlayTime)
+
+	$ImagePath = "./icons/default.png"
+	$pictureBoxImagePath = New-Object System.Windows.Forms.TextBox
+	$pictureBoxImagePath.hide()
+	$pictureBoxImagePath.Text = $ImagePath
+	$form.Controls.Add($pictureBoxImagePath)
+
+	$pictureBox = New-Object Windows.Forms.PictureBox
+	$pictureBox.Location = New-Object Drawing.Point(15, 20)
+	$pictureBox.Size = New-Object Drawing.Size(140, 140)
+	$pictureBox.SizeMode = [System.Windows.Forms.PictureBoxSizeMode]::CenterImage
+	$pictureBox.Image = [System.Drawing.Image]::FromFile($ImagePath)
+	$form.Controls.Add($pictureBox)
+
+	$buttonUpdateExe = New-Object System.Windows.Forms.Button
+	$buttonUpdateExe.Location = New-Object Drawing.Point(470, 60)
+	$buttonUpdateExe.Text = "Edit Exe"
+	$buttonUpdateExe.Add_Click({
+		$openFileDialog = OpenFileDialog "Select Executable" 'Executable (*.exe)|*.exe'
+		$result = $openFileDialog.ShowDialog()
+		if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
+			$textExe.Text = $openFileDialog.FileName
+
+			$GameExeFile = Get-Item $textExe.Text
+			$GameExeName = $GameExeFile.BaseName
+			$textName.Text = $GameExeName
+
+			$EntityFound = DoesEntityExists "games" "exe_name" $GameExeName
+			if ($null -ne $EntityFound)
+			{
+				ShowMessage "Another Game with Executable $GameExeName.exe already exists`r`nSee Games List." "OK" "Asterisk"
+				$textExe.Text = ""
+				Log "Game Already Exists. returning"
+				return
+			}
+
+			$GameIconPath="$env:TEMP\GG-{0}.png" -f $(Get-Random)
+     		$GameIcon = [System.Drawing.Icon]::ExtractAssociatedIcon($GameExeFile)
+     		$GameIcon.ToBitmap().save($GameIconPath)
+		
+			$pictureBoxImagePath.Text = $GameIconPath
+			$pictureBox.Image = [System.Drawing.Image]::FromFile($GameIconPath)
+
+		}
+	})
+	$form.Controls.Add($buttonUpdateExe)
+
+	$buttonOK = New-Object System.Windows.Forms.Button
+	$buttonOK.Location = New-Object Drawing.Point(245, 175)
+	$buttonOK.Text = "OK"
+	$buttonOK.Add_Click({
+
+		$GameName = $textName.Text
+		$GameExeFile = Get-Item $textExe.Text
+		$GameExeName = $GameExeFile.BaseName
+		$GameIconPath = $pictureBoxImagePath.Text
+		$GameLastPlayDate = (Get-Date -UFormat %s).Split('.').Get(0)
+
+		SaveGame -GameName $GameName -GameExeName $GameExeName -GameIconPath $GameIconPath `
+	 			-GamePlayTime 0 -GameLastPlayDate $GameLastPlayDate -GameCompleteStatus 'FALSE' -GamePlatform 'PC'
+		ShowMessage "Added '$GameName' in Database." "OK" "Asterisk"
+
+		$form.Close()
+	})
+	$form.Controls.Add($buttonOK)
+
+	$buttonCancel = New-Object System.Windows.Forms.Button
+	$buttonCancel.Location = New-Object Drawing.Point(370, 175)
 	$buttonCancel.Text = "Cancel"
 	$buttonCancel.Add_Click({
 		$form.Close()
