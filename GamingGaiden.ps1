@@ -91,10 +91,12 @@ try {
 	$RegGameMenuItem = CreateMenuItem "Register Game"
 	$RegPlatformMenuItem = CreateMenuItem "Register Emulator"
 	$EditGameMenuItem = CreateMenuItem "Edit Game"
+	$EditPlatformMenuItem = CreateMenuItem "Edit Platform"
 	
 	$ConfigureSubMenuItem.DropDownItems.Add($RegGameMenuItem)
 	$ConfigureSubMenuItem.DropDownItems.Add($RegPlatformMenuItem)
 	$ConfigureSubMenuItem.DropDownItems.Add($EditGameMenuItem)
+	$ConfigureSubMenuItem.DropDownItems.Add($EditPlatformMenuItem)
 	
 	$AppContextMenu = New-Object System.Windows.Forms.ContextMenuStrip
 	$AppContextMenu.Items.AddRange(@($ShowListMenuItem, $ConfigureSubMenuItem, $StartTrackerMenuItem, $StopTrackerMenuItem,  $ExitMenuItem))
@@ -130,6 +132,8 @@ try {
 	$RegPlatformMenuItem.Add_Click({ ConfigureAction "RegisterEmulatedPlatform"; })
 
 	$EditGameMenuItem.Add_Click({ ConfigureAction "EditGame"; CleanupTempFiles })
+
+	$EditPlatformMenuItem.Add_Click({ ConfigureAction "EditPlatform"; })
 
 	$ExitMenuItem.Add_Click({ $AppNotifyIcon.Visible = $false; Stop-Job -Name "TrackerJob"; [System.Windows.Forms.Application]::Exit(); })
 	#------------------------------------------

@@ -56,15 +56,22 @@ function RenderListBoxForm($Prompt, $List) {
 	$form.Topmost = $true
 
 	$result = $form.ShowDialog()
-	
+
 	if ( -Not ($result -eq [System.Windows.Forms.DialogResult]::OK))
 	{
 		Log "Operation cancelled or closed abruptly. Returning";
         exit 1
 	}
 	
+	if ($null -eq $listBox.SelectedItem)
+	{
+		ShowMessage "You must select an item to proceed. Try Again." "OK" "Error"
+		exit 1
+	}
+	
 	return $listBox.SelectedItem
 }
+
 function RenderGameList() {
 
 	$Database = ".\GamingGaiden.db"
@@ -114,14 +121,12 @@ function RenderGameList() {
 
 function RenderEditGameForm($SelectedGame) {
 
-	# Create a form
 	$form = New-Object System.Windows.Forms.Form
 	$form.Text = "Gameplay Gaiden: Edit Game"
 	$form.Size = New-Object Drawing.Size(580, 255)
 	$form.StartPosition = 'CenterScreen'
 	$form.FormBorderStyle = 'FixedDialog'
 
-	# Create labels and text fields for Name, Platform, and PlayTime
 	$labelName = New-Object System.Windows.Forms.Label
 	$labelName.AutoSize = $true
 	$labelName.Location = New-Object Drawing.Point(170, 20)
@@ -237,10 +242,13 @@ function RenderEditGameForm($SelectedGame) {
 	$buttonOK.Text = "OK"
 	$buttonOK.Add_Click({
 
+		$GameName = $textName.Text
 		$PlayTimeInMin = PlayTimeStringToMin $textPlayTime.Text
 		$GameExeName = $textExe.Text -replace ".exe"
 		
-		UpdateGameOnEdit -GameName $textName.Text -GameExeName $GameExeName -GameIconPath $pictureBoxImagePath.Text -GamePlayTime $PlayTimeInMin -GameCompleteStatus 'FALSE' -GamePlatform $textPlatform.Text
+		UpdateGameOnEdit -GameName $GameName -GameExeName $GameExeName -GameIconPath $pictureBoxImagePath.Text -GamePlayTime $PlayTimeInMin -GameCompleteStatus 'FALSE' -GamePlatform $textPlatform.Text
+
+		ShowMessage "Updated '$GameName' in Database." "OK" "Asterisk"
 
 		$form.Close()
 	})
@@ -248,6 +256,142 @@ function RenderEditGameForm($SelectedGame) {
 
 	$buttonCancel = New-Object System.Windows.Forms.Button
 	$buttonCancel.Location = New-Object Drawing.Point(370, 175)
+	$buttonCancel.Text = "Cancel"
+	$buttonCancel.Add_Click({
+		$form.Close()
+	})
+	$form.Controls.Add($buttonCancel)
+
+	# Show the form
+	$form.ShowDialog()
+
+	
+	# Dispose of the form
+	$form.Dispose()
+}
+
+function RenderEditPlatformForm($SelectedPlatform) {
+
+	$form = New-Object System.Windows.Forms.Form
+	$form.Text = "Gameplay Gaiden: Edit Platform"
+	$form.Size = New-Object Drawing.Size(410, 255)
+	$form.StartPosition = 'CenterScreen'
+	$form.FormBorderStyle = 'FixedDialog'
+
+	$labelName = New-Object System.Windows.Forms.Label
+	$labelName.AutoSize = $true
+	$labelName.Location = New-Object Drawing.Point(10, 20)
+	$labelName.Text = "Name:"
+	$form.Controls.Add($labelName)
+
+	$textName = New-Object System.Windows.Forms.TextBox
+	$textName.Size = New-Object System.Drawing.Size(200,20)
+	$textName.Location = New-Object Drawing.Point(85, 20)
+	$textName.Text = $SelectedPlatform.name
+	$textName.ReadOnly = $true
+	$form.Controls.Add($textName)
+
+	$labelExe = New-Object System.Windows.Forms.Label
+	$labelExe.AutoSize = $true
+	$labelExe.Location = New-Object Drawing.Point(10, 60)
+	$labelExe.Text = "Exe:"
+	$form.Controls.Add($labelExe)
+
+	$textExe = New-Object System.Windows.Forms.TextBox
+	$textExe.Size = New-Object System.Drawing.Size(200,20)
+	$textExe.Location = New-Object Drawing.Point(85, 60)
+	$textExe.Text = ($SelectedPlatform.exe_name + ".exe")
+	$form.Controls.Add($textExe)
+
+	$labelRomExt = New-Object System.Windows.Forms.Label
+	$labelRomExt.AutoSize = $true
+	$labelRomExt.Location = New-Object Drawing.Point(10, 100)
+	$labelRomExt.Text = "Rom Extns:"
+	$form.Controls.Add($labelRomExt)
+
+	$textRomExt = New-Object System.Windows.Forms.TextBox
+	$textRomExt.Size = New-Object System.Drawing.Size(200,20)
+	$textRomExt.Location = New-Object Drawing.Point(85, 100)
+	$textRomExt.Text = $SelectedPlatform.rom_extensions
+	$form.Controls.Add($textRomExt)
+	
+	$buttonUpdateExe = New-Object System.Windows.Forms.Button
+	$buttonUpdateExe.Location = New-Object Drawing.Point(300, 58)
+	$buttonUpdateExe.Text = "Edit Exe"
+	$buttonUpdateExe.Add_Click({
+		$openFileDialog = OpenFileDialog "Select Executable" 'Executable (*.exe)|*.exe'
+		$result = $openFileDialog.ShowDialog()
+		if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
+			$textExe.Text = (Get-Item $openFileDialog.FileName).Name
+		}
+	})
+	$form.Controls.Add($buttonUpdateExe)
+
+	if (-Not $SelectedPlatform.core -eq "") {
+		$labelCores = New-Object System.Windows.Forms.Label
+		$labelCores.AutoSize = $true
+		$labelCores.Location = New-Object Drawing.Point(10, 140)
+		$labelCores.Text = "Cores:"
+		$form.Controls.Add($labelCores)
+
+		$textCore = New-Object System.Windows.Forms.TextBox
+		$textCore.Size = New-Object System.Drawing.Size(200,20)
+		$textCore.Location = New-Object Drawing.Point(85, 140)
+		$textCore.Text = $SelectedPlatform.core
+		$form.Controls.Add($textCore)
+
+		$buttonUpdateCore = New-Object System.Windows.Forms.Button
+		$buttonUpdateCore.Location = New-Object Drawing.Point(300, 138)
+		$buttonUpdateCore.Text = "Edit Core"
+		$buttonUpdateCore.Add_Click({
+			$openFileDialog = OpenFileDialog "Select Retroarch Core" 'DLL (*.dll)|*.dll'
+			$result = $openFileDialog.ShowDialog()
+			if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
+				$textCore.Text = (Get-Item $openFileDialog.FileName).Name
+			}
+		})
+		$form.Controls.Add($buttonUpdateCore)
+	}
+
+	$buttonRemove = New-Object System.Windows.Forms.Button
+	$buttonRemove.Location = New-Object Drawing.Point(300, 18)
+	$buttonRemove.Text = "Delete"
+	$buttonRemove.Add_Click({
+		$PlatformName = $textName.Text
+		$UserInput = UserConfirmationDialog "Confirm Platform Removal" "All Data about '$PlatformName' will be lost.`r`nAre you sure?"
+		if ($UserInput.ToLower() -eq 'yes')
+		{
+			RemovePlatform $PlatformName
+			ShowMessage "Removed '$PlatformName' from Database." "OK" "Asterisk"
+			Log "Removed '$PlatformName' from Database."
+			$form.Close()
+		}
+	})
+	$form.Controls.Add($buttonRemove)
+
+	$buttonOK = New-Object System.Windows.Forms.Button
+	$buttonOK.Location = New-Object Drawing.Point(85, 175)
+	$buttonOK.Text = "OK"
+	$buttonOK.Add_Click({
+
+		$PlatformName = $textName.Text
+		$PlatformExeName = $textExe.Text -replace ".exe"
+		$PlatformCore = ""
+		if (-Not $SelectedPlatform.core -eq "")
+		{
+			$PlatformCore = $textCore.Text
+		}
+		
+		UpdatePlatformOnEdit -PlatformName $PlatformName -PlatformExeName $PlatformExeName -PlatformCore $PlatformCore -PlatformRomExtensions $textRomExt.Text
+
+		ShowMessage "Updated '$PlatformName' in Database." "OK" "Asterisk"
+
+		$form.Close()
+	})
+	$form.Controls.Add($buttonOK)
+
+	$buttonCancel = New-Object System.Windows.Forms.Button
+	$buttonCancel.Location = New-Object Drawing.Point(210, 175)
 	$buttonCancel.Text = "Cancel"
 	$buttonCancel.Add_Click({
 		$form.Close()

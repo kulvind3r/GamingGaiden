@@ -104,6 +104,17 @@ function EditGame {
     RenderEditGameForm $SelectedGameDetails
 }
 
+function EditPlatform {
+    Log "Starting Platform Editing"
+
+    $PlatformsList = (Invoke-SqliteQuery -Query "SELECT name FROM emulated_platforms" -SQLiteConnection $DBConnection).name
+    $SelectedPlatform = RenderListBoxForm "Select a Platform" $PlatformsList
+
+    $SelectedPlatformDetails = findPlatformDetails $SelectedPlatform
+    
+    RenderEditPlatformForm $SelectedPlatformDetails
+}
+
 try {
 
     [System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms')  | out-null
@@ -122,10 +133,8 @@ try {
         "RegisterGame" { Clear-Host; RegisterGame }
         "RegisterEmulatedPlatform" { Clear-Host; RegisterEmulatedPlatform }
         "EditGame" { Clear-Host; EditGame }
-        "RemovePlatform" { Clear-Host; RemovePlatform }
+        "EditPlatform" { Clear-Host; EditPlatform }
     }
-    
-    $DBConnection.Close()
 }
 catch {
     [System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms')    | out-null

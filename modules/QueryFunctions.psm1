@@ -124,3 +124,14 @@ function findGameDetails($Game) {
 
 	return $GameDetails
 }
+
+function findPlatformDetails($Platform) {
+	Log "Finding Details of $Platform"
+
+	$pattern = SQLEscapedMatchPattern $Platform.Trim()
+	$GetPlatformDetailsQuery = "SELECT * FROM emulated_platforms WHERE name LIKE '{0}'" -f $pattern
+
+	$PlatformDetails = Invoke-SqliteQuery -Query $GetPlatformDetailsQuery -SQLiteConnection $DBConnection
+
+	return $PlatformDetails
+}

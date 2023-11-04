@@ -79,15 +79,36 @@ function UpdateGameOnEdit() {
 
 	$GameNamePattern = SQLEscapedMatchPattern($GameName.Trim())
 
-	$UpdateGamePlayTimeQuery = "UPDATE games SET exe_name = @GameExeName, icon = @GameIconBytes, play_time = @GamePlayTime, completed = @GameCompleteStatus, platform = @GamePlatform WHERE name LIKE '{0}'" -f $GameNamePattern
+	$UpdateGameQuery = "UPDATE games SET exe_name = @GameExeName, icon = @GameIconBytes, play_time = @GamePlayTime, completed = @GameCompleteStatus, platform = @GamePlatform WHERE name LIKE '{0}'" -f $GameNamePattern
 
     Log "Editing $GameName in Database"
-	Invoke-SqliteQuery -Query $UpdateGamePlayTimeQuery -SQLiteConnection $DBConnection -SqlParameters @{
+	Invoke-SqliteQuery -Query $UpdateGameQuery -SQLiteConnection $DBConnection -SqlParameters @{
         GameExeName = $GameExeName.Trim()
 		GameIconBytes = $GameIconBytes
         GamePlayTime = $GamePlayTime
         GameCompleteStatus = $GameCompleteStatus
         GamePlatform = $GamePlatform.Trim()
+	}
+}
+
+function  UpdatePlatformOnEdit() {
+
+    param(
+        [string]$PlatformName,
+        [string]$PlatformExeName,
+		[string]$PlatformCore,
+		[string]$PlatformRomExtensions
+    )
+
+	$PlatformNamePattern = SQLEscapedMatchPattern($PlatformName.Trim())
+
+    $UpdatePlatformQuery = "UPDATE emulated_platforms set exe_name = @PlatformExeName, core = @PlatformCore, rom_extensions = @PlatformRomExtensions WHERE name LIKE '{0}'" -f $PlatformNamePattern
+
+    Log "Editing $GameName in Database"
+	Invoke-SqliteQuery -Query $UpdatePlatformQuery -SQLiteConnection $DBConnection -SqlParameters @{
+        PlatformExeName = $PlatformExeName
+		PlatformCore = $PlatformCore
+        PlatformRomExtensions = $PlatformRomExtensions.Trim()
 	}
 }
 
