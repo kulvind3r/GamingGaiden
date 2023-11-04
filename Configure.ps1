@@ -5,11 +5,11 @@ param (
 #Requires -Version 5.1
 #Requires -Modules PSSQLite
 
-function RegisterGame {
+function AddGame {
     
     Log "Starting Game Registration"
     
-    $GameName = UserInputDialog "Register Game" "Enter Name for the Game"
+    $GameName = UserInputDialog "Add Game" "Enter Name for the Game"
 
     $EntityFound = DoesEntityExists "games" "name" $GameName
     if ($null -ne $EntityFound)
@@ -44,11 +44,11 @@ function RegisterGame {
     ShowMessage "Game Successfully Registered" "OK" "Asterisk"
 }
 
-function RegisterEmulatedPlatform {
+function AddPlatform {
 
     Log "Starting emulated platform registration"
 
-    $PlatformName = UserInputDialog "Register Platform" "Enter Platform Name: NES, Gamecube, Playstation 2 etc"
+    $PlatformName = UserInputDialog "Add Platform" "Enter Platform Name: NES, Gamecube, Playstation 2 etc"
 
     $EntityFound = DoesEntityExists "emulated_platforms" "name"  $PlatformName 
     if ($null -ne $EntityFound)
@@ -99,7 +99,7 @@ function EditGame {
     $GamesList = (Invoke-SqliteQuery -Query "SELECT name FROM games" -SQLiteConnection $DBConnection).name
     $SelectedGame = RenderListBoxForm "Select a Game" $GamesList
 
-    $SelectedGameDetails = findGameDetails $SelectedGame
+    $SelectedGameDetails = GetGameDetails $SelectedGame
     
     RenderEditGameForm $SelectedGameDetails
 }
@@ -110,7 +110,7 @@ function EditPlatform {
     $PlatformsList = (Invoke-SqliteQuery -Query "SELECT name FROM emulated_platforms" -SQLiteConnection $DBConnection).name
     $SelectedPlatform = RenderListBoxForm "Select a Platform" $PlatformsList
 
-    $SelectedPlatformDetails = findPlatformDetails $SelectedPlatform
+    $SelectedPlatformDetails = GetPlatformDetails $SelectedPlatform
     
     RenderEditPlatformForm $SelectedPlatformDetails
 }
@@ -130,8 +130,8 @@ try {
     $DBConnection = New-SQLiteConnection -DataSource $Database
         
     switch ($Action) {
-        "RegisterGame" { Clear-Host; RegisterGame }
-        "RegisterEmulatedPlatform" { Clear-Host; RegisterEmulatedPlatform }
+        "AddGame" { Clear-Host; AddGame }
+        "AddPlatform" { Clear-Host; AddPlatform }
         "EditGame" { Clear-Host; EditGame }
         "EditPlatform" { Clear-Host; EditPlatform }
     }

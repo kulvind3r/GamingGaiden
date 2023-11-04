@@ -11,11 +11,11 @@ function SaveGame(){
 
     $GameIconBytes = (Get-Content -Path $GameIconPath -Encoding byte -Raw);
 
-    $RegisterGameQuery = "INSERT INTO GAMES (name, exe_name, icon, play_time, last_play_date, completed, platform)" +
+    $AddGameQuery = "INSERT INTO GAMES (name, exe_name, icon, play_time, last_play_date, completed, platform)" +
 						"VALUES (@GameName, @GameExeName, @GameIconBytes, @GamePlayTime, @GameLastPlayDate, @GameCompleteStatus, @GamePlatform)"
 
-	Log "Registering $GameName in Database"
-    Invoke-SqliteQuery -Query $RegisterGameQuery -SQLiteConnection $DBConnection -SqlParameters @{
+	Log "Adding $GameName in Database"
+    Invoke-SqliteQuery -Query $AddGameQuery -SQLiteConnection $DBConnection -SqlParameters @{
         GameName = $GameName.Trim()
         GameExeName = $GameExeName.Trim()
 		GameIconBytes = $GameIconBytes
@@ -35,11 +35,11 @@ function SavePlatform(){
 		[string]$RomExtensions
     )
 
-    $RegisterEmulatedPlatformQuery = "INSERT INTO Emulated_Platforms (name, exe_name, core, rom_extensions)" +
+    $AddPlatformQuery = "INSERT INTO Emulated_Platforms (name, exe_name, core, rom_extensions)" +
                                     "VALUES (@PlatformName, @EmulatorExeName, @CoreName, @RomExtensions)"
 
-    Log "Registering $PlatformName in Database"
-    Invoke-SqliteQuery -Query $RegisterEmulatedPlatformQuery -SQLiteConnection $DBConnection -SqlParameters @{
+    Log "Adding $PlatformName in Database"
+    Invoke-SqliteQuery -Query $AddPlatformQuery -SQLiteConnection $DBConnection -SqlParameters @{
         PlatformName = $PlatformName.Trim()
         EmulatorExeName = $EmulatorExeName.Trim()
         CoreName = $CoreName.Trim()
@@ -95,19 +95,19 @@ function  UpdatePlatformOnEdit() {
 
     param(
         [string]$PlatformName,
-        [string]$PlatformExeName,
-		[string]$PlatformCore,
+        [string]$EmulatorExeName,
+		[string]$EmulatorCore,
 		[string]$PlatformRomExtensions
     )
 
 	$PlatformNamePattern = SQLEscapedMatchPattern($PlatformName.Trim())
 
-    $UpdatePlatformQuery = "UPDATE emulated_platforms set exe_name = @PlatformExeName, core = @PlatformCore, rom_extensions = @PlatformRomExtensions WHERE name LIKE '{0}'" -f $PlatformNamePattern
+    $UpdatePlatformQuery = "UPDATE emulated_platforms set exe_name = @EmulatorExeName, core = @EmulatorCore, rom_extensions = @PlatformRomExtensions WHERE name LIKE '{0}'" -f $PlatformNamePattern
 
     Log "Editing $GameName in Database"
 	Invoke-SqliteQuery -Query $UpdatePlatformQuery -SQLiteConnection $DBConnection -SqlParameters @{
-        PlatformExeName = $PlatformExeName
-		PlatformCore = $PlatformCore
+        EmulatorExeName = $EmulatorExeName
+		EmulatorCore = $EmulatorCore
         PlatformRomExtensions = $PlatformRomExtensions.Trim()
 	}
 }

@@ -114,7 +114,7 @@ function findEmulatedGameDetails($DetectedEmulatorExe) {
 	return New-Object PSObject -Property @{ Name = $EmulatedGameName; Exe = $DetectedEmulatorExe ; Platform = $EmulatedGamePlatform }
 }
 
-function findGameDetails($Game) {
+function GetGameDetails($Game) {
 	Log "Finding Details of $Game"
 
 	$pattern = SQLEscapedMatchPattern $Game.Trim()
@@ -125,7 +125,7 @@ function findGameDetails($Game) {
 	return $GameDetails
 }
 
-function findPlatformDetails($Platform) {
+function GetPlatformDetails($Platform) {
 	Log "Finding Details of $Platform"
 
 	$pattern = SQLEscapedMatchPattern $Platform.Trim()

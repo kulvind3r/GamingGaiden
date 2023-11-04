@@ -381,14 +381,14 @@ function RenderEditPlatformForm($SelectedPlatform) {
 	$buttonOK.Add_Click({
 
 		$PlatformName = $textName.Text
-		$PlatformExeName = $textExe.Text -replace ".exe"
-		$PlatformCore = ""
+		$EmulatorExeName = $textExe.Text -replace ".exe"
+		$EmulatorCore = ""
 		if (-Not $SelectedPlatform.core -eq "")
 		{
-			$PlatformCore = $textCore.Text
+			$EmulatorCore = $textCore.Text
 		}
 		
-		UpdatePlatformOnEdit -PlatformName $PlatformName -PlatformExeName $PlatformExeName -PlatformCore $PlatformCore -PlatformRomExtensions $textRomExt.Text
+		UpdatePlatformOnEdit -PlatformName $PlatformName -EmulatorExeName $EmulatorExeName -EmulatorCore $EmulatorCore -PlatformRomExtensions $textRomExt.Text
 
 		ShowMessage "Updated '$PlatformName' in Database." "OK" "Asterisk"
 

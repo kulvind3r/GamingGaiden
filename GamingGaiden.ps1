@@ -87,19 +87,19 @@ try {
 	$StartTrackerMenuItem = CreateMenuItem "Start Tracker"
 	$StopTrackerMenuItem = CreateMenuItem "Stop Tracker"
 	
-	$ConfigureSubMenuItem = CreateMenuItem "Configure"
-	$RegGameMenuItem = CreateMenuItem "Register Game"
-	$RegPlatformMenuItem = CreateMenuItem "Register Emulator"
+	$SettingsSubMenuItem = CreateMenuItem "Settings"
+	$AddGameMenuItem = CreateMenuItem "Add Game"
+	$AddPlatformMenuItem = CreateMenuItem "Add Emulator"
 	$EditGameMenuItem = CreateMenuItem "Edit Game"
-	$EditPlatformMenuItem = CreateMenuItem "Edit Platform"
+	$EditPlatformMenuItem = CreateMenuItem "Edit Emulator"
 	
-	$ConfigureSubMenuItem.DropDownItems.Add($RegGameMenuItem)
-	$ConfigureSubMenuItem.DropDownItems.Add($RegPlatformMenuItem)
-	$ConfigureSubMenuItem.DropDownItems.Add($EditGameMenuItem)
-	$ConfigureSubMenuItem.DropDownItems.Add($EditPlatformMenuItem)
+	$SettingsSubMenuItem.DropDownItems.Add($AddGameMenuItem)
+	$SettingsSubMenuItem.DropDownItems.Add($AddPlatformMenuItem)
+	$SettingsSubMenuItem.DropDownItems.Add($EditGameMenuItem)
+	$SettingsSubMenuItem.DropDownItems.Add($EditPlatformMenuItem)
 	
 	$AppContextMenu = New-Object System.Windows.Forms.ContextMenuStrip
-	$AppContextMenu.Items.AddRange(@($ShowListMenuItem, $ConfigureSubMenuItem, $StartTrackerMenuItem, $StopTrackerMenuItem,  $ExitMenuItem))
+	$AppContextMenu.Items.AddRange(@($ShowListMenuItem, $SettingsSubMenuItem, $StartTrackerMenuItem, $StopTrackerMenuItem,  $ExitMenuItem))
 	$AppNotifyIcon.ContextMenuStrip = $AppContextMenu
 	
 	#------------------------------------------
@@ -127,9 +127,9 @@ try {
 		$AppNotifyIcon.ShowBalloonTip(3000, "Gaming Gaiden", "Tracker Stopped.", [System.Windows.Forms.ToolTipIcon]::Info)
 	})
 
-	$RegGameMenuItem.Add_Click({ ConfigureAction "RegisterGame"; CleanupTempFiles })
+	$AddGameMenuItem.Add_Click({ ConfigureAction "AddGame"; CleanupTempFiles })
 
-	$RegPlatformMenuItem.Add_Click({ ConfigureAction "RegisterEmulatedPlatform"; })
+	$AddPlatformMenuItem.Add_Click({ ConfigureAction "AddPlatform"; })
 
 	$EditGameMenuItem.Add_Click({ ConfigureAction "EditGame"; CleanupTempFiles })
 

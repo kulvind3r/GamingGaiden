@@ -2,13 +2,13 @@ function DetectGame() {
 
 	Log "Starting game detection"
 
-    $GetRegisteredGameExeQuery = "SELECT exe_name FROM games WHERE completed LIKE 'FALSE'"
-	$GetRegisteredEmulatorsExeQuery = "SELECT exe_name FROM emulated_platforms"
+    $GetGameExesQuery = "SELECT exe_name FROM games WHERE completed LIKE 'FALSE'"
+	$GetEmulatorExesQuery = "SELECT exe_name FROM emulated_platforms"
 
-    $RegisteredGamesExeList = (Invoke-SqliteQuery -Query $GetRegisteredGameExeQuery -SQLiteConnection $DBConnection).exe_name
-	$RegisteredEmulatorsExeList = (Invoke-SqliteQuery -Query $GetRegisteredEmulatorsExeQuery -SQLiteConnection $DBConnection).exe_name
+    $GameExeList = (Invoke-SqliteQuery -Query $GetGameExesQuery -SQLiteConnection $DBConnection).exe_name
+	$EmulatorExeList = (Invoke-SqliteQuery -Query $GetEmulatorExesQuery -SQLiteConnection $DBConnection).exe_name
 
-	$ExesToDetect = ( $RegisteredEmulatorsExeList + $RegisteredGamesExeList ) | Select-Object -Unique
+	$ExesToDetect = ( $EmulatorExeList + $GameExeList ) | Select-Object -Unique
 	
     $DetectedExe = $null
     do {
@@ -74,7 +74,7 @@ function MonitorGame($DetectedExe, $RecordingNotifyIcon) {
 	}
 	else
 	{
-		Log "Game Doesn't Exists. Registerting New Game"
+		Log "Game Doesn't Exists. Adding New Game"
 		SaveGame -GameName $GameName -GameExeName $DetectedExe -$GameIconPath "./icons/default.png" `
 				 -GamePlayTime $UpdatedPlayTime -GameLastPlayDate $UpdatedLastPlayDate -GameCompleteStatus 'FALSE' -GamePlatform $EmulatedGameDetails.Platform
 	}
