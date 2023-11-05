@@ -71,6 +71,9 @@ if ( $UserChoice.ToLower() -eq 'yes' )
     if ( $ScheduledTaskChoice.ToLower() -eq 'yes' ) {
         CreateScheduledTask
     }
+
+    Write-Host "Installation successful. Enjoy." -ForegroundColor Green
+    Start-Sleep 2
 }
 else
 {
