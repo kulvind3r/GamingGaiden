@@ -2,7 +2,7 @@ mkdir -f .\build\GamingGaiden
 
 Remove-Item .\ui\index.html -ErrorAction SilentlyContinue
 
-Get-ChildItem .\ui\resources\images\ -Exclude default.png | Remove-Item
+Get-ChildItem .\ui\resources\images\ -Exclude default.png, finished.png, playing.png | Remove-Item
 
 $SourceFiles = ".\GamingGaiden.ps1", ".\SetupDatabase.ps1", ".\Configure.ps1", ".\Install.ps1", ".\modules", ".\icons", ".\ui"
 
