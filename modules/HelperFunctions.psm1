@@ -95,6 +95,14 @@ function UserConfirmationDialog($Title, $Prompt) {
 	return [microsoft.visualbasic.interaction]::MsgBox($Prompt, "YesNo,Question", $Title).ToString()
 }
 
+function CalculateFileHash ($FilePath) {
+	$FileName = (Get-Item $FilePath).Name
+	Copy-Item $FilePath "$env:TEMP\$FileName"
+	$FileHash = Get-FileHash "$env:TEMP\$FileName"
+	Remove-Item "$env:TEMP\$FileName"
+	return $FileHash.Hash
+}
+
 function BackupDatabase {
 	$WorkingDirectory = (Get-Location).Path
 	mkdir -f $WorkingDirectory\backups

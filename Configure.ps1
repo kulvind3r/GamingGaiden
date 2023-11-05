@@ -51,7 +51,7 @@ try {
     Log "Connecting to database for configuration"
     $DBConnection = New-SQLiteConnection -DataSource $Database
     
-    $DatabaseFileHashBefore = (Get-FileHash '.\GamingGaiden.db').Hash
+    $DatabaseFileHashBefore = CalculateFileHash '.\GamingGaiden.db'
 
     switch ($Action) {
         "AddGame" { Clear-Host; AddGame }
@@ -60,7 +60,7 @@ try {
         "EditPlatform" { Clear-Host; EditPlatform }
     }
 
-    $DatabaseFileHashAfter = (Get-FileHash '.\GamingGaiden.db').Hash
+    $DatabaseFileHashAfter = CalculateFileHash '.\GamingGaiden.db'
 
     if ($DatabaseFileHashAfter -ne $DatabaseFileHashBefore){
         BackupDatabase
