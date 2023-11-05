@@ -516,8 +516,10 @@ function RenderAddGameForm() {
 
 			$GameExeFile = Get-Item $textExe.Text
 			$GameExeName = $GameExeFile.BaseName
-			$textName.Text = $GameExeName
-
+			if ($textName.Text -eq "") {
+				$textName.Text = $GameExeName
+			}
+			
 			$EntityFound = DoesEntityExists "games" "exe_name" $GameExeName
 			if ($null -ne $EntityFound)
 			{
