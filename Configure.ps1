@@ -19,6 +19,12 @@ function EditGame {
     Log "Starting Game Editing"
 
     $GamesList = (Invoke-SqliteQuery -Query "SELECT name FROM games" -SQLiteConnection $DBConnection).name
+    if ($GamesList.Length -eq 0){
+        ShowMessage "No Games found in DB. Please add few games first." "Ok" "Error"
+        Log "Games list is empty. Returning"
+        return
+    }
+    
     $SelectedGame = RenderListBoxForm "Select a Game" $GamesList
 
     $SelectedGameDetails = GetGameDetails $SelectedGame
@@ -29,7 +35,13 @@ function EditGame {
 function EditPlatform {
     Log "Starting Platform Editing"
 
-    $PlatformsList = (Invoke-SqliteQuery -Query "SELECT name FROM emulated_platforms" -SQLiteConnection $DBConnection).name
+    $PlatformsList = (Invoke-SqliteQuery -Query "SELECT name FROM emulated_platforms" -SQLiteConnection $DBConnection).name 
+    if ($PlatformsList.Length -eq 0){
+        ShowMessage "No Platforms found in DB. Please add few emulators first." "Ok" "Error"
+        Log "Platforms list is empty. Returning"
+        return
+    }
+
     $SelectedPlatform = RenderListBoxForm "Select a Platform" $PlatformsList
 
     $SelectedPlatformDetails = GetPlatformDetails $SelectedPlatform
