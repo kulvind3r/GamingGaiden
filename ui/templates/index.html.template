@@ -32,7 +32,7 @@
                 }
             },
             {
-                "targets": 4,
+                "targets": 5,
                 render: function (data, type, row, meta) {
                   if (type === "display") {
                     var utcSeconds = parseInt(data);
@@ -44,10 +44,10 @@
                 }
             }
           ],
-          order: [[4, 'desc']],
+          order: [[5, 'desc']],
           "ordering": true,
           "paging": "numbers",
-          "pageLength": 9,
+          "pageLength": 8,
           "lengthChange": false,
           "searching": true
         });

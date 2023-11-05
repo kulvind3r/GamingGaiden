@@ -3,14 +3,16 @@ class Game {
     [ValidateNotNullOrEmpty()][string]$Name
 	[ValidateNotNullOrEmpty()][string]$Platform
     [ValidateNotNullOrEmpty()][string]$Playtime
+	[ValidateNotNullOrEmpty()][string]$Completed
     [ValidateNotNullOrEmpty()][string]$Last_Played_On
 	
 
-    Game($IconUri, $Name, $Platform, $Playtime, $LastPlayDate) {
+    Game($IconUri, $Name, $Platform, $Playtime, $Completed, $LastPlayDate) {
        $this.Icon = $IconUri
 	   $this.Name = $Name
 	   $this.Platform = $Platform
        $this.Playtime = $Playtime
+	   $this.Completed = $Completed
 	   $this.Last_Played_On = $LastPlayDate
     }
 }
@@ -83,7 +85,7 @@ function RenderGameList() {
 	$WorkingDirectory = (Get-Location).Path
 	mkdir -f $WorkingDirectory\ui\resources\images
 	
-	$GetAllGamesQuery = "SELECT name, icon, platform, play_time, last_play_date FROM games"
+	$GetAllGamesQuery = "SELECT name, icon, platform, play_time, completed, last_play_date FROM games"
 	
 	$GameRecords = (Invoke-SqliteQuery -Query $GetAllGamesQuery -SQLiteConnection $DBConnection)
 	
@@ -100,8 +102,14 @@ function RenderGameList() {
 			$IconBitmap.Save("$WorkingDirectory\ui\resources\images\$ImageFileName.png",[System.Drawing.Imaging.ImageFormat]::Png)
 			$IconUri = "<img src=`".\resources\images\$ImageFileName.png`">"
 		}
+
+		$StatusUri = "<div>Finished</div><img src=`".\resources\images\finished.png`">"
+		if ($GameRecord.completed -eq 'FALSE')
+		{
+			$StatusUri = "<div>Playing</div><img src=`".\resources\images\playing.png`">"
+		}
 		
-		$CurrentGame = [Game]::new($IconUri, $Name, $GameRecord.platform, $GameRecord.play_time, $GameRecord.last_play_date)
+		$CurrentGame = [Game]::new($IconUri, $Name, $GameRecord.platform, $GameRecord.play_time, $StatusUri, $GameRecord.last_play_date)
 
 		$Games += $CurrentGame
 		$TotalPlayTime += $GameRecord.play_time
@@ -113,6 +121,7 @@ function RenderGameList() {
 	
 	$report = (Get-Content $WorkingDirectory\ui\templates\index.html.template) -replace "_GAMESTABLE_", $Table
 	$report = $report -replace "Last_Played_On", "Last Played On"
+	$report = $report -replace "Completed", "Status"
 	$report = $report -replace "_TOTALGAMECOUNT_", $Games.length
 	$report = $report -replace "_TOTALPLAYTIME_", $TotalPlayTimeString
 	

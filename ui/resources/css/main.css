@@ -9,8 +9,25 @@ table {
   border: 1px solid #333;
 }
 
+/* Style alternate table rows with background color */
+tr:nth-child(even) {
+  background-color: #bccad6 !important;
+}
+
+/* Add hover effect on table rows */
+tr:hover {
+  background-color: #555 !important;
+}
+
+/* Set cell borders */
 td {
   border: 1px solid #333;
+}
+
+/* set style for cells with images */
+td img {
+  max-width: 100%; /* Limit any image width to the cell's width */
+  max-height: 100%; /* Limit any image height to the cell's height */
 }
 
 /* Style the table headers (th) */
@@ -20,6 +37,34 @@ th {
   font-weight: bold;
   text-align: center !important;
   padding: 10px;
+}
+
+/* hide the text in the first column header */
+th:first-child {
+  color: #333;
+}
+
+/* Define specific styles for the Icon column */
+td:first-child {
+  width: 50px;
+  text-align: center;
+}
+
+/* Define specific styles for the Status column */
+td:nth-child(5) {
+  width: 50px;
+  text-align: center;
+  font-size: 13px;
+}
+
+td:nth-child(5) img {
+  max-width: 70%;
+}
+
+/* Define specific styles for the Name column */
+td:nth-child(2) {
+  font-weight: bold;
+  text-transform: uppercase;
 }
 
 #DataTables_Table_0_filter {
@@ -59,41 +104,4 @@ th {
 
 #DataTables_Table_0_paginate .disabled {
   color: #667292 !important;
-}
-
-/* hide the text in the first colum header */
-th:first-child {
-  color: #333;
-}
-
-/* Limit heights of rows with data cells to 50px */
-tr td {
-  height: 50px
-}
-
-/* Style alternate table rows with background color */
-tr:nth-child(even) {
-  background-color: #bccad6 !important;
-}
-
-td img {
-  max-width: 100%; /* Limit image width to the cell's width */
-  max-height: 100%; /* Limit image height to the cell's height */
-}
-
-/* Define specific styles for the first column (Icon) */
-td:first-child {
-  width: 50px;
-  text-align: center;
-}
-
-/* Define specific styles for the 2nd column (Name) */
-td:nth-child(2) {
-  font-weight: bold;
-  text-transform: uppercase;
-}
-
-/* Add hover effect on table rows */
-tr:hover {
-  background-color: #555 !important;
 }
