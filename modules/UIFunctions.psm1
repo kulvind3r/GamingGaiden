@@ -183,6 +183,16 @@ function RenderEditGameForm($SelectedGame) {
 	$textPlayTime.Text = $PlayTimeString
 	$form.Controls.Add($textPlayTime)
 
+	$checkboxCompleted = New-Object Windows.Forms.CheckBox
+    $checkboxCompleted.Text = "Finished"
+	if($SelectedGame.completed -eq 'TRUE')
+	{
+		$checkboxCompleted.Checked = $true
+	}
+    $checkboxCompleted.Top = 140
+    $checkboxCompleted.Left = 470
+	$form.Controls.Add($checkboxCompleted)
+
 	$IconFileName = ToBase64 $SelectedGame.name
 	$ImagePath = "$env:TEMP\GG-{0}-$IconFileName.png" -f $(Get-Random)
 	$IconBitmap = BytesToBitmap $SelectedGame.icon
@@ -263,8 +273,13 @@ function RenderEditGameForm($SelectedGame) {
 			return
 		}
 		$GameExeName = $textExe.Text -replace ".exe"
+
+		$GameCompleteStatus = $SelectedGame.completed
+		if ($checkboxCompleted.Checked -eq $true){
+			$GameCompleteStatus = 'TRUE'
+		}
 		
-		UpdateGameOnEdit -GameName $GameName -GameExeName $GameExeName -GameIconPath $pictureBoxImagePath.Text -GamePlayTime $PlayTimeInMin -GameCompleteStatus 'FALSE' -GamePlatform $textPlatform.Text
+		UpdateGameOnEdit -GameName $GameName -GameExeName $GameExeName -GameIconPath $pictureBoxImagePath.Text -GamePlayTime $PlayTimeInMin -GameCompleteStatus $GameCompleteStatus -GamePlatform $textPlatform.Text
 
 		ShowMessage "Updated '$GameName' in Database." "OK" "Asterisk"
 
