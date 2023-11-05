@@ -53,7 +53,8 @@ function CreateScheduledTask() {
 
     $settings = New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -ExecutionTimeLimit 0
 
-    $trigger = New-ScheduledTaskTrigger -AtStartup
+    $trigger = New-ScheduledTaskTrigger -AtLogOn
+    $trigger.Delay = 'PT1M'
 
     # Register the scheduled task
     Register-ScheduledTask -TaskName "Gaming Gaiden Autostart" -Description "Runs Gaming Gaiden at startup" -Action $action -Trigger $trigger -Settings $settings -Force
