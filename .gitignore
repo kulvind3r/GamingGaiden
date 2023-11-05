@@ -5,6 +5,5 @@
 ui/resources/images/*
 !ui/resources/images/default.png
 ui/index.html
-tasks.json
 backups/*
-release/*
+build/*
