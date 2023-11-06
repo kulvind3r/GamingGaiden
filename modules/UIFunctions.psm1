@@ -426,6 +426,14 @@ function RenderEditPlatformForm($SelectedPlatform) {
 			return
 		}
 
+		$PlatformRomExtensions = $textRomExt.Text
+		if (-Not ($PlatformRomExtensions -match '^([a-z]{3},)*([a-z]{3}){1}$'))
+		{
+			ShowMessage "Error in rom extensions. Please submit extensions as a ',' separated list without the leading '.'`r`ne.g. zip,iso,chd OR zip,iso OR zip" "OK" "Error"
+			Log "incorrect Rom extensions format. returning."
+			return
+		}
+
 		$PlatformName = $textName.Text
 		$EmulatorExeName = $textExe.Text -replace ".exe"
 		$EmulatorCore = ""
@@ -434,7 +442,7 @@ function RenderEditPlatformForm($SelectedPlatform) {
 			$EmulatorCore = $textCore.Text
 		}
 		
-		UpdatePlatformOnEdit -PlatformName $PlatformName -EmulatorExeName $EmulatorExeName -EmulatorCore $EmulatorCore -PlatformRomExtensions $textRomExt.Text
+		UpdatePlatformOnEdit -PlatformName $PlatformName -EmulatorExeName $EmulatorExeName -EmulatorCore $EmulatorCore -PlatformRomExtensions $PlatformRomExtensions
 
 		ShowMessage "Updated '$PlatformName' in Database." "OK" "Asterisk"
 
@@ -685,7 +693,7 @@ function RenderAddPlatformForm() {
 		if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
 			$textExe.Text = $openFileDialog.FileName
 			$ExeName = (Get-Item $textExe.Text).BaseName
-			if ($ExeName.ToLower() -eq "retroarch"){
+			if ($ExeName.ToLower() -like "*retroarch*"){
 				$labelCores.show()
 				$textCore.show()
 				$buttonAddCore.show()
@@ -706,7 +714,7 @@ function RenderAddPlatformForm() {
 			return
 		}
 		$EmulatorExeName = (Get-Item $textExe.Text).BaseName
-		if ($EmulatorExeName.ToLower() -eq "retroarch"){
+		if ($EmulatorExeName.ToLower() -like "*retroarch*"){
 			if ($textCore.Text -eq "")
 			{
 				ShowMessage "Retroarch detected.`r`nYou must select Core for platform. Try again." "OK" "Error"
@@ -725,6 +733,12 @@ function RenderAddPlatformForm() {
 
 		$EmulatorCore = $textCore.Text
 		$PlatformRomExtensions = $textRomExt.Text
+		if (-Not ($PlatformRomExtensions -match '^([a-z]{3},)*([a-z]{3}){1}$'))
+		{
+			ShowMessage "Error in rom extensions. Please submit extensions as a ',' separated list without the leading '.'`r`ne.g. zip,iso,chd OR zip,iso OR zip" "OK" "Error"
+			Log "incorrect Rom extensions format. returning."
+			return
+		}
 
 		SavePlatform -PlatformName $PlatformName -EmulatorExeName $EmulatorExeName -CoreName $EmulatorCore -RomExtensions $PlatformRomExtensions
 
