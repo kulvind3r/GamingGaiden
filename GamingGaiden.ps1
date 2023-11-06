@@ -77,10 +77,19 @@ try {
 		StopTrackerJob
 		StartTrackerJob
 	}
+
+	function CreateMenuSeparator(){
+		return New-Object Windows.Forms.ToolStripSeparator
+	}
 	#------------------------------------------
 
 	#------------------------------------------
 	# Setup Tray Icon
+	$MenuItemSeparator1 = CreateMenuSeparator
+	$MenuItemSeparator2 = CreateMenuSeparator
+	$MenuItemSeparator3 = CreateMenuSeparator
+	$MenuItemSeparator4 = CreateMenuSeparator
+
 	$IconRunning = [System.Drawing.Icon]::new(".\icons\running.ico")
 	$IconStopped = [System.Drawing.Icon]::new(".\icons\stopped.ico")
 
@@ -99,12 +108,13 @@ try {
 	$EditPlatformMenuItem = CreateMenuItem "Edit Emulator"
 	
 	$SettingsSubMenuItem.DropDownItems.Add($AddGameMenuItem)
-	$SettingsSubMenuItem.DropDownItems.Add($AddPlatformMenuItem)
 	$SettingsSubMenuItem.DropDownItems.Add($EditGameMenuItem)
+	$SettingsSubMenuItem.DropDownItems.Add($MenuItemSeparator1)
+	$SettingsSubMenuItem.DropDownItems.Add($AddPlatformMenuItem)
 	$SettingsSubMenuItem.DropDownItems.Add($EditPlatformMenuItem)
-	
+		
 	$AppContextMenu = New-Object System.Windows.Forms.ContextMenuStrip
-	$AppContextMenu.Items.AddRange(@($ShowListMenuItem, $SettingsSubMenuItem, $StartTrackerMenuItem, $StopTrackerMenuItem,  $ExitMenuItem))
+	$AppContextMenu.Items.AddRange(@($ShowListMenuItem, $MenuItemSeparator2, $SettingsSubMenuItem, $MenuItemSeparator3, $StartTrackerMenuItem, $StopTrackerMenuItem, $MenuItemSeparator4, $ExitMenuItem))
 	$AppNotifyIcon.ContextMenuStrip = $AppContextMenu
 	
 	#------------------------------------------
