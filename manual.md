@@ -55,11 +55,11 @@ Click ok to register the platform and Gaming Gaiden will now track any game you 
 
 Notify icon menu *Settings => Stop Tracker*. To resume tracking *Settings => Start Tracker*
 
-### Gaming Gaiden is not tracking emulated games launched from emulator application directly
+### Help! Gaming Gaiden is not tracking emulated games launched from emulator application directly.
 
 It cannot. Games launched directly from emulator GUI like Retroarch, PCSX2, Dolphin or Duckstation might not have *Command lines* attached in Windows process. You must either use a Frontend like EmulationStation, Launchbox etc with *Command line* or Windows desktop shortcuts to the emulators with *Command lines*
 
-### Single emulator for multiple platforms
+### Help! I use a single emulator for multiple platforms.
 For emulators that can play more than one platform, for e.g. Dolphin that plays both Wii and Gamecube. You need to make sure that there is some difference in the command line of the emulator when running different platform.
 
 To do this, make a copy of executable of emulator and change it's name to include platform name for e.g.
@@ -72,15 +72,15 @@ This is the only way for Gaming Gaiden to register games under the correct platf
 
 Hide the extra copies of *"Dplphin.exe"* in explorer to keep your Dolphin installation looking neat and clean.
 
-### Single Retroarch core for multiple platforms
+### Help! I use the same Retroarch core for multiple platforms.
 
 Same trick as above can be applied fore retroarch as well. Use the same core, but make copies of *"retroarch.exe"* for each platform and use those as executables for different platforms.
 
 Hide the extra copies of *"retroarch.exe"* in explorer to keep your retroarch installation looking neat and clean.
 
-### Why the above workarounds, can't you just code something to handle this?
+### Why the above workarounds? Can't you handle these scenarios in code?
 
-Gaming Gaiden was born due to an excellent program *"Gameplay-Time-Tracker"* completly failing due to it's complexity. *"Gameplay-Time-Tracker"* did lots of tricks and stuff to handle complex scenarios. With time as Operating systems and applications changed, it couldn't even do it's core feature of tracking games. It was abandoned and is no longer maintained.
+Gaming Gaiden was born because an excellent program *"Gameplay-Time-Tracker"* completly failed due to being overcomplicated. *"Gameplay-Time-Tracker"* did lots of tricks and stuff to handle such complex scenarios. With time as Operating systems and applications changed, it couldn't even do it's core feature of tracking games. It was abandoned and is no longer maintained.
 
 Gaming Gaiden has been designed to remain as simple as possible. It avoids doing complex intelligent guess work / smart identification to not depend on special operating system features or unique libraries that can change in future.
 
