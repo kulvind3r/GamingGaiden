@@ -89,6 +89,7 @@ try {
 	$MenuItemSeparator2 = CreateMenuSeparator
 	$MenuItemSeparator3 = CreateMenuSeparator
 	$MenuItemSeparator4 = CreateMenuSeparator
+	$MenuItemSeparator5 = CreateMenuSeparator
 
 	$IconRunning = [System.Drawing.Icon]::new(".\icons\running.ico")
 	$IconStopped = [System.Drawing.Icon]::new(".\icons\stopped.ico")
@@ -100,6 +101,7 @@ try {
 	$ExitMenuItem = CreateMenuItem "Exit"
 	$StartTrackerMenuItem = CreateMenuItem "Start Tracker"
 	$StopTrackerMenuItem = CreateMenuItem "Stop Tracker"
+	$HelpMenuItem = CreateMenuItem "Help"
 	
 	$SettingsSubMenuItem = CreateMenuItem "Settings"
 	$AddGameMenuItem = CreateMenuItem "Add Game"
@@ -114,7 +116,7 @@ try {
 	$SettingsSubMenuItem.DropDownItems.Add($EditPlatformMenuItem)
 		
 	$AppContextMenu = New-Object System.Windows.Forms.ContextMenuStrip
-	$AppContextMenu.Items.AddRange(@($ShowListMenuItem, $MenuItemSeparator2, $SettingsSubMenuItem, $MenuItemSeparator3, $StartTrackerMenuItem, $StopTrackerMenuItem, $MenuItemSeparator4, $ExitMenuItem))
+	$AppContextMenu.Items.AddRange(@($ShowListMenuItem, $MenuItemSeparator2, $SettingsSubMenuItem, $MenuItemSeparator3, $StartTrackerMenuItem, $StopTrackerMenuItem, $MenuItemSeparator4, $HelpMenuItem, $MenuItemSeparator5, $ExitMenuItem))
 	$AppNotifyIcon.ContextMenuStrip = $AppContextMenu
 	
 	#------------------------------------------
@@ -130,6 +132,11 @@ try {
 		Log "Rendering html list of tracked games"
 		RenderGameList
 		Invoke-Item ".\ui\index.html"
+	})
+
+	$HelpMenuItem.Add_Click({
+		Log "Showing Help"
+		Invoke-Item ".\ui\manual.html"
 	})
 
 	$StartTrackerMenuItem.Add_Click({ 

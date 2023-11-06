@@ -7,5 +7,6 @@ ui/resources/images/*
 !ui/resources/images/finished.png
 !ui/resources/images/playing.png
 ui/index.html
+ui/manual.html
 backups/*
 build/*
