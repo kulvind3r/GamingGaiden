@@ -26,6 +26,12 @@ try {
 
     Invoke-SqliteQuery -Query $CreatePlatformsTableQuery -SQLiteConnection $DBConnection
 
+    $CreateDailyPlaytimeTableQuery="CREATE TABLE IF NOT EXISTS daily_playtime (
+                        play_date TEXT PRIMARY KEY NOT NULL,
+                        play_time INTEGER)"
+
+    Invoke-SqliteQuery -Query $CreateDailyPlaytimeTableQuery -SQLiteConnection $DBConnection
+
     $DBConnection.Close()
 }
 catch {

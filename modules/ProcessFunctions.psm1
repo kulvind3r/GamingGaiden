@@ -81,6 +81,8 @@ function MonitorGame($DetectedExe, $RecordingNotifyIcon) {
 				 -GamePlayTime $UpdatedPlayTime -GameLastPlayDate $UpdatedLastPlayDate -GameCompleteStatus 'FALSE' -GamePlatform $EmulatedGameDetails.Platform
 	}
 
+	RecordPlaytimOnDate($CurrentPlayTime)
+
 	$DatabaseFileHashAfter = CalculateFileHash '.\GamingGaiden.db'
 
 	if ($DatabaseFileHashAfter -ne $DatabaseFileHashBefore){

@@ -127,3 +127,24 @@ function RemovePlatform($PlatformName) {
     Log "Removing $PlatformName from Database"
     Invoke-SqliteQuery -Query $RemovePlatformQuery -SQLiteConnection $DBConnection
 }
+
+function RecordPlaytimOnDate($PlayTime) {
+    $ExistingPlayTimeQuery = "SELECT play_time FROM daily_playtime WHERE play_date like DATE('now')"
+
+    $ExistingPlayTime = (Invoke-SqliteQuery -Query $ExistingPlayTimeQuery -SQLiteConnection $DBConnection).play_time
+    
+    $RecordPlayTimeQuery = ""
+    if ($null -eq $ExistingPlayTime)
+    {
+        $RecordPlayTimeQuery = "INSERT INTO daily_playtime(play_date, play_time) VALUES (DATE('now'), {0})" -f $PlayTime
+    }
+    else
+    {
+        $UpdatedPlayTime = $PlayTime + $ExistingPlayTime
+
+        $RecordPlayTimeQuery = "UPDATE daily_playtime SET play_time = {0} WHERE play_date like DATE('now')" -f $UpdatedPlayTime
+    }
+
+    Log "Updating PlayTime for Today in Database"
+    Invoke-SqliteQuery -Query $RecordPlayTimeQuery -SQLiteConnection $DBConnection
+}
