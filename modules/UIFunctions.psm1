@@ -17,17 +17,34 @@ class Game {
     }
 }
 
+function FilterListBox {
+    param(
+        [string]$filterText,
+        [System.Windows.Forms.ListBox]$listBox,
+        [string[]]$originalItems
+    )
+
+    $listBox.Items.Clear()
+
+    # Add items to the ListBox that match the filterText
+    foreach ($item in $originalItems) {
+        if ($item -like "*$filterText*") {
+            $listBox.Items.Add($item)
+        }
+    }
+}
+
 function RenderListBoxForm($Prompt, $List) {
 	$form = New-Object System.Windows.Forms.Form
 	$form.Text = "Gaming Gaiden"
-	$form.Size = New-Object System.Drawing.Size(300,360)
+	$form.Size = New-Object System.Drawing.Size(300,400)
 	$form.StartPosition = 'CenterScreen'
 	$form.FormBorderStyle = 'FixedDialog'
 	$form.Icon = [System.Drawing.Icon]::new(".\icons\running.ico")
 	$form.Topmost = $true
 
 	$okButton = New-Object System.Windows.Forms.Button
-	$okButton.Location = New-Object System.Drawing.Point(60,280)
+	$okButton.Location = New-Object System.Drawing.Point(60,320)
 	$okButton.Size = New-Object System.Drawing.Size(75,23)
 	$okButton.Text = 'OK'
 	$okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
@@ -35,7 +52,7 @@ function RenderListBoxForm($Prompt, $List) {
 	$form.Controls.Add($okButton)
 
 	$cancelButton = New-Object System.Windows.Forms.Button
-	$cancelButton.Location = New-Object System.Drawing.Point(150,280)
+	$cancelButton.Location = New-Object System.Drawing.Point(150,320)
 	$cancelButton.Size = New-Object System.Drawing.Size(75,23)
 	$cancelButton.Text = 'Cancel'
 	$cancelButton.DialogResult = [System.Windows.Forms.DialogResult]::Cancel
@@ -43,15 +60,30 @@ function RenderListBoxForm($Prompt, $List) {
 	$form.Controls.Add($cancelButton)
 
 	$label = New-Object System.Windows.Forms.Label
-	$label.Location = New-Object System.Drawing.Point(10,20)
+	$label.Location = New-Object System.Drawing.Point(10,60)
 	$label.Size = New-Object System.Drawing.Size(280,20)
 	$label.Text = $Prompt
 	$form.Controls.Add($label)
 
 	$listBox = New-Object System.Windows.Forms.ListBox
-	$listBox.Location = New-Object System.Drawing.Point(10,40)
+	$listBox.Location = New-Object System.Drawing.Point(10,80)
 	$listBox.Size = New-Object System.Drawing.Size(265,20)
 	$listBox.Height = 230
+
+	$labelSearch = New-Object System.Windows.Forms.Label
+	$labelSearch.AutoSize = $true
+	$labelSearch.Location = New-Object Drawing.Point(10, 20)
+	$labelSearch.Text = "Search:"
+	$form.Controls.Add($labelSearch)
+
+	$textSearch = New-Object System.Windows.Forms.TextBox
+	$textSearch.Size = New-Object System.Drawing.Size(200,20)
+	$textSearch.Location = New-Object Drawing.Point(70, 20)
+	$form.Controls.Add($textSearch)
+
+	$textSearch.Add_TextChanged({
+		FilterListBox -filterText $textSearch.Text -listBox $listBox -originalItems $List
+	})
 
 	[void] $listBox.Items.AddRange($List)
 
