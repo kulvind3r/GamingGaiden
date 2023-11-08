@@ -1,24 +1,33 @@
-/* Page Style */
 body {
   font-family: "JetBrains Mono",monospace;
   font-size: 14px;
   background-color: white;
 }
 
-/* Reset default table styles */
 table {
   width: 97.5% !important;
   border: 1px solid #333;
 }
 
-/* Style alternate table rows with background color */
-tr:nth-child(even) {
-  background-color: #bccad6 !important;
+th {
+  background-color: #333;
+  color: #fff;
+  font-weight: bold;
+  text-align: center !important;
+  padding: 10px;
 }
 
-/* Add hover effect on table rows */
 tr:hover {
-  background-color: #555 !important;
+  background-color: gray !important;
+}
+
+tr:nth-child(even):hover {
+  background-color: gray !important;
+}
+
+/* Style alternate table rows */
+tr:nth-child(even) {
+  background-color: #bccad6 !important;
 }
 
 /* Set cell borders */
@@ -28,17 +37,8 @@ td {
 
 /* set style for cells with images */
 td img {
-  max-width: 100%; /* Limit any image width to the cell's width */
-  max-height: 100%; /* Limit any image height to the cell's height */
-}
-
-/* Style the table headers (th) */
-th {
-  background-color: #333;
-  color: #fff;
-  font-weight: bold;
-  text-align: center !important;
-  padding: 10px;
+  max-width: 100%;
+  max-height: 100%;
 }
 
 /* hide the text in the first column header */
@@ -59,6 +59,7 @@ td:nth-child(5) {
   font-size: 13px;
 }
 
+/* Reduce size of images in Status column */
 td:nth-child(5) img {
   max-width: 70%;
 }

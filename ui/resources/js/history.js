@@ -99,31 +99,6 @@ function updateChart(selectedYear, selectedMonth, yearlySummaryEnabled = false) 
     });
 }
 
-function loadDataFromTable() {
-    const table = document.getElementById('data-table');
-    const rows = table.querySelectorAll('tbody tr');
-
-    gamingData = Array.from(rows).map(row => {
-        const date = row.cells[0].textContent;
-        const time = parseFloat(row.cells[1].textContent);
-        return { date, time };
-    });
-
-    // Initialize the chart with the first year in the table
-    const firstDate = new Date(gamingData[1].date);
-    const lastDate = new Date(gamingData[gamingData.length - 1].date);
-    firstYear = parseInt(lastDate.getFullYear())
-    firstMonth = parseInt(lastDate.getMonth())
-    finalYear = parseInt(firstDate.getFullYear());
-    finalMonth = parseInt(firstDate.getMonth());
-    
-    selectedYear = finalYear
-    selectedMonth = finalMonth 
-
-    updatePeriodDisplayWithMonth(selectedYear, selectedMonth);
-    updateChart(selectedYear, selectedMonth);
-}
-
 function switchToNextMonth() {
     if (selectedMonth === finalMonth && selectedYear === finalYear) {
         updateWarnMessage("No More Data");
@@ -210,6 +185,31 @@ function toggleSummaryPeriod() {
         updatePeriodDisplayWithMonth(selectedYear, selectedMonth);
         updateChart(selectedYear, selectedMonth);
     }
+}
+
+function loadDataFromTable() {
+    const table = document.getElementById('data-table');
+    const rows = table.querySelectorAll('tbody tr');
+
+    gamingData = Array.from(rows).map(row => {
+        const date = row.cells[0].textContent;
+        const time = parseFloat(row.cells[1].textContent);
+        return { date, time };
+    });
+
+    // Initialize the chart with the first year in the table
+    const firstDate = new Date(gamingData[1].date);
+    const lastDate = new Date(gamingData[gamingData.length - 1].date);
+    firstYear = parseInt(lastDate.getFullYear())
+    firstMonth = parseInt(lastDate.getMonth())
+    finalYear = parseInt(firstDate.getFullYear());
+    finalMonth = parseInt(firstDate.getMonth());
+    
+    selectedYear = finalYear
+    selectedMonth = finalMonth 
+
+    updatePeriodDisplayWithMonth(selectedYear, selectedMonth);
+    updateChart(selectedYear, selectedMonth);
 }
 
 document.getElementById('prev-button').addEventListener('click', () => switchToPrevMonth());
