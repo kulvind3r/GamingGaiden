@@ -47,7 +47,7 @@
           order: [[5, 'desc']],
           "ordering": true,
           "paging": "numbers",
-          "pageLength": 10,
+          "pageLength": 9,
           "lengthChange": false,
           "searching": true
         });

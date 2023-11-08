@@ -1,6 +1,8 @@
 /* Page Style */
 body {
-  background-color: #667292;
+  font-family: "JetBrains Mono",monospace;
+  font-size: 14px;
+  background-color: white;
 }
 
 /* Reset default table styles */
@@ -69,39 +71,35 @@ td:nth-child(2) {
 
 #DataTables_Table_0_filter {
   float: right;
-  margin-bottom: 9px;
+  margin-top: 10px;
+  margin-bottom: 20px;
   margin-right: 1.3%;
-  color: azure !important;
 }
 
 #TotalPlaytime {
   float: left;
   white-space: pre;
+  margin-top: 10px;
   margin-left: 1.3%;
   margin-bottom: 9px;
-  color: azure !important;
 }
 
 #AllGames {
   position: absolute;
+  margin-top: 5px;
   left: 50%;
   transform: translateX(-45%);
   font-weight: bold;
+  font-size: 20px;
   text-transform: uppercase;
   text-align: center;
-  color: azure !important;
   white-space: pre;
 }
 
 #DataTables_Table_0_info {
   margin-left: 1.3%;
-  color: azure !important;
-}
-
-#DataTables_Table_0_paginate:not(.disabled) {
-  color: azure !important;
 }
 
 #DataTables_Table_0_paginate .disabled {
-  color: #667292 !important;
+  color: white !important;
 }

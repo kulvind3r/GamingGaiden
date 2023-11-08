@@ -26,12 +26,13 @@
         <h1>Play Time History</h1>
         <canvas id="gaming-time-chart"></canvas>
         <div id="navigation-bar">
-            <button class="arrow-button" id="prev-button"><<</button>
-            <p id="month-display"></p>
-            <button class="arrow-button" id="next-button">>></button>
+            <button class="button-30" id="prev-button"><<</button>
+            <p id="time-period-display"></p>
+            <button class="button-30" id="next-button">>></button>
         </div>
         <p id="warn-msg"></p>
     </div>
+    <button class="button-30" id="period-button">Yearly Summary</button>
     <div>
         _DAILYPLAYTIMETABLE_
     </div>
