@@ -4,18 +4,21 @@ let firstYear; let firstMonth
 let finalYear; let finalMonth
 let chart;
 let summaryPeriod = "monthly"
+let yearTotalTime;
+let monthTotalTime;
 
 $('table')[0].setAttribute('id','data-table');
 
 function updatePeriodDisplayWithMonth(selectedYear, selectedMonth) {
     selectedMonth = selectedMonth + 1
     selectedDate = new Date(`${selectedYear}-${selectedMonth}`)
-    document.getElementById('time-period-display').innerText = selectedDate.toLocaleDateString("en-US",{ year: 'numeric', month: 'long'})
+    let monthString = selectedDate.toLocaleDateString("en-US",{ year: 'numeric', month: 'long'})
+    document.getElementById('time-period-display').innerText = monthString + " : " + parseInt(monthTotalTime) + " Hrs";
     updateWarnMessage("")
 }
 
 function updatePeriodDisplayWithYear(selectedYear) {
-    document.getElementById('time-period-display').innerText = selectedYear
+    document.getElementById('time-period-display').innerText = selectedYear + " : " + parseInt(yearTotalTime) + " Hrs";
     updateWarnMessage("")
 }
 
@@ -32,6 +35,7 @@ function updateChart(selectedYear, selectedMonth, yearlySummaryEnabled = false) 
 
     if (!yearlySummaryEnabled)
     {
+        monthTotalTime = 0;
         let firstDate = new Date(selectedYear, selectedMonth, 1);
         let lastDate = new Date(selectedYear, selectedMonth + 1, 0);
         
@@ -41,7 +45,8 @@ function updateChart(selectedYear, selectedMonth, yearlySummaryEnabled = false) 
                 const itemDate = new Date(item.date);
                 return itemDate.getFullYear() === selectedYear && itemDate.getMonth() === selectedMonth && itemDate.getDate() === date.getDate();
             });
-            data.push(gamingEntry ? gamingEntry.time / 60 : 0); // Convert minutes to hours
+            data.push(gamingEntry ? gamingEntry.time / 60 : 0);
+            monthTotalTime = monthTotalTime + (gamingEntry ? gamingEntry.time / 60 : 0);
         }
 
         datasetData = data
@@ -49,6 +54,7 @@ function updateChart(selectedYear, selectedMonth, yearlySummaryEnabled = false) 
     }
     else
     {
+        yearTotalTime = 0;
         labels = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec']
 
         for (let month = 0; month <= 11; month = month +1) {
@@ -59,7 +65,8 @@ function updateChart(selectedYear, selectedMonth, yearlySummaryEnabled = false) 
                     monthPlayTime = monthPlayTime + item.time;
                 }
             });
-            data.push({"month":labels[month], "time": monthPlayTime / 60 }); // Convert minutes to hours
+            data.push({"month":labels[month], "time": monthPlayTime / 60 });
+            yearTotalTime = yearTotalTime + (monthPlayTime / 60)
         }
 
         datasetData = data.map(row => row.time)
@@ -114,8 +121,9 @@ function switchToNextMonth() {
     else {
         selectedMonth = selectedMonth + 1
     }
-    updatePeriodDisplayWithMonth(selectedYear, selectedMonth);
     updateChart(selectedYear, selectedMonth);
+    updatePeriodDisplayWithMonth(selectedYear, selectedMonth);
+    
 }
 
 function switchToPrevMonth() {
@@ -133,8 +141,9 @@ function switchToPrevMonth() {
     else {
         selectedMonth = selectedMonth - 1;
     }
-    updatePeriodDisplayWithMonth(selectedYear, selectedMonth);
     updateChart(selectedYear, selectedMonth);
+    updatePeriodDisplayWithMonth(selectedYear, selectedMonth);
+    
 }
 
 function switchToNextYear() {
@@ -145,8 +154,8 @@ function switchToNextYear() {
     else {
         selectedYear = selectedYear + 1
     }
-    updatePeriodDisplayWithYear(selectedYear);
     updateChart(selectedYear, selectedMonth, true);
+    updatePeriodDisplayWithYear(selectedYear);
 }
 
 function switchToPrevYear() {
@@ -157,8 +166,8 @@ function switchToPrevYear() {
     else {
         selectedYear = selectedYear - 1;
     }
-    updatePeriodDisplayWithYear(selectedYear);
     updateChart(selectedYear, selectedMonth, true);
+    updatePeriodDisplayWithYear(selectedYear);
 }
 
 function toggleSummaryPeriod() {
@@ -172,8 +181,8 @@ function toggleSummaryPeriod() {
         summaryPeriod = "yearly"
         document.getElementById('period-button').innerText = "Monthly Summary"
 
-        updatePeriodDisplayWithYear(selectedYear);
         updateChart(selectedYear, selectedMonth, true);
+        updatePeriodDisplayWithYear(selectedYear);
     }
     else {
         document.getElementById('prev-button').addEventListener('click', () => switchToPrevMonth());
@@ -182,8 +191,8 @@ function toggleSummaryPeriod() {
         summaryPeriod = "monthly"
         document.getElementById('period-button').innerText = "Yearly Summary"
 
-        updatePeriodDisplayWithMonth(selectedYear, selectedMonth);
         updateChart(selectedYear, selectedMonth);
+        updatePeriodDisplayWithMonth(selectedYear, selectedMonth);
     }
 }
 
@@ -208,8 +217,8 @@ function loadDataFromTable() {
     selectedYear = finalYear
     selectedMonth = finalMonth 
 
-    updatePeriodDisplayWithMonth(selectedYear, selectedMonth);
     updateChart(selectedYear, selectedMonth);
+    updatePeriodDisplayWithMonth(selectedYear, selectedMonth);
 }
 
 document.getElementById('prev-button').addEventListener('click', () => switchToPrevMonth());
