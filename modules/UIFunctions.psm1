@@ -162,6 +162,28 @@ function RenderGameList() {
 	$DBConnection.Close()
 }
 
+function RenderHistory() {
+
+	$Database = ".\GamingGaiden.db"
+	Log "Connecting to database for Rendering game list"
+	$DBConnection = New-SQLiteConnection -DataSource $Database
+
+	$WorkingDirectory = (Get-Location).Path
+
+	$GetDailyPlayTimeDataQuery = "SELECT play_date as date, play_time as time FROM daily_playtime"
+
+	$DailyPlayTimeData = (Invoke-SqliteQuery -Query $GetDailyPlayTimeDataQuery -SQLiteConnection $DBConnection)
+
+	$Table = $DailyPlayTimeData | ConvertTo-Html -Fragment
+	
+	$report = (Get-Content $WorkingDirectory\ui\templates\history.html.template) -replace "_DAILYPLAYTIMETABLE_", $Table
+
+	Log $report
+	[System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $WorkingDirectory\ui\history.html
+
+	$DBConnection.Close()
+}
+
 function RenderEditGameForm($SelectedGame) {
 
 	$form = New-Object System.Windows.Forms.Form

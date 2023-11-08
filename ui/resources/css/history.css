@@ -1,0 +1,31 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    font-family: Arial, sans-serif;
+}
+
+#chart-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%; /* Adjust the width as needed */
+    max-width: 1500px; /* Set a maximum width */
+}
+
+#gaming-time-chart {
+    width: 100%; /* Chart fills the container */
+    max-height: 700px; /* Set a maximum height */
+}
+
+#navigation-bar {
+    display: flex;
+    width: 500px;
+    justify-content: space-around;
+}
+
+.arrow-button {
+    margin: 10px;
+    cursor: pointer;
+}

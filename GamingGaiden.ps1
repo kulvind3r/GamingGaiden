@@ -98,6 +98,7 @@ try {
 	$AppNotifyIcon.Visible = $true
 
 	$ShowListMenuItem = CreateMenuItem "My Games"
+	$ShowStatsMenuItem = CreateMenuItem "Statstics"
 	$ExitMenuItem = CreateMenuItem "Exit"
 	$StartTrackerMenuItem = CreateMenuItem "Start Tracker"
 	$StopTrackerMenuItem = CreateMenuItem "Stop Tracker"
@@ -116,7 +117,7 @@ try {
 	$SettingsSubMenuItem.DropDownItems.Add($EditPlatformMenuItem)
 		
 	$AppContextMenu = New-Object System.Windows.Forms.ContextMenuStrip
-	$AppContextMenu.Items.AddRange(@($ShowListMenuItem, $MenuItemSeparator2, $SettingsSubMenuItem, $MenuItemSeparator3, $StartTrackerMenuItem, $StopTrackerMenuItem, $MenuItemSeparator4, $HelpMenuItem, $MenuItemSeparator5, $ExitMenuItem))
+	$AppContextMenu.Items.AddRange(@($ShowListMenuItem, $ShowStatsMenuItem, $MenuItemSeparator2, $SettingsSubMenuItem, $MenuItemSeparator3, $StartTrackerMenuItem, $StopTrackerMenuItem, $MenuItemSeparator4, $HelpMenuItem, $MenuItemSeparator5, $ExitMenuItem))
 	$AppNotifyIcon.ContextMenuStrip = $AppContextMenu
 	
 	#------------------------------------------
@@ -132,6 +133,12 @@ try {
 		Log "Rendering html list of tracked games"
 		RenderGameList
 		Invoke-Item ".\ui\index.html"
+	})
+
+	$ShowStatsMenuItem.Add_Click({
+		Log "Rendering History"
+		RenderHistory
+		Invoke-Item ".\ui\history.html"
 	})
 
 	$HelpMenuItem.Add_Click({

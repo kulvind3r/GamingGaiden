@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Gaming Gaiden</title>
+    <link rel="stylesheet" href="./resources/css/history.css">
+    <script src="./resources/js/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        $(document).ready(
+          function() {
+            $('table').each(
+              function(){
+                var tHead = $(this).find('tr:first').html();
+                $(this).find('colgroup').remove();
+                $(this).find('tr:first').remove();
+                $(this).find('tbody').before('<thead>' + tHead + '</thead>');
+              }
+            );
+            $('table')[0].style.display = 'none';
+          }
+        );
+    </script>
+</head>
+<body>
+    <div id="chart-container">
+        <h1>Play Time History</h1>
+        <canvas id="gaming-time-chart"></canvas>
+        <div id="navigation-bar">
+            <button class="arrow-button" id="prev-button"><<</button>
+            <p id="month-display"></p>
+            <button class="arrow-button" id="next-button">>></button>
+        </div>
+        <p id="warn-msg"></p>
+    </div>
+    <div>
+        _DAILYPLAYTIMETABLE_
+    </div>
+    <script src="./resources/js/history.js"></script>
+</body>
+</html>
