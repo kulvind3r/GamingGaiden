@@ -90,9 +90,6 @@ function updateChart(selectedYear, selectedMonth, yearlySummaryEnabled = false) 
             }]
         },
         options: {
-            animation: {
-                duration: 0
-            },
             scales: {
                 y: {
                     beginAtZero: true,
