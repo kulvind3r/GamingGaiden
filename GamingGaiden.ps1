@@ -98,7 +98,7 @@ try {
 	$AppNotifyIcon.Visible = $true
 
 	$ShowListMenuItem = CreateMenuItem "My Games"
-	$ShowStatsMenuItem = CreateMenuItem "Statstics"
+	$ShowStatsMenuItem = CreateMenuItem "Time Spent Gaming"
 	$MostPlayedMenuItem = CreateMenuItem "Most Played"
 	$ExitMenuItem = CreateMenuItem "Exit"
 	$StartTrackerMenuItem = CreateMenuItem "Start Tracker"
@@ -116,9 +116,9 @@ try {
 	$SettingsSubMenuItem.DropDownItems.Add($MenuItemSeparator1)
 	$SettingsSubMenuItem.DropDownItems.Add($AddPlatformMenuItem)
 	$SettingsSubMenuItem.DropDownItems.Add($EditPlatformMenuItem)
-		
+
 	$AppContextMenu = New-Object System.Windows.Forms.ContextMenuStrip
-	$AppContextMenu.Items.AddRange(@($ShowListMenuItem, $ShowStatsMenuItem, $MostPlayedMenuItem, $MenuItemSeparator2, $SettingsSubMenuItem, $MenuItemSeparator3, $StartTrackerMenuItem, $StopTrackerMenuItem, $MenuItemSeparator4, $HelpMenuItem, $MenuItemSeparator5, $ExitMenuItem))
+	$AppContextMenu.Items.AddRange(@($ShowListMenuItem, $MostPlayedMenuItem, $ShowStatsMenuItem, $MenuItemSeparator2, $SettingsSubMenuItem, $MenuItemSeparator3, $StartTrackerMenuItem, $StopTrackerMenuItem, $MenuItemSeparator4, $HelpMenuItem, $MenuItemSeparator5, $ExitMenuItem))
 	$AppNotifyIcon.ContextMenuStrip = $AppContextMenu
 	
 	#------------------------------------------

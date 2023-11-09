@@ -23,7 +23,7 @@
 </head>
 <body>
     <div id="chart-container">
-        <h1>Most Played Games</h1>
+        <h1>Your Most Played Games</h1>
         <canvas id="most-played-chart"></canvas>
         <div id="navigation-bar">
             <div>Top</div>

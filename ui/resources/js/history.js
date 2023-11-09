@@ -84,7 +84,7 @@ function updateChart(selectedYear, selectedMonth, yearlySummaryEnabled = false) 
         data: {
             labels: labels,
             datasets: [{
-                label: 'Time Spent Gaming (hours)',
+                label: 'Playtime (hours)',
                 data: datasetData,
                 borderWidth: 2
             }]

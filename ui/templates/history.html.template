@@ -23,7 +23,7 @@
 </head>
 <body>
     <div id="chart-container">
-        <h1>Play Time History</h1>
+        <h1>Time You Spent Playing Games</h1>
         <canvas id="gaming-time-chart"></canvas>
         <div id="navigation-bar">
             <button class="stats-button" id="prev-button"><<</button>
