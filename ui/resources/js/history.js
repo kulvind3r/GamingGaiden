@@ -45,7 +45,7 @@ function updateChart(selectedYear, selectedMonth, yearlySummaryEnabled = false) 
                 const itemDate = new Date(item.date);
                 return itemDate.getFullYear() === selectedYear && itemDate.getMonth() === selectedMonth && itemDate.getDate() === date.getDate();
             });
-            data.push(gamingEntry ? gamingEntry.time / 60 : 0);
+            data.push(gamingEntry ? (gamingEntry.time / 60).toFixed(1) : 0);
             monthTotalTime = monthTotalTime + (gamingEntry ? gamingEntry.time / 60 : 0);
         }
 
@@ -65,7 +65,7 @@ function updateChart(selectedYear, selectedMonth, yearlySummaryEnabled = false) 
                     monthPlayTime = monthPlayTime + item.time;
                 }
             });
-            data.push({"month":labels[month], "time": monthPlayTime / 60 });
+            data.push({"month":labels[month], "time": (monthPlayTime / 60).toFixed(1) });
             yearTotalTime = yearTotalTime + (monthPlayTime / 60)
         }
 

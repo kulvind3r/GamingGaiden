@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Gaming Gaiden</title>
+    <link rel="stylesheet" href="./resources/css/most_played.css">
+    <script src="./resources/js/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        $(document).ready(
+          function() {
+            $('table').each(
+              function(){
+                var tHead = $(this).find('tr:first').html();
+                $(this).find('colgroup').remove();
+                $(this).find('tr:first').remove();
+                $(this).find('tbody').before('<thead>' + tHead + '</thead>');
+              }
+            );
+            $('table')[0].style.display = 'none';
+          }
+        );
+    </script>
+</head>
+<body>
+    <div id="chart-container">
+        <h1>Most Played Games</h1>
+        <canvas id="most-played-chart"></canvas>
+        <div id="navigation-bar">
+            <div>Top</div>
+            <select id="game-count">
+              <option value=10>10</option>
+              <option value=20>20</option>
+              <option value=30>30</option>
+              <option value=40>40</option>
+              <option value=50>50</option>
+            </select>
+            <div>Games</div>
+        </div>
+    </div>
+    <div>
+        _GAMESPLAYTIMETABLE_
+    </div>
+    <script src="./resources/js/most_played.js"></script>
+</body>
+</html>

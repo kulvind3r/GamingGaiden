@@ -99,6 +99,7 @@ try {
 
 	$ShowListMenuItem = CreateMenuItem "My Games"
 	$ShowStatsMenuItem = CreateMenuItem "Statstics"
+	$MostPlayedMenuItem = CreateMenuItem "Most Played"
 	$ExitMenuItem = CreateMenuItem "Exit"
 	$StartTrackerMenuItem = CreateMenuItem "Start Tracker"
 	$StopTrackerMenuItem = CreateMenuItem "Stop Tracker"
@@ -117,7 +118,7 @@ try {
 	$SettingsSubMenuItem.DropDownItems.Add($EditPlatformMenuItem)
 		
 	$AppContextMenu = New-Object System.Windows.Forms.ContextMenuStrip
-	$AppContextMenu.Items.AddRange(@($ShowListMenuItem, $ShowStatsMenuItem, $MenuItemSeparator2, $SettingsSubMenuItem, $MenuItemSeparator3, $StartTrackerMenuItem, $StopTrackerMenuItem, $MenuItemSeparator4, $HelpMenuItem, $MenuItemSeparator5, $ExitMenuItem))
+	$AppContextMenu.Items.AddRange(@($ShowListMenuItem, $ShowStatsMenuItem, $MostPlayedMenuItem, $MenuItemSeparator2, $SettingsSubMenuItem, $MenuItemSeparator3, $StartTrackerMenuItem, $StopTrackerMenuItem, $MenuItemSeparator4, $HelpMenuItem, $MenuItemSeparator5, $ExitMenuItem))
 	$AppNotifyIcon.ContextMenuStrip = $AppContextMenu
 	
 	#------------------------------------------
@@ -139,6 +140,12 @@ try {
 		Log "Rendering History"
 		RenderHistory
 		Invoke-Item ".\ui\history.html"
+	})
+
+	$MostPlayedMenuItem.Add_Click({
+		Log "Rendering Most Played"
+		RenderMostPlayed
+		Invoke-Item ".\ui\most_played.html"
 	})
 
 	$HelpMenuItem.Add_Click({

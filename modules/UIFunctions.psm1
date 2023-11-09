@@ -178,8 +178,27 @@ function RenderHistory() {
 	
 	$report = (Get-Content $WorkingDirectory\ui\templates\history.html.template) -replace "_DAILYPLAYTIMETABLE_", $Table
 
-	Log $report
 	[System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $WorkingDirectory\ui\history.html
+
+	$DBConnection.Close()
+}
+
+function RenderMostPlayed() {
+	$Database = ".\GamingGaiden.db"
+	Log "Connecting to database for Rendering game list"
+	$DBConnection = New-SQLiteConnection -DataSource $Database
+
+	$WorkingDirectory = (Get-Location).Path
+
+	$GetGamesPlayTimeDataQuery = "SELECT name, play_time as time FROM games Order By play_time DESC"
+
+	$GamesPlayTimeData = (Invoke-SqliteQuery -Query $GetGamesPlayTimeDataQuery -SQLiteConnection $DBConnection)
+
+	$Table = $GamesPlayTimeData | ConvertTo-Html -Fragment
+	
+	$report = (Get-Content $WorkingDirectory\ui\templates\most_played.html.template) -replace "_GAMESPLAYTIMETABLE_", $Table
+
+	[System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $WorkingDirectory\ui\most_played.html
 
 	$DBConnection.Close()
 }
