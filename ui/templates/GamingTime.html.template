@@ -4,7 +4,7 @@
     <title>Gaming Gaiden</title>
     <link rel="stylesheet" href="./resources/css/GamingTime.css">
     <script src="./resources/js/jquery-3.7.1.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="./resources/js/chart.js"></script>
     <script>
         $(document).ready(
           function() {
