@@ -151,18 +151,18 @@ function RenderGameList() {
 
 	$Table = $Games | ConvertTo-Html -Fragment
 	
-	$report = (Get-Content $WorkingDirectory\ui\templates\index.html.template) -replace "_GAMESTABLE_", $Table
+	$report = (Get-Content $WorkingDirectory\ui\templates\MyGames.html.template) -replace "_GAMESTABLE_", $Table
 	$report = $report -replace "Last_Played_On", "Last Played On"
 	$report = $report -replace "Completed", "Status"
 	$report = $report -replace "_TOTALGAMECOUNT_", $Games.length
 	$report = $report -replace "_TOTALPLAYTIME_", $TotalPlayTimeString
 	
-	[System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $WorkingDirectory\ui\index.html
+	[System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $WorkingDirectory\ui\MyGames.html
 
 	$DBConnection.Close()
 }
 
-function RenderHistory() {
+function RenderGamingTime() {
 
 	$Database = ".\GamingGaiden.db"
 	Log "Connecting to database for Rendering game list"
@@ -176,9 +176,9 @@ function RenderHistory() {
 
 	$Table = $DailyPlayTimeData | ConvertTo-Html -Fragment
 	
-	$report = (Get-Content $WorkingDirectory\ui\templates\history.html.template) -replace "_DAILYPLAYTIMETABLE_", $Table
+	$report = (Get-Content $WorkingDirectory\ui\templates\GamingTime.html.template) -replace "_DAILYPLAYTIMETABLE_", $Table
 
-	[System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $WorkingDirectory\ui\history.html
+	[System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $WorkingDirectory\ui\GamingTime.html
 
 	$DBConnection.Close()
 }
@@ -196,9 +196,9 @@ function RenderMostPlayed() {
 
 	$Table = $GamesPlayTimeData | ConvertTo-Html -Fragment
 	
-	$report = (Get-Content $WorkingDirectory\ui\templates\most_played.html.template) -replace "_GAMESPLAYTIMETABLE_", $Table
+	$report = (Get-Content $WorkingDirectory\ui\templates\MostPlayed.html.template) -replace "_GAMESPLAYTIMETABLE_", $Table
 
-	[System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $WorkingDirectory\ui\most_played.html
+	[System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $WorkingDirectory\ui\MostPlayed.html
 
 	$DBConnection.Close()
 }

@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Gaming Gaiden</title>
-    <link rel="stylesheet" href="./resources/css/most_played.css">
+    <link rel="stylesheet" href="./resources/css/MostPlayed.css">
     <script src="./resources/js/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
@@ -40,6 +40,6 @@
     <div>
         _GAMESPLAYTIMETABLE_
     </div>
-    <script src="./resources/js/most_played.js"></script>
+    <script src="./resources/js/MostPlayed.js"></script>
 </body>
 </html>

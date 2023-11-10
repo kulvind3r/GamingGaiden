@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Gaming Gaiden</title>
-    <link rel="stylesheet" href="./resources/css/history.css">
+    <link rel="stylesheet" href="./resources/css/GamingTime.css">
     <script src="./resources/js/jquery-3.7.1.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
@@ -36,6 +36,6 @@
     <div>
         _DAILYPLAYTIMETABLE_
     </div>
-    <script src="./resources/js/history.js"></script>
+    <script src="./resources/js/GamingTime.js"></script>
 </body>
 </html>

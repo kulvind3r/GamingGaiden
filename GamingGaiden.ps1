@@ -98,6 +98,8 @@ try {
 	$AppNotifyIcon.Visible = $true
 
 	$ShowListMenuItem = CreateMenuItem "My Games"
+	$ShowListMenuItem.Font = New-Object Drawing.Font("Segoe UI", 9, [Drawing.FontStyle]::Bold)
+
 	$ShowStatsMenuItem = CreateMenuItem "Time Spent Gaming"
 	$MostPlayedMenuItem = CreateMenuItem "Most Played"
 	$ExitMenuItem = CreateMenuItem "Exit"
@@ -123,8 +125,16 @@ try {
 	
 	#------------------------------------------
 	# Setup Tray Icon Actions
-	$AppNotifyIcon.Add_Click({                    
+	$AppNotifyIcon.Add_Click({
+
 		If ($_.Button -eq [Windows.Forms.MouseButtons]::Left) {
+			Log "Rendering html list of tracked games"
+			RenderGameList
+			Invoke-Item ".\ui\MyGames.html"
+			return
+		}
+
+		If ($_.Button -eq [Windows.Forms.MouseButtons]::Right) {
 			$AppNotifyIcon.GetType().GetMethod("ShowContextMenu",[System.Reflection.BindingFlags]::Instance `
 			-bor [System.Reflection.BindingFlags]::NonPublic).Invoke($AppNotifyIcon,$null)
 		}
@@ -133,24 +143,24 @@ try {
 	$ShowListMenuItem.Add_Click({
 		Log "Rendering html list of tracked games"
 		RenderGameList
-		Invoke-Item ".\ui\index.html"
+		Invoke-Item ".\ui\MyGames.html"
 	})
 
 	$ShowStatsMenuItem.Add_Click({
-		Log "Rendering History"
-		RenderHistory
-		Invoke-Item ".\ui\history.html"
+		Log "Rendering GamingTime"
+		RenderGamingTime
+		Invoke-Item ".\ui\GamingTime.html"
 	})
 
 	$MostPlayedMenuItem.Add_Click({
 		Log "Rendering Most Played"
 		RenderMostPlayed
-		Invoke-Item ".\ui\most_played.html"
+		Invoke-Item ".\ui\MostPlayed.html"
 	})
 
 	$HelpMenuItem.Add_Click({
 		Log "Showing Help"
-		Invoke-Item ".\ui\manual.html"
+		Invoke-Item ".\ui\Manual.html"
 	})
 
 	$StartTrackerMenuItem.Add_Click({ 
