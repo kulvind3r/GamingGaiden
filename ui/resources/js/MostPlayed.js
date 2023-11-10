@@ -9,7 +9,7 @@ function updateChart(gameCount) {
     let labels = [];
     let data = [];
 
-    for (i=1; i<=gameCount; i++)
+    for (i=0; i<gameCount; i++)
     {
         labels.push(gamingData[i].name)
         data.push({"game":gamingData[i].name, "time": (gamingData[i].time / 60).toFixed(1) });
@@ -71,6 +71,9 @@ function loadDataFromTable() {
         return { name, time };
     });
 
+    // Remove header row data
+    gamingData.shift()
+    
     updateChart(gameCount);
 }
 

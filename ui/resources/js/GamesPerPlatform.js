@@ -45,6 +45,8 @@ function loadDataFromTable() {
         return { name, count };
     });
 
+    // Remove header row data
+    gamingData.shift()
     updateChart();
 }
 

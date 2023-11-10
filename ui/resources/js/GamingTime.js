@@ -97,8 +97,8 @@ function updateChart(selectedYear, selectedMonth, yearlySummaryEnabled = false) 
                     callback: (value) => value + ' hrs'
                 }
             },
-            responsive: true, // Make the chart responsive
-            maintainAspectRatio: false // Allow the chart to adjust its aspect ratio
+            responsive: true,
+            maintainAspectRatio: false
         }
     });
 }
@@ -203,8 +203,11 @@ function loadDataFromTable() {
         return { date, time };
     });
 
+    // Remove header row data
+    gamingData.shift()
+    
     // Initialize the chart with the first year in the table
-    const firstDate = new Date(gamingData[1].date);
+    const firstDate = new Date(gamingData[0].date);
     const lastDate = new Date(gamingData[gamingData.length - 1].date);
     firstYear = parseInt(lastDate.getFullYear())
     firstMonth = parseInt(lastDate.getMonth())
