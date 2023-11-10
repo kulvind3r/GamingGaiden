@@ -11,15 +11,5 @@ body {
     flex-direction: column;
     align-items: center;
     width: 100%;
-    max-width: 1600px;
-}
-
-#navigation-bar {
-    display: flex;
-    margin-top: 20px;
-    margin-bottom: 20px;
-    width: 200px;
-    justify-content: space-around;
-    font-family: "JetBrains Mono",monospace;
-    font-size: 18px;
+    max-width: 800px;
 }

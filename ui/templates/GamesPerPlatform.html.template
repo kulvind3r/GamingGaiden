@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Gaming Gaiden</title>
-    <link rel="stylesheet" href="./resources/css/MostPlayed.css">
+    <link rel="stylesheet" href="./resources/css/GamesPerPlatform.css">
     <script src="./resources/js/jquery-3.7.1.min.js"></script>
     <script src="./resources/js/chart.js"></script>
     <script>
@@ -23,23 +23,12 @@
 </head>
 <body>
     <div id="chart-container">
-        <h1>Your Most Played Games</h1>
-        <canvas id="most-played-chart"></canvas>
-        <div id="navigation-bar">
-            <div>Top</div>
-            <select id="game-count">
-              <option value=10>10</option>
-              <option value=20>20</option>
-              <option value=30>30</option>
-              <option value=40>40</option>
-              <option value=50>50</option>
-            </select>
-            <div>Games</div>
-        </div>
+        <h1>Games You Played On Each Platform</h1>
+        <canvas id="games-per-platform-chart"></canvas>
     </div>
     <div>
-        _GAMESPLAYTIMETABLE_
+        _GAMESPERPLATFORMTABLE_
     </div>
-    <script src="./resources/js/MostPlayed.js"></script>
+    <script src="./resources/js/GamesPerPlatform.js"></script>
 </body>
 </html>

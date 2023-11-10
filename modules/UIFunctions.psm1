@@ -203,6 +203,26 @@ function RenderMostPlayed() {
 	$DBConnection.Close()
 }
 
+function RenderGamesPerPlatform() {
+	$Database = ".\GamingGaiden.db"
+	Log "Connecting to database for Rendering game list"
+	$DBConnection = New-SQLiteConnection -DataSource $Database
+
+	$WorkingDirectory = (Get-Location).Path
+
+	$GetGamesPerPlatformDataQuery = "SELECT  platform, COUNT(name) FROM games GROUP BY platform"
+
+	$GetGamesPerPlatformData = (Invoke-SqliteQuery -Query $GetGamesPerPlatformDataQuery -SQLiteConnection $DBConnection)
+
+	$Table = $GetGamesPerPlatformData | ConvertTo-Html -Fragment
+	
+	$report = (Get-Content $WorkingDirectory\ui\templates\GamesPerPlatform.html.template) -replace "_GAMESPERPLATFORMTABLE_", $Table
+
+	[System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $WorkingDirectory\ui\GamesPerPlatform.html
+
+	$DBConnection.Close()
+}
+
 function RenderEditGameForm($SelectedGame) {
 
 	$form = New-Object System.Windows.Forms.Form

@@ -90,6 +90,7 @@ try {
 	$MenuItemSeparator3 = CreateMenuSeparator
 	$MenuItemSeparator4 = CreateMenuSeparator
 	$MenuItemSeparator5 = CreateMenuSeparator
+	$MenuItemSeparator6 = CreateMenuSeparator
 
 	$IconRunning = [System.Drawing.Icon]::new(".\icons\running.ico")
 	$IconStopped = [System.Drawing.Icon]::new(".\icons\stopped.ico")
@@ -97,11 +98,9 @@ try {
 	$AppNotifyIcon = CreateNotifyIcon "Gaming Gaiden" ".\icons\running.ico"
 	$AppNotifyIcon.Visible = $true
 
-	$ShowListMenuItem = CreateMenuItem "My Games"
-	$ShowListMenuItem.Font = New-Object Drawing.Font("Segoe UI", 9, [Drawing.FontStyle]::Bold)
+	$MyGamesMenuItem = CreateMenuItem "My Games"
+	$MyGamesMenuItem.Font = New-Object Drawing.Font("Segoe UI", 9, [Drawing.FontStyle]::Bold)
 
-	$ShowStatsMenuItem = CreateMenuItem "Time Spent Gaming"
-	$MostPlayedMenuItem = CreateMenuItem "Most Played"
 	$ExitMenuItem = CreateMenuItem "Exit"
 	$StartTrackerMenuItem = CreateMenuItem "Start Tracker"
 	$StopTrackerMenuItem = CreateMenuItem "Stop Tracker"
@@ -112,15 +111,22 @@ try {
 	$AddPlatformMenuItem = CreateMenuItem "Add Emulator"
 	$EditGameMenuItem = CreateMenuItem "Edit Game"
 	$EditPlatformMenuItem = CreateMenuItem "Edit Emulator"
-	
 	$SettingsSubMenuItem.DropDownItems.Add($AddGameMenuItem)
 	$SettingsSubMenuItem.DropDownItems.Add($EditGameMenuItem)
 	$SettingsSubMenuItem.DropDownItems.Add($MenuItemSeparator1)
 	$SettingsSubMenuItem.DropDownItems.Add($AddPlatformMenuItem)
 	$SettingsSubMenuItem.DropDownItems.Add($EditPlatformMenuItem)
 
+	$StatsSubMenuItem = CreateMenuItem "Statstics"
+	$GamingTimeMenuItem = CreateMenuItem "Time Spent Gaming"
+	$MostPlayedMenuItem = CreateMenuItem "Most Played"
+	$GamesPerPlatformMenuItem = CreateMenuItem "Games Per Platform"
+	$StatsSubMenuItem.DropDownItems.Add($GamingTimeMenuItem)
+	$StatsSubMenuItem.DropDownItems.Add($MostPlayedMenuItem)
+	$StatsSubMenuItem.DropDownItems.Add($GamesPerPlatformMenuItem)
+
 	$AppContextMenu = New-Object System.Windows.Forms.ContextMenuStrip
-	$AppContextMenu.Items.AddRange(@($ShowListMenuItem, $MostPlayedMenuItem, $ShowStatsMenuItem, $MenuItemSeparator2, $SettingsSubMenuItem, $MenuItemSeparator3, $StartTrackerMenuItem, $StopTrackerMenuItem, $MenuItemSeparator4, $HelpMenuItem, $MenuItemSeparator5, $ExitMenuItem))
+	$AppContextMenu.Items.AddRange(@($MyGamesMenuItem, $MenuItemSeparator2, $StatsSubMenuItem, $MenuItemSeparator3, $SettingsSubMenuItem, $MenuItemSeparator4, $StartTrackerMenuItem, $StopTrackerMenuItem, $MenuItemSeparator5, $HelpMenuItem, $MenuItemSeparator6, $ExitMenuItem))
 	$AppNotifyIcon.ContextMenuStrip = $AppContextMenu
 	
 	#------------------------------------------
@@ -140,13 +146,13 @@ try {
 		}
 	})
 
-	$ShowListMenuItem.Add_Click({
+	$MyGamesMenuItem.Add_Click({
 		Log "Rendering html list of tracked games"
 		RenderGameList
 		Invoke-Item ".\ui\MyGames.html"
 	})
 
-	$ShowStatsMenuItem.Add_Click({
+	$GamingTimeMenuItem.Add_Click({
 		Log "Rendering GamingTime"
 		RenderGamingTime
 		Invoke-Item ".\ui\GamingTime.html"
@@ -156,6 +162,12 @@ try {
 		Log "Rendering Most Played"
 		RenderMostPlayed
 		Invoke-Item ".\ui\MostPlayed.html"
+	})
+
+	$GamesPerPlatformMenuItem.Add_Click({
+		Log "Rendering Games Per Platform"
+		RenderGamesPerPlatform
+		Invoke-Item ".\ui\GamesPerPlatform.html"
 	})
 
 	$HelpMenuItem.Add_Click({
