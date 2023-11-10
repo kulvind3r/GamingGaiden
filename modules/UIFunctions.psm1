@@ -120,7 +120,12 @@ function RenderGameList() {
 	$GetAllGamesQuery = "SELECT name, icon, platform, play_time, completed, last_play_date FROM games"
 	
 	$GameRecords = (Invoke-SqliteQuery -Query $GetAllGamesQuery -SQLiteConnection $DBConnection)
-	
+	if ($GameRecords.Length -eq 0){
+        ShowMessage "No Games found in DB. Please add some games first." "Ok" "Error"
+        Log "Games list is empty. Returning"
+        return
+    }
+
 	$Games = @()
 	$TotalPlayTime = $null;
 	foreach ($GameRecord in $GameRecords) {
@@ -174,6 +179,12 @@ function RenderGamingTime() {
 
 	$DailyPlayTimeData = (Invoke-SqliteQuery -Query $GetDailyPlayTimeDataQuery -SQLiteConnection $DBConnection)
 
+	if ($DailyPlayTimeData.Length -eq 0){
+        ShowMessage "No Records of Game Time found in DB. Please play some games first." "Ok" "Error"
+        Log "Games list is empty. Returning"
+        return
+    }
+
 	$Table = $DailyPlayTimeData | ConvertTo-Html -Fragment
 	
 	$report = (Get-Content $WorkingDirectory\ui\templates\GamingTime.html.template) -replace "_DAILYPLAYTIMETABLE_", $Table
@@ -193,6 +204,11 @@ function RenderMostPlayed() {
 	$GetGamesPlayTimeDataQuery = "SELECT name, play_time as time FROM games Order By play_time DESC"
 
 	$GamesPlayTimeData = (Invoke-SqliteQuery -Query $GetGamesPlayTimeDataQuery -SQLiteConnection $DBConnection)
+	if ($GamesPlayTimeData.Length -eq 0){
+        ShowMessage "No Games found in DB. Please add some games first." "Ok" "Error"
+        Log "Games list is empty. Returning"
+        return
+    }
 
 	$Table = $GamesPlayTimeData | ConvertTo-Html -Fragment
 	
@@ -213,6 +229,11 @@ function RenderGamesPerPlatform() {
 	$GetGamesPerPlatformDataQuery = "SELECT  platform, COUNT(name) FROM games GROUP BY platform"
 
 	$GetGamesPerPlatformData = (Invoke-SqliteQuery -Query $GetGamesPerPlatformDataQuery -SQLiteConnection $DBConnection)
+	if ($GetGamesPerPlatformData.Length -eq 0){
+        ShowMessage "No Games found in DB. Please add some games first." "Ok" "Error"
+        Log "Games list is empty. Returning"
+        return
+    }
 
 	$Table = $GetGamesPerPlatformData | ConvertTo-Html -Fragment
 	
