@@ -14,6 +14,20 @@ try {
 	Import-Module -Name ".\modules\HelperFunctions.psm1"
 	Import-Module -Name ".\modules\UIFunctions.psm1"
 	
+	# Check if Gaming Gaiden is already Running 
+	$PsScriptsRunning = get-wmiobject win32_process | Where-Object{$_.processname -eq 'powershell.exe'} | select-object commandline,ProcessId
+
+	ForEach ($PsCmdLine in $PsScriptsRunning){
+		[Int32]$OtherPID = $PsCmdLine.ProcessId
+		[String]$OtherCmdLine = $PsCmdLine.commandline
+	
+		If (($OtherCmdLine -like "*GamingGaiden.ps1*") -And ($OtherPID -ne $PID) ){
+			ShowMessage "Gaming Gaiden is already running as PID [$OtherPID]. Not Starting another Instance." "Ok" "Error"
+			Log "Gaming Gaiden is already running as PID [$OtherPID]. Not Starting another Instance."
+			Exit
+		}
+	}
+
 	ResetLog
 	Log "Executing Database Setup"
 	Start-Process -FilePath "powershell" -ArgumentList "-File","`".\SetupDatabase.ps1`"" -WindowStyle Hidden -Wait
