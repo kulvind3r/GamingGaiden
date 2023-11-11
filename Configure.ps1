@@ -51,8 +51,8 @@ function EditPlatform {
 
 try {
 
-    [System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms')  | out-null
-    [System.Reflection.assembly]::loadwithpartialname("microsoft.visualbasic") | Out-Null
+    [System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms')  | Out-Null
+    [System.Reflection.assembly]::LoadwithPartialname("microsoft.visualbasic") | Out-Null
     Import-Module PSSQLite
     Import-Module -Name ".\modules\HelperFunctions.psm1"
     Import-Module -Name ".\modules\QueryFunctions.psm1"

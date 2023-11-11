@@ -27,7 +27,7 @@ function UserPrompt($Msg, $Color = "Green") {
     Write-Host $Msg -ForegroundColor $Color
 }
 
-function checkConnection() {
+function CheckConnection() {
     if ( -Not (Test-NetConnection www.powershellgallery.com -Port 443 -InformationLevel "Detailed").TcpTestSucceeded)
     {
         UserPrompt "Dependencies Need to be downloaded. No connection to Internet. Exiting" "Red"
@@ -35,33 +35,6 @@ function checkConnection() {
         exit 1
     }
 }
-
-if (-Not ((Get-Module -ListAvailable -Name PSSqlite) -And (Get-Module -ListAvailable -Name ThreadJob))) { checkConnection }
-
-UserPrompt "Read the Following Notice Carefully"
-
-Start-Sleep -s 2
-
-UserPrompt @"
-This script will setup Gaming Gaiden to run from current location on your PC
-Following actions will be taken
-
-1. Execution policy will be set to "RemoteSigned". This allows to run Powershell scripts after they are unblocked.
-
-Read more here. https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-5.1#remotesigned
-
-2. All scripts included with GamingGaiden will be unblocked so they can be run.
-
-3. PSSQLite and ThreadJob modules will be installed from microsoft powershell gallery.
-
-4. A shortcut will be placed on your desktop and in current directory to run Gaming Gaiden.
-
-5. Optionally you can choose to add a scheduled task to run Gaming Gaiden automatically on startup.
-"@ "White"
-
-UserPrompt "Do you wish to proceed with installation? Yes/No"
-
-$UserChoice = Read-Host
 
 function CreateShortcut() {
     $GamingGaidenScript = (Get-Item ".\GamingGaiden.ps1")
@@ -106,6 +79,33 @@ function InstallModules($Modules) {
     foreach ($Module in $Modules) { Install-Module $Module }
     Set-PSRepository -Name 'PSGallery' -InstallationPolicy Untrusted;
 }
+
+if (-Not ((Get-Module -ListAvailable -Name PSSqlite) -And (Get-Module -ListAvailable -Name ThreadJob))) { CheckConnection }
+
+UserPrompt "Read the Following Notice Carefully"
+
+Start-Sleep -s 2
+
+UserPrompt @"
+This script will setup Gaming Gaiden to run from current location on your PC
+Following actions will be taken
+
+1. Execution policy will be set to "RemoteSigned". This allows to run Powershell scripts after they are unblocked.
+
+Read more here. https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-5.1#remotesigned
+
+2. All scripts included with GamingGaiden will be unblocked so they can be run.
+
+3. PSSQLite and ThreadJob modules will be installed from microsoft powershell gallery.
+
+4. A shortcut will be placed on your desktop and in current directory to run Gaming Gaiden.
+
+5. Optionally you can choose to add a scheduled task to run Gaming Gaiden automatically on startup.
+"@ "White"
+
+UserPrompt "Do you wish to proceed with installation? Yes/No"
+
+$UserChoice = Read-Host
 
 if ( $UserChoice.ToLower() -eq 'yes' )
 {

@@ -1,12 +1,9 @@
 ﻿#Requires -Version 5.1
 #Requires -Modules PSSQLite, ThreadJob
 
-[System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms')    | out-null
-[System.Reflection.Assembly]::LoadWithPartialName('presentationframework')   | out-null
-[System.Reflection.Assembly]::LoadWithPartialName('System.Drawing')          | out-null
-[System.Reflection.Assembly]::LoadWithPartialName('System.Web')          	 | out-null
-[System.Reflection.Assembly]::LoadWithPartialName('WindowsFormsIntegration') | out-null
-[System.Reflection.assembly]::loadwithpartialname("microsoft.visualbasic") | Out-Null
+[System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms')    | Out-null
+[System.Reflection.Assembly]::LoadWithPartialName('System.Drawing')          | Out-null
+[System.Reflection.Assembly]::LoadWithPartialName('System.Web')          	 | Out-null
 
 try {
 	Import-Module PSSQLite

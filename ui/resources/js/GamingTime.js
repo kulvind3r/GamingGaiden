@@ -209,10 +209,10 @@ function loadDataFromTable() {
     // Initialize the chart with the first year in the table
     const firstDate = new Date(gamingData[0].date);
     const lastDate = new Date(gamingData[gamingData.length - 1].date);
-    firstYear = parseInt(lastDate.getFullYear())
-    firstMonth = parseInt(lastDate.getMonth())
-    finalYear = parseInt(firstDate.getFullYear());
-    finalMonth = parseInt(firstDate.getMonth());
+    firstYear = parseInt(firstDate.getFullYear())
+    firstMonth = parseInt(firstDate.getMonth())
+    finalYear = parseInt(lastDate.getFullYear());
+    finalMonth = parseInt(lastDate.getMonth());
     
     selectedYear = finalYear
     selectedMonth = finalMonth 

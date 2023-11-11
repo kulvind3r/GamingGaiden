@@ -175,7 +175,7 @@ function RenderGamingTime() {
 
 	$WorkingDirectory = (Get-Location).Path
 
-	$GetDailyPlayTimeDataQuery = "SELECT play_date as date, play_time as time FROM daily_playtime"
+	$GetDailyPlayTimeDataQuery = "SELECT play_date as date, play_time as time FROM daily_playtime ORDER BY date ASC"
 
 	$DailyPlayTimeData = (Invoke-SqliteQuery -Query $GetDailyPlayTimeDataQuery -SQLiteConnection $DBConnection)
 
@@ -824,7 +824,7 @@ function RenderAddPlatformForm() {
 
 		if ($textExe.Text -eq "" -Or $textName.Text -eq "" -Or $textRomExt.Text -eq "")
 		{
-			ShowMessage "Name, Exe and Extensions fields cannot be empty.`r`nTry again." "OK" "Error"
+			ShowMessage "Platform, Exe and Extensions fields cannot be empty.`r`nTry again." "OK" "Error"
 			return
 		}
 		$EmulatorExeName = (Get-Item $textExe.Text).BaseName

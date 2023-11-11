@@ -28,7 +28,7 @@ function PlayTimeMinsToString($PlayTime) {
 }
 
 function PlayTimeStringToMin($PlayTime) {
-	if ( -Not ($PlayTime -match '^[0-9]{0,5} Hr [0-5][0-9] Min$') ) {
+	if ( -Not ($PlayTime -match '^[0-9]{0,5} Hr [0-5]{0,1}[0-9]{1} Min$') ) {
         Log "Incorrect Playtime format entered. Returning null"
         return $null
     }
