@@ -67,7 +67,8 @@ function MonitorGame($DetectedExe, $RecordingNotifyIcon) {
 	{
 		$DetectedExePattern = SQLEscapedMatchPattern($DetectedExe.Trim())
 		$GetGameNameQuery = "SELECT name FROM games WHERE exe_name LIKE '{0}'" -f $DetectedExePattern
-		$GameName = (Invoke-SqliteQuery -Query $GetGameNameQuery -SQLiteConnection $DBConnection).name
+		$EntityFound = Invoke-SqliteQuery -Query $GetGameNameQuery -SQLiteConnection $DBConnection
+		$GameName = $EntityFound.name
 	}
 	
 	$RecordingNotifyIcon.Text = "Tracking $GameName"
