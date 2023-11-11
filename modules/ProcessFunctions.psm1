@@ -81,14 +81,14 @@ function MonitorGame($DetectedExe, $RecordingNotifyIcon) {
 		
 		$RecordedGamePlayTime = GetPlayTime $GameName
 		$UpdatedPlayTime = $RecordedGamePlayTime + $CurrentPlayTime
-
+		
 		UpdateGameOnSession -GameName $GameName -GamePlayTime $UpdatedPlayTime -GameLastPlayDate $UpdatedLastPlayDate
 	}
 	else
 	{
 		Log "Game Doesn't Exists. Adding New Game"
 		SaveGame -GameName $GameName -GameExeName $DetectedExe -GameIconPath "./icons/default.png" `
-				 -GamePlayTime $UpdatedPlayTime -GameLastPlayDate $UpdatedLastPlayDate -GameCompleteStatus 'FALSE' -GamePlatform $EmulatedGameDetails.Platform
+				 -GamePlayTime $CurrentPlayTime -GameLastPlayDate $UpdatedLastPlayDate -GameCompleteStatus 'FALSE' -GamePlatform $EmulatedGameDetails.Platform
 	}
 
 	RecordPlaytimOnDate($CurrentPlayTime)
