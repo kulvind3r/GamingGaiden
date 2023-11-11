@@ -137,7 +137,7 @@ function findEmulatedGameDetails($DetectedEmulatorExe) {
 	
 	$EmulatedGamePlatform = findEmulatedGamePlatform $DetectedEmulatorExe $CoreName
 
-	if ($EmulatedGamePlatform.Length -gt 1)
+	if ($EmulatedGamePlatform -is [system.array])
 	{
 		Log "Something went wrong. More Than one platform detected. Game Details won't be accurate."
 		return $false
