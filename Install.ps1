@@ -23,11 +23,26 @@ if(-not $isAdmin) {
 $InstallDirectory = Get-Content "$env:TEMP\gg-install.config"
 Set-Location $InstallDirectory.ToString()
 
-Write-Host "Read the Following Notice Carefully" -ForegroundColor Green
+function UserPrompt($Msg, $Color = "Green") {
+    Write-Host $Msg -ForegroundColor $Color
+}
+
+function checkConnection() {
+    if ( -Not (Test-NetConnection www.powershellgallery.com -Port 443 -InformationLevel "Detailed").TcpTestSucceeded)
+    {
+        UserPrompt "Dependencies Need to be downloaded. No connection to Internet. Exiting" "Red"
+        Start-Sleep -s 2
+        exit 1
+    }
+}
+
+if (-Not ((Get-Module -ListAvailable -Name PSSqlite) -And (Get-Module -ListAvailable -Name ThreadJob))) { checkConnection }
+
+UserPrompt "Read the Following Notice Carefully"
 
 Start-Sleep -s 2
 
-Write-Host @"
+UserPrompt @"
 This script will setup Gaming Gaiden to run from current location on your PC
 Following actions will be taken
 
@@ -42,9 +57,9 @@ Read more here. https://learn.microsoft.com/en-us/powershell/module/microsoft.po
 4. A shortcut will be placed on your desktop and in current directory to run Gaming Gaiden.
 
 5. Optionally you can choose to add a scheduled task to run Gaming Gaiden automatically on startup.
-"@
+"@ "White"
 
-Write-Host "Do you wish to proceed with installation? Yes/No" -ForegroundColor Green
+UserPrompt "Do you wish to proceed with installation? Yes/No"
 
 $UserChoice = Read-Host
 
@@ -64,6 +79,7 @@ function CreateShortcut() {
     $shortcut.WindowStyle = 7 # Takes only int values, 7 is "Minimized" style
     $shortcut.Save()
     Copy-Item "$DesktopPath\Gaming Gaiden.lnk" .
+    Copy-Item "$DesktopPath\Gaming Gaiden.lnk" "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\"
 }
 
 function CreateScheduledTask() {
@@ -83,39 +99,48 @@ function CreateScheduledTask() {
     Register-ScheduledTask -TaskName "Gaming Gaiden Autostart" -Description "Runs Gaming Gaiden at startup" -Action $action -Trigger $trigger -Settings $settings -Force
 }
 
+function InstallModules($Modules) {
+    if ($Modules.Length -eq 0) { UserPrompt "All modules already installed."; return }
+
+    Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted;
+    foreach ($Module in $Modules) { Install-Module $Module }
+    Set-PSRepository -Name 'PSGallery' -InstallationPolicy Untrusted;
+}
+
 if ( $UserChoice.ToLower() -eq 'yes' )
 {
-    Write-Host "Updating LocalMachine Execution Policy." -ForegroundColor Green
+    UserPrompt "Updating LocalMachine Execution Policy."
     $ErrorActionPreference = 'SilentlyContinue'
     Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope LocalMachine
     Remove-Variable $ErrorActionPreference
     
-    Write-Host "Unblocking all Gaming Gaiden files" -ForegroundColor Green
+    UserPrompt "Unblocking all Gaming Gaiden files"
     Get-ChildItem . -recurse | Unblock-File
 
-    Write-Host "Installing ThreadJob and PSSqlite Modules" -ForegroundColor Green
-    Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted
-    Install-Module ThreadJob
-    Install-Module PSSqlite
-    Set-PSRepository -Name 'PSGallery' -InstallationPolicy Untrusted
+    UserPrompt "Installing ThreadJob and PSSqlite Modules"
 
-    Write-Host "Creating Shortcut" -ForegroundColor Green
+    $Modules = @()
+    if (-Not (Get-Module -ListAvailable -Name ThreadJob)){ $Modules = $Modules + "ThreadJob" }
+    if (-Not (Get-Module -ListAvailable -Name ThreadJob)){ $Modules = $Modules + "PSSqlite" }
+    InstallModules $Modules
+
+    UserPrompt "Creating Shortcut"
     CreateShortcut
 
     $ScheduledTaskChoice = Read-Host -Prompt "Would you like Gaming Gaiden to auto start at boot? Yes/No"
     if ( $ScheduledTaskChoice.ToLower() -eq 'yes' ) {
-        Write-Host "Creating Scheduled Task" -ForegroundColor Green
+        UserPrompt "Creating Scheduled Task"
         CreateScheduledTask
     }
 
-    Write-Host "Installation successful. Enjoy." -ForegroundColor Green
+    UserPrompt "Installation successful. Enjoy."
     Remove-Item "$env:TEMP\gg-install.config" -Force
     Start-Sleep 2
     exit 0
 }
 else
 {
-    Write-Host "User decided not to proceed with installation. Exiting." -ForegroundColor Green
+    UserPrompt "User decided not to proceed with installation. Exiting."
     Remove-Item "$env:TEMP\gg-install.config" -Force
     Start-Sleep 2
     exit 1
