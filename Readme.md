@@ -11,10 +11,7 @@ noun (common)
 
 A Tale; Side Story;
 
-
 A simple application written in powershell to track your gaming time and review how you have spent your hours at leisure. 
-
-
 
 ### Features
 - Tracks runtime for any PC or emulated game.
@@ -28,9 +25,10 @@ A simple application written in powershell to track your gaming time and review 
 - See your most played games and number of games played per platform.
 - Completely offline, No internet required after first installation. All data stored locally.
 - Portable, no MSI installer or Setup. Just Unzip and run Install script.
-- Database backup after every gaming session or change in database. Last 5 backups always maintained. Simply Replace DB file to Restore.
+- Database backup after every gaming session or change in database. Last 5 backups always maintained. Simply replace DB file to Restore.
 - Automated scheduled task setup on install to run at startup and start tracking.
 - Inbuilt Manual explaining how to use application in detail. Just click Help from menu.
+- Detailed Logging to identify bugs and errors.
 
 ### Vs Steam, Playnite etc.
 The launchers do time tracking at best as a side feature. Gaming Gaiden is designed to give you insights to your hobby. It's stastics feature will answer questions like 
@@ -65,13 +63,13 @@ Made with love using
 - Game Cartridge Icon from [FreePik on Flaticon](https://www.flaticon.com/free-icons/game-cartridge)
 - Cute [Ninja Vector by Catalyststuff on Freepik](https://www.freepik.com/free-vector/cute-ninja-gaming-cartoon-vector-icon-illustration-people-technology-icon-concept-isolated-flat_42903434.htm)
 
-### Contributing / Raising Issues
+### Raising Bugs
 
 ***Read the included manual first before raising issues. You might be able to solve it without needing help.***
 
-No new features / enhancements are planned. It is feature complete for what it needs to do. Simplicity is a design choice to ensure bugs remain low. Goal is to do one job and one job alone while being rock solid. New feature requests / contributions may not be accepted or entertained. 
+As a single dev, i have tested the application to best of my ability before making it public. However a large number of users is the first rigrous QA process the application is going to get. Bugs that i missed are bound to be found so kindly be patient. Bug reports in current feature set are welcome. Please share.
 
-Bug reports in current feature set are welcome. Fixes will be done / accepted only if the issue is considered valid for current feature set application has.
+I will try my best to fix bugs that are valid for the current set of features. If a bug report looks more like a new feature being requested instead of something broken in existing features. I may chose not to work on that. I believe the application is feature complete for what it is trying to do and i don't plan to add any additional features for most part.
 
 I would much rather actually play games than keep on developing this.
 
