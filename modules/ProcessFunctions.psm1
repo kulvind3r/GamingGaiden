@@ -2,7 +2,7 @@ function DetectGame() {
 
 	Log "Starting game detection"
 
-    $GetGameExesQuery = "SELECT exe_name FROM games WHERE completed LIKE 'FALSE'"
+    $GetGameExesQuery = "SELECT exe_name FROM games"
 	$GetEmulatorExesQuery = "SELECT exe_name FROM emulated_platforms"
 
     $GameExeList = (Invoke-SqliteQuery -Query $GetGameExesQuery -SQLiteConnection $DBConnection).exe_name
