@@ -76,4 +76,4 @@ Bug reports in current feature set are welcome. Fixes will be done / accepted on
 I would much rather actually play games than keep on developing this.
 
 ### I have More Questions
-Check [FAQ](./readme-files/faq.md)
+Check [FAQ](./readme-files/FAQ.md)
