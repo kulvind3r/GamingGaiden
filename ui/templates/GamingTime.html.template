@@ -26,13 +26,13 @@
         <h1>Time You Spent Playing Games</h1>
         <canvas id="gaming-time-chart"></canvas>
         <div id="navigation-bar">
-            <button class="stats-button" id="prev-button"><<</button>
+            <button class="custom-button" id="prev-button"><<</button>
             <p id="time-period-display"></p>
-            <button class="stats-button" id="next-button">>></button>
+            <button class="custom-button" id="next-button">>></button>
         </div>
         <p id="warn-msg"></p>
     </div>
-    <button class="stats-button" id="period-button">Yearly Summary</button>
+    <button class="custom-button" id="period-button">Yearly Summary</button>
     <div>
         _DAILYPLAYTIMETABLE_
     </div>

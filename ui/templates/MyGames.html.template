@@ -54,12 +54,26 @@
 
         $('#DataTables_Table_0_wrapper')[0].insertAdjacentHTML("afterbegin",'<div id="AllGames">All Games\n_TOTALGAMECOUNT_</div>');
         $('#DataTables_Table_0_wrapper')[0].insertAdjacentHTML("afterbegin",'<div id="TotalPlaytime">Total Playtime\n_TOTALPLAYTIME_</div>');
+
+        document.getElementById('Toggle-Pagination').addEventListener('click', () => {
+          if ($('table').DataTable().page.len() == 9)
+          {
+            document.getElementById('Toggle-Pagination').innerText = "Paginate";
+            $('table').DataTable().page.len(-1).draw();
+          }
+          else {
+            document.getElementById('Toggle-Pagination').innerText = "Show All";
+            $('table').DataTable().page.len(9).draw();
+          }
+        });
       }
     );
   </script>
 </head>
 <body>
   _GAMESTABLE_
+  <div id="button-container">
+    <button class="custom-button" id="Toggle-Pagination">Show All</button>
+  </div>
 </body>
 </html>
-
