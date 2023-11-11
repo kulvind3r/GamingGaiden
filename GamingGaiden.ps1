@@ -52,9 +52,7 @@ try {
 			$RecordingNotifyIcon = CreateNotifyIcon "Tracking Game" ".\icons\recording.ico"
 			while ($true) {
 				$DetectedExe = DetectGame
-				$RecordingNotifyIcon.Visible = $true
 				MonitorGame $DetectedExe $RecordingNotifyIcon
-				$RecordingNotifyIcon.Visible = $false
 			}
 		}
 		catch {

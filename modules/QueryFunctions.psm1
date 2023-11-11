@@ -74,6 +74,7 @@ function findEmulatedGameCore($DetectedEmulatorExe, $EmulatorCommandLine) {
 		}
 	}
 
+	Log "Detected Core : $CoreName"
 	return $CoreName
 }
 
@@ -94,6 +95,7 @@ function findEmulatedGamePlatform($DetectedEmulatorExe, $Core) {
 	
 	$EmulatedGamePlatform = (Invoke-SqliteQuery -Query $GetPlatformQuery -SQLiteConnection $DBConnection).name
 
+	Log "Detected Platform : $EmulatedGamePlatform"
 	return $EmulatedGamePlatform
 }
 
@@ -106,9 +108,22 @@ function findEmulatedGameDetails($DetectedEmulatorExe) {
 	$EmulatedGameName = findEmulatedGame $DetectedEmulatorExe $EmulatorCommandLine
 	if ($EmulatedGameName.Length -eq 0)
 	{
+		Log "Something went wrong. Detected Emulated Game's Name was of 0 char length."
 		return $false
 	}
-	$CoreName = findEmulatedGameCore $DetectedEmulatorExe $EmulatorCommandLine
+
+	$CoreName = $null
+	if ($DetectedEmulatorExe.ToLower() -like "*retroarch*"){
+		Log "Retroarch detected. Triggering core detection"
+		$CoreName = findEmulatedGameCore $DetectedEmulatorExe $EmulatorCommandLine
+
+		if ($null -eq $CoreName)
+		{
+			Log "No Core found for retroarch based emulation. Most likely Platform is not registered. Please register Platform."
+			return $false
+		}
+	}
+	
 	$EmulatedGamePlatform = findEmulatedGamePlatform $DetectedEmulatorExe $CoreName
 
 	return New-Object PSObject -Property @{ Name = $EmulatedGameName; Exe = $DetectedEmulatorExe ; Platform = $EmulatedGamePlatform }

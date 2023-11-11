@@ -27,6 +27,16 @@ function DetectGame() {
     return $DetectedExe
 }
 
+function TimeTrackerLoop($DetectedExe) {
+	$CurrentPlayTime = 0
+    while(Get-Process $DetectedExe)
+    {
+        $CurrentPlayTime = [int16](New-TimeSpan -Start (Get-Process $DetectedExe).StartTime).TotalMinutes
+        Start-Sleep -s 10
+    }
+	return $CurrentPlayTime
+}
+
 function MonitorGame($DetectedExe, $RecordingNotifyIcon) {
 
 	Log "Starting monitoring for $DetectedExe"
@@ -39,12 +49,15 @@ function MonitorGame($DetectedExe, $RecordingNotifyIcon) {
 	$UpdatedPlayTime = 0
 	$UpdatedLastPlayDate = (Get-Date -UFormat %s).Split('.').Get(0)
 
-	if (IsExeEmulator($DetectedExe))
+	if (IsExeEmulator $DetectedExe)
 	{
 		$EmulatedGameDetails = findEmulatedGameDetails $DetectedExe
 		if ($EmulatedGameDetails -eq $false)
 		{
-			Log "Something went wrong. Detected Emulated Game's Name was of 0 char length. Exiting Monitoring Loop. Going back to Detection"
+			Log "Received no details on Emulated Game. Check earlier logs for hint."
+			Log "Will start timetracker loop to wait for current detected Exe to stop before resuming detection. No playtime will be recorded."
+			
+			TimeTrackerLoop $DetectedExe
 			return
 		}
 		$GameName = $EmulatedGameDetails.Name
@@ -56,14 +69,11 @@ function MonitorGame($DetectedExe, $RecordingNotifyIcon) {
 		$GetGameNameQuery = "SELECT name FROM games WHERE exe_name LIKE '{0}'" -f $DetectedExePattern
 		$GameName = (Invoke-SqliteQuery -Query $GetGameNameQuery -SQLiteConnection $DBConnection).name
 	}
+	
 	$RecordingNotifyIcon.Text = "Tracking $GameName"
-
-    $CurrentPlayTime = 0
-    while(Get-Process $DetectedExe)
-    {
-        $CurrentPlayTime = [int16](New-TimeSpan -Start (Get-Process $DetectedExe).StartTime).TotalMinutes
-        Start-Sleep -s 10
-    }
+	$RecordingNotifyIcon.Visible = $true
+    $CurrentPlayTime = TimeTrackerLoop $DetectedExe
+	$RecordingNotifyIcon.Visible = $false
 
 	if ($null -ne $EntityFound)
 	{
