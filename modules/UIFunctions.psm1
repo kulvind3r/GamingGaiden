@@ -837,8 +837,8 @@ function RenderAddPlatformForm() {
 		}
 
 		$PlatformName = $textName.Text
-		$EntityFound = DoesEntityExists "emulated_platforms" "name"  $PlatformName
-		if ($null -ne $EntityFound)
+		$PlatformFound = DoesEntityExists "emulated_platforms" "name"  $PlatformName
+		if ($null -ne $PlatformFound)
 		{
 			ShowMessage "Platform $PlatformName already exists.`r`nUse Edit Platform setting to check existing platforms." "OK" "Error"
 			Log "Platform already exists. returning"
@@ -846,6 +846,16 @@ function RenderAddPlatformForm() {
 		}
 
 		$EmulatorCore = $textCore.Text
+
+		$ExeCoreComboFound = CheckExeCoreCombo $EmulatorExeName $EmulatorCore
+		Log "Checkpoint 1"
+		if ($null -ne $ExeCoreComboFound)
+		{
+			ShowMessage "Executable '$EmulatorExeName.exe' is already registered with core '$EmulatorCore'.`r`nCannot register another platform with same Exe and Core Combination.`r`nUse Edit Platform setting to check existing platforms." "OK" "Error"
+			Log "Exe and Core Combo already exists. Cannot register a new platform with same combination. returning"
+			return
+		}
+
 		$PlatformRomExtensions = $textRomExt.Text
 		if (-Not ($PlatformRomExtensions -match '^([a-z]{3},)*([a-z]{3}){1}$'))
 		{

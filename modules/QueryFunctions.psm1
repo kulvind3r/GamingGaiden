@@ -21,6 +21,18 @@ function DoesEntityExists($Table, $Column, $EntityName){
     return $EntityFound
 }
 
+function CheckExeCoreCombo($Exe, $Core){
+	Log "Checking if $Exe is already registered with $Core"
+
+	$ExeNamePattern = SQLEscapedMatchPattern($Exe.Trim())
+	$CoreNamePattern = SQLEscapedMatchPattern($Core.Trim())
+    $ValidateEntityQuery = "SELECT * FROM emulated_platforms WHERE exe_name LIKE '{0}' AND core LIKE '{1}'" -f $ExeNamePattern, $CoreNamePattern
+
+    $EntityFound = (Invoke-SqliteQuery -Query $ValidateEntityQuery -SQLiteConnection $DBConnection)
+
+    return $EntityFound
+}
+
 function GetPlayTime($GameName) {
 	$GameNamePattern = SQLEscapedMatchPattern($GameName.Trim())
 	$GetGamePlayTimeQuery = "SELECT play_time FROM games WHERE name LIKE '{0}'" -f $GameNamePattern
@@ -82,10 +94,9 @@ function findEmulatedGamePlatform($DetectedEmulatorExe, $Core) {
 	
 	$ExePattern = SQLEscapedMatchPattern $DetectedEmulatorExe.Trim()
 	$GetPlatformQuery = $null
-	if ($Core.Length -eq 0 )
-	{
+	if ($Core.Length -eq 0 ) {
 		Log "Finding platform for $DetectedEmulatorExe"
-		$GetPlatformQuery = "SELECT name FROM emulated_platforms WHERE exe_name LIKE '{0}'" -f $ExePattern
+		$GetPlatformQuery = "SELECT name FROM emulated_platforms WHERE exe_name LIKE '{0}' AND core LIKE ''" -f $ExePattern
 	}
 	else {
 		Log "Finding platform for $DetectedEmulatorExe and core $Core"
@@ -125,6 +136,12 @@ function findEmulatedGameDetails($DetectedEmulatorExe) {
 	}
 	
 	$EmulatedGamePlatform = findEmulatedGamePlatform $DetectedEmulatorExe $CoreName
+
+	if ($EmulatedGamePlatform.Length -gt 1)
+	{
+		Log "Something went wrong. More Than one platform detected. Game Details won't be accurate."
+		return $false
+	}
 
 	return New-Object PSObject -Property @{ Name = $EmulatedGameName; Exe = $DetectedEmulatorExe ; Platform = $EmulatedGamePlatform }
 }
