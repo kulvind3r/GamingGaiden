@@ -1,28 +1,29 @@
-﻿function IsExeEmulator($DetectedExe) {
-	
-	Log "Checking if Detected Exe is an Emulator"
+﻿function IsExeEmulator($DetectedExe) {	
+	Log "Is $DetectedExe is an Emulator?"
 
 	$pattern = SQLEscapedMatchPattern $DetectedExe.Trim()
 	$FindExeQuery = "SELECT COUNT(*) as '' FROM emulated_platforms WHERE exe_name LIKE '{0}'" -f $pattern
 
 	$ExesFound = (Invoke-SqliteQuery -Query $FindExeQuery -SQLiteConnection $DBConnection).Column1
 
+	Log ("Check result: {0}" -f ($ExesFound -gt 0))
 	return ($ExesFound -gt 0)
 }
 
 function DoesEntityExists($Table, $Column, $EntityName){
-    Log "Checking if $EntityName Exists in $Table"
+    Log "Does $EntityName exists in $Table?"
 
 	$EntityNamePattern = SQLEscapedMatchPattern($EntityName.Trim())
     $ValidateEntityQuery = "SELECT * FROM {0} WHERE {1} LIKE '{2}'" -f $Table, $Column, $EntityNamePattern
 
     $EntityFound = (Invoke-SqliteQuery -Query $ValidateEntityQuery -SQLiteConnection $DBConnection)
 
+	Log "Discovered entity: $EntityFound"
     return $EntityFound
 }
 
-function CheckExeCoreCombo($Exe, $Core){
-	Log "Checking if $Exe is already registered with $Core"
+function CheckExeCoreCombo($Exe, $Core) {
+	Log "Is $Exe already registered with $Core?"
 
 	$ExeNamePattern = SQLEscapedMatchPattern($Exe.Trim())
 	$CoreNamePattern = SQLEscapedMatchPattern($Core.Trim())
@@ -30,21 +31,24 @@ function CheckExeCoreCombo($Exe, $Core){
 
     $EntityFound = (Invoke-SqliteQuery -Query $ValidateEntityQuery -SQLiteConnection $DBConnection)
 
+	Log "Detected exe core Combo: $EntityFound"
     return $EntityFound
 }
 
 function GetPlayTime($GameName) {
+	Log "Get existing gameplay time for $GameName"
+
 	$GameNamePattern = SQLEscapedMatchPattern($GameName.Trim())
 	$GetGamePlayTimeQuery = "SELECT play_time FROM games WHERE name LIKE '{0}'" -f $GameNamePattern
 
 	$RecordedGamePlayTime = (Invoke-SqliteQuery -Query $GetGamePlayTimeQuery -SQLiteConnection $DBConnection).play_time
 
+	Log "Detected gameplay time: $RecordedGamePlayTime"
 	return $RecordedGamePlayTime
 }
 
-function findEmulatedGame($DetectedEmulatorExe, $EmulatorCommandLine){
-	
-	Log "Finding name of emulated game for $DetectedEmulatorExe"
+function findEmulatedGame($DetectedEmulatorExe, $EmulatorCommandLine) {
+	Log "Finding emulated game for $DetectedEmulatorExe"
 
 	$pattern = SQLEscapedMatchPattern $DetectedEmulatorExe.Trim()
 	$GetRomExtensionsQuery = "SELECT rom_extensions FROM emulated_platforms WHERE exe_name LIKE '{0}'" -f $pattern
@@ -62,11 +66,12 @@ function findEmulatedGame($DetectedEmulatorExe, $EmulatorCommandLine){
 
 	$EmulatedGame = [regex]::Replace($RomName, '\([^)]*\)', "")
 
+	Log ("Detected game: {0}" -f $EmulatedGame.Trim())
 	return $EmulatedGame.Trim()
 }
 
 function findEmulatedGameCore($DetectedEmulatorExe, $EmulatorCommandLine) {
-	Log "Finding core used for emulated game by $DetectedEmulatorExe"
+	Log "Finding core in use by $DetectedEmulatorExe"
 
 	$pattern = SQLEscapedMatchPattern $DetectedEmulatorExe.Trim()
 	$GetCoresQuery = "SELECT core FROM emulated_platforms WHERE exe_name LIKE '{0}'" -f $pattern
@@ -86,12 +91,11 @@ function findEmulatedGameCore($DetectedEmulatorExe, $EmulatorCommandLine) {
 		}
 	}
 
-	Log "Detected Core : $CoreName"
+	Log "Detected core: $CoreName"
 	return $CoreName
 }
 
-function findEmulatedGamePlatform($DetectedEmulatorExe, $Core) {
-	
+function findEmulatedGamePlatform($DetectedEmulatorExe, $Core) {	
 	$ExePattern = SQLEscapedMatchPattern $DetectedEmulatorExe.Trim()
 	$GetPlatformQuery = $null
 	if ($Core.Length -eq 0 ) {
@@ -106,31 +110,30 @@ function findEmulatedGamePlatform($DetectedEmulatorExe, $Core) {
 	
 	$EmulatedGamePlatform = (Invoke-SqliteQuery -Query $GetPlatformQuery -SQLiteConnection $DBConnection).name
 
-	Log "Detected Platform : $EmulatedGamePlatform"
+	Log "Detected platform : $EmulatedGamePlatform"
 	return $EmulatedGamePlatform
 }
 
 function findEmulatedGameDetails($DetectedEmulatorExe) {
-
-	Log "Finding Details of Emulated Game by $DetectedEmulatorExe"
+	Log "Finding emulated game details for $DetectedEmulatorExe"
 
 	$EmulatorCommandLine = Get-WmiObject Win32_Process -Filter "name = '$DetectedEmulatorExe.exe'" | Select-Object -ExpandProperty CommandLine
 
 	$EmulatedGameName = findEmulatedGame $DetectedEmulatorExe $EmulatorCommandLine
 	if ($EmulatedGameName.Length -eq 0)
 	{
-		Log "Something went wrong. Detected Emulated Game's Name was of 0 char length."
+		Log "Error: Detected emulated game name of 0 char length. Returning"
 		return $false
 	}
 
 	$CoreName = $null
 	if ($DetectedEmulatorExe.ToLower() -like "*retroarch*"){
-		Log "Retroarch detected. Triggering core detection"
+		Log "Retroarch detected. Detecting core next"
 		$CoreName = findEmulatedGameCore $DetectedEmulatorExe $EmulatorCommandLine
 
 		if ($null -eq $CoreName)
 		{
-			Log "No Core found for retroarch based emulation. Most likely Platform is not registered. Please register Platform."
+			Log "Error: No core detected. Most likely platform not registered. Please register platform."
 			return $false
 		}
 	}
@@ -139,10 +142,11 @@ function findEmulatedGameDetails($DetectedEmulatorExe) {
 
 	if ($EmulatedGamePlatform -is [system.array])
 	{
-		Log "Something went wrong. More Than one platform detected. Game Details won't be accurate."
+		Log "Error: Multiple platforms detected. Returning."
 		return $false
 	}
 
+	Log "Found emulated game details. Name: $EmulatedGameName, Exe: $DetectedEmulatorExe, Platform: $EmulatedGamePlatform"
 	return New-Object PSObject -Property @{ Name = $EmulatedGameName; Exe = $DetectedEmulatorExe ; Platform = $EmulatedGamePlatform }
 }
 
@@ -154,6 +158,7 @@ function GetGameDetails($Game) {
 
 	$GameDetails = Invoke-SqliteQuery -Query $GetGameDetailsQuery -SQLiteConnection $DBConnection
 
+	Log ("Found details: name: {0}, exe_name: {1}, platform: {2}, play_time: {3}" -f $Game.name, $Game.exe_name, $Game.platform, $Game.play_time)
 	return $GameDetails
 }
 
@@ -165,5 +170,6 @@ function GetPlatformDetails($Platform) {
 
 	$PlatformDetails = Invoke-SqliteQuery -Query $GetPlatformDetailsQuery -SQLiteConnection $DBConnection
 
+	Log ("Found details: name: {0}, exe_name: {1}, core: {2}" -f $PlatformDetails.name, $PlatformDetails.exe_name, $PlatformDetails.core)
 	return $PlatformDetails
 }

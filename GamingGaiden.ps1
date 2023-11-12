@@ -20,15 +20,15 @@ try {
 	
 		If (($OtherCmdLine -like "*GamingGaiden.ps1*") -And ($OtherPID -ne $PID) ){
 			ShowMessage "Gaming Gaiden is already running as PID [$OtherPID]. Not Starting another Instance." "Ok" "Error"
-			Log "Gaming Gaiden is already running as PID [$OtherPID]. Not Starting another Instance."
+			Log "Error: Gaming Gaiden already running as PID [$OtherPID]. Not Starting another Instance."
 			Exit
 		}
 	}
 
 	ResetLog
-	Log "Executing Database Setup"
+	Log "Executing database setup"
 	Start-Process -FilePath "powershell" -ArgumentList "-File","`".\SetupDatabase.ps1`"" -WindowStyle Hidden -Wait
-	Log "Database Setup Complete"
+	Log "Database setup complete"
 
 	#------------------------------------------
 	# Setup tracker Job Scripts and Other Functions
@@ -55,9 +55,9 @@ try {
 		catch {
 			$RecordingNotifyIcon.Visible = $false
 			$Timestamp = (Get-date -f %d-%M-%y`|%H:%m:%s)
-			Write-Output "$Timestamp : A User or System error has caused an exception. Check Log for Details." >> ".\GamingGaiden.log"
+			Write-Output "$Timestamp : Error: A user or system error has caused an exception. Check log for details." >> ".\GamingGaiden.log"
 			Write-Output "$Timestamp : Exception: $($_.Exception.Message)" >> ".\GamingGaiden.log"
-			Write-Output "$Timestamp : Tracker job has failed. Please restart from app menu to continue detection." >> ".\GamingGaiden.log"
+			Write-Output "$Timestamp : Error: Tracker job has failed. Please restart from app menu to continue detection." >> ".\GamingGaiden.log"
 			exit 1;
 		}
 		
@@ -68,7 +68,7 @@ try {
 		$StopTrackerMenuItem.Enabled = $true
 		$StartTrackerMenuItem.Enabled = $false
 		$AppNotifyIcon.Icon = $IconRunning
-		Log "Started Tracker"
+		Log "Started tracker"
 	}
 
 	function  StopTrackerJob {
@@ -76,13 +76,13 @@ try {
 		$StopTrackerMenuItem.Enabled = $false
 		$StartTrackerMenuItem.Enabled = $true
 		$AppNotifyIcon.Icon = $IconStopped
-		Log "Stopped Tracker"
+		Log "Stopped tracker"
 	}
 
 	function  ConfigureAction($Action, $WindowStyle = "Normal") {
-		Log "Executing Configuration Action: $Action"
+		Log "Executing configuration action: $Action"
 	   	Start-Process -FilePath "powershell" -ArgumentList "-File","`".\Configure.ps1`"", "$Action" -NoNewWindow -Wait
-	   	Log "Rebooting Tracker Job to apply new configuration"
+	   	Log "Rebooting tracker job to apply new configuration"
 		StopTrackerJob
 		StartTrackerJob
 	}
@@ -143,7 +143,6 @@ try {
 	$AppNotifyIcon.Add_Click({
 
 		If ($_.Button -eq [Windows.Forms.MouseButtons]::Left) {
-			Log "Rendering html list of tracked games"
 			RenderGameList
 			Invoke-Item ".\ui\MyGames.html"
 			return
@@ -156,31 +155,27 @@ try {
 	})
 
 	$MyGamesMenuItem.Add_Click({
-		Log "Rendering html list of tracked games"
 		RenderGameList
 		Invoke-Item ".\ui\MyGames.html"
 	})
 
 	$GamingTimeMenuItem.Add_Click({
-		Log "Rendering GamingTime"
 		RenderGamingTime
 		Invoke-Item ".\ui\GamingTime.html"
 	})
 
 	$MostPlayedMenuItem.Add_Click({
-		Log "Rendering Most Played"
 		RenderMostPlayed
 		Invoke-Item ".\ui\MostPlayed.html"
 	})
 
 	$GamesPerPlatformMenuItem.Add_Click({
-		Log "Rendering Games Per Platform"
 		RenderGamesPerPlatform
 		Invoke-Item ".\ui\GamesPerPlatform.html"
 	})
 
 	$HelpMenuItem.Add_Click({
-		Log "Showing Help"
+		Log "Showing help"
 		Invoke-Item ".\ui\Manual.html"
 	})
 
@@ -205,7 +200,7 @@ try {
 	$ExitMenuItem.Add_Click({ $AppNotifyIcon.Visible = $false; Stop-Job -Name "TrackerJob"; [System.Windows.Forms.Application]::Exit(); })
 	#------------------------------------------
 
-	Log "Starting TrackerJob on app boot"
+	Log "Starting tracker on app boot"
 	StartTrackerJob
 
 	Log "Hiding powershell window"
@@ -225,7 +220,7 @@ catch {
     [System.Windows.Forms.MessageBox]::Show("Exception: $($_.Exception.Message). Check log for details",'Gaming Gaiden', "OK", "Error")
 
 	$Timestamp = (Get-date -f %d-%M-%y`|%H:%m:%s)
-    Write-Output "$Timestamp : A User or System error has caused an exception. Check Log for Details." >> ".\GamingGaiden.log"
+    Write-Output "$Timestamp : Error: A user or system error has caused an exception. Check log for details." >> ".\GamingGaiden.log"
     Write-Output "$Timestamp : Exception: $($_.Exception.Message)" >> ".\GamingGaiden.log"
     exit 1;
 }

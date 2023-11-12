@@ -26,7 +26,6 @@ function FilterListBox {
 
     $listBox.Items.Clear()
 
-    # Add items to the ListBox that match the filterText
     foreach ($item in $originalItems) {
         if ($item -like "*$filterText*") {
             $listBox.Items.Add($item)
@@ -93,13 +92,14 @@ function RenderListBoxForm($Prompt, $List) {
 
 	if ( -Not ($result -eq [System.Windows.Forms.DialogResult]::OK))
 	{
-		Log "Operation cancelled or closed abruptly. Returning";
+		Log "Error: Operation cancelled or closed abruptly. Returning";
         exit 1
 	}
 	
 	if ($null -eq $listBox.SelectedItem)
 	{
 		ShowMessage "You must select an item to proceed. Try Again." "OK" "Error"
+		Log "Error: No item selected in list operation. Returning";
 		exit 1
 	}
 
@@ -109,9 +109,9 @@ function RenderListBoxForm($Prompt, $List) {
 }
 
 function RenderGameList() {
+	Log "Rendering my games list"
 
 	$Database = ".\GamingGaiden.db"
-	Log "Connecting to database for Rendering game list"
 	$DBConnection = New-SQLiteConnection -DataSource $Database
 	
 	$WorkingDirectory = (Get-Location).Path
@@ -122,7 +122,7 @@ function RenderGameList() {
 	$GameRecords = (Invoke-SqliteQuery -Query $GetAllGamesQuery -SQLiteConnection $DBConnection)
 	if ($GameRecords.Length -eq 0){
         ShowMessage "No Games found in DB. Please add some games first." "Ok" "Error"
-        Log "Games list is empty. Returning"
+        Log "Error: Games list empty. Returning"
         return
     }
 
@@ -168,9 +168,9 @@ function RenderGameList() {
 }
 
 function RenderGamingTime() {
+	Log "Rendering time spent gaming"
 
 	$Database = ".\GamingGaiden.db"
-	Log "Connecting to database for Rendering game list"
 	$DBConnection = New-SQLiteConnection -DataSource $Database
 
 	$WorkingDirectory = (Get-Location).Path
@@ -181,7 +181,7 @@ function RenderGamingTime() {
 
 	if ($DailyPlayTimeData.Length -eq 0){
         ShowMessage "No Records of Game Time found in DB. Please play some games first." "Ok" "Error"
-        Log "Games list is empty. Returning"
+        Log "Error: Game time records empty. Returning"
         return
     }
 
@@ -195,8 +195,9 @@ function RenderGamingTime() {
 }
 
 function RenderMostPlayed() {
+	Log "Rendering most played"
+
 	$Database = ".\GamingGaiden.db"
-	Log "Connecting to database for Rendering game list"
 	$DBConnection = New-SQLiteConnection -DataSource $Database
 
 	$WorkingDirectory = (Get-Location).Path
@@ -206,7 +207,7 @@ function RenderMostPlayed() {
 	$GamesPlayTimeData = (Invoke-SqliteQuery -Query $GetGamesPlayTimeDataQuery -SQLiteConnection $DBConnection)
 	if ($GamesPlayTimeData.Length -eq 0){
         ShowMessage "No Games found in DB. Please add some games first." "Ok" "Error"
-        Log "Games list is empty. Returning"
+        Log "Error: Games list empty. Returning"
         return
     }
 
@@ -220,8 +221,9 @@ function RenderMostPlayed() {
 }
 
 function RenderGamesPerPlatform() {
+	Log "Rendering games per platform"
+
 	$Database = ".\GamingGaiden.db"
-	Log "Connecting to database for Rendering game list"
 	$DBConnection = New-SQLiteConnection -DataSource $Database
 
 	$WorkingDirectory = (Get-Location).Path
@@ -231,7 +233,7 @@ function RenderGamesPerPlatform() {
 	$GetGamesPerPlatformData = (Invoke-SqliteQuery -Query $GetGamesPerPlatformDataQuery -SQLiteConnection $DBConnection)
 	if ($GetGamesPerPlatformData.Length -eq 0){
         ShowMessage "No Games found in DB. Please add some games first." "Ok" "Error"
-        Log "Games list is empty. Returning"
+        Log "Error: Games list empty. Returning"
         return
     }
 
@@ -418,10 +420,7 @@ function RenderEditGameForm($SelectedGame) {
 	})
 	$form.Controls.Add($buttonCancel)
 
-	# Show the form
 	$form.ShowDialog()
-	
-	# Dispose of the form
 	$form.Dispose()
 }
 
@@ -544,7 +543,6 @@ function RenderEditPlatformForm($SelectedPlatform) {
 		if (-Not ($PlatformRomExtensions -match '^([a-z]{3},)*([a-z]{3}){1}$'))
 		{
 			ShowMessage "Error in rom extensions. Please submit extensions as a ',' separated list without the leading '.'`r`ne.g. zip,iso,chd OR zip,iso OR zip" "OK" "Error"
-			Log "incorrect Rom extensions format. returning."
 			return
 		}
 
@@ -572,10 +570,7 @@ function RenderEditPlatformForm($SelectedPlatform) {
 	})
 	$form.Controls.Add($buttonCancel)
 
-	# Show the form
 	$form.ShowDialog()
-
-	# Dispose of the form
 	$form.Dispose()
 }
 
@@ -671,7 +666,6 @@ function RenderAddGameForm() {
 			{
 				ShowMessage "Another Game with Executable $GameExeName.exe already exists`r`nSee Games List." "OK" "Asterisk"
 				$textExe.Text = ""
-				Log "Game Already Exists. returning"
 				return
 			}
 
@@ -718,10 +712,7 @@ function RenderAddGameForm() {
 	})
 	$form.Controls.Add($buttonCancel)
 
-	# Show the form
 	$form.ShowDialog()
-
-	# Dispose of the form
 	$form.Dispose()
 }
 
@@ -841,7 +832,6 @@ function RenderAddPlatformForm() {
 		if ($null -ne $PlatformFound)
 		{
 			ShowMessage "Platform $PlatformName already exists.`r`nUse Edit Platform setting to check existing platforms." "OK" "Error"
-			Log "Platform already exists. returning"
 			return
 		}
 
@@ -852,7 +842,6 @@ function RenderAddPlatformForm() {
 		if ($null -ne $ExeCoreComboFound)
 		{
 			ShowMessage "Executable '$EmulatorExeName.exe' is already registered with core '$EmulatorCore'.`r`nCannot register another platform with same Exe and Core Combination.`r`nUse Edit Platform setting to check existing platforms." "OK" "Error"
-			Log "Exe and Core Combo already exists. Cannot register a new platform with same combination. returning"
 			return
 		}
 
@@ -860,7 +849,6 @@ function RenderAddPlatformForm() {
 		if (-Not ($PlatformRomExtensions -match '^([a-z]{3},)*([a-z]{3}){1}$'))
 		{
 			ShowMessage "Error in rom extensions. Please submit extensions as a ',' separated list without the leading '.'`r`ne.g. zip,iso,chd OR zip,iso OR zip" "OK" "Error"
-			Log "incorrect Rom extensions format. returning."
 			return
 		}
 
@@ -880,9 +868,6 @@ function RenderAddPlatformForm() {
 	})
 	$form.Controls.Add($buttonCancel)
 
-	# Show the form
 	$form.ShowDialog()
-
-	# Dispose of the form
 	$form.Dispose()
 }

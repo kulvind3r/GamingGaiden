@@ -27,7 +27,6 @@ function SaveGame(){
 }
 
 function SavePlatform(){
-
     param(
         [string]$PlatformName,
         [string]$EmulatorExeName,
@@ -58,7 +57,7 @@ function UpdateGameOnSession() {
 
 	$UpdateGamePlayTimeQuery = "UPDATE games SET play_time = @UpdatedPlayTime, last_play_date = @UpdatedLastPlayDate WHERE name LIKE '{0}'" -f $GameNamePattern
 
-    Log "Updating $GameName Playtime to $GamePlayTime in Database"
+    Log "Updating $GameName playtime to $GamePlayTime in database"
 	Invoke-SqliteQuery -Query $UpdateGamePlayTimeQuery -SQLiteConnection $DBConnection -SqlParameters @{ 
 		UpdatedPlayTime = $GamePlayTime
 		UpdatedLastPlayDate = $GameLastPlayDate
@@ -81,7 +80,7 @@ function UpdateGameOnEdit() {
 
 	$UpdateGameQuery = "UPDATE games SET exe_name = @GameExeName, icon = @GameIconBytes, play_time = @GamePlayTime, completed = @GameCompleteStatus, platform = @GamePlatform WHERE name LIKE '{0}'" -f $GameNamePattern
 
-    Log "Editing $GameName in Database"
+    Log "Editing $GameName in database"
 	Invoke-SqliteQuery -Query $UpdateGameQuery -SQLiteConnection $DBConnection -SqlParameters @{
         GameExeName = $GameExeName.Trim()
 		GameIconBytes = $GameIconBytes
@@ -92,7 +91,6 @@ function UpdateGameOnEdit() {
 }
 
 function  UpdatePlatformOnEdit() {
-
     param(
         [string]$PlatformName,
         [string]$EmulatorExeName,
@@ -104,7 +102,7 @@ function  UpdatePlatformOnEdit() {
 
     $UpdatePlatformQuery = "UPDATE emulated_platforms set exe_name = @EmulatorExeName, core = @EmulatorCore, rom_extensions = @PlatformRomExtensions WHERE name LIKE '{0}'" -f $PlatformNamePattern
 
-    Log "Editing $GameName in Database"
+    Log "Editing $GameName in database"
 	Invoke-SqliteQuery -Query $UpdatePlatformQuery -SQLiteConnection $DBConnection -SqlParameters @{
         EmulatorExeName = $EmulatorExeName
 		EmulatorCore = $EmulatorCore
@@ -116,7 +114,7 @@ function RemoveGame($GameName) {
     $GameNamePattern = SQLEscapedMatchPattern($GameName.Trim())
     $RemoveGameQuery = "DELETE FROM games WHERE name LIKE '{0}'" -f $GameNamePattern
 
-    Log "Removing $GameName from Database"
+    Log "Removing $GameName from database"
     Invoke-SqliteQuery -Query $RemoveGameQuery -SQLiteConnection $DBConnection
 }
 
@@ -124,7 +122,7 @@ function RemovePlatform($PlatformName) {
     $PlatformNamePattern = SQLEscapedMatchPattern($PlatformName.Trim())
     $RemovePlatformQuery = "DELETE FROM emulated_platforms WHERE name LIKE '{0}'" -f $PlatformNamePattern
 
-    Log "Removing $PlatformName from Database"
+    Log "Removing $PlatformName from database"
     Invoke-SqliteQuery -Query $RemovePlatformQuery -SQLiteConnection $DBConnection
 }
 
@@ -145,6 +143,6 @@ function RecordPlaytimOnDate($PlayTime) {
         $RecordPlayTimeQuery = "UPDATE daily_playtime SET play_time = {0} WHERE play_date like DATE('now')" -f $UpdatedPlayTime
     }
 
-    Log "Updating PlayTime for Today in Database"
+    Log "Updating playTime for today in database"
     Invoke-SqliteQuery -Query $RecordPlayTimeQuery -SQLiteConnection $DBConnection
 }

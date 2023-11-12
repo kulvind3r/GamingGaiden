@@ -6,7 +6,7 @@ param (
 #Requires -Modules PSSQLite
 
 function AddGame {
-    Log "Starting Game Registration"
+    Log "Starting game registration"
     RenderAddGameForm
 }
 
@@ -16,12 +16,12 @@ function AddPlatform {
 }
 
 function EditGame {
-    Log "Starting Game Editing"
+    Log "Starting game editing"
 
     $GamesList = (Invoke-SqliteQuery -Query "SELECT name FROM games" -SQLiteConnection $DBConnection).name
     if ($GamesList.Length -eq 0){
-        ShowMessage "No Games found in DB. Please add few games first." "Ok" "Error"
-        Log "Games list is empty. Returning"
+        ShowMessage "No Games found in database. Please add few games first." "Ok" "Error"
+        Log "Error: Games list empty. Returning"
         return
     }
     
@@ -33,12 +33,12 @@ function EditGame {
 }
 
 function EditPlatform {
-    Log "Starting Platform Editing"
+    Log "Starting platform editing"
 
     $PlatformsList = (Invoke-SqliteQuery -Query "SELECT name FROM emulated_platforms" -SQLiteConnection $DBConnection).name 
     if ($PlatformsList.Length -eq 0){
-        ShowMessage "No Platforms found in DB. Please add few emulators first." "Ok" "Error"
-        Log "Platforms list is empty. Returning"
+        ShowMessage "No Platforms found in database. Please add few emulators first." "Ok" "Error"
+        Log "Error: Platform list empty. Returning"
         return
     }
 
@@ -50,7 +50,6 @@ function EditPlatform {
 }
 
 try {
-
     [System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms')  | Out-Null
     [System.Reflection.assembly]::LoadwithPartialname("microsoft.visualbasic") | Out-Null
     Import-Module PSSQLite
@@ -64,6 +63,7 @@ try {
     $DBConnection = New-SQLiteConnection -DataSource $Database
     
     $DatabaseFileHashBefore = CalculateFileHash '.\GamingGaiden.db'
+    Log "Database hash before: $DatabaseFileHashBefore"
 
     switch ($Action) {
         "AddGame" { Clear-Host; AddGame }
@@ -73,6 +73,7 @@ try {
     }
 
     $DatabaseFileHashAfter = CalculateFileHash '.\GamingGaiden.db'
+    Log "Database hash after: $DatabaseFileHashAfter"
 
     if ($DatabaseFileHashAfter -ne $DatabaseFileHashBefore){
         BackupDatabase
@@ -83,7 +84,7 @@ catch {
     [System.Windows.Forms.MessageBox]::Show("Exception: $($_.Exception.Message). Check log for details",'Gaming Gaiden', "OK", "Error")
 
     $Timestamp = (Get-date -f %d-%M-%y`|%H:%m:%s)
-    Write-Output "$Timestamp : A User or System error has caused an exception. Please Try again. Check log for exception details" >> ".\GamingGaiden.log"
+    Write-Output "$Timestamp : Error: A user or system error has caused an exception. Check log for details" >> ".\GamingGaiden.log"
     Write-Output "$Timestamp : Exception: $($_.Exception.Message)" >> ".\GamingGaiden.log"
     exit 1;
 }

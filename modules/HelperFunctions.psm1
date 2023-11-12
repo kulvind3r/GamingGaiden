@@ -29,7 +29,7 @@ function PlayTimeMinsToString($PlayTime) {
 
 function PlayTimeStringToMin($PlayTime) {
 	if ( -Not ($PlayTime -match '^[0-9]{0,5} Hr [0-5]{0,1}[0-9]{1} Min$') ) {
-        Log "Incorrect Playtime format entered. Returning null"
+        Log "Error: Incorrect playtime format. Returning null"
         return $null
     }
 
@@ -104,6 +104,8 @@ function CalculateFileHash ($FilePath) {
 }
 
 function BackupDatabase {
+	Log "Backing up database"
+	
 	$WorkingDirectory = (Get-Location).Path
 	mkdir -f $WorkingDirectory\backups
 	$Timestamp = Get-Date -f "dd-MM-yyyy-HH.mm.ss"

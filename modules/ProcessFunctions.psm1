@@ -1,5 +1,4 @@
 function DetectGame() {
-
 	Log "Starting game detection"
 
     $GetGameExesQuery = "SELECT exe_name FROM games"
@@ -16,7 +15,7 @@ function DetectGame() {
 			if ( $null = Get-Process $ExeName -ErrorAction SilentlyContinue )
 			{
 				$DetectedExe = $ExeName
-				Log "Found $ExeName Running. Exiting Detection"
+				Log "Found $ExeName running. Exiting detection"
 				break
 			}
 		}
@@ -38,10 +37,10 @@ function TimeTrackerLoop($DetectedExe) {
 }
 
 function MonitorGame($DetectedExe, $RecordingNotifyIcon) {
-
 	Log "Starting monitoring for $DetectedExe"
-
+	
 	$DatabaseFileHashBefore = CalculateFileHash '.\GamingGaiden.db'
+	Log "Database hash before: $DatabaseFileHashBefore"
 
 	$EmulatedGameDetails = $null
 	$GameName = $null
@@ -54,8 +53,8 @@ function MonitorGame($DetectedExe, $RecordingNotifyIcon) {
 		$EmulatedGameDetails = findEmulatedGameDetails $DetectedExe
 		if ($EmulatedGameDetails -eq $false)
 		{
-			Log "Received no details on Emulated Game. Check earlier logs for hint."
-			Log "Will start timetracker loop to wait for current detected Exe to stop before resuming detection. No playtime will be recorded."
+			Log "Error: Problem in fetching emulated game details. See above for details"
+			Log "Error: Cannot resume detection until $DetectedExe exits. No playtime will be recorded."
 			
 			TimeTrackerLoop $DetectedExe
 			return
@@ -95,6 +94,7 @@ function MonitorGame($DetectedExe, $RecordingNotifyIcon) {
 	RecordPlaytimOnDate($CurrentPlayTime)
 
 	$DatabaseFileHashAfter = CalculateFileHash '.\GamingGaiden.db'
+	Log "Database hash after: $DatabaseFileHashAfter"
 
 	if ($DatabaseFileHashAfter -ne $DatabaseFileHashBefore){
         BackupDatabase
