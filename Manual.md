@@ -29,7 +29,7 @@ Once you have your emulation setup like above..
 4. If retroarch is detected, it will automatically ask you for the core used for the platform. Add using *Add Core* button that shows.
 5. Enter extensions you use for your game rom files e.g. zip, chd, rvg in *Rom Extns*. Just the extension name without the leading *"."*
 
-Click ok to register the platform and Gaming Gaiden will now track any game you play with an emulator automatically.
+Click ok to register the platform and Gaming Gaiden will now track any game you play with the emulator automatically.
 
 **Emulated games are auto detected and auto registered. Name of the rom file is used as game name. Game name cannot be changed once registered without deleting existing game and running it again for auto registration. Make sure rom files are named correctly.**
 
@@ -57,6 +57,10 @@ Click ok to register the platform and Gaming Gaiden will now track any game you 
 
 Notify icon menu *Stop Tracker*. To resume tracking, icon menu *Start Tracker*
 
+### Help! I accidentally corrupted / lost / deleted some or all of my data. How do I restore?
+
+Check the backup folder in the install directory, it should have backups of database. Exit the app. Copy the database file from backup zip to install directory and start the app again.
+
 ### Help! Gaming Gaiden is not tracking emulated games launched from emulator application directly.
 
 It cannot. Games launched directly from emulator GUI like Retroarch, PCSX2, Dolphin or Duckstation might not have *Command lines* attached in Windows process. You must either use a Frontend like EmulationStation, Launchbox etc with *Command line* or Windows desktop shortcuts to the emulators with *Command lines*
@@ -79,10 +83,6 @@ Hide the extra copies of *"Dplphin.exe"* in explorer to keep your Dolphin instal
 Same trick as above can be applied fore retroarch as well. Use the same core, but make copies of *"retroarch.exe"* for each platform and use those as executables for different platforms.
 
 Hide the extra copies of *"retroarch.exe"* in explorer to keep your retroarch installation looking neat and clean.
-
-### Help! I accidentally corrupted / lost / deleted some or all of my data. How do i restore?
-
-Check the backup folder in the install directory, it should have backups of database. Exit the app. Copy the database file from backup zip to install directory and start the app again. 
 
 ### Why the above workarounds? Can't you handle these scenarios in code?
 
