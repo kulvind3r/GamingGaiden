@@ -1,3 +1,41 @@
+function CreateForm($Text, $SizeX, $SizeY, $IconPath) {
+	$form = New-Object System.Windows.Forms.Form
+	$form.Text = $Text
+	$form.Size = New-Object Drawing.Size($SizeX, $SizeY)
+	$form.StartPosition = 'CenterScreen'
+	$form.FormBorderStyle = 'FixedDialog'
+	$form.Icon = [System.Drawing.Icon]::new($IconPath)
+	$form.Topmost = $true
+
+	return $form
+}
+
+function Createlabel($Text, $DrawX, $DrawY) {
+	$label = New-Object System.Windows.Forms.Label
+	$label.AutoSize = $true
+	$label.Location = New-Object Drawing.Point($DrawX, $DrawY)
+	$label.Text = $Text
+
+	return $label
+}
+
+function CreateTextBox($Text, $DrawX, $DrawY, $SizeX, $SizeY) {
+	$textBox = New-Object System.Windows.Forms.TextBox
+	$textBox.Text = $Text
+	$textBox.Location = New-Object Drawing.Point($DrawX, $DrawY)
+	$textBox.Size = New-Object System.Drawing.Size($SizeX,$SizeY)
+	
+	return $textBox
+}
+
+function CreateButton($Text, $DrawX, $DrawY) {
+	$button = New-Object System.Windows.Forms.Button
+	$button.Location = New-Object Drawing.Point($DrawX, $DrawY)
+	$button.Text = $Text
+
+	return $button
+}
+
 function FilterListBox {
     param(
         [string]$filterText,
@@ -15,51 +53,33 @@ function FilterListBox {
 }
 
 function RenderListBoxForm($Prompt, $List) {
-	$form = New-Object System.Windows.Forms.Form
-	$form.Text = "Gaming Gaiden"
-	$form.Size = New-Object System.Drawing.Size(300,400)
-	$form.StartPosition = 'CenterScreen'
-	$form.FormBorderStyle = 'FixedDialog'
-	$form.Icon = [System.Drawing.Icon]::new(".\icons\running.ico")
-	$form.Topmost = $true
 
-	$okButton = New-Object System.Windows.Forms.Button
-	$okButton.Location = New-Object System.Drawing.Point(60,320)
-	$okButton.Size = New-Object System.Drawing.Size(75,23)
-	$okButton.Text = 'OK'
+	$ListBoxForm = CreateForm "Gaming Gaiden" 300 400 ".\icons\running.ico"
+
+	$okButton = CreateButton "OK" 60 320
 	$okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
-	$form.AcceptButton = $okButton
-	$form.Controls.Add($okButton)
+	$ListBoxForm.AcceptButton = $okButton
+	$ListBoxForm.Controls.Add($okButton)
 
-	$cancelButton = New-Object System.Windows.Forms.Button
-	$cancelButton.Location = New-Object System.Drawing.Point(150,320)
-	$cancelButton.Size = New-Object System.Drawing.Size(75,23)
-	$cancelButton.Text = 'Cancel'
+	$cancelButton = CreateButton "Cancel" 150 320
 	$cancelButton.DialogResult = [System.Windows.Forms.DialogResult]::Cancel
-	$form.CancelButton = $cancelButton
-	$form.Controls.Add($cancelButton)
+	$ListBoxForm.CancelButton = $cancelButton
+	$ListBoxForm.Controls.Add($cancelButton)
 
-	$label = New-Object System.Windows.Forms.Label
-	$label.Location = New-Object System.Drawing.Point(10,60)
+	$label = Createlabel $Prompt 10 60
 	$label.Size = New-Object System.Drawing.Size(280,20)
-	$label.Text = $Prompt
-	$form.Controls.Add($label)
+	$ListBoxForm.Controls.Add($label)
 
 	$listBox = New-Object System.Windows.Forms.ListBox
 	$listBox.Location = New-Object System.Drawing.Point(10,80)
 	$listBox.Size = New-Object System.Drawing.Size(265,20)
 	$listBox.Height = 230
 
-	$labelSearch = New-Object System.Windows.Forms.Label
-	$labelSearch.AutoSize = $true
-	$labelSearch.Location = New-Object Drawing.Point(10, 20)
-	$labelSearch.Text = "Search:"
-	$form.Controls.Add($labelSearch)
+	$labelSearch = Createlabel "Search:" 10 20
+	$ListBoxForm.Controls.Add($labelSearch)
 
-	$textSearch = New-Object System.Windows.Forms.TextBox
-	$textSearch.Size = New-Object System.Drawing.Size(200,20)
-	$textSearch.Location = New-Object Drawing.Point(70, 20)
-	$form.Controls.Add($textSearch)
+	$textSearch = CreateTextBox "" 70 20 200 20
+	$ListBoxForm.Controls.Add($textSearch)
 
 	$textSearch.Add_TextChanged({
 		FilterListBox -filterText $textSearch.Text -listBox $listBox -originalItems $List
@@ -67,9 +87,9 @@ function RenderListBoxForm($Prompt, $List) {
 
 	[void] $listBox.Items.AddRange($List)
 
-	$form.Controls.Add($listBox)
+	$ListBoxForm.Controls.Add($listBox)
 
-	$result = $form.ShowDialog()
+	$result = $ListBoxForm.ShowDialog()
 
 	if ( -Not ($result -eq [System.Windows.Forms.DialogResult]::OK))
 	{
@@ -84,82 +104,49 @@ function RenderListBoxForm($Prompt, $List) {
 		exit 1
 	}
 
-	$form.Dispose()
+	$ListBoxForm.Dispose()
 	
 	return $listBox.SelectedItem
 }
 
 function RenderEditGameForm($SelectedGame) {
 
-	$form = New-Object System.Windows.Forms.Form
-	$form.Text = "Gaming Gaiden: Edit Game"
-	$form.Size = New-Object Drawing.Size(580, 255)
-	$form.StartPosition = 'CenterScreen'
-	$form.FormBorderStyle = 'FixedDialog'
-	$form.Icon = [System.Drawing.Icon]::new(".\icons\running.ico")
-	$form.Topmost = $true
+	$EditGameForm = CreateForm "Gaming Gaiden: Edit Game" 580 255 ".\icons\running.ico"
+	
+	$labelName = Createlabel "Name:" 170 20
+	$EditGameForm.Controls.Add($labelName)
 
-	$labelName = New-Object System.Windows.Forms.Label
-	$labelName.AutoSize = $true
-	$labelName.Location = New-Object Drawing.Point(170, 20)
-	$labelName.Text = "Name:"
-	$form.Controls.Add($labelName)
-
-	$textName = New-Object System.Windows.Forms.TextBox
-	$textName.Size = New-Object System.Drawing.Size(300,20)
-	$textName.Location = New-Object Drawing.Point(245, 20)
-	$textName.Text = $SelectedGame.name
+	$textName = CreateTextBox $SelectedGame.name 245 20 300 20
 	$textName.ReadOnly = $true
-	$form.Controls.Add($textName)
+	$EditGameForm.Controls.Add($textName)
 
-	$labelExe = New-Object System.Windows.Forms.Label
-	$labelExe.AutoSize = $true
-	$labelExe.Location = New-Object Drawing.Point(170, 60)
-	$labelExe.Text = "Exe:"
-	$form.Controls.Add($labelExe)
+	$labelExe = Createlabel "Exe:" 170 60
+	$EditGameForm.Controls.Add($labelExe)
 
-	$textExe = New-Object System.Windows.Forms.TextBox
-	$textExe.Size = New-Object System.Drawing.Size(200,20)
-	$textExe.Location = New-Object Drawing.Point(245, 60)
-	$textExe.Text = ($SelectedGame.exe_name + ".exe")
+	$textExe = CreateTextBox ($SelectedGame.exe_name + ".exe") 245 60 200 20
 	$textExe.ReadOnly = $true
-	$form.Controls.Add($textExe)
+	$EditGameForm.Controls.Add($textExe)
 
-	$labelPlatform = New-Object System.Windows.Forms.Label
-	$labelPlatform.AutoSize = $true
-	$labelPlatform.Location = New-Object Drawing.Point(170, 100)
-	$labelPlatform.Text = "Platform:"
-	$form.Controls.Add($labelPlatform)
+	$labelPlatform = Createlabel "Platform:" 170 100
+	$EditGameForm.Controls.Add($labelPlatform)
 
-	$textPlatform = New-Object System.Windows.Forms.TextBox
-	$textPlatform.Size = New-Object System.Drawing.Size(200,20)
-	$textPlatform.Location = New-Object Drawing.Point(245, 100)
-	$textPlatform.Text = $SelectedGame.platform
-	$form.Controls.Add($textPlatform)
+	$textPlatform = CreateTextBox $SelectedGame.platform 245 100 200 20
+	$EditGameForm.Controls.Add($textPlatform)
 
-	$labelPlayTime = New-Object System.Windows.Forms.Label
-	$labelPlayTime.AutoSize = $true
-	$labelPlayTime.Location = New-Object Drawing.Point(170, 140)
-	$labelPlayTime.Text = "PlayTime:"
-	$form.Controls.Add($labelPlayTime)
+	$labelPlayTime = Createlabel "PlayTime:" 170 140
+	$EditGameForm.Controls.Add($labelPlayTime)
 
 	$PlayTimeString = PlayTimeMinsToString $SelectedGame.play_time
 
-	$textPlayTime = New-Object System.Windows.Forms.TextBox
-	$textPlayTime.Size = New-Object System.Drawing.Size(200,20)
-	$textPlayTime.Location = New-Object Drawing.Point(245, 140)
-	$textPlayTime.Text = $PlayTimeString
-	$form.Controls.Add($textPlayTime)
+	$textPlayTime = CreateTextBox $PlayTimeString 245 140 200 20
+	$EditGameForm.Controls.Add($textPlayTime)
 
 	$checkboxCompleted = New-Object Windows.Forms.CheckBox
     $checkboxCompleted.Text = "Finished"
-	if($SelectedGame.completed -eq 'TRUE')
-	{
-		$checkboxCompleted.Checked = $true
-	}
+	if($SelectedGame.completed -eq 'TRUE') { $checkboxCompleted.Checked = $true	}
     $checkboxCompleted.Top = 140
     $checkboxCompleted.Left = 470
-	$form.Controls.Add($checkboxCompleted)
+	$EditGameForm.Controls.Add($checkboxCompleted)
 
 	$IconFileName = ToBase64 $SelectedGame.name
 	$ImagePath = "$env:TEMP\GG-{0}-$IconFileName.png" -f $(Get-Random)
@@ -170,18 +157,16 @@ function RenderEditGameForm($SelectedGame) {
 	$pictureBoxImagePath = New-Object System.Windows.Forms.TextBox
 	$pictureBoxImagePath.hide()
 	$pictureBoxImagePath.Text = $ImagePath
-	$form.Controls.Add($pictureBoxImagePath)
+	$EditGameForm.Controls.Add($pictureBoxImagePath)
 
 	$pictureBox = New-Object Windows.Forms.PictureBox
 	$pictureBox.Location = New-Object Drawing.Point(15, 20)
 	$pictureBox.Size = New-Object Drawing.Size(140, 140)
 	$pictureBox.SizeMode = [System.Windows.Forms.PictureBoxSizeMode]::CenterImage
 	$pictureBox.Image = [System.Drawing.Image]::FromFile($ImagePath)
-	$form.Controls.Add($pictureBox)
+	$EditGameForm.Controls.Add($pictureBox)
 
-	$buttonUpdateIcon = New-Object System.Windows.Forms.Button
-	$buttonUpdateIcon.Location = New-Object Drawing.Point(48, 175)
-	$buttonUpdateIcon.Text = "Edit Icon"
+	$buttonUpdateIcon = CreateButton "Edit Icon" 48 175
 	$buttonUpdateIcon.Add_Click({
 		$openFileDialog = OpenFileDialog "Select Game Icon File" 'PNG (*.png)|*.png|JPEG (*.jpg)|*.jpg'
 		$result = $openFileDialog.ShowDialog()
@@ -191,11 +176,9 @@ function RenderEditGameForm($SelectedGame) {
 			$pictureBox.Image = [System.Drawing.Image]::FromFile($ImagePath)
 		}
 	})
-	$form.Controls.Add($buttonUpdateIcon)
+	$EditGameForm.Controls.Add($buttonUpdateIcon)
 
-	$buttonUpdateExe = New-Object System.Windows.Forms.Button
-	$buttonUpdateExe.Location = New-Object Drawing.Point(470, 60)
-	$buttonUpdateExe.Text = "Edit Exe"
+	$buttonUpdateExe = CreateButton "Edit Exe" 470 60
 	$buttonUpdateExe.Add_Click({
 		$openFileDialog = OpenFileDialog "Select Executable" 'Executable (*.exe)|*.exe'
 		$result = $openFileDialog.ShowDialog()
@@ -203,11 +186,9 @@ function RenderEditGameForm($SelectedGame) {
 			$textExe.Text = (Get-Item $openFileDialog.FileName).Name
 		}
 	})
-	$form.Controls.Add($buttonUpdateExe)
+	$EditGameForm.Controls.Add($buttonUpdateExe)
 
-	$buttonRemove = New-Object System.Windows.Forms.Button
-	$buttonRemove.Location = New-Object Drawing.Point(470, 100)
-	$buttonRemove.Text = "Delete"
+	$buttonRemove = CreateButton "Delete" 470 100
 	$buttonRemove.Add_Click({
 		$GameName = $textName.Text
 		$UserInput = UserConfirmationDialog "Confirm Game Removal" "All Data about '$GameName' will be lost.`r`nAre you sure?"
@@ -216,34 +197,31 @@ function RenderEditGameForm($SelectedGame) {
 			RemoveGame $GameName
 			ShowMessage "Removed '$GameName' from Database." "OK" "Asterisk"
 			Log "Removed '$GameName' from Database."
-			$form.Close()
+			$EditGameForm.Close()
 		}
 	})
-	$form.Controls.Add($buttonRemove)
+	$EditGameForm.Controls.Add($buttonRemove)
 
-	$buttonOK = New-Object System.Windows.Forms.Button
-	$buttonOK.Location = New-Object Drawing.Point(245, 175)
-	$buttonOK.Text = "OK"
+	$buttonOK = CreateButton "OK" 245 175
 	$buttonOK.Add_Click({
-
-		if($textPlatform.Text -eq "" -Or $textPlayTime.Text -eq "")
-		{
+		if($textPlatform.Text -eq "" -Or $textPlayTime.Text -eq "")	{
 			ShowMessage "Platform, Playtime fields cannot be empty. Try Again." "OK" "Error"
 			return
 		}
 
 		$GameName = $textName.Text
+
 		$PlayTimeInMin = PlayTimeStringToMin $textPlayTime.Text
-		if ($null -eq $PlayTimeInMin)
-		{
+		if ($null -eq $PlayTimeInMin) {
 			ShowMessage "Incorrect Playtime Format. Enter exactly 'x Hr y Min'. Resetting PlayTime" "OK" "Error"
 			$textPlayTime.Text = $PlayTimeString
 			return
 		}
+
 		$GameExeName = $textExe.Text -replace ".exe"
 
 		$GameCompleteStatus = $SelectedGame.completed
-		if ($checkboxCompleted.Checked -eq $true){
+		if ($checkboxCompleted.Checked -eq $true) {
 			$GameCompleteStatus = 'TRUE'
 		}
 		
@@ -251,73 +229,43 @@ function RenderEditGameForm($SelectedGame) {
 
 		ShowMessage "Updated '$GameName' in Database." "OK" "Asterisk"
 
-		$form.Close()
+		$EditGameForm.Close()
 	})
-	$form.Controls.Add($buttonOK)
+	$EditGameForm.Controls.Add($buttonOK)
 
-	$buttonCancel = New-Object System.Windows.Forms.Button
-	$buttonCancel.Location = New-Object Drawing.Point(370, 175)
-	$buttonCancel.Text = "Cancel"
-	$buttonCancel.Add_Click({
-		$form.Close()
-	})
-	$form.Controls.Add($buttonCancel)
+	$buttonCancel = CreateButton "Cancel" 370 175
+	$buttonCancel.Add_Click({ $EditGameForm.Close() })
+	$EditGameForm.Controls.Add($buttonCancel)
 
-	$form.ShowDialog()
-	$form.Dispose()
+	$EditGameForm.ShowDialog()
+	$EditGameForm.Dispose()
 }
 
 function RenderEditPlatformForm($SelectedPlatform) {
 
-	$form = New-Object System.Windows.Forms.Form
-	$form.Text = "Gaming Gaiden: Edit Platform"
-	$form.Size = New-Object Drawing.Size(410, 255)
-	$form.StartPosition = 'CenterScreen'
-	$form.FormBorderStyle = 'FixedDialog'
-	$form.Icon = [System.Drawing.Icon]::new(".\icons\running.ico")
-	$form.Topmost = $true
+	$EditPlatform =	CreateForm "Gaming Gaiden: Edit Platform" 410 255 ".\icons\running.ico"
 
-	$labelName = New-Object System.Windows.Forms.Label
-	$labelName.AutoSize = $true
-	$labelName.Location = New-Object Drawing.Point(10, 20)
-	$labelName.Text = "Name:"
-	$form.Controls.Add($labelName)
+	$labelName = Createlabel "Name:" 10 20
+	$EditPlatform.Controls.Add($labelName)
 
-	$textName = New-Object System.Windows.Forms.TextBox
-	$textName.Size = New-Object System.Drawing.Size(200,20)
-	$textName.Location = New-Object Drawing.Point(85, 20)
-	$textName.Text = $SelectedPlatform.name
+	$textName = CreateTextBox $SelectedPlatform.name 85 20 200 20
 	$textName.ReadOnly = $true
-	$form.Controls.Add($textName)
+	$EditPlatform.Controls.Add($textName)
 
-	$labelExe = New-Object System.Windows.Forms.Label
-	$labelExe.AutoSize = $true
-	$labelExe.Location = New-Object Drawing.Point(10, 60)
-	$labelExe.Text = "Exe:"
-	$form.Controls.Add($labelExe)
+	$labelExe = Createlabel "Exe:" 10 60
+	$EditPlatform.Controls.Add($labelExe)
 
-	$textExe = New-Object System.Windows.Forms.TextBox
-	$textExe.Size = New-Object System.Drawing.Size(200,20)
-	$textExe.Location = New-Object Drawing.Point(85, 60)
-	$textExe.Text = ($SelectedPlatform.exe_name + ".exe")
+	$textExe = CreateTextBox ($SelectedPlatform.exe_name + ".exe") 85 60 200 20
 	$textExe.ReadOnly = $true
-	$form.Controls.Add($textExe)
+	$EditPlatform.Controls.Add($textExe)
 
-	$labelRomExt = New-Object System.Windows.Forms.Label
-	$labelRomExt.AutoSize = $true
-	$labelRomExt.Location = New-Object Drawing.Point(10, 100)
-	$labelRomExt.Text = "Rom Extns:"
-	$form.Controls.Add($labelRomExt)
+	$labelRomExt = Createlabel "Rom Extns:" 10 100
+	$EditPlatform.Controls.Add($labelRomExt)
 
-	$textRomExt = New-Object System.Windows.Forms.TextBox
-	$textRomExt.Size = New-Object System.Drawing.Size(200,20)
-	$textRomExt.Location = New-Object Drawing.Point(85, 100)
-	$textRomExt.Text = $SelectedPlatform.rom_extensions
-	$form.Controls.Add($textRomExt)
+	$textRomExt = CreateTextBox $SelectedPlatform.rom_extensions 85 100 200 20
+	$EditPlatform.Controls.Add($textRomExt)
 	
-	$buttonUpdateExe = New-Object System.Windows.Forms.Button
-	$buttonUpdateExe.Location = New-Object Drawing.Point(300, 58)
-	$buttonUpdateExe.Text = "Edit Exe"
+	$buttonUpdateExe = CreateButton "Edit Exe" 300 58
 	$buttonUpdateExe.Add_Click({
 		$openFileDialog = OpenFileDialog "Select Executable" 'Executable (*.exe)|*.exe'
 		$result = $openFileDialog.ShowDialog()
@@ -325,25 +273,17 @@ function RenderEditPlatformForm($SelectedPlatform) {
 			$textExe.Text = (Get-Item $openFileDialog.FileName).Name
 		}
 	})
-	$form.Controls.Add($buttonUpdateExe)
+	$EditPlatform.Controls.Add($buttonUpdateExe)
 
 	if (-Not $SelectedPlatform.core -eq "") {
-		$labelCores = New-Object System.Windows.Forms.Label
-		$labelCores.AutoSize = $true
-		$labelCores.Location = New-Object Drawing.Point(10, 140)
-		$labelCores.Text = "Cores:"
-		$form.Controls.Add($labelCores)
+		$labelCores = Createlabel "Cores:" 10 140
+		$EditPlatform.Controls.Add($labelCores)
 
-		$textCore = New-Object System.Windows.Forms.TextBox
-		$textCore.Size = New-Object System.Drawing.Size(200,20)
-		$textCore.Location = New-Object Drawing.Point(85, 140)
-		$textCore.Text = $SelectedPlatform.core
+		$textCore = CreateTextBox $SelectedPlatform.core 85 140 200 20
 		$textCore.ReadOnly = $true
-		$form.Controls.Add($textCore)
+		$EditPlatform.Controls.Add($textCore)
 
-		$buttonUpdateCore = New-Object System.Windows.Forms.Button
-		$buttonUpdateCore.Location = New-Object Drawing.Point(300, 138)
-		$buttonUpdateCore.Text = "Edit Core"
+		$buttonUpdateCore = CreateButton "Edit Core" 300 138
 		$buttonUpdateCore.Add_Click({
 			$openFileDialog = OpenFileDialog "Select Retroarch Core" 'DLL (*.dll)|*.dll'
 			$result = $openFileDialog.ShowDialog()
@@ -351,12 +291,10 @@ function RenderEditPlatformForm($SelectedPlatform) {
 				$textCore.Text = (Get-Item $openFileDialog.FileName).Name
 			}
 		})
-		$form.Controls.Add($buttonUpdateCore)
+		$EditPlatform.Controls.Add($buttonUpdateCore)
 	}
 
-	$buttonRemove = New-Object System.Windows.Forms.Button
-	$buttonRemove.Location = New-Object Drawing.Point(300, 18)
-	$buttonRemove.Text = "Delete"
+	$buttonRemove = CreateButton "Delete" 300 18
 	$buttonRemove.Add_Click({
 		$PlatformName = $textName.Text
 		$UserInput = UserConfirmationDialog "Confirm Platform Removal" "All Data about '$PlatformName' will be lost.`r`nAre you sure?"
@@ -365,26 +303,21 @@ function RenderEditPlatformForm($SelectedPlatform) {
 			RemovePlatform $PlatformName
 			ShowMessage "Removed '$PlatformName' from Database." "OK" "Asterisk"
 			Log "Removed '$PlatformName' from Database."
-			$form.Close()
+			$EditPlatform.Close()
 		}
 	})
-	$form.Controls.Add($buttonRemove)
+	$EditPlatform.Controls.Add($buttonRemove)
 
-	$buttonOK = New-Object System.Windows.Forms.Button
-	$buttonOK.Location = New-Object Drawing.Point(85, 175)
-	$buttonOK.Text = "OK"
+	$buttonOK = CreateButton "OK" 85 175
 	$buttonOK.Add_Click({
-
-		if ($textRomExt.Text -eq "")
-		{
+		if ($textRomExt.Text -eq "") {
 			ShowMessage "Extensions field cannot be empty.`r`nResetting Extensions. Try again." "OK" "Error"
 			$textRomExt.Text = $SelectedPlatform.rom_extensions
 			return
 		}
 
 		$PlatformRomExtensions = $textRomExt.Text
-		if (-Not ($PlatformRomExtensions -match '^([a-z]{3},)*([a-z]{3}){1}$'))
-		{
+		if (-Not ($PlatformRomExtensions -match '^([a-z]{3},)*([a-z]{3}){1}$')) {
 			ShowMessage "Error in rom extensions. Please submit extensions as a ',' separated list without the leading '.'`r`ne.g. zip,iso,chd OR zip,iso OR zip" "OK" "Error"
 			return
 		}
@@ -392,8 +325,7 @@ function RenderEditPlatformForm($SelectedPlatform) {
 		$PlatformName = $textName.Text
 		$EmulatorExeName = $textExe.Text -replace ".exe"
 		$EmulatorCore = ""
-		if (-Not $SelectedPlatform.core -eq "")
-		{
+		if (-Not $SelectedPlatform.core -eq "") {
 			$EmulatorCore = $textCore.Text
 		}
 		
@@ -401,97 +333,63 @@ function RenderEditPlatformForm($SelectedPlatform) {
 
 		ShowMessage "Updated '$PlatformName' in Database." "OK" "Asterisk"
 
-		$form.Close()
+		$EditPlatform.Close()
 	})
-	$form.Controls.Add($buttonOK)
+	$EditPlatform.Controls.Add($buttonOK)
 
-	$buttonCancel = New-Object System.Windows.Forms.Button
-	$buttonCancel.Location = New-Object Drawing.Point(210, 175)
-	$buttonCancel.Text = "Cancel"
-	$buttonCancel.Add_Click({
-		$form.Close()
-	})
-	$form.Controls.Add($buttonCancel)
+	$buttonCancel = CreateButton "Cancel" 210 175
+	$buttonCancel.Add_Click({ $EditPlatform.Close() })
+	$EditPlatform.Controls.Add($buttonCancel)
 
-	$form.ShowDialog()
-	$form.Dispose()
+	$EditPlatform.ShowDialog()
+	$EditPlatform.Dispose()
 }
 
 function RenderAddGameForm() {
 
-	$form = New-Object System.Windows.Forms.Form
-	$form.Text = "Gaming Gaiden: Add Game"
-	$form.Size = New-Object Drawing.Size(580, 255)
-	$form.StartPosition = 'CenterScreen'
-	$form.FormBorderStyle = 'FixedDialog'
-	$form.Icon = [System.Drawing.Icon]::new(".\icons\running.ico")
-	$form.Topmost = $true
+	$AddGameForm =	CreateForm "Gaming Gaiden: Add Game" 580 255 ".\icons\running.ico"
 
-	$labelName = New-Object System.Windows.Forms.Label
-	$labelName.AutoSize = $true
-	$labelName.Location = New-Object Drawing.Point(170, 20)
-	$labelName.Text = "Name:"
-	$form.Controls.Add($labelName)
+	$labelName = Createlabel "Name:" 170 20
+	$AddGameForm.Controls.Add($labelName)
 
-	$textName = New-Object System.Windows.Forms.TextBox
-	$textName.Size = New-Object System.Drawing.Size(300,20)
-	$textName.Location = New-Object Drawing.Point(245, 20)
-	$form.Controls.Add($textName)
+	$textName = CreateTextBox "" 245 20 300 20
+	$AddGameForm.Controls.Add($textName)
 
-	$labelExe = New-Object System.Windows.Forms.Label
-	$labelExe.AutoSize = $true
-	$labelExe.Location = New-Object Drawing.Point(170, 60)
-	$labelExe.Text = "Exe:"
-	$form.Controls.Add($labelExe)
+	$labelExe = Createlabel "Exe:" 170 60
+	$AddGameForm.Controls.Add($labelExe)
 
-	$textExe = New-Object System.Windows.Forms.TextBox
-	$textExe.Size = New-Object System.Drawing.Size(200,20)
-	$textExe.Location = New-Object Drawing.Point(245, 60)
+	$textExe = CreateTextBox "" 245 60 200 20
 	$textExe.ReadOnly = $true
-	$form.Controls.Add($textExe)
+	$AddGameForm.Controls.Add($textExe)
 
-	$labelPlatform = New-Object System.Windows.Forms.Label
-	$labelPlatform.AutoSize = $true
-	$labelPlatform.Location = New-Object Drawing.Point(170, 100)
-	$labelPlatform.Text = "Platform:"
-	$form.Controls.Add($labelPlatform)
+	$labelPlatform = Createlabel "Platform:" 170 100
+	$AddGameForm.Controls.Add($labelPlatform)
 
-	$textPlatform = New-Object System.Windows.Forms.TextBox
-	$textPlatform.Size = New-Object System.Drawing.Size(200,20)
-	$textPlatform.Location = New-Object Drawing.Point(245, 100)
-	$textPlatform.Text = 'PC'
+	$textPlatform = CreateTextBox "PC" 245 100 200 20
 	$textPlatform.ReadOnly = $true
-	$form.Controls.Add($textPlatform)
+	$AddGameForm.Controls.Add($textPlatform)
 
-	$labelPlayTime = New-Object System.Windows.Forms.Label
-	$labelPlayTime.AutoSize = $true
-	$labelPlayTime.Location = New-Object Drawing.Point(170, 140)
-	$labelPlayTime.Text = "PlayTime:"
-	$form.Controls.Add($labelPlayTime)
+	$labelPlayTime = Createlabel "PlayTime:" 170 140
+	$AddGameForm.Controls.Add($labelPlayTime)
 
-	$textPlayTime = New-Object System.Windows.Forms.TextBox
-	$textPlayTime.Size = New-Object System.Drawing.Size(200,20)
-	$textPlayTime.Location = New-Object Drawing.Point(245, 140)
-	$textPlayTime.Text = "0 Hr 0 Min"
+	$textPlayTime = CreateTextBox "0 Hr 0 Min" 245 140 200 20
 	$textPlayTime.ReadOnly = $true
-	$form.Controls.Add($textPlayTime)
+	$AddGameForm.Controls.Add($textPlayTime)
 
 	$ImagePath = "./icons/default.png"
 	$pictureBoxImagePath = New-Object System.Windows.Forms.TextBox
 	$pictureBoxImagePath.hide()
 	$pictureBoxImagePath.Text = $ImagePath
-	$form.Controls.Add($pictureBoxImagePath)
+	$AddGameForm.Controls.Add($pictureBoxImagePath)
 
 	$pictureBox = New-Object Windows.Forms.PictureBox
 	$pictureBox.Location = New-Object Drawing.Point(15, 20)
 	$pictureBox.Size = New-Object Drawing.Size(140, 140)
 	$pictureBox.SizeMode = [System.Windows.Forms.PictureBoxSizeMode]::CenterImage
 	$pictureBox.Image = [System.Drawing.Image]::FromFile($ImagePath)
-	$form.Controls.Add($pictureBox)
+	$AddGameForm.Controls.Add($pictureBox)
 
-	$buttonUpdateExe = New-Object System.Windows.Forms.Button
-	$buttonUpdateExe.Location = New-Object Drawing.Point(470, 60)
-	$buttonUpdateExe.Text = "Add Exe"
+	$buttonUpdateExe = CreateButton "Add Exe" 470 60
 	$buttonUpdateExe.Add_Click({
 		$openFileDialog = OpenFileDialog "Select Executable" 'Executable (*.exe)|*.exe'
 		$result = $openFileDialog.ShowDialog()
@@ -521,11 +419,9 @@ function RenderAddGameForm() {
 
 		}
 	})
-	$form.Controls.Add($buttonUpdateExe)
+	$AddGameForm.Controls.Add($buttonUpdateExe)
 
-	$buttonOK = New-Object System.Windows.Forms.Button
-	$buttonOK.Location = New-Object Drawing.Point(245, 175)
-	$buttonOK.Text = "OK"
+	$buttonOK = CreateButton "OK" 245 175
 	$buttonOK.Add_Click({
 
 		if ($textExe.Text -eq "" -Or $textName.Text -eq "" )
@@ -543,85 +439,51 @@ function RenderAddGameForm() {
 	 			-GamePlayTime 0 -GameLastPlayDate $GameLastPlayDate -GameCompleteStatus 'FALSE' -GamePlatform 'PC'
 		ShowMessage "Registered '$GameName' in Database." "OK" "Asterisk"
 
-		$form.Close()
+		$AddGameForm.Close()
 	})
-	$form.Controls.Add($buttonOK)
+	$AddGameForm.Controls.Add($buttonOK)
 
-	$buttonCancel = New-Object System.Windows.Forms.Button
-	$buttonCancel.Location = New-Object Drawing.Point(370, 175)
-	$buttonCancel.Text = "Cancel"
-	$buttonCancel.Add_Click({
-		$form.Close()
-	})
-	$form.Controls.Add($buttonCancel)
+	$buttonCancel = CreateButton "Cancel" 370 175
+	$buttonCancel.Add_Click({ $AddGameForm.Close() })
+	$AddGameForm.Controls.Add($buttonCancel)
 
-	$form.ShowDialog()
-	$form.Dispose()
+	$AddGameForm.ShowDialog()
+	$AddGameForm.Dispose()
 }
 
 function RenderAddPlatformForm() {
 
-	$form = New-Object System.Windows.Forms.Form
-	$form.Text = "Gaming Gaiden: Add Emulator"
-	$form.Size = New-Object Drawing.Size(410, 255)
-	$form.StartPosition = 'CenterScreen'
-	$form.FormBorderStyle = 'FixedDialog'
-	$form.Icon = [System.Drawing.Icon]::new(".\icons\running.ico")
-	$form.Topmost = $true
+	$AddPlatform =	CreateForm "Gaming Gaiden: Add Emulator" 410 255 ".\icons\running.ico"
 
-	$labelName = New-Object System.Windows.Forms.Label
-	$labelName.AutoSize = $true
-	$labelName.Location = New-Object Drawing.Point(10, 20)
-	$labelName.Text = "Platorm:"
-	$form.Controls.Add($labelName)
+	$labelName = Createlabel "Platorm:" 10 20
+	$AddPlatform.Controls.Add($labelName)
 
-	$textName = New-Object System.Windows.Forms.TextBox
-	$textName.Size = New-Object System.Drawing.Size(200,20)
-	$textName.Location = New-Object Drawing.Point(85, 20)
-	$form.Controls.Add($textName)
+	$textName = CreateTextBox "" 85 20 200 20
+	$AddPlatform.Controls.Add($textName)
 
-	$labelExe = New-Object System.Windows.Forms.Label
-	$labelExe.AutoSize = $true
-	$labelExe.Location = New-Object Drawing.Point(10, 60)
-	$labelExe.Text = "Emulator Exe:"
-	$form.Controls.Add($labelExe)
+	$labelExe = Createlabel "Emulator Exe:" 10 60
+	$AddPlatform.Controls.Add($labelExe)
 
-	$textExe = New-Object System.Windows.Forms.TextBox
-	$textExe.Size = New-Object System.Drawing.Size(200,20)
-	$textExe.Location = New-Object Drawing.Point(85, 60)
+	$textExe = CreateTextBox "" 85 60 200 20
 	$textExe.ReadOnly = $true
-	$form.Controls.Add($textExe)
+	$AddPlatform.Controls.Add($textExe)
 
-	$labelRomExt = New-Object System.Windows.Forms.Label
-	$labelRomExt.AutoSize = $true
-	$labelRomExt.Location = New-Object Drawing.Point(10, 100)
-	$labelRomExt.Text = "Rom Extns:"
-	$form.Controls.Add($labelRomExt)
+	$labelRomExt = Createlabel "Rom Extns:" 10 100
+	$AddPlatform.Controls.Add($labelRomExt)
 
-	$textRomExt = New-Object System.Windows.Forms.TextBox
-	$textRomExt.Size = New-Object System.Drawing.Size(200,20)
-	$textRomExt.Location = New-Object Drawing.Point(85, 100)
-	$textRomExt.Text = ""
-	$form.Controls.Add($textRomExt)
+	$textRomExt = CreateTextBox "" 85 100 200 20
+	$AddPlatform.Controls.Add($textRomExt)
 	
-	$labelCores = New-Object System.Windows.Forms.Label
-	$labelCores.AutoSize = $true
-	$labelCores.Location = New-Object Drawing.Point(10, 140)
-	$labelCores.Text = "Core:"
+	$labelCores = Createlabel "Core:" 10 140 
 	$labelCores.hide()
-	$form.Controls.Add($labelCores)
+	$AddPlatform.Controls.Add($labelCores)
 
-	$textCore = New-Object System.Windows.Forms.TextBox
-	$textCore.Size = New-Object System.Drawing.Size(200,20)
-	$textCore.Location = New-Object Drawing.Point(85, 140)
-	$textCore.Text = ""
+	$textCore = CreateTextBox "" 85 140 200 20
 	$textCore.ReadOnly = $true
 	$textCore.hide()
-	$form.Controls.Add($textCore)
+	$AddPlatform.Controls.Add($textCore)
 
-	$buttonAddCore = New-Object System.Windows.Forms.Button
-	$buttonAddCore.Location = New-Object Drawing.Point(300, 138)
-	$buttonAddCore.Text = "Add Core"
+	$buttonAddCore = CreateButton "Add Core" 300 138
 	$buttonAddCore.hide()
 	$buttonAddCore.Add_Click({
 		$openFileDialog = OpenFileDialog "Select Retroarch Core" 'DLL (*.dll)|*.dll'
@@ -630,11 +492,9 @@ function RenderAddPlatformForm() {
 			$textCore.Text = (Get-Item $openFileDialog.FileName).Name
 		}
 	})
-	$form.Controls.Add($buttonAddCore)
+	$AddPlatform.Controls.Add($buttonAddCore)
 
-	$buttonAddExe = New-Object System.Windows.Forms.Button
-	$buttonAddExe.Location = New-Object Drawing.Point(300, 58)
-	$buttonAddExe.Text = "Add Exe"
+	$buttonAddExe = CreateButton "Add Exe" 300 58
 	$buttonAddExe.Add_Click({
 		$openFileDialog = OpenFileDialog "Select Executable" 'Executable (*.exe)|*.exe'
 		$result = $openFileDialog.ShowDialog()
@@ -649,11 +509,9 @@ function RenderAddPlatformForm() {
 			}
 		}
 	})
-	$form.Controls.Add($buttonAddExe)
+	$AddPlatform.Controls.Add($buttonAddExe)
 
-	$buttonOK = New-Object System.Windows.Forms.Button
-	$buttonOK.Location = New-Object Drawing.Point(85, 175)
-	$buttonOK.Text = "OK"
+	$buttonOK = CreateButton "OK" 85 175
 	$buttonOK.Add_Click({
 
 		if ($textExe.Text -eq "" -Or $textName.Text -eq "" -Or $textRomExt.Text -eq "")
@@ -699,18 +557,14 @@ function RenderAddPlatformForm() {
 
 		ShowMessage "Registered '$PlatformName' in Database." "OK" "Asterisk"
 
-		$form.Close()
+		$AddPlatform.Close()
 	})
-	$form.Controls.Add($buttonOK)
+	$AddPlatform.Controls.Add($buttonOK)
 
-	$buttonCancel = New-Object System.Windows.Forms.Button
-	$buttonCancel.Location = New-Object Drawing.Point(210, 175)
-	$buttonCancel.Text = "Cancel"
-	$buttonCancel.Add_Click({
-		$form.Close()
-	})
-	$form.Controls.Add($buttonCancel)
+	$buttonCancel = CreateButton "Cancel" 210 175
+	$buttonCancel.Add_Click({ $AddPlatform.Close() })
+	$AddPlatform.Controls.Add($buttonCancel)
 
-	$form.ShowDialog()
-	$form.Dispose()
+	$AddPlatform.ShowDialog()
+	$AddPlatform.Dispose()
 }

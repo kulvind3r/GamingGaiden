@@ -20,7 +20,7 @@ function EditGame {
 
     $GamesList = (RunDBQuery "SELECT name FROM games").name
     if ($GamesList.Length -eq 0){
-        ShowMessage "No Games found in database. Please add few games first." "Ok" "Error"
+        ShowMessage "No Games found in database. Please add few games first." "OK" "Error"
         Log "Error: Games list empty. Returning"
         return
     }
@@ -37,7 +37,7 @@ function EditPlatform {
 
     $PlatformsList = (RunDBQuery "SELECT name FROM emulated_platforms").name 
     if ($PlatformsList.Length -eq 0){
-        ShowMessage "No Platforms found in database. Please add few emulators first." "Ok" "Error"
+        ShowMessage "No Platforms found in database. Please add few emulators first." "OK" "Error"
         Log "Error: Platform list empty. Returning"
         return
     }

@@ -5,7 +5,6 @@ class Game {
     [ValidateNotNullOrEmpty()][string]$Playtime
 	[ValidateNotNullOrEmpty()][string]$Completed
     [ValidateNotNullOrEmpty()][string]$Last_Played_On
-	
 
     Game($IconUri, $Name, $Platform, $Playtime, $Completed, $LastPlayDate) {
        $this.Icon = $IconUri
@@ -26,20 +25,19 @@ function RenderGameList() {
 	$GetAllGamesQuery = "SELECT name, icon, platform, play_time, completed, last_play_date FROM games"
 	
 	$GameRecords = RunDBQuery $GetAllGamesQuery
-	if ($GameRecords.Length -eq 0){
-        ShowMessage "No Games found in DB. Please add some games first." "Ok" "Error"
+	if ($GameRecords.Length -eq 0) {
+        ShowMessage "No Games found in DB. Please add some games first." "OK" "Error"
         Log "Error: Games list empty. Returning"
         return
     }
 
 	$Games = @()
-	$TotalPlayTime = $null;
+	$TotalPlayTime = $null
 	foreach ($GameRecord in $GameRecords) {
 		$Name = $GameRecord.name
 
 		$IconUri = "<img src=`".\resources\images\default.png`">"
-		if ($null -ne $GameRecord.icon)
-		{
+		if ($null -ne $GameRecord.icon)	{
 			$ImageFileName = ToBase64 $Name
 			$IconBitmap = BytesToBitmap $GameRecord.icon
 			$IconBitmap.Save("$WorkingDirectory\ui\resources\images\$ImageFileName.png",[System.Drawing.Imaging.ImageFormat]::Png)
@@ -47,8 +45,7 @@ function RenderGameList() {
 		}
 
 		$StatusUri = "<div>Finished</div><img src=`".\resources\images\finished.png`">"
-		if ($GameRecord.completed -eq 'FALSE')
-		{
+		if ($GameRecord.completed -eq 'FALSE') {
 			$StatusUri = "<div>Playing</div><img src=`".\resources\images\playing.png`">"
 		}
 		
@@ -82,8 +79,8 @@ function RenderGamingTime() {
 
 	$DailyPlayTimeData = RunDBQuery $GetDailyPlayTimeDataQuery
 
-	if ($DailyPlayTimeData.Length -eq 0){
-        ShowMessage "No Records of Game Time found in DB. Please play some games first." "Ok" "Error"
+	if ($DailyPlayTimeData.Length -eq 0) {
+        ShowMessage "No Records of Game Time found in DB. Please play some games first." "OK" "Error"
         Log "Error: Game time records empty. Returning"
         return
     }
@@ -105,8 +102,8 @@ function RenderMostPlayed() {
 	$GetGamesPlayTimeDataQuery = "SELECT name, play_time as time FROM games Order By play_time DESC"
 
 	$GamesPlayTimeData = RunDBQuery $GetGamesPlayTimeDataQuery
-	if ($GamesPlayTimeData.Length -eq 0){
-        ShowMessage "No Games found in DB. Please add some games first." "Ok" "Error"
+	if ($GamesPlayTimeData.Length -eq 0) {
+        ShowMessage "No Games found in DB. Please add some games first." "OK" "Error"
         Log "Error: Games list empty. Returning"
         return
     }
@@ -128,8 +125,8 @@ function RenderGamesPerPlatform() {
 	$GetGamesPerPlatformDataQuery = "SELECT  platform, COUNT(name) FROM games GROUP BY platform"
 
 	$GetGamesPerPlatformData = RunDBQuery $GetGamesPerPlatformDataQuery
-	if ($GetGamesPerPlatformData.Length -eq 0){
-        ShowMessage "No Games found in DB. Please add some games first." "Ok" "Error"
+	if ($GetGamesPerPlatformData.Length -eq 0) {
+        ShowMessage "No Games found in DB. Please add some games first." "OK" "Error"
         Log "Error: Games list empty. Returning"
         return
     }
