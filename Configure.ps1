@@ -55,7 +55,7 @@ try {
     Import-Module PSSQLite
     Import-Module -Name ".\modules\HelperFunctions.psm1"
     Import-Module -Name ".\modules\QueryFunctions.psm1"
-    Import-Module -Name ".\modules\UIFunctions.psm1"
+    Import-Module -Name ".\modules\UIFunctionsForConfiguration.psm1"
     Import-Module -Name ".\modules\StorageFunctions.psm1"
 
     $Database = ".\GamingGaiden.db"
