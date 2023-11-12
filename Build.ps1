@@ -3,7 +3,7 @@
 mkdir -f .\build\GamingGaiden
 Remove-Item .\ui\*.html -ErrorAction SilentlyContinue
 
-D:\Projects\pandoc-3.1.9\pandoc.exe --ascii .\Manual.md -o .\ui\Manual.html
+pandoc.exe --ascii .\Manual.md -o .\ui\Manual.html
 
 $ManualHTML = Get-Content .\ui\Manual.html
 $ManualTemplate = Get-Content .\ui\templates\Manual.html.template
