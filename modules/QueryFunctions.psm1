@@ -133,7 +133,7 @@ function findEmulatedGameDetails($DetectedEmulatorExe) {
 
 		if ($null -eq $CoreName)
 		{
-			Log "Error: No core detected. Most likely platform not registered. Please register platform."
+			Log "Error: No core detected. Most likely platform is not registered. Please register platform."
 			return $false
 		}
 	}

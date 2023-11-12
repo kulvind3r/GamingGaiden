@@ -15,20 +15,20 @@ A simple application written in powershell to track your gaming time and review 
 
 ## Features
 - Tracks runtime for any PC or emulated game.
-- Detailed Games list UI with search and sorting. Editable game Icons. Mark games as finished etc.
-- Works amazing with command line based emulation frontends like EmulationStation, LaunchBox and other standalone emulators.
-- Automatically identifies and tracks new emulated games once an emulator is added.
-- Retroarch Support. Tracks different emulators under retroarch separately.
-- Extremely lightweight. 200KB install size. Single Process. Uses just 60 MB memory at runtime.
-- Stop and Resume tracking anytime without exiting the app.
+- Automatically track all new emulated games by just registering the emulator only once.
+- Retroarch Supported. Track different retroarch cores as distinct emulated platforms.
+- Works best with command line based emulation frontends like EmulationStation, LaunchBox and other standalone emulators. 
+- Detailed Games list UI with search and sorting. Editable game icons. Games can be marked finished for backlog records.
+- Extremely lightweight. 200KB install size. Single process. Uses just 60 MB memory at runtime.
+- Stop and resume tracking anytime without exiting the app.
 - Daily, Monthly and Yearly play time statstics.
-- See your most played games and number of games played per platform.
-- Completely offline, No internet required after first installation. All data stored locally.
-- Portable, no MSI installer or Setup. Just Unzip and run Install script.
-- Database backup after every gaming session or change in database. Last 5 backups always maintained. Simply replace DB file to Restore.
+- Shows most played games and number of games played per platform.
+- Completely offline. No internet required after first installation. All data stored locally.
+- Portable, no MSI installer or setup. Just unzip and run install script.
+- Protects Data. Database backup on every update. Keeps 5 latest backups. 
 - Automated scheduled task setup on install to run at startup and start tracking.
-- Inbuilt Manual explaining how to use application in detail. Just click Help from menu.
-- Detailed Logging to identify bugs and errors.
+- Detailed how to use manual. Just click Help from menu.
+- Detailed logging to identify bugs and errors.
 
 ## Vs Steam, Playnite etc.
 The launchers do time tracking at best as a side feature. Gaming Gaiden is designed to give you insights to your hobby. It's stastics feature will answer questions like 

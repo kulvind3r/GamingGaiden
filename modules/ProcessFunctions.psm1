@@ -53,7 +53,7 @@ function MonitorGame($DetectedExe, $RecordingNotifyIcon) {
 		$EmulatedGameDetails = findEmulatedGameDetails $DetectedExe
 		if ($EmulatedGameDetails -eq $false)
 		{
-			Log "Error: Problem in fetching emulated game details. See above for details"
+			Log "Error: Problem in fetching emulated game details. See earlier logs for more info"
 			Log "Error: Cannot resume detection until $DetectedExe exits. No playtime will be recorded."
 			
 			TimeTrackerLoop $DetectedExe

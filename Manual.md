@@ -31,6 +31,8 @@ Once you have your emulation setup like above..
 
 Click ok to register the platform and Gaming Gaiden will now track any game you play with an emulator automatically.
 
+**Emulated games are auto detected and auto registered. Name of the rom file is used as game name. Game name cannot be changed once registered without deleting existing game and running it again for auto registration. Make sure rom files are named correctly.**
+
 ### How do I make changes to a tracked game or mark it as finished?
 
 1. Notify icon menu *Settings => Edit Game*. Select the game you want to change in the list that shows and press ok.
@@ -77,6 +79,10 @@ Hide the extra copies of *"Dplphin.exe"* in explorer to keep your Dolphin instal
 Same trick as above can be applied fore retroarch as well. Use the same core, but make copies of *"retroarch.exe"* for each platform and use those as executables for different platforms.
 
 Hide the extra copies of *"retroarch.exe"* in explorer to keep your retroarch installation looking neat and clean.
+
+### Help! I accidentally corrupted / lost / deleted some or all of my data. How do i restore?
+
+Check the backup folder in the install directory, it should have backups of database. Exit the app. Copy the database file from backup zip to install directory and start the app again. 
 
 ### Why the above workarounds? Can't you handle these scenarios in code?
 
