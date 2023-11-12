@@ -4,8 +4,8 @@ function DetectGame() {
     $GetGameExesQuery = "SELECT exe_name FROM games"
 	$GetEmulatorExesQuery = "SELECT exe_name FROM emulated_platforms"
 
-    $GameExeList = (Invoke-SqliteQuery -Query $GetGameExesQuery -SQLiteConnection $DBConnection).exe_name
-	$EmulatorExeList = (Invoke-SqliteQuery -Query $GetEmulatorExesQuery -SQLiteConnection $DBConnection).exe_name
+    $GameExeList = (RunDBQuery $GetGameExesQuery).exe_name
+	$EmulatorExeList = (RunDBQuery $GetEmulatorExesQuery).exe_name
 
 	$ExesToDetect = ( $EmulatorExeList + $GameExeList ) | Select-Object -Unique
 	
@@ -66,7 +66,7 @@ function MonitorGame($DetectedExe, $RecordingNotifyIcon) {
 	{
 		$DetectedExePattern = SQLEscapedMatchPattern($DetectedExe.Trim())
 		$GetGameNameQuery = "SELECT name FROM games WHERE exe_name LIKE '{0}'" -f $DetectedExePattern
-		$EntityFound = Invoke-SqliteQuery -Query $GetGameNameQuery -SQLiteConnection $DBConnection
+		$EntityFound = RunDBQuery $GetGameNameQuery
 		$GameName = $EntityFound.name
 	}
 	

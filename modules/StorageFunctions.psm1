@@ -15,7 +15,7 @@ function SaveGame(){
 						"VALUES (@GameName, @GameExeName, @GameIconBytes, @GamePlayTime, @GameLastPlayDate, @GameCompleteStatus, @GamePlatform)"
 
 	Log "Adding $GameName in Database"
-    Invoke-SqliteQuery -Query $AddGameQuery -SQLiteConnection $DBConnection -SqlParameters @{
+    RunDBQuery $AddGameQuery @{
         GameName = $GameName.Trim()
         GameExeName = $GameExeName.Trim()
 		GameIconBytes = $GameIconBytes
@@ -38,7 +38,7 @@ function SavePlatform(){
                                     "VALUES (@PlatformName, @EmulatorExeName, @CoreName, @RomExtensions)"
 
     Log "Adding $PlatformName in Database"
-    Invoke-SqliteQuery -Query $AddPlatformQuery -SQLiteConnection $DBConnection -SqlParameters @{
+    RunDBQuery $AddPlatformQuery @{
         PlatformName = $PlatformName.Trim()
         EmulatorExeName = $EmulatorExeName.Trim()
         CoreName = $CoreName.Trim()
@@ -58,7 +58,7 @@ function UpdateGameOnSession() {
 	$UpdateGamePlayTimeQuery = "UPDATE games SET play_time = @UpdatedPlayTime, last_play_date = @UpdatedLastPlayDate WHERE name LIKE '{0}'" -f $GameNamePattern
 
     Log "Updating $GameName playtime to $GamePlayTime in database"
-	Invoke-SqliteQuery -Query $UpdateGamePlayTimeQuery -SQLiteConnection $DBConnection -SqlParameters @{ 
+	RunDBQuery $UpdateGamePlayTimeQuery @{ 
 		UpdatedPlayTime = $GamePlayTime
 		UpdatedLastPlayDate = $GameLastPlayDate
 	}
@@ -81,7 +81,7 @@ function UpdateGameOnEdit() {
 	$UpdateGameQuery = "UPDATE games SET exe_name = @GameExeName, icon = @GameIconBytes, play_time = @GamePlayTime, completed = @GameCompleteStatus, platform = @GamePlatform WHERE name LIKE '{0}'" -f $GameNamePattern
 
     Log "Editing $GameName in database"
-	Invoke-SqliteQuery -Query $UpdateGameQuery -SQLiteConnection $DBConnection -SqlParameters @{
+	RunDBQuery $UpdateGameQuery @{
         GameExeName = $GameExeName.Trim()
 		GameIconBytes = $GameIconBytes
         GamePlayTime = $GamePlayTime
@@ -103,7 +103,7 @@ function  UpdatePlatformOnEdit() {
     $UpdatePlatformQuery = "UPDATE emulated_platforms set exe_name = @EmulatorExeName, core = @EmulatorCore, rom_extensions = @PlatformRomExtensions WHERE name LIKE '{0}'" -f $PlatformNamePattern
 
     Log "Editing $GameName in database"
-	Invoke-SqliteQuery -Query $UpdatePlatformQuery -SQLiteConnection $DBConnection -SqlParameters @{
+	RunDBQuery $UpdatePlatformQuery @{
         EmulatorExeName = $EmulatorExeName
 		EmulatorCore = $EmulatorCore
         PlatformRomExtensions = $PlatformRomExtensions.Trim()
@@ -115,7 +115,7 @@ function RemoveGame($GameName) {
     $RemoveGameQuery = "DELETE FROM games WHERE name LIKE '{0}'" -f $GameNamePattern
 
     Log "Removing $GameName from database"
-    Invoke-SqliteQuery -Query $RemoveGameQuery -SQLiteConnection $DBConnection
+    RunDBQuery $RemoveGameQuery
 }
 
 function RemovePlatform($PlatformName) {
@@ -123,13 +123,13 @@ function RemovePlatform($PlatformName) {
     $RemovePlatformQuery = "DELETE FROM emulated_platforms WHERE name LIKE '{0}'" -f $PlatformNamePattern
 
     Log "Removing $PlatformName from database"
-    Invoke-SqliteQuery -Query $RemovePlatformQuery -SQLiteConnection $DBConnection
+    RunDBQuery $RemovePlatformQuery
 }
 
 function RecordPlaytimOnDate($PlayTime) {
     $ExistingPlayTimeQuery = "SELECT play_time FROM daily_playtime WHERE play_date like DATE('now')"
 
-    $ExistingPlayTime = (Invoke-SqliteQuery -Query $ExistingPlayTimeQuery -SQLiteConnection $DBConnection).play_time
+    $ExistingPlayTime = (RunDBQuery $ExistingPlayTimeQuery -SQLiteConnection $DBConnection).play_time
     
     $RecordPlayTimeQuery = ""
     if ($null -eq $ExistingPlayTime)
@@ -144,5 +144,5 @@ function RecordPlaytimOnDate($PlayTime) {
     }
 
     Log "Updating playTime for today in database"
-    Invoke-SqliteQuery -Query $RecordPlayTimeQuery -SQLiteConnection $DBConnection
+    RunDBQuery $RecordPlayTimeQuery
 }

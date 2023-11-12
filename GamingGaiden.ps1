@@ -30,6 +30,10 @@ try {
 	Start-Process -FilePath "powershell" -ArgumentList "-File","`".\SetupDatabase.ps1`"" -WindowStyle Hidden -Wait
 	Log "Database setup complete"
 
+	$Database = ".\GamingGaiden.db"
+    Log "Opening DB connection for the duration of main application run"
+    $DBConnection = New-SQLiteConnection -DataSource $Database
+
 	#------------------------------------------
 	# Setup tracker Job Scripts and Other Functions
 	$TrackerJobInitializationScript = {
@@ -37,20 +41,23 @@ try {
 		Import-Module -Name ".\modules\HelperFunctions.psm1";
 		Import-Module -Name ".\modules\QueryFunctions.psm1";
 		Import-Module -Name ".\modules\StorageFunctions.psm1";
-		Import-Module -Name ".\modules\UIFunctions.psm1"
 		Import-Module PSSQLite;
-
-		$Database = ".\GamingGaiden.db"
-		$DBConnection = New-SQLiteConnection -DataSource $Database
 	}
 
 	$TrackerJobScript = {
 		try {
+			Log "Opening DB connection for the duration of tracker job"
+			$Database = ".\GamingGaiden.db"
+			$DBConnection = New-SQLiteConnection -DataSource $Database
+
 			$RecordingNotifyIcon = CreateNotifyIcon "Tracking Game" ".\icons\recording.ico"
 			while ($true) {
 				$DetectedExe = DetectGame
 				MonitorGame $DetectedExe $RecordingNotifyIcon
 			}
+			
+			Log "Closing DB connection on tracker job closing"
+    		$DBConnection.Close()
 		}
 		catch {
 			$RecordingNotifyIcon.Visible = $false
@@ -141,7 +148,6 @@ try {
 	#------------------------------------------
 	# Setup Tray Icon Actions
 	$AppNotifyIcon.Add_Click({
-
 		If ($_.Button -eq [Windows.Forms.MouseButtons]::Left) {
 			RenderGameList
 			Invoke-Item ".\ui\MyGames.html"
@@ -197,7 +203,13 @@ try {
 
 	$EditPlatformMenuItem.Add_Click({ ConfigureAction "EditPlatform"; })
 
-	$ExitMenuItem.Add_Click({ $AppNotifyIcon.Visible = $false; Stop-Job -Name "TrackerJob"; [System.Windows.Forms.Application]::Exit(); })
+	$ExitMenuItem.Add_Click({ 
+		$AppNotifyIcon.Visible = $false; 
+		Stop-Job -Name "TrackerJob"; 
+		Log "Closing DB connection on main application closing"
+    	$DBConnection.Close()
+		[System.Windows.Forms.Application]::Exit(); 
+	})
 	#------------------------------------------
 
 	Log "Starting tracker on app boot"

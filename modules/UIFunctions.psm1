@@ -110,16 +110,13 @@ function RenderListBoxForm($Prompt, $List) {
 
 function RenderGameList() {
 	Log "Rendering my games list"
-
-	$Database = ".\GamingGaiden.db"
-	$DBConnection = New-SQLiteConnection -DataSource $Database
 	
 	$WorkingDirectory = (Get-Location).Path
 	mkdir -f $WorkingDirectory\ui\resources\images
 	
 	$GetAllGamesQuery = "SELECT name, icon, platform, play_time, completed, last_play_date FROM games"
 	
-	$GameRecords = (Invoke-SqliteQuery -Query $GetAllGamesQuery -SQLiteConnection $DBConnection)
+	$GameRecords = RunDBQuery $GetAllGamesQuery
 	if ($GameRecords.Length -eq 0){
         ShowMessage "No Games found in DB. Please add some games first." "Ok" "Error"
         Log "Error: Games list empty. Returning"
@@ -170,14 +167,11 @@ function RenderGameList() {
 function RenderGamingTime() {
 	Log "Rendering time spent gaming"
 
-	$Database = ".\GamingGaiden.db"
-	$DBConnection = New-SQLiteConnection -DataSource $Database
-
 	$WorkingDirectory = (Get-Location).Path
 
 	$GetDailyPlayTimeDataQuery = "SELECT play_date as date, play_time as time FROM daily_playtime ORDER BY date ASC"
 
-	$DailyPlayTimeData = (Invoke-SqliteQuery -Query $GetDailyPlayTimeDataQuery -SQLiteConnection $DBConnection)
+	$DailyPlayTimeData = RunDBQuery $GetDailyPlayTimeDataQuery
 
 	if ($DailyPlayTimeData.Length -eq 0){
         ShowMessage "No Records of Game Time found in DB. Please play some games first." "Ok" "Error"
@@ -197,14 +191,11 @@ function RenderGamingTime() {
 function RenderMostPlayed() {
 	Log "Rendering most played"
 
-	$Database = ".\GamingGaiden.db"
-	$DBConnection = New-SQLiteConnection -DataSource $Database
-
 	$WorkingDirectory = (Get-Location).Path
 
 	$GetGamesPlayTimeDataQuery = "SELECT name, play_time as time FROM games Order By play_time DESC"
 
-	$GamesPlayTimeData = (Invoke-SqliteQuery -Query $GetGamesPlayTimeDataQuery -SQLiteConnection $DBConnection)
+	$GamesPlayTimeData = RunDBQuery $GetGamesPlayTimeDataQuery
 	if ($GamesPlayTimeData.Length -eq 0){
         ShowMessage "No Games found in DB. Please add some games first." "Ok" "Error"
         Log "Error: Games list empty. Returning"
@@ -223,14 +214,11 @@ function RenderMostPlayed() {
 function RenderGamesPerPlatform() {
 	Log "Rendering games per platform"
 
-	$Database = ".\GamingGaiden.db"
-	$DBConnection = New-SQLiteConnection -DataSource $Database
-
 	$WorkingDirectory = (Get-Location).Path
 
 	$GetGamesPerPlatformDataQuery = "SELECT  platform, COUNT(name) FROM games GROUP BY platform"
 
-	$GetGamesPerPlatformData = (Invoke-SqliteQuery -Query $GetGamesPerPlatformDataQuery -SQLiteConnection $DBConnection)
+	$GetGamesPerPlatformData = RunDBQuery $GetGamesPerPlatformDataQuery
 	if ($GetGamesPerPlatformData.Length -eq 0){
         ShowMessage "No Games found in DB. Please add some games first." "Ok" "Error"
         Log "Error: Games list empty. Returning"

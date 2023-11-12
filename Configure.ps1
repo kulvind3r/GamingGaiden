@@ -18,7 +18,7 @@ function AddPlatform {
 function EditGame {
     Log "Starting game editing"
 
-    $GamesList = (Invoke-SqliteQuery -Query "SELECT name FROM games" -SQLiteConnection $DBConnection).name
+    $GamesList = (RunDBQuery "SELECT name FROM games").name
     if ($GamesList.Length -eq 0){
         ShowMessage "No Games found in database. Please add few games first." "Ok" "Error"
         Log "Error: Games list empty. Returning"
@@ -35,7 +35,7 @@ function EditGame {
 function EditPlatform {
     Log "Starting platform editing"
 
-    $PlatformsList = (Invoke-SqliteQuery -Query "SELECT name FROM emulated_platforms" -SQLiteConnection $DBConnection).name 
+    $PlatformsList = (RunDBQuery "SELECT name FROM emulated_platforms").name 
     if ($PlatformsList.Length -eq 0){
         ShowMessage "No Platforms found in database. Please add few emulators first." "Ok" "Error"
         Log "Error: Platform list empty. Returning"
@@ -78,6 +78,9 @@ try {
     if ($DatabaseFileHashAfter -ne $DatabaseFileHashBefore){
         BackupDatabase
     }
+
+    Log "Closing database connection on finishing configuration"
+    $DBConnection.Close()
 }
 catch {
     [System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms')    | out-null

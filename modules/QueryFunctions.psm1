@@ -4,7 +4,7 @@
 	$pattern = SQLEscapedMatchPattern $DetectedExe.Trim()
 	$FindExeQuery = "SELECT COUNT(*) as '' FROM emulated_platforms WHERE exe_name LIKE '{0}'" -f $pattern
 
-	$ExesFound = (Invoke-SqliteQuery -Query $FindExeQuery -SQLiteConnection $DBConnection).Column1
+	$ExesFound = (RunDBQuery $FindExeQuery).Column1
 
 	Log ("Check result: {0}" -f ($ExesFound -gt 0))
 	return ($ExesFound -gt 0)
@@ -16,7 +16,7 @@ function DoesEntityExists($Table, $Column, $EntityName){
 	$EntityNamePattern = SQLEscapedMatchPattern($EntityName.Trim())
     $ValidateEntityQuery = "SELECT * FROM {0} WHERE {1} LIKE '{2}'" -f $Table, $Column, $EntityNamePattern
 
-    $EntityFound = (Invoke-SqliteQuery -Query $ValidateEntityQuery -SQLiteConnection $DBConnection)
+    $EntityFound = (RunDBQuery $ValidateEntityQuery)
 
 	Log "Discovered entity: $EntityFound"
     return $EntityFound
@@ -29,7 +29,7 @@ function CheckExeCoreCombo($Exe, $Core) {
 	$CoreNamePattern = SQLEscapedMatchPattern($Core.Trim())
     $ValidateEntityQuery = "SELECT * FROM emulated_platforms WHERE exe_name LIKE '{0}' AND core LIKE '{1}'" -f $ExeNamePattern, $CoreNamePattern
 
-    $EntityFound = (Invoke-SqliteQuery -Query $ValidateEntityQuery -SQLiteConnection $DBConnection)
+    $EntityFound = RunDBQuery $ValidateEntityQuery
 
 	Log "Detected exe core Combo: $EntityFound"
     return $EntityFound
@@ -41,7 +41,7 @@ function GetPlayTime($GameName) {
 	$GameNamePattern = SQLEscapedMatchPattern($GameName.Trim())
 	$GetGamePlayTimeQuery = "SELECT play_time FROM games WHERE name LIKE '{0}'" -f $GameNamePattern
 
-	$RecordedGamePlayTime = (Invoke-SqliteQuery -Query $GetGamePlayTimeQuery -SQLiteConnection $DBConnection).play_time
+	$RecordedGamePlayTime = (RunDBQuery $GetGamePlayTimeQuery).play_time
 
 	Log "Detected gameplay time: $RecordedGamePlayTime"
 	return $RecordedGamePlayTime
@@ -52,7 +52,7 @@ function findEmulatedGame($DetectedEmulatorExe, $EmulatorCommandLine) {
 
 	$pattern = SQLEscapedMatchPattern $DetectedEmulatorExe.Trim()
 	$GetRomExtensionsQuery = "SELECT rom_extensions FROM emulated_platforms WHERE exe_name LIKE '{0}'" -f $pattern
-	$RomExtensions = (Invoke-SqliteQuery -Query $GetRomExtensionsQuery -SQLiteConnection $DBConnection).rom_extensions.Split(',')
+	$RomExtensions = (RunDBQuery $GetRomExtensionsQuery).rom_extensions.Split(',')
 
 	$RomName = $null
 	foreach ($RomExtension in $RomExtensions) {
@@ -76,7 +76,7 @@ function findEmulatedGameCore($DetectedEmulatorExe, $EmulatorCommandLine) {
 	$pattern = SQLEscapedMatchPattern $DetectedEmulatorExe.Trim()
 	$GetCoresQuery = "SELECT core FROM emulated_platforms WHERE exe_name LIKE '{0}'" -f $pattern
 	$CoreName = $null
-	$Cores = (Invoke-SqliteQuery -Query $GetCoresQuery -SQLiteConnection $DBConnection).core
+	$Cores = (RunDBQuery $GetCoresQuery).core
 	if ( $Cores.Length -le 1)
 	{
 		$CoreName = $Cores[0]
@@ -108,7 +108,7 @@ function findEmulatedGamePlatform($DetectedEmulatorExe, $Core) {
 		$GetPlatformQuery = "SELECT name FROM emulated_platforms WHERE exe_name LIKE '{0}' AND core LIKE '{1}'" -f $ExePattern, $CorePattern
 	}
 	
-	$EmulatedGamePlatform = (Invoke-SqliteQuery -Query $GetPlatformQuery -SQLiteConnection $DBConnection).name
+	$EmulatedGamePlatform = (RunDBQuery $GetPlatformQuery).name
 
 	Log "Detected platform : $EmulatedGamePlatform"
 	return $EmulatedGamePlatform
@@ -156,7 +156,7 @@ function GetGameDetails($Game) {
 	$pattern = SQLEscapedMatchPattern $Game.Trim()
 	$GetGameDetailsQuery = "SELECT name, exe_name, platform, play_time, completed, icon FROM games WHERE name LIKE '{0}'" -f $pattern
 
-	$GameDetails = Invoke-SqliteQuery -Query $GetGameDetailsQuery -SQLiteConnection $DBConnection
+	$GameDetails = RunDBQuery $GetGameDetailsQuery
 
 	Log ("Found details: name: {0}, exe_name: {1}, platform: {2}, play_time: {3}" -f $GameDetails.name, $GameDetails.exe_name, $GameDetails.platform, $GameDetails.play_time)
 	return $GameDetails
@@ -168,8 +168,8 @@ function GetPlatformDetails($Platform) {
 	$pattern = SQLEscapedMatchPattern $Platform.Trim()
 	$GetPlatformDetailsQuery = "SELECT * FROM emulated_platforms WHERE name LIKE '{0}'" -f $pattern
 
-	$PlatformDetails = Invoke-SqliteQuery -Query $GetPlatformDetailsQuery -SQLiteConnection $DBConnection
+	$PlatformDetails = RunDBQuery $GetPlatformDetailsQuery
 
 	Log ("Found details: name: {0}, exe_name: {1}, core: {2}" -f $PlatformDetails.name, $PlatformDetails.exe_name, $PlatformDetails.core)
-	return $PlatformDetails
+	return $PlatformDetails 
 }

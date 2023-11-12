@@ -23,7 +23,6 @@ function ToBase64($String) {
 
 function PlayTimeMinsToString($PlayTime) {
 	$Minutes = $null; $Hours = [math]::divrem($PlayTime, 60, [ref]$Minutes);
-
 	return ("{0} Hr {1} Min" -f $Hours, $Minutes)
 }
 
@@ -100,6 +99,7 @@ function CalculateFileHash ($FilePath) {
 	Copy-Item $FilePath "$env:TEMP\$FileName"
 	$FileHash = Get-FileHash "$env:TEMP\$FileName"
 	Remove-Item "$env:TEMP\$FileName"
+
 	return $FileHash.Hash
 }
 
@@ -115,4 +115,16 @@ function BackupDatabase {
 	Remove-Item "$env:TEMP\GamingGaiden.db"
 
 	Get-ChildItem -Path .\backups -File | Sort-Object -Property CreationTime | Select-Object -SkipLast 5 | Remove-Item
+}
+
+function RunDBQuery ($Query, $SQLParameters = $null) {
+	if ($null -eq $SQLParameters)
+	{
+		$Result = Invoke-SqliteQuery -Query $Query -SQLiteConnection $DBConnection
+	}
+	else
+	{
+		$Result = Invoke-SqliteQuery -Query $Query -SQLiteConnection $DBConnection -SqlParameters $SQLParameters
+	}
+	return $Result
 }
