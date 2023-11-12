@@ -158,7 +158,7 @@ function GetGameDetails($Game) {
 
 	$GameDetails = Invoke-SqliteQuery -Query $GetGameDetailsQuery -SQLiteConnection $DBConnection
 
-	Log ("Found details: name: {0}, exe_name: {1}, platform: {2}, play_time: {3}" -f $Game.name, $Game.exe_name, $Game.platform, $Game.play_time)
+	Log ("Found details: name: {0}, exe_name: {1}, platform: {2}, play_time: {3}" -f $GameDetails.name, $GameDetails.exe_name, $GameDetails.platform, $GameDetails.play_time)
 	return $GameDetails
 }
 
