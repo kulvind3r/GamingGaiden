@@ -11,12 +11,12 @@
 }
 
 function DoesEntityExists($Table, $Column, $EntityName){
-    Log "Does $EntityName exists in $Table?"
+    Log "Does $EntityName exists in $Table ?"
 
 	$EntityNamePattern = SQLEscapedMatchPattern($EntityName.Trim())
     $ValidateEntityQuery = "SELECT * FROM {0} WHERE {1} LIKE '{2}'" -f $Table, $Column, $EntityNamePattern
 
-    $EntityFound = (RunDBQuery $ValidateEntityQuery)
+    $EntityFound = RunDBQuery $ValidateEntityQuery
 
 	Log "Discovered entity: $EntityFound"
     return $EntityFound
