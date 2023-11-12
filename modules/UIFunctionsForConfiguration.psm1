@@ -452,7 +452,6 @@ function RenderAddPlatformForm() {
 		$EmulatorCore = $textCore.Text
 
 		$ExeCoreComboFound = CheckExeCoreCombo $EmulatorExeName $EmulatorCore
-		Log "Checkpoint 1"
 		if ($null -ne $ExeCoreComboFound) {
 			ShowMessage "Executable '$EmulatorExeName.exe' is already registered with core '$EmulatorCore'.`r`nCannot register another platform with same Exe and Core Combination.`r`nUse Edit Platform setting to check existing platforms." "OK" "Error"
 			return
