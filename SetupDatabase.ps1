@@ -38,7 +38,7 @@ catch {
     [System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms')    | out-null
     [System.Windows.Forms.MessageBox]::Show("Exception: $($_.Exception.Message). Check log for details",'Gaming Gaiden', "OK", "Error")
 
-    $Timestamp = (Get-date -f %d-%M-%y`|%H:%m:%s)
+    $Timestamp = Get-date -f s
     Write-Output "$Timestamp : Error: A user or system error has caused an exception. Database setup could not be finished. Check log for details." >> ".\GamingGaiden.log"
     Write-Output "$Timestamp : Exception: $($_.Exception.Message)" >> ".\GamingGaiden.log"
     exit 1;

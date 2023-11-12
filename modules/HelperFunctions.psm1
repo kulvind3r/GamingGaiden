@@ -5,7 +5,7 @@ function ResetLog($MSG) {
 }
 
 function Log($MSG) {
-	$Timestamp = (Get-date -f %d-%M-%y`|%H:%m:%s)
+	$Timestamp = Get-date -f s
 	Write-Output "$Timestamp : $MSG" >> ".\GamingGaiden.log"
 }
 
