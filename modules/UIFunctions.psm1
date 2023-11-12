@@ -249,7 +249,7 @@ function RenderGamesPerPlatform() {
 function RenderEditGameForm($SelectedGame) {
 
 	$form = New-Object System.Windows.Forms.Form
-	$form.Text = "Gameplay Gaiden: Edit Game"
+	$form.Text = "Gaming Gaiden: Edit Game"
 	$form.Size = New-Object Drawing.Size(580, 255)
 	$form.StartPosition = 'CenterScreen'
 	$form.FormBorderStyle = 'FixedDialog'
@@ -427,7 +427,7 @@ function RenderEditGameForm($SelectedGame) {
 function RenderEditPlatformForm($SelectedPlatform) {
 
 	$form = New-Object System.Windows.Forms.Form
-	$form.Text = "Gameplay Gaiden: Edit Platform"
+	$form.Text = "Gaming Gaiden: Edit Platform"
 	$form.Size = New-Object Drawing.Size(410, 255)
 	$form.StartPosition = 'CenterScreen'
 	$form.FormBorderStyle = 'FixedDialog'
@@ -577,7 +577,7 @@ function RenderEditPlatformForm($SelectedPlatform) {
 function RenderAddGameForm() {
 
 	$form = New-Object System.Windows.Forms.Form
-	$form.Text = "Gameplay Gaiden: Add Game"
+	$form.Text = "Gaming Gaiden: Add Game"
 	$form.Size = New-Object Drawing.Size(580, 255)
 	$form.StartPosition = 'CenterScreen'
 	$form.FormBorderStyle = 'FixedDialog'
@@ -719,7 +719,7 @@ function RenderAddGameForm() {
 function RenderAddPlatformForm() {
 
 	$form = New-Object System.Windows.Forms.Form
-	$form.Text = "Gameplay Gaiden: Add Emulator"
+	$form.Text = "Gaming Gaiden: Add Emulator"
 	$form.Size = New-Object Drawing.Size(410, 255)
 	$form.StartPosition = 'CenterScreen'
 	$form.FormBorderStyle = 'FixedDialog'
