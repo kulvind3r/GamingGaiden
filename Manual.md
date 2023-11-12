@@ -53,7 +53,7 @@ Click ok to register the platform and Gaming Gaiden will now track any game you 
 
 ### How do I pause/resume tracking?
 
-Notify icon menu *Settings => Stop Tracker*. To resume tracking *Settings => Start Tracker*
+Notify icon menu *Stop Tracker*. To resume tracking, icon menu *Start Tracker*
 
 ### Help! Gaming Gaiden is not tracking emulated games launched from emulator application directly.
 
