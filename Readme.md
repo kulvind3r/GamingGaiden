@@ -69,6 +69,9 @@ This is just a one time privelege escalation for installing dependencies and cha
 Made with love using 
 
 - [PSSQLite](https://www.powershellgallery.com/packages/PSSQLite) by [Warren Frame](https://github.com/RamblingCookieMonster)
+- [DataTables](https://datatables.net/)
+- [Jquery](https://jquery.com/)
+- [ChartJs](https://www.chartjs.org/)
 - Various Icons from [Icons8](https://icons8.com)
 - Game Cartridge Icon from [FreePik on Flaticon](https://www.flaticon.com/free-icons/game-cartridge)
 - Cute [Ninja Vector by Catalyststuff on Freepik](https://www.freepik.com/free-vector/cute-ninja-gaming-cartoon-vector-icon-illustration-people-technology-icon-concept-isolated-flat_42903434.htm)
