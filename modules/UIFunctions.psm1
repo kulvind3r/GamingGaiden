@@ -139,3 +139,38 @@ function RenderGamesPerPlatform() {
 
 	$DBConnection.Close()
 }
+
+function RenderAboutDialog() {
+	$AboutForm = CreateForm "About" 350 280 ".\icons\running.ico"
+	$AboutForm.BackColor = [System.Drawing.Color]::FromArgb(200, 200, 200)
+
+	$PictureBox = CreatePictureBox "./icons/banner.png" 6 20 322 60
+	$AboutForm.Controls.Add($pictureBox)
+
+	$TextCopyRight = [char]::ConvertFromUtf32(0x000000A9) + " 2023 Kulvinder Singh"
+	$LabelCopyRight = CreateLabel $TextCopyRight 107 100
+	$AboutForm.Controls.Add($LabelCopyRight)
+
+	$LabelHome = New-Object Windows.Forms.LinkLabel
+	$LabelHome.Text = "Home"
+	$LabelHome.Location = New-Object Drawing.Point(154, 130)
+	$LabelHome.AutoSize = $true
+	$LabelHome.Add_LinkClicked({
+		Start-Process "https://github.com/kulvind3r/GamingGaiden"
+	})
+	$AboutForm.Controls.Add($LabelHome)
+
+	$LabelAttributions = New-Object Windows.Forms.LinkLabel
+	$LabelAttributions.Text = "Open Source And Original Art Attributions"
+	$LabelAttributions.Location = New-Object Drawing.Point(63, 160)
+	$LabelAttributions.AutoSize = $true
+	$LabelAttributions.Add_LinkClicked({
+		Start-Process "https://github.com/kulvind3r/GamingGaiden#attributions"
+	})
+	$AboutForm.Controls.Add($LabelAttributions)
+
+	$buttonClose = CreateButton "Close" 133 200; $buttonClose.Add_Click({ $AboutForm.Close() }); $AboutForm.Controls.Add($buttonClose)
+
+	$AboutForm.ShowDialog()
+	$AboutForm.Dispose()
+}

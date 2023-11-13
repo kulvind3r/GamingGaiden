@@ -128,3 +128,51 @@ function RunDBQuery ($Query, $SQLParameters = $null) {
 	}
 	return $Result
 }
+
+function CreateForm($Text, $SizeX, $SizeY, $IconPath) {
+	$form = New-Object System.Windows.Forms.Form
+	$form.Text = $Text
+	$form.Size = New-Object Drawing.Size($SizeX, $SizeY)
+	$form.StartPosition = 'CenterScreen'
+	$form.FormBorderStyle = 'FixedDialog'
+	$form.Icon = [System.Drawing.Icon]::new($IconPath)
+	$form.Topmost = $true
+
+	return $form
+}
+
+function Createlabel($Text, $DrawX, $DrawY) {
+	$label = New-Object System.Windows.Forms.Label
+	$label.AutoSize = $true
+	$label.Location = New-Object Drawing.Point($DrawX, $DrawY)
+	$label.Text = $Text
+
+	return $label
+}
+
+function CreateTextBox($Text, $DrawX, $DrawY, $SizeX, $SizeY) {
+	$textBox = New-Object System.Windows.Forms.TextBox
+	$textBox.Text = $Text
+	$textBox.Location = New-Object Drawing.Point($DrawX, $DrawY)
+	$textBox.Size = New-Object System.Drawing.Size($SizeX,$SizeY)
+	
+	return $textBox
+}
+
+function CreateButton($Text, $DrawX, $DrawY) {
+	$button = New-Object System.Windows.Forms.Button
+	$button.Location = New-Object Drawing.Point($DrawX, $DrawY)
+	$button.Text = $Text
+
+	return $button
+}
+
+function CreatePictureBox($ImagePath, $DrawX, $DrawY, $SizeX, $SizeY){
+	$pictureBox = New-Object Windows.Forms.PictureBox
+	$pictureBox.Location = New-Object Drawing.Point($DrawX, $DrawY)
+	$pictureBox.Size = New-Object Drawing.Size($SizeX, $SizeY)
+	$pictureBox.SizeMode = [System.Windows.Forms.PictureBoxSizeMode]::CenterImage
+	$pictureBox.Image = [System.Drawing.Image]::FromFile($ImagePath)
+
+	return $pictureBox
+}

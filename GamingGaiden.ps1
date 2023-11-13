@@ -121,6 +121,7 @@ try {
 	$StartTrackerMenuItem = CreateMenuItem "Start Tracker"
 	$StopTrackerMenuItem = CreateMenuItem "Stop Tracker"
 	$HelpMenuItem = CreateMenuItem "Help"
+	$AboutMenuItem = CreateMenuItem "About"
 	
 	$SettingsSubMenuItem = CreateMenuItem "Settings"
 	$AddGameMenuItem = CreateMenuItem "Add Game"
@@ -142,7 +143,7 @@ try {
 	$StatsSubMenuItem.DropDownItems.Add($GamesPerPlatformMenuItem)
 
 	$AppContextMenu = New-Object System.Windows.Forms.ContextMenuStrip
-	$AppContextMenu.Items.AddRange(@($MyGamesMenuItem, $MenuItemSeparator2, $StatsSubMenuItem, $MenuItemSeparator3, $SettingsSubMenuItem, $MenuItemSeparator4, $StartTrackerMenuItem, $StopTrackerMenuItem, $MenuItemSeparator5, $HelpMenuItem, $MenuItemSeparator6, $ExitMenuItem))
+	$AppContextMenu.Items.AddRange(@($MyGamesMenuItem, $MenuItemSeparator2, $StatsSubMenuItem, $MenuItemSeparator3, $SettingsSubMenuItem, $MenuItemSeparator4, $StartTrackerMenuItem, $StopTrackerMenuItem, $MenuItemSeparator5, $HelpMenuItem, $AboutMenuItem, $MenuItemSeparator6, $ExitMenuItem))
 	$AppNotifyIcon.ContextMenuStrip = $AppContextMenu
 	
 	#------------------------------------------
@@ -183,6 +184,10 @@ try {
 	$HelpMenuItem.Add_Click({
 		Log "Showing help"
 		Invoke-Item ".\ui\Manual.html"
+	})
+
+	$AboutMenuItem.Add_Click({
+		RenderAboutDialog
 	})
 
 	$StartTrackerMenuItem.Add_Click({ 
