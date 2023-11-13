@@ -30,6 +30,10 @@ A simple application written in powershell to track your gaming time and review 
 - Detailed how to use manual. Just click Help from menu.
 - Detailed logging to identify bugs and errors.
 
+## Feature Screenshots
+<img src="./readme-files/GamesList.png" width="320" height="180"> <img src="./readme-files/MostPlayedGames.png" width="320" height="180"> <img src="./readme-files/GamesPlayedPerPlatform.png" width="170" height="180">
+<img src="./readme-files/TimeSpentGamingMonthly.png" width="320" height="180"> <img src="./readme-files/TimeSpentGamingYearly.png" width="320" height="180">
+
 ## Feature Demos
 - [Tracking PC Games](https://youtu.be/QHVJvWrDWC4)
 - [Tracking Emulated Games](https://youtu.be/ltRJVeOxr1s)
