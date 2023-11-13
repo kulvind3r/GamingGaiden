@@ -30,6 +30,12 @@ A simple application written in powershell to track your gaming time and review 
 - Detailed how to use manual. Just click Help from menu.
 - Detailed logging to identify bugs and errors.
 
+## Feature Demos
+- [Tracking PC Games](https://youtu.be/PRD1KzHCoSs)
+- [Tracking Emulated Games](https://youtu.be/v8si7BSiZ3Y)
+- [Tracking Retroarch Games](https://youtu.be/tTJLqbsry5A)
+- [Gaming Stastics & Other Features](https://youtu.be/7UOJ-jWsPts)
+
 ## Vs Steam, Playnite etc.
 The launchers do time tracking at best as a side feature. Gaming Gaiden is designed to give you insights to your hobby. It's stastics feature will answer questions like 
 - *Are you really gaming for same hours as you used to? Is your beloved hobby still alive?*
