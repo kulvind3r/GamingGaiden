@@ -19,7 +19,7 @@ A simple application written in powershell to track your gaming time and review 
 - Retroarch Supported. Track different retroarch cores as distinct emulated platforms.
 - Works best with command line based emulation frontends like EmulationStation, LaunchBox and other standalone emulators. 
 - Detailed Games list UI with search and sorting. Editable game icons. Games can be marked finished for backlog records.
-- Extremely lightweight. 200KB install size. Single process. Uses just 60 MB memory at runtime.
+- Extremely lightweight. 4 MB install size. Single process. Uses just 60 MB memory at runtime.
 - Stop and resume tracking anytime without exiting the app.
 - Daily, Monthly and Yearly play time statstics.
 - Shows most played games and number of games played per platform.
