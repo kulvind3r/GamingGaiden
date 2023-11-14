@@ -7,7 +7,7 @@ function DetectGame() {
     $GameExeList = (RunDBQuery $GetGameExesQuery).exe_name
 	$EmulatorExeList = (RunDBQuery $GetEmulatorExesQuery).exe_name
 
-	$ExesToDetect = ( $EmulatorExeList + $GameExeList ) | Select-Object -Unique
+	$ExesToDetect = ( $($EmulatorExeList; $GameExeList) ) | Select-Object -Unique
 	
     $DetectedExe = $null
     do {
