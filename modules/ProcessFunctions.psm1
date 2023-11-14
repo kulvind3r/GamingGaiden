@@ -9,21 +9,17 @@ function DetectGame() {
 
 	$ExesToDetect = ( $($EmulatorExeList; $GameExeList) ) | Select-Object -Unique
 	
-    $DetectedExe = $null
     do {
         foreach ( $ExeName in $ExesToDetect ){
 			if ( $null = Get-Process $ExeName -ErrorAction SilentlyContinue )
 			{
-				$DetectedExe = $ExeName
 				Log "Found $ExeName running. Exiting detection"
-				break
+				return $ExeName
 			}
 		}
         Start-Sleep -s 10
     }
-    while (-not $DetectedExe)
-    
-    return $DetectedExe
+    while ($true)
 }
 
 function TimeTrackerLoop($DetectedExe) {
