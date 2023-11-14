@@ -32,7 +32,7 @@ try {
 
 	$Database = ".\GamingGaiden.db"
     Log "Opening DB connection for the duration of main application run"
-    $DBConnection = New-SQLiteConnection -DataSource $Database
+    $DBConnection = New-SQLiteConnection -DataSource $Database -ReadOnly
 
 	#------------------------------------------
 	# Setup tracker Job Scripts and Other Functions
@@ -58,6 +58,7 @@ try {
 			
 			Log "Closing DB connection on tracker job closing"
     		$DBConnection.Close()
+			$DBConnection.Dispose()
 		}
 		catch {
 			$RecordingNotifyIcon.Visible = $false
@@ -213,6 +214,7 @@ try {
 		Stop-Job -Name "TrackerJob"; 
 		Log "Closing DB connection on main application closing"
     	$DBConnection.Close()
+		$DBConnection.Dispose()
 		[System.Windows.Forms.Application]::Exit(); 
 	})
 	#------------------------------------------

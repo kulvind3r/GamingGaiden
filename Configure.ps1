@@ -81,6 +81,7 @@ try {
 
     Log "Closing database connection on finishing configuration"
     $DBConnection.Close()
+    $DBConnection.Dispose()
 }
 catch {
     [System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms')    | out-null

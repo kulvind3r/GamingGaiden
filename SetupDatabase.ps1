@@ -33,6 +33,7 @@ try {
     Invoke-SqliteQuery -Query $CreateDailyPlaytimeTableQuery -SQLiteConnection $DBConnection
 
     $DBConnection.Close()
+    $DBConnection.Dispose()
 }
 catch {
     [System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms')    | out-null
