@@ -4,8 +4,7 @@
 try {
     Import-Module PSSQLite
     
-    $Database = ".\GamingGaiden.db"
-    $DBConnection = New-SQLiteConnection -DataSource $Database
+    $DBConnection = New-SQLiteConnection -DataSource ".\GamingGaiden.db"
 
     $CreateGamesTableQuery="CREATE TABLE IF NOT EXISTS games (
                         name TEXT PRIMARY KEY NOT NULL,

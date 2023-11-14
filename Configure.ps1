@@ -57,10 +57,6 @@ try {
     Import-Module -Name ".\modules\QueryFunctions.psm1"
     Import-Module -Name ".\modules\UIFunctionsForConfiguration.psm1"
     Import-Module -Name ".\modules\StorageFunctions.psm1"
-
-    $Database = ".\GamingGaiden.db"
-    Log "Connecting to database for configuration"
-    $DBConnection = New-SQLiteConnection -DataSource $Database
     
     $DatabaseFileHashBefore = CalculateFileHash '.\GamingGaiden.db'
     Log "Database hash before: $DatabaseFileHashBefore"
@@ -78,10 +74,6 @@ try {
     if ($DatabaseFileHashAfter -ne $DatabaseFileHashBefore){
         BackupDatabase
     }
-
-    Log "Closing database connection on finishing configuration"
-    $DBConnection.Close()
-    $DBConnection.Dispose()
 }
 catch {
     [System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms')    | out-null

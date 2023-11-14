@@ -66,8 +66,6 @@ function RenderGameList() {
 	$report = $report -replace "_TOTALPLAYTIME_", $TotalPlayTimeString
 	
 	[System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $WorkingDirectory\ui\MyGames.html
-
-	$DBConnection.Close()
 }
 
 function RenderGamingTime() {
@@ -90,8 +88,6 @@ function RenderGamingTime() {
 	$report = (Get-Content $WorkingDirectory\ui\templates\GamingTime.html.template) -replace "_DAILYPLAYTIMETABLE_", $Table
 
 	[System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $WorkingDirectory\ui\GamingTime.html
-
-	$DBConnection.Close()
 }
 
 function RenderMostPlayed() {
@@ -113,8 +109,6 @@ function RenderMostPlayed() {
 	$report = (Get-Content $WorkingDirectory\ui\templates\MostPlayed.html.template) -replace "_GAMESPLAYTIMETABLE_", $Table
 
 	[System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $WorkingDirectory\ui\MostPlayed.html
-
-	$DBConnection.Close()
 }
 
 function RenderGamesPerPlatform() {
@@ -137,7 +131,6 @@ function RenderGamesPerPlatform() {
 
 	[System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $WorkingDirectory\ui\GamesPerPlatform.html
 
-	$DBConnection.Close()
 }
 
 function RenderAboutDialog() {

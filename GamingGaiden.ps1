@@ -30,10 +30,6 @@ try {
 	Start-Process -FilePath "powershell" -ArgumentList "-File","`".\SetupDatabase.ps1`"" -WindowStyle Hidden -Wait
 	Log "Database setup complete"
 
-	$Database = ".\GamingGaiden.db"
-    Log "Opening DB connection for the duration of main application run"
-    $DBConnection = New-SQLiteConnection -DataSource $Database -ReadOnly
-
 	#------------------------------------------
 	# Setup tracker Job Scripts and Other Functions
 	$TrackerJobInitializationScript = {
@@ -46,19 +42,11 @@ try {
 
 	$TrackerJobScript = {
 		try {
-			Log "Opening DB connection for the duration of tracker job"
-			$Database = ".\GamingGaiden.db"
-			$DBConnection = New-SQLiteConnection -DataSource $Database
-
 			$RecordingNotifyIcon = CreateNotifyIcon "Tracking Game" ".\icons\recording.ico"
 			while ($true) {
 				$DetectedExe = DetectGame
 				MonitorGame $DetectedExe $RecordingNotifyIcon
 			}
-			
-			Log "Closing DB connection on tracker job closing"
-    		$DBConnection.Close()
-			$DBConnection.Dispose()
 		}
 		catch {
 			$RecordingNotifyIcon.Visible = $false
@@ -211,10 +199,7 @@ try {
 
 	$ExitMenuItem.Add_Click({ 
 		$AppNotifyIcon.Visible = $false; 
-		Stop-Job -Name "TrackerJob"; 
-		Log "Closing DB connection on main application closing"
-    	$DBConnection.Close()
-		$DBConnection.Dispose()
+		Stop-Job -Name "TrackerJob";
 		[System.Windows.Forms.Application]::Exit(); 
 	})
 	#------------------------------------------

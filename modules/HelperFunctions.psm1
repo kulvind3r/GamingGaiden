@@ -118,13 +118,14 @@ function BackupDatabase {
 }
 
 function RunDBQuery ($Query, $SQLParameters = $null) {
+	
 	if ($null -eq $SQLParameters)
 	{
-		$Result = Invoke-SqliteQuery -Query $Query -SQLiteConnection $DBConnection
+		$Result = Invoke-SqliteQuery -Query $Query -DataBase ".\GamingGaiden.db"
 	}
 	else
 	{
-		$Result = Invoke-SqliteQuery -Query $Query -SQLiteConnection $DBConnection -SqlParameters $SQLParameters
+		$Result = Invoke-SqliteQuery -Query $Query -DataBase ".\GamingGaiden.db" -SqlParameters $SQLParameters
 	}
 	return $Result
 }

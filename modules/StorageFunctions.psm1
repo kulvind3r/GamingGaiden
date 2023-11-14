@@ -129,7 +129,7 @@ function RemovePlatform($PlatformName) {
 function RecordPlaytimOnDate($PlayTime) {
     $ExistingPlayTimeQuery = "SELECT play_time FROM daily_playtime WHERE play_date like DATE('now')"
 
-    $ExistingPlayTime = (RunDBQuery $ExistingPlayTimeQuery -SQLiteConnection $DBConnection).play_time
+    $ExistingPlayTime = (RunDBQuery $ExistingPlayTimeQuery).play_time
     
     $RecordPlayTimeQuery = ""
     if ($null -eq $ExistingPlayTime)
