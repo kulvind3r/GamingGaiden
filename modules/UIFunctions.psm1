@@ -28,7 +28,7 @@ function RenderGameList() {
 	if ($GameRecords.Length -eq 0) {
         ShowMessage "No Games found in DB. Please add some games first." "OK" "Error"
         Log "Error: Games list empty. Returning"
-        return
+        return $false
     }
 
 	$Games = @()
@@ -80,7 +80,7 @@ function RenderGamingTime() {
 	if ($DailyPlayTimeData.Length -eq 0) {
         ShowMessage "No Records of Game Time found in DB. Please play some games first." "OK" "Error"
         Log "Error: Game time records empty. Returning"
-        return
+        return $false
     }
 
 	$Table = $DailyPlayTimeData | ConvertTo-Html -Fragment
@@ -101,7 +101,7 @@ function RenderMostPlayed() {
 	if ($GamesPlayTimeData.Length -eq 0) {
         ShowMessage "No Games found in DB. Please add some games first." "OK" "Error"
         Log "Error: Games list empty. Returning"
-        return
+        return $false
     }
 
 	$Table = $GamesPlayTimeData | ConvertTo-Html -Fragment
@@ -122,7 +122,7 @@ function RenderGamesPerPlatform() {
 	if ($GetGamesPerPlatformData.Length -eq 0) {
         ShowMessage "No Games found in DB. Please add some games first." "OK" "Error"
         Log "Error: Games list empty. Returning"
-        return
+        return $false
     }
 
 	$Table = $GetGamesPerPlatformData | ConvertTo-Html -Fragment

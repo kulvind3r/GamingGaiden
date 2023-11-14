@@ -151,23 +151,31 @@ try {
 	})
 
 	$MyGamesMenuItem.Add_Click({
-		RenderGameList
-		Invoke-Item ".\ui\MyGames.html"
+		$GamesCheckResult = RenderGameList
+		if ($GamesCheckResult -ne $false) {
+			Invoke-Item ".\ui\MyGames.html"
+		}
 	})
 
 	$GamingTimeMenuItem.Add_Click({
-		RenderGamingTime
-		Invoke-Item ".\ui\GamingTime.html"
+		$GameTimeCheckResult = RenderGamingTime
+		if ($GameTimeCheckResult -ne $false) {
+			Invoke-Item ".\ui\GamingTime.html"
+		}
 	})
 
 	$MostPlayedMenuItem.Add_Click({
-		RenderMostPlayed
-		Invoke-Item ".\ui\MostPlayed.html"
+		$MostPlayedCheckResult = RenderMostPlayed
+		if ($MostPlayedCheckResult -ne $false) {
+			Invoke-Item ".\ui\MostPlayed.html"
+		}
 	})
 
 	$GamesPerPlatformMenuItem.Add_Click({
-		RenderGamesPerPlatform
-		Invoke-Item ".\ui\GamesPerPlatform.html"
+		$GamesPerPlatformCheckResult = RenderGamesPerPlatform
+		if ($GamesPerPlatformCheckResult -ne $false) {
+			Invoke-Item ".\ui\GamesPerPlatform.html"
+		}
 	})
 
 	$HelpMenuItem.Add_Click({
