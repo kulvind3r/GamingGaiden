@@ -27,13 +27,7 @@
         <canvas id="most-played-chart"></canvas>
         <div id="navigation-bar">
             <div>Top</div>
-            <select id="game-count">
-              <option value=10>10</option>
-              <option value=20>20</option>
-              <option value=30>30</option>
-              <option value=40>40</option>
-              <option value=50>50</option>
-            </select>
+            <select id="game-count"></select>
             <div>Games</div>
         </div>
     </div>

@@ -9,6 +9,11 @@ function updateChart(gameCount) {
     let labels = [];
     let data = [];
 
+    if (gameCount > gamingData.length)
+    {
+      gameCount = gamingData.length
+    }
+
     for (i=0; i<gameCount; i++)
     {
         labels.push(gamingData[i].name)
@@ -73,6 +78,24 @@ function loadDataFromTable() {
 
     // Remove header row data
     gamingData.shift()
+  
+    selectBox = document.getElementById('game-count');
+    const maxOptions = Math.min(50, gamingData.length);
+
+    // Loop to generate options
+    for (let i = 10; i <= maxOptions; i += 10) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.text = i;
+        selectBox.add(option);
+    }
+
+    if (gamingData.length < 50) {
+        const showAllOption = document.createElement('option');
+        showAllOption.value = gamingData.length;
+        showAllOption.text = gamingData.length;
+        selectBox.add(showAllOption);
+    }
     
     updateChart(gameCount);
 }
