@@ -55,7 +55,6 @@ try {
 			Write-Output "$Timestamp : Error: Tracker job has failed. Please restart from app menu to continue detection." >> ".\GamingGaiden.log"
 			exit 1;
 		}
-		
 	}
 
 	function  StartTrackerJob {

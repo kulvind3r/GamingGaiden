@@ -6,6 +6,7 @@ ui/resources/images/*
 !ui/resources/images/default.png
 !ui/resources/images/finished.png
 !ui/resources/images/playing.png
+!ui/resources/images/favicon.ico
 ui/*.html
 backups/*
 build/*
