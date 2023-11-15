@@ -26,12 +26,13 @@ function DetectGame() {
 }
 
 function TimeTrackerLoop($DetectedExe) {
+	$HWinfoSensorSession = 'HKCU:\SOFTWARE\HWiNFO64\Sensors\Custom\Gaming Gaiden\Other1'
 	$CurrentPlayTime = 0
 	$ExeStartTime = (Get-Process $DetectedExe).StartTime
     while(Get-Process $DetectedExe)
     {
         $CurrentPlayTime = [int16] (New-TimeSpan -Start $ExeStartTime).TotalMinutes
-		
+		Set-Itemproperty -path $HWinfoSensorSession -Name 'Value' -value $CurrentPlayTime
 		# Mandatory Garbage collect in loop because powershell is dogshit in recovering memory from infinite loops
 		[System.GC]::GetTotalMemory($true) | out-null
         Start-Sleep -s 5

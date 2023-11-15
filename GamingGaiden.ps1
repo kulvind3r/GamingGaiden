@@ -31,12 +31,19 @@ try {
 	Log "Database setup complete"
 
 	# Integrate With HWiNFO
+	$HWinfoSensorTracking = 'HKCU:\SOFTWARE\HWiNFO64\Sensors\Custom\Gaming Gaiden\Other0'
+	$HWinfoSensorSession = 'HKCU:\SOFTWARE\HWiNFO64\Sensors\Custom\Gaming Gaiden\Other1'
+
 	if ((Test-Path "HKCU:\SOFTWARE\HWiNFO64") -And -Not (Test-Path "HKCU:\SOFTWARE\HWiNFO64\Sensors\Custom\Gaming Gaiden")) {
 		Log "Integrating with HWiNFO"
 		New-Item -path 'HKCU:\SOFTWARE\HWiNFO64\Sensors\Custom\Gaming Gaiden' -Name 'Other0' -Force
-		Set-Itemproperty -path 'HKCU:\SOFTWARE\HWiNFO64\Sensors\Custom\Gaming Gaiden\Other0' -Name 'Name' -value 'Tracking'
-		Set-Itemproperty -path 'HKCU:\SOFTWARE\HWiNFO64\Sensors\Custom\Gaming Gaiden\Other0' -Name 'Unit' -value 'Yes/No'
-		Set-Itemproperty -path 'HKCU:\SOFTWARE\HWiNFO64\Sensors\Custom\Gaming Gaiden\Other0' -Name 'Value' -value 0
+		New-Item -path 'HKCU:\SOFTWARE\HWiNFO64\Sensors\Custom\Gaming Gaiden' -Name 'Other1' -Force
+		Set-Itemproperty -path $HWinfoSensorTracking -Name 'Name' -value 'Tracking'
+		Set-Itemproperty -path $HWinfoSensorTracking -Name 'Unit' -value 'Yes/No'
+		Set-Itemproperty -path $HWinfoSensorTracking -Name 'Value' -value 0
+		Set-Itemproperty -path $HWinfoSensorSession -Name 'Name' -value 'Session Length'
+		Set-Itemproperty -path $HWinfoSensorSession -Name 'Unit' -value 'Min'
+		Set-Itemproperty -path $HWinfoSensorSession -Name 'Value' -value 0
 	}
 	else {
 		Log "HWiNFO not detected. Or Gaming Gaiden is already Integrated. Skipping Auto Integration"
@@ -71,14 +78,21 @@ try {
 		}
 	}
 
+	function ResetIconAndSensors(){
+		Log "Resetting Icon and Sensors"
+		Remove-Item "$env:TEMP\GG-TrackingGame.txt" -ErrorAction silentlycontinue
+		Set-Itemproperty -path $HWinfoSensorTracking -Name 'Value' -value 0
+		Set-Itemproperty -path $HWinfoSensorSession -Name 'Value' -value 0
+		$AppNotifyIcon.Text = "Gaming Gaiden"
+	}
+
 	function  StartTrackerJob {
 		Start-ThreadJob -InitializationScript $TrackerJobInitializationScript -ScriptBlock $TrackerJobScript -Name "TrackerJob"
 		$StopTrackerMenuItem.Enabled = $true
 		$StartTrackerMenuItem.Enabled = $false
 
-		# Reset App Icon & Cleanup Tracking file before starting tracker
-		Remove-Item "$env:TEMP\GG-TrackingGame.txt" -ErrorAction silentlycontinue
-		$AppNotifyIcon.Text = "Gaming Gaiden"
+		# Reset App Icon & Cleanup Tracking file/reset sensors before starting tracker
+		ResetIconAndSensors
 		$AppNotifyIcon.Icon = $IconRunning
 		Log "Started tracker"
 	}
@@ -88,11 +102,9 @@ try {
 		$StopTrackerMenuItem.Enabled = $false
 		$StartTrackerMenuItem.Enabled = $true
 
-		# Reset Icon Text & Cleanup Tracking file if stopped in middle of Tracking
-		Remove-Item "$env:TEMP\GG-TrackingGame.txt" -ErrorAction silentlycontinue
-		$AppNotifyIcon.Text = "Gaming Gaiden"
+		# Reset App Icon & Cleanup Tracking file/reset sensors if stopped in middle of Tracking
+		ResetIconAndSensors
 		$AppNotifyIcon.Icon = $IconStopped
-		Set-Itemproperty -path 'HKCU:\SOFTWARE\HWiNFO64\Sensors\Custom\Gaming Gaiden\Other0' -Name 'Value' -value 0
 		Log "Stopped tracker"
 	}
 
@@ -114,15 +126,14 @@ try {
 			$GameName = Get-Content "$env:TEMP\GG-TrackingGame.txt"
 			$AppNotifyIcon.Text = "Tracking $GameName"
 			$AppNotifyIcon.Icon = $IconTracking
-			Set-Itemproperty -path 'HKCU:\SOFTWARE\HWiNFO64\Sensors\Custom\Gaming Gaiden\Other0' -Name 'Value' -value 1
+			Set-Itemproperty -path $HWinfoSensorTracking -Name 'Value' -value 1
 		}
 		else
 		{
 			if ($AppNotifyIcon.Text -ne "Gaming Gaiden")
 			{
-				$AppNotifyIcon.Text = "Gaming Gaiden"
+				ResetIconAndSensors
 				$AppNotifyIcon.Icon = $IconRunning
-				Set-Itemproperty -path 'HKCU:\SOFTWARE\HWiNFO64\Sensors\Custom\Gaming Gaiden\Other0' -Name 'Value' -value 0
 			} 
 		}
 	}
