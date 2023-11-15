@@ -48,7 +48,6 @@ try {
 			}
 		}
 		catch {
-			$RecordingNotifyIcon.Visible = $false
 			$Timestamp = (Get-date -f %d-%M-%y`|%H:%m:%s)
 			Write-Output "$Timestamp : Error: A user or system error has caused an exception. Check log for details." >> ".\GamingGaiden.log"
 			Write-Output "$Timestamp : Exception: $($_.Exception.Message)" >> ".\GamingGaiden.log"

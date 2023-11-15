@@ -41,6 +41,7 @@ function RenderGameList() {
 			$ImageFileName = ToBase64 $Name
 			$IconBitmap = BytesToBitmap $GameRecord.icon
 			$IconBitmap.Save("$WorkingDirectory\ui\resources\images\$ImageFileName.png",[System.Drawing.Imaging.ImageFormat]::Png)
+			$IconBitmap.Dispose()
 			$IconUri = "<img src=`".\resources\images\$ImageFileName.png`">"
 		}
 

@@ -8,7 +8,7 @@ function DetectGame() {
 	$EmulatorExeList = (RunDBQuery $GetEmulatorExesQuery).exe_name
 
 	$ExesToDetect = ( $($EmulatorExeList; $GameExeList) ) | Select-Object -Unique
-	
+	$AllRunningProcesses = $null
     do {
 		$AllRunningProcesses = (Get-Process).ProcessName
         foreach ( $ExeName in $ExesToDetect ){
@@ -18,7 +18,7 @@ function DetectGame() {
 				return $ExeName
 			}
 		}
-        Start-Sleep -s 3
+        Start-Sleep -s 10
     }
     while ($true)
 }
