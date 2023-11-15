@@ -42,10 +42,9 @@ try {
 
 	$TrackerJobScript = {
 		try {
-			$RecordingNotifyIcon = CreateNotifyIcon "Tracking Game" ".\icons\recording.ico"
 			while ($true) {
 				$DetectedExe = DetectGame
-				MonitorGame $DetectedExe $RecordingNotifyIcon
+				MonitorGame $DetectedExe
 			}
 		}
 		catch {
@@ -63,6 +62,10 @@ try {
 		Start-ThreadJob -InitializationScript $TrackerJobInitializationScript -ScriptBlock $TrackerJobScript -Name "TrackerJob"
 		$StopTrackerMenuItem.Enabled = $true
 		$StartTrackerMenuItem.Enabled = $false
+
+		# Reset App Icon & Cleanup Tracking file before starting tracker
+		Remove-Item "$env:TEMP\GG-TrackingGame.txt" -ErrorAction silentlycontinue
+		$AppNotifyIcon.Text = "Gaming Gaiden"
 		$AppNotifyIcon.Icon = $IconRunning
 		Log "Started tracker"
 	}
@@ -71,6 +74,10 @@ try {
 		Stop-Job "TrackerJob" -ErrorAction silentlycontinue
 		$StopTrackerMenuItem.Enabled = $false
 		$StartTrackerMenuItem.Enabled = $true
+
+		# Reset Icon Text & Cleanup Tracking file if stopped in middle of Tracking
+		Remove-Item "$env:TEMP\GG-TrackingGame.txt" -ErrorAction silentlycontinue
+		$AppNotifyIcon.Text = "Gaming Gaiden"
 		$AppNotifyIcon.Icon = $IconStopped
 		Log "Stopped tracker"
 	}
@@ -86,7 +93,29 @@ try {
 	function CreateMenuSeparator(){
 		return New-Object Windows.Forms.ToolStripSeparator
 	}
+
+	function UpdateAppIconToShowTracking(){
+		if (Test-Path "$env:TEMP\GG-TrackingGame.txt")
+		{
+			$GameName = Get-Content "$env:TEMP\GG-TrackingGame.txt"
+			$AppNotifyIcon.Text = "Tracking $GameName"
+			$AppNotifyIcon.Icon = $IconTracking
+		}
+		else
+		{
+			if ($AppNotifyIcon.Text -ne "Gaming Gaiden")
+			{
+				$AppNotifyIcon.Text = "Gaming Gaiden"
+				$AppNotifyIcon.Icon = $IconRunning
+			} 
+		}
+	}
+
 	#------------------------------------------
+	# Setup Timer To Monitor Tracking Updates from Tracker Job
+	$Timer = New-Object Windows.Forms.Timer
+	$Timer.Interval = 750
+	$Timer.Add_Tick({ UpdateAppIconToShowTracking })
 
 	#------------------------------------------
 	# Setup Tray Icon
@@ -98,6 +127,7 @@ try {
 	$MenuItemSeparator6 = CreateMenuSeparator
 
 	$IconRunning = [System.Drawing.Icon]::new(".\icons\running.ico")
+	$IconTracking = [System.Drawing.Icon]::new(".\icons\tracking.ico")
 	$IconStopped = [System.Drawing.Icon]::new(".\icons\stopped.ico")
 
 	$AppNotifyIcon = CreateNotifyIcon "Gaming Gaiden" ".\icons\running.ico"
@@ -134,7 +164,7 @@ try {
 	$AppContextMenu = New-Object System.Windows.Forms.ContextMenuStrip
 	$AppContextMenu.Items.AddRange(@($MyGamesMenuItem, $MenuItemSeparator2, $StatsSubMenuItem, $MenuItemSeparator3, $SettingsSubMenuItem, $MenuItemSeparator4, $StartTrackerMenuItem, $StopTrackerMenuItem, $MenuItemSeparator5, $HelpMenuItem, $AboutMenuItem, $MenuItemSeparator6, $ExitMenuItem))
 	$AppNotifyIcon.ContextMenuStrip = $AppContextMenu
-	
+
 	#------------------------------------------
 	# Setup Tray Icon Actions
 	$AppNotifyIcon.Add_Click({
@@ -208,12 +238,17 @@ try {
 	$ExitMenuItem.Add_Click({ 
 		$AppNotifyIcon.Visible = $false; 
 		Stop-Job -Name "TrackerJob";
+		$Timer.Stop()
+		$Timer.Dispose()
 		[System.Windows.Forms.Application]::Exit(); 
 	})
 	#------------------------------------------
 
 	Log "Starting tracker on app boot"
 	StartTrackerJob
+
+	Log "Starting timer to check for Tracking updates"
+	$Timer.Start()
 
 	Log "Hiding powershell window"
 	$WindowCode = '[DllImport("user32.dll")] public static extern bool ShowWindowAsync(IntPtr hWnd, int nCmdShow);'

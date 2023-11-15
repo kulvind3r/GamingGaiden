@@ -10,29 +10,31 @@ function DetectGame() {
 	$ExesToDetect = ( $($EmulatorExeList; $GameExeList) ) | Select-Object -Unique
 	
     do {
+		$AllRunningProcesses = (Get-Process).ProcessName
         foreach ( $ExeName in $ExesToDetect ){
-			if ( $null = Get-Process $ExeName -ErrorAction SilentlyContinue )
+			if ( $AllRunningProcesses.Contains($ExeName) )
 			{
 				Log "Found $ExeName running. Exiting detection"
 				return $ExeName
 			}
 		}
-        Start-Sleep -s 10
+        Start-Sleep -s 3
     }
     while ($true)
 }
 
 function TimeTrackerLoop($DetectedExe) {
 	$CurrentPlayTime = 0
+	$ExeStartTime = (Get-Process $DetectedExe).StartTime
     while(Get-Process $DetectedExe)
     {
-        $CurrentPlayTime = [int16](New-TimeSpan -Start (Get-Process $DetectedExe).StartTime).TotalMinutes
-        Start-Sleep -s 10
+        $CurrentPlayTime = [int16] (New-TimeSpan -Start $ExeStartTime).TotalMinutes
+        Start-Sleep -s 3
     }
 	return $CurrentPlayTime
 }
 
-function MonitorGame($DetectedExe, $RecordingNotifyIcon) {
+function MonitorGame($DetectedExe) {
 	Log "Starting monitoring for $DetectedExe"
 	
 	$DatabaseFileHashBefore = CalculateFileHash '.\GamingGaiden.db'
@@ -66,10 +68,9 @@ function MonitorGame($DetectedExe, $RecordingNotifyIcon) {
 		$GameName = $EntityFound.name
 	}
 	
-	$RecordingNotifyIcon.Text = "Tracking $GameName"
-	$RecordingNotifyIcon.Visible = $true
+	Write-Output "$GameName" > "$env:TEMP\GG-TrackingGame.txt"
     $CurrentPlayTime = TimeTrackerLoop $DetectedExe
-	$RecordingNotifyIcon.Visible = $false
+	Remove-Item "$env:TEMP\GG-TrackingGame.txt"
 
 	if ($null -ne $EntityFound)
 	{
