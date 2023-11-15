@@ -1,24 +1,26 @@
 function DetectGame() {
 	Log "Starting game detection"
 
-    $GetGameExesQuery = "SELECT exe_name FROM games"
+    $GetGameExesQuery = "SELECT exe_name FROM games ORDER BY last_play_date DESC"
 	$GetEmulatorExesQuery = "SELECT exe_name FROM emulated_platforms"
 
     $GameExeList = (RunDBQuery $GetGameExesQuery).exe_name
 	$EmulatorExeList = (RunDBQuery $GetEmulatorExesQuery).exe_name
 
-	$ExesToDetect = ( $($EmulatorExeList; $GameExeList) ) | Select-Object -Unique
-	$AllRunningProcesses = $null
+	$ExesToDetect = $($GameExeList; $EmulatorExeList) | Select-Object -Unique
+
     do {
-		$AllRunningProcesses = (Get-Process).ProcessName
         foreach ( $ExeName in $ExesToDetect ){
-			if ( $AllRunningProcesses.Contains($ExeName) )
+			if ( $null = Get-Process -name $ExeName -ErrorAction SilentlyContinue )
 			{
 				Log "Found $ExeName running. Exiting detection"
 				return $ExeName
 			}
 		}
-        Start-Sleep -s 10
+
+		# Mandatory Garbage collect in loop because powershell is dogshit in recovering memory from infinite loops
+		[System.GC]::GetTotalMemory($true) | out-null
+        Start-Sleep -s 5
     }
     while ($true)
 }
@@ -29,7 +31,10 @@ function TimeTrackerLoop($DetectedExe) {
     while(Get-Process $DetectedExe)
     {
         $CurrentPlayTime = [int16] (New-TimeSpan -Start $ExeStartTime).TotalMinutes
-        Start-Sleep -s 3
+		
+		# Mandatory Garbage collect in loop because powershell is dogshit in recovering memory from infinite loops
+		[System.GC]::GetTotalMemory($true) | out-null
+        Start-Sleep -s 5
     }
 	return $CurrentPlayTime
 }
