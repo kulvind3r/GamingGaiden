@@ -30,6 +30,18 @@ try {
 	Start-Process -FilePath "powershell" -ArgumentList "-File","`".\SetupDatabase.ps1`"" -WindowStyle Hidden -Wait
 	Log "Database setup complete"
 
+	# Integrate With HWiNFO
+	if ((Test-Path "HKCU:\SOFTWARE\HWiNFO64") -And -Not (Test-Path "HKCU:\SOFTWARE\HWiNFO64\Sensors\Custom\Gaming Gaiden")) {
+		Log "Integrating with HWiNFO"
+		New-Item -path 'HKCU:\SOFTWARE\HWiNFO64\Sensors\Custom\Gaming Gaiden' -Name 'Other0' -Force
+		Set-Itemproperty -path 'HKCU:\SOFTWARE\HWiNFO64\Sensors\Custom\Gaming Gaiden\Other0' -Name 'Name' -value 'Tracking'
+		Set-Itemproperty -path 'HKCU:\SOFTWARE\HWiNFO64\Sensors\Custom\Gaming Gaiden\Other0' -Name 'Unit' -value 'Yes/No'
+		Set-Itemproperty -path 'HKCU:\SOFTWARE\HWiNFO64\Sensors\Custom\Gaming Gaiden\Other0' -Name 'Value' -value 0
+	}
+	else {
+		Log "HWiNFO not detected. Or Gaming Gaiden is already Integrated. Skipping Auto Integration"
+	}
+	
 	#------------------------------------------
 	# Setup tracker Job Scripts and Other Functions
 	$TrackerJobInitializationScript = {
@@ -80,6 +92,7 @@ try {
 		Remove-Item "$env:TEMP\GG-TrackingGame.txt" -ErrorAction silentlycontinue
 		$AppNotifyIcon.Text = "Gaming Gaiden"
 		$AppNotifyIcon.Icon = $IconStopped
+		Set-Itemproperty -path 'HKCU:\SOFTWARE\HWiNFO64\Sensors\Custom\Gaming Gaiden\Other0' -Name 'Value' -value 0
 		Log "Stopped tracker"
 	}
 
@@ -101,6 +114,7 @@ try {
 			$GameName = Get-Content "$env:TEMP\GG-TrackingGame.txt"
 			$AppNotifyIcon.Text = "Tracking $GameName"
 			$AppNotifyIcon.Icon = $IconTracking
+			Set-Itemproperty -path 'HKCU:\SOFTWARE\HWiNFO64\Sensors\Custom\Gaming Gaiden\Other0' -Name 'Value' -value 1
 		}
 		else
 		{
@@ -108,6 +122,7 @@ try {
 			{
 				$AppNotifyIcon.Text = "Gaming Gaiden"
 				$AppNotifyIcon.Icon = $IconRunning
+				Set-Itemproperty -path 'HKCU:\SOFTWARE\HWiNFO64\Sensors\Custom\Gaming Gaiden\Other0' -Name 'Value' -value 0
 			} 
 		}
 	}
