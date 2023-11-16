@@ -43,6 +43,7 @@ A simple application written in powershell to track your gaming time and review 
 - [Tracking Emulated Games](https://youtu.be/ltRJVeOxr1s)
 - [Tracking Retroarch Games](https://youtu.be/RvE6_fYAiRM)
 - [Gaming Stastics & Other Features](https://youtu.be/gIqdKGoQDGM)
+- [HWiNFO Sensor](https://youtu.be/pFe80EzFog8)
 
 ## Vs Steam, Playnite etc.
 For purely tracking play time, Gaming Gaiden has much more features than the above launchers. Ease of use with Emulators is much higher. You don't need to add each emulated game individually. HWiNFO integration and lightweight background process that you can launch and forget are other important ones.
