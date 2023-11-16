@@ -20,7 +20,7 @@ A simple application written in powershell to track your gaming time and review 
 - Works best with command line based emulation frontends like EmulationStation, LaunchBox and other standalone emulators. 
 - Detailed Games list UI with search and sorting. Editable game icons. Games can be marked finished for backlog records.
 - HWiNFO64 Sensor. Track game time recording status in RTSS / HWiNFO overlays.
-- Extremely lightweight. 1 MB install size. Single process. Uses just 60 MB memory at runtime.
+- Extremely lightweight. 1 MB install size. Single process. Uses less than 60 MB memory at runtime and has barely any CPU load, 0.5% or less.
 - Stop and resume tracking anytime without exiting the app.
 - Daily, Monthly and Yearly play time statstics.
 - Shows most played games and number of games played per platform.
@@ -45,7 +45,9 @@ A simple application written in powershell to track your gaming time and review 
 - [Gaming Stastics & Other Features](https://youtu.be/gIqdKGoQDGM)
 
 ## Vs Steam, Playnite etc.
-The launchers do time tracking at best as a side feature. Gaming Gaiden is designed to give you insights to your hobby. It's stastics feature will answer questions like 
+For purely tracking play time, Gaming Gaiden has much more features than the above launchers. Ease of use with Emulators is much higher. You don't need to add each emulated game individually. HWiNFO integration and lightweight background process that you can launch and forget are other important ones.
+
+Biggest feature though are the stastics that it generates from your data. The launchers do time tracking at best as a side feature. Gaming Gaiden is designed to give you insights to your hobby. It's stastics feature will answer questions like 
 - *Are you really gaming for same hours as you used to? Is your beloved hobby still alive?*
 - *Are you playing too much, is gaming affecting your life?*
 - *Did you play enough games / enough hours since you bought that new PC to justify it's cost?*
