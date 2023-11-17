@@ -57,7 +57,7 @@ Biggest feature though are the stastics that it generates from your data. The la
 This application should add value to your gaming hobby by gathering data quietly in background and then making it super easy for you to draw conclusions and bring changes.
 
 ## How to install
-1. Download the latest release zip file from releases page.
+1. Download ***GamingGaiden.zip*** from the [latest release](https://github.com/kulvind3r/GamingGaiden/releases/latest).
 2. Extract "GamingGaiden" folder and copy it to a location where you would like to run it from. **Do Not Use "C:/Program Files" or any other protected location that needs admin rights.**
 3. Right click "Install.ps1" and click "Run with powershell". You must be connected to Internet at this point to download dependencies.
 4. Optionally choose to setup a scheduled task to autostart at user login.
