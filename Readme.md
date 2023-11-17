@@ -58,11 +58,11 @@ This application should add value to your gaming hobby by gathering data quietly
 
 ## How to install
 1. Download ***GamingGaiden.zip*** from the [latest release](https://github.com/kulvind3r/GamingGaiden/releases/latest).
-2. Extract "GamingGaiden" folder and copy it to a location where you would like to run it from. **Do Not Use "C:/Program Files" or any other protected location that needs admin rights.**
-3. Right click "Install.ps1" and click "Run with powershell". You must be connected to Internet at this point to download dependencies.
+2. Extract "GamingGaiden" folder and copy it to a location where you would like to run it from. ***Do Not Use "C:/Program Files" or any other protected location that needs admin rights.***
+3. Right click *"Install.ps1"* and click *"Run with powershell"*. You must be connected to Internet at this point to download dependencies.
 4. Optionally choose to setup a scheduled task to autostart at user login.
 5. Once installation is done, you will have a shortcut to run the application on desktop and start menu.
-6. If you move the application to another directory, simply run "Install.ps1" once again, to setup from the new location.
+6. If you move the application to another directory, simply run *"Install.ps1"* once again, to setup from the new location.
 
 ## DISCLAIMER
 Windows by default doesn't allow Powershell scripts downloaded from internet to be run. Windows powershell execution policy must be changed to RemoteSigned to allow the application scripts to be run.
