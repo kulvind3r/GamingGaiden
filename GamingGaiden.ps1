@@ -64,9 +64,6 @@ try {
 			while ($true) {
 				$DetectedExe = DetectGame
 				MonitorGame $DetectedExe
-
-				# Mandatory Garbage collect in loop because powershell is dogshit in recovering memory from infinite loops
-				[System.GC]::GetTotalMemory($true) | out-null
 			}
 		}
 		catch {

@@ -10,14 +10,15 @@ function DetectGame() {
 	$ExesToDetect = $($GameExeList; $EmulatorExeList) | Select-Object -Unique
 
     do {
+		$AllProcesses = ((Get-Process).ProcessName | Select-Object -Unique)
         foreach ( $ExeName in $ExesToDetect ){
-			if ( $null = Get-Process -name $ExeName -ErrorAction SilentlyContinue )
+			if ( $AllProcesses -contains $ExeName )
 			{
 				Log "Found $ExeName running. Exiting detection"
 				return $ExeName
 			}
 		}
-
+		Clear-Variable AllProcesses; Remove-Variable AllProcesses
 		# Mandatory Garbage collect in loop because powershell is dogshit in recovering memory from infinite loops
 		[System.GC]::GetTotalMemory($true) | out-null
         Start-Sleep -s 5
@@ -33,8 +34,6 @@ function TimeTrackerLoop($DetectedExe) {
     {
         $CurrentPlayTime = [int16] (New-TimeSpan -Start $ExeStartTime).TotalMinutes
 		Set-Itemproperty -path $HWinfoSensorSession -Name 'Value' -value $CurrentPlayTime
-		# Mandatory Garbage collect in loop because powershell is dogshit in recovering memory from infinite loops
-		[System.GC]::GetTotalMemory($true) | out-null
         Start-Sleep -s 5
     }
 	return $CurrentPlayTime
