@@ -7,6 +7,8 @@
             "command": "powershell",
             "args": [
                 "-NoLogo",
+                "-ExecutionPolicy",
+                "bypass",
                 "-File",
                 "${file}"
             ],
