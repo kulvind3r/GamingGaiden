@@ -26,7 +26,7 @@ A simple application written in powershell to track your gaming time and review 
     - Shows most played games and number of games played per platform.
     - Daily, Monthly and Yearly play time statstics.
 - #### Quality of Life Features
-    - Extremely lightweight. 7 MB install size. Single process. Uses less than 50 MB Memory and 1% CPU.
+    - Extremely lightweight. 7 MB install size. Single process. Uses less than 50 MB Memory and less than 1% CPU.
     - Completely offline and portable. No internet required. All data stored locally.
     - Automated data backup on every gaming session. Keeps 5 latest backups.
     - Automated scheduled task setup on install to run at startup and start tracking.
