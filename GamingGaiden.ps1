@@ -1,29 +1,28 @@
 ﻿#Requires -Version 5.1
-#Requires -Modules PSSQLite, ThreadJob
 
 [System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms')    | Out-null
 [System.Reflection.Assembly]::LoadWithPartialName('System.Drawing')          | Out-null
 [System.Reflection.Assembly]::LoadWithPartialName('System.Web')          	 | Out-null
 
 try {
-	Import-Module PSSQLite
-	Import-Module ThreadJob
-	Import-Module -Name ".\modules\HelperFunctions.psm1"
-	Import-Module -Name ".\modules\UIFunctions.psm1"
+	Import-Module ".\modules\PSSQLite"
+	Import-Module ".\modules\ThreadJob"
+	Import-Module ".\modules\HelperFunctions.psm1"
+	Import-Module ".\modules\UIFunctions.psm1"
 	
 	# Check if Gaming Gaiden is already Running 
-	$PsScriptsRunning = get-wmiobject win32_process | Where-Object{$_.processname -eq 'powershell.exe'} | select-object commandline,ProcessId
+	# $PsScriptsRunning = get-wmiobject win32_process | Where-Object{$_.processname -eq 'powershell.exe'} | select-object commandline,ProcessId
 
-	ForEach ($PsCmdLine in $PsScriptsRunning){
-		[Int32]$OtherPID = $PsCmdLine.ProcessId
-		[String]$OtherCmdLine = $PsCmdLine.commandline
+	# ForEach ($PsCmdLine in $PsScriptsRunning){
+	# 	[Int32]$OtherPID = $PsCmdLine.ProcessId
+	# 	[String]$OtherCmdLine = $PsCmdLine.commandline
 	
-		If (($OtherCmdLine -like "*GamingGaiden.ps1*") -And ($OtherPID -ne $PID) ){
-			ShowMessage "Gaming Gaiden is already running as PID [$OtherPID]. Not Starting another Instance." "Ok" "Error"
-			Log "Error: Gaming Gaiden already running as PID [$OtherPID]. Not Starting another Instance."
-			Exit
-		}
-	}
+	# 	If (($OtherCmdLine -like "*GamingGaiden.ps1*") -And ($OtherPID -ne $PID) ){
+	# 		ShowMessage "Gaming Gaiden is already running as PID [$OtherPID]. Not Starting another Instance." "Ok" "Error"
+	# 		Log "Error: Gaming Gaiden already running as PID [$OtherPID]. Not Starting another Instance."
+	# 		Exit
+	# 	}
+	# }
 
 	ResetLog
 	Log "Executing database setup"
@@ -52,11 +51,11 @@ try {
 	#------------------------------------------
 	# Setup tracker Job Scripts and Other Functions
 	$TrackerJobInitializationScript = {
-		Import-Module -Name ".\modules\ProcessFunctions.psm1";
-		Import-Module -Name ".\modules\HelperFunctions.psm1";
-		Import-Module -Name ".\modules\QueryFunctions.psm1";
-		Import-Module -Name ".\modules\StorageFunctions.psm1";
-		Import-Module PSSQLite;
+		Import-Module ".\modules\ProcessFunctions.psm1";
+		Import-Module ".\modules\HelperFunctions.psm1";
+		Import-Module ".\modules\QueryFunctions.psm1";
+		Import-Module ".\modules\StorageFunctions.psm1";
+		Import-Module ".\modules\PSSQLite";
 	}
 
 	$TrackerJobScript = {

@@ -27,15 +27,6 @@ function UserPrompt($Msg, $Color = "Green") {
     Write-Host $Msg -ForegroundColor $Color
 }
 
-function CheckConnection() {
-    if ( -Not (Test-NetConnection www.powershellgallery.com -Port 443 -InformationLevel "Detailed").TcpTestSucceeded)
-    {
-        UserPrompt "Dependencies Need to be downloaded. No connection to Internet. Exiting" "Red"
-        Start-Sleep -s 2
-        exit 1
-    }
-}
-
 function CreateShortcut() {
     $GamingGaidenScript = (Get-Item ".\GamingGaiden.ps1")
     $GamingGaidenPath = $GamingGaidenScript.FullName
@@ -72,16 +63,6 @@ function CreateScheduledTask() {
     Register-ScheduledTask -TaskName "Gaming Gaiden Autostart" -Description "Runs Gaming Gaiden at startup" -Action $action -Trigger $trigger -Settings $settings -Force
 }
 
-function InstallModules($Modules) {
-    if ($Modules.Length -eq 0) { UserPrompt "All modules already installed."; return }
-
-    Set-PSRepository -Name 'PSGallery' -InstallationPolicy Trusted;
-    foreach ($Module in $Modules) { Install-Module $Module }
-    Set-PSRepository -Name 'PSGallery' -InstallationPolicy Untrusted;
-}
-
-if (-Not ((Get-Module -ListAvailable -Name PSSqlite) -And (Get-Module -ListAvailable -Name ThreadJob))) { CheckConnection }
-
 UserPrompt "Read the Following Notice Carefully"
 
 Start-Sleep -s 2
@@ -96,11 +77,9 @@ Read more here. https://learn.microsoft.com/en-us/powershell/module/microsoft.po
 
 2. All scripts included with GamingGaiden will be unblocked so they can be run.
 
-3. PSSQLite and ThreadJob modules will be installed from microsoft powershell gallery.
+3. A shortcut will be placed on your desktop and in current directory to run Gaming Gaiden.
 
-4. A shortcut will be placed on your desktop and in current directory to run Gaming Gaiden.
-
-5. Optionally you can choose to add a scheduled task to run Gaming Gaiden automatically on startup.
+4. Optionally you can choose to add a scheduled task to run Gaming Gaiden automatically on startup.
 "@ "White"
 
 UserPrompt "Do you wish to proceed with installation? Yes/No"
@@ -116,13 +95,6 @@ if ( $UserChoice.ToLower() -eq 'yes' )
     
     UserPrompt "Unblocking all Gaming Gaiden files"
     Get-ChildItem . -recurse | Unblock-File
-
-    UserPrompt "Installing ThreadJob and PSSqlite Modules"
-
-    $Modules = @()
-    if (-Not (Get-Module -ListAvailable -Name ThreadJob)){ $Modules = $Modules + "ThreadJob" }
-    if (-Not (Get-Module -ListAvailable -Name ThreadJob)){ $Modules = $Modules + "PSSqlite" }
-    InstallModules $Modules
 
     UserPrompt "Creating Shortcut"
     CreateShortcut

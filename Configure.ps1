@@ -3,7 +3,6 @@ param (
 )
 
 #Requires -Version 5.1
-#Requires -Modules PSSQLite
 
 function AddGame {
     Log "Starting game registration"
@@ -52,11 +51,11 @@ function EditPlatform {
 try {
     [System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms')  | Out-Null
     [System.Reflection.assembly]::LoadwithPartialname("microsoft.visualbasic") | Out-Null
-    Import-Module PSSQLite
-    Import-Module -Name ".\modules\HelperFunctions.psm1"
-    Import-Module -Name ".\modules\QueryFunctions.psm1"
-    Import-Module -Name ".\modules\UIFunctionsForConfiguration.psm1"
-    Import-Module -Name ".\modules\StorageFunctions.psm1"
+    Import-Module ".\modules\PSSQLite"
+    Import-Module ".\modules\HelperFunctions.psm1"
+    Import-Module ".\modules\QueryFunctions.psm1"
+    Import-Module ".\modules\UIFunctionsForConfiguration.psm1"
+    Import-Module ".\modules\StorageFunctions.psm1"
     
     $DatabaseFileHashBefore = CalculateFileHash '.\GamingGaiden.db'
     Log "Database hash before: $DatabaseFileHashBefore"
