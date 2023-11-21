@@ -1,0 +1,1 @@
+powershell -ExecutionPolicy Bypass -File "%~dp0SetupLaunchOptions.ps1" -InstallDirectory "%~dp0\"

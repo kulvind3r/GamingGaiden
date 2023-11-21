@@ -14,7 +14,7 @@ $FinalHTML = $ManualTemplate -replace "_MARKDOWN_HTML_",$ManualHTML
 
 Get-ChildItem .\ui\resources\images\ -Exclude default.png, finished.png, playing.png, favicon.ico | Remove-Item
 
-$SourceFiles = ".\GamingGaiden.ps1", ".\SetupDatabase.ps1", ".\Configure.ps1", ".\Install.ps1", ".\modules", ".\icons", ".\ui"
+$SourceFiles = ".\GamingGaiden.ps1", ".\SetupDatabase.ps1", ".\Configure.ps1", ".\SetupLaunchOptions.ps1", ".\Install.bat", ".\modules", ".\icons", ".\ui"
 
 Copy-Item -Recurse -Path $SourceFiles -Destination .\build\GamingGaiden\ -Force
 

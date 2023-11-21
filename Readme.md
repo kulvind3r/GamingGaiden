@@ -14,22 +14,24 @@ A Tale; Side Story;
 A simple application written in powershell to track your gaming time and review how you have spent your hours at leisure. 
 
 ## Features
-- Tracks runtime for any PC or emulated game.
-- Automatically track all new emulated games by just registering the emulator only once.
-- Retroarch Supported. Track different retroarch cores as distinct emulated platforms.
-- Works best with command line based emulation frontends like EmulationStation, LaunchBox and other standalone emulators. 
-- Detailed Games list UI with search and sorting. Editable game icons. Games can be marked finished for backlog records.
-- HWiNFO64 Sensor. Track game time recording status in RTSS / HWiNFO overlays.
-- Extremely lightweight. 1 MB install size. Single process with very low CPU and Memory (less than 75 MB) usage.
-- Stop and resume tracking anytime without exiting the app.
-- Daily, Monthly and Yearly play time statstics.
-- Shows most played games and number of games played per platform.
-- Completely offline. No internet required after first installation. All data stored locally.
-- Portable, no MSI installer or setup. Just unzip and run install script.
-- Protects Data. Database backup on every update. Keeps 5 latest backups. 
-- Automated scheduled task setup on install to run at startup and start tracking.
-- Detailed how to use manual. Just click Help from menu.
-- Detailed logging to identify bugs and errors.
+- #### Time Tracking and Emulator Support
+    - Tracks runtime for any PC or emulated game.
+    - Automatically track all new emulated games by just registering the emulator only once.
+    - Retroarch supported. Track different retroarch cores as distinct emulated platforms.
+    - Works best with command line based emulation frontends like EmulationStation, LaunchBox and other standalone emulators. 
+    - Stop or resume tracking anytime without exiting the app.
+    - HWiNFO64 Sensor. Track game time recording status in RTSS / HWiNFO overlays.
+- #### UI and Statistics
+    - Detailed Games list UI with search and sorting. Editable game icons. Games can be marked finished for backlog records.
+    - Shows most played games and number of games played per platform.
+    - Daily, Monthly and Yearly play time statstics.
+- #### Quality of Life Features
+    - Extremely lightweight. 7 MB install size. Single process. Uses less than 50 MB Memory and 1% CPU.
+    - Completely offline and portable. No internet required. All data stored locally.
+    - Automated data backup on every gaming session. Keeps 5 latest backups.
+    - Automated scheduled task setup on install to run at startup and start tracking.
+    - Detailed how to use manual. Just click Help from menu.
+    - Detailed logging to identify bugs and errors.
 
 ## Feature Screenshots
 <img src="./readme-files/GamesList.png" width="320" height="180"> <img src="./readme-files/MostPlayedGames.png" width="320" height="180"> 
@@ -59,17 +61,14 @@ This application should add value to your gaming hobby by gathering data quietly
 ## How to install
 1. Download ***GamingGaiden.zip*** from the [latest release](https://github.com/kulvind3r/GamingGaiden/releases/latest).
 2. Extract "GamingGaiden" folder and copy it to a location where you would like to run it from. ***Do Not Use "C:/Program Files" or any other protected location that needs admin rights.***
-3. Right click *"Install.ps1"* and click *"Run with powershell"*. You must be connected to Internet at this point to download dependencies.
+3. Right click `Install.bat` and click `Run as administrator`.
 4. Optionally choose to setup a scheduled task to autostart at user login.
 5. Once installation is done, you will have a shortcut to run the application on desktop and start menu.
-6. If you move the application to another directory, simply run *"Install.ps1"* once again, to setup from the new location.
+6. If you move the application to another directory, simply run `Install.bat` once again as administrator, to setup from the new location.
 
 ## DISCLAIMER
-Windows by default doesn't allow Powershell scripts downloaded from internet to be run. Windows powershell execution policy must be changed to RemoteSigned to allow the application scripts to be run.
-
-Install script does this by automatically elevating itself to Admin priveleges, you will see a UAC dialog if UAC is enabled to authorize this. You can freely review the code to see the steps Install script takes while running as admin and choose to allow it to run or not.
-
-This is just a one time privelege escalation for installing dependencies and changing execution policy. Primary application does not need admin rights to run.
+1. `Install.bat` needs to be run as administrator to create the scheduled task for starting automatically on system startup.
+2. All shortcuts and scheduled tasks will include the parameter `-ExecutionPolicy bypass` so that powershell scripts can be run. Windows by default doesn't allow powershell scripts to be executed.
 
 ## Attributions
 
