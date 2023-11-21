@@ -47,6 +47,10 @@ function CreateScheduledTask() {
 
 UserPrompt "Creating Shortcuts"
 CreateShortcut
+
+UserPrompt "Unblocking all Gaming Gaiden files"
+Get-ChildItem . -recurse | Unblock-File
+
 $ScheduledTaskChoice = Read-Host -Prompt "Would you like Gaming Gaiden to auto start at boot? Yes/No"
 if ( $ScheduledTaskChoice.ToLower() -eq 'yes' ) {
     UserPrompt "Creating Scheduled Task"
