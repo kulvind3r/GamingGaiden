@@ -11,7 +11,7 @@ noun (common)
 
 A Tale; Side Story;
 
-A simple application written in powershell to track your gaming time and review how you have spent your hours at leisure. 
+A simple windows system tray application written in powershell to track your gaming time and review how you have spent your hours at leisure. 
 
 ## Features
 - #### Time Tracking and Emulator Support
