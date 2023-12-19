@@ -64,7 +64,7 @@ This application should add value to your gaming hobby by gathering data quietly
 3. Right click `Install.bat` and click `Run as administrator`.
 4. Optionally choose to setup a scheduled task to autostart at user login.
 5. Once installation is done, you will have a shortcut to run the application on desktop and start menu. Just double click the shortcut to start the application.
-6. **On Starting from Shortcut, a brief command line window flashes and then the application runs in the System Tray. It is Tray app. It has no GUI window. All Graphs , stastics will be shown in your browser**.
+6. _**On Starting from Shortcut, a brief command line window flashes and then the application runs in the System Tray. It is Tray app. It has no GUI window. All Operations are done from right click menu of tray app. All Lists, Graphs, Stastics will be shown in your default internet browser.**_ Please watch the youtube tutorials shared above to learn how to use the application.
 7. If you move the application to another directory, simply run `Install.bat` once again as administrator, to setup from the new location.
 
 ## DISCLAIMER
