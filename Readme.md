@@ -63,8 +63,9 @@ This application should add value to your gaming hobby by gathering data quietly
 2. Extract "GamingGaiden" folder and copy it to a location where you would like to run it from. ***Do Not Use "C:/Program Files" or any other protected location that needs admin rights.***
 3. Right click `Install.bat` and click `Run as administrator`.
 4. Optionally choose to setup a scheduled task to autostart at user login.
-5. Once installation is done, you will have a shortcut to run the application on desktop and start menu.
-6. If you move the application to another directory, simply run `Install.bat` once again as administrator, to setup from the new location.
+5. Once installation is done, you will have a shortcut to run the application on desktop and start menu. Just double click the shortcut to start the application.
+6. **On Starting from Shortcut, a brief command line window flashes and then the application runs in the System Tray. It is Tray app. It has no GUI window. All Graphs , stastics will be shown in your browser**.
+7. If you move the application to another directory, simply run `Install.bat` once again as administrator, to setup from the new location.
 
 ## DISCLAIMER
 1. `Install.bat` needs to be run as administrator to create the scheduled task for starting automatically on system startup.
