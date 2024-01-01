@@ -11,7 +11,7 @@ $('table')[0].setAttribute('id','data-table');
 
 function updatePeriodDisplayWithMonth(selectedYear, selectedMonth) {
     selectedMonth = selectedMonth + 1
-    selectedDate = new Date(`${selectedYear}-${selectedMonth}`)
+    selectedDate = new Date(`${selectedYear}-${selectedMonth}-1`)
     let monthString = selectedDate.toLocaleDateString("en-US",{ year: 'numeric', month: 'long'})
     document.getElementById('time-period-display').innerText = monthString + " : " + parseInt(monthTotalTime) + " Hrs";
     updateWarnMessage("")
