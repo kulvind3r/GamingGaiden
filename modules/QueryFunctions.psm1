@@ -64,7 +64,7 @@ function findEmulatedGame($DetectedEmulatorExe, $EmulatorCommandLine) {
 		}
 	}
 
-	$EmulatedGame = [regex]::Replace($RomName, '\([^)]*\)', "")
+	$EmulatedGame = [regex]::Replace($RomName, '\([^)]*\)|\[[^\]]*\]', "")
 
 	Log ("Detected game: {0}" -f $EmulatedGame.Trim())
 	return $EmulatedGame.Trim()
