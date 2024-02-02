@@ -176,7 +176,7 @@ try {
 	$SettingsSubMenuItem.DropDownItems.Add($AddPlatformMenuItem)
 	$SettingsSubMenuItem.DropDownItems.Add($EditPlatformMenuItem)
 
-	$StatsSubMenuItem = CreateMenuItem "Statstics"
+	$StatsSubMenuItem = CreateMenuItem "Statistics"
 	$GamingTimeMenuItem = CreateMenuItem "Time Spent Gaming"
 	$MostPlayedMenuItem = CreateMenuItem "Most Played"
 	$GamesPerPlatformMenuItem = CreateMenuItem "Games Per Platform"
