@@ -52,10 +52,13 @@ UserPrompt "Unblocking all Gaming Gaiden files"
 Get-ChildItem . -recurse | Unblock-File
 
 $ScheduledTaskChoice = Read-Host -Prompt "Would you like Gaming Gaiden to auto start at boot? Yes/No"
-if ( $ScheduledTaskChoice.ToLower() -eq 'yes' ) {
-    UserPrompt "Creating Scheduled Task"
+if ( $ScheduledTaskChoice.ToLower() -match 'yes|y' ) { 
     CreateScheduledTask
+    UserPrompt "Auto start scheduled task successfully created."
 }
-UserPrompt "Installation successful. Enjoy."
-Start-Sleep 3
+else {
+    UserPrompt "Auto start scheduled task setup cancelled by user."
+}
+UserPrompt "Installation successful. Press any key to exit..."
+$Host.UI.RawUI.ReadKey("NoEcho,IncludeKeyDown")
 exit 0

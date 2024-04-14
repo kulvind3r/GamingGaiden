@@ -397,7 +397,7 @@ function RenderAddPlatformForm() {
 		$PlatformName = $textName.Text
 		$PlatformFound = DoesEntityExists "emulated_platforms" "name"  $PlatformName
 		if ($null -ne $PlatformFound) {
-			ShowMessage "Platform $PlatformName already exists.`r`nUse Edit Platform setting to check existing platforms." "OK" "Error"
+			ShowMessage "Platform $PlatformName already exists.`r`nUse Edit Emulator setting to check existing platforms." "OK" "Error"
 			return
 		}
 
