@@ -24,7 +24,7 @@
             {
                 "targets": 3,
                 render: function (data, type, row, meta) {
-                  if (type === "display") {
+                  if (type === "display" || type === 'filter') {
                     var hours = parseInt(parseInt(data) / 60);
                     var minutes = parseInt(data) % 60;
                     return hours + " Hr " + minutes + " Min";
@@ -35,7 +35,7 @@
             {
                 "targets": 5,
                 render: function (data, type, row, meta) {
-                  if (type === "display") {
+                  if (type === "display" || type === 'filter') {
                     var utcSeconds = parseInt(data);
                     var date = new Date(0);
                     date.setUTCSeconds(utcSeconds);
