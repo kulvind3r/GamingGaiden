@@ -5,7 +5,10 @@ function DetectGame() {
 	$GetEmulatorExesQuery = "SELECT exe_name FROM emulated_platforms"
 
     $GameExeList = (RunDBQuery $GetGameExesQuery).exe_name
-	$EmulatorExeList = (RunDBQuery $GetEmulatorExesQuery).exe_name
+	
+	$RawEmulatorExes = (RunDBQuery $GetEmulatorExesQuery).exe_name
+	# Flatten the rows with multiple exes into a single list
+	$EmulatorExeList = ($RawEmulatorExes -join ',') -split ','
 
 	$ExesToDetect = $($GameExeList; $EmulatorExeList) | Select-Object -Unique
 

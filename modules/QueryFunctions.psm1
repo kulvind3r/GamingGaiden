@@ -2,7 +2,7 @@
 	Log "Is $DetectedExe is an Emulator?"
 
 	$pattern = SQLEscapedMatchPattern $DetectedExe.Trim()
-	$FindExeQuery = "SELECT COUNT(*) as '' FROM emulated_platforms WHERE exe_name LIKE '{0}'" -f $pattern
+	$FindExeQuery = "SELECT COUNT(*) as '' FROM emulated_platforms WHERE exe_name LIKE '%{0}%'" -f $pattern
 
 	$ExesFound = (RunDBQuery $FindExeQuery).Column1
 
@@ -22,12 +22,12 @@ function DoesEntityExists($Table, $Column, $EntityName){
     return $EntityFound
 }
 
-function CheckExeCoreCombo($Exe, $Core) {
-	Log "Is $Exe already registered with $Core?"
+function CheckExeCoreCombo($ExeList, $Core) {
+	Log "Is $ExeList already registered with $Core?"
 
-	$ExeNamePattern = SQLEscapedMatchPattern($Exe.Trim())
+	$ExeListPattern = SQLEscapedMatchPattern($ExeList.Trim())
 	$CoreNamePattern = SQLEscapedMatchPattern($Core.Trim())
-    $ValidateEntityQuery = "SELECT * FROM emulated_platforms WHERE exe_name LIKE '{0}' AND core LIKE '{1}'" -f $ExeNamePattern, $CoreNamePattern
+    $ValidateEntityQuery = "SELECT * FROM emulated_platforms WHERE exe_name LIKE '%{0}%' AND core LIKE '{1}'" -f $ExeListPattern, $CoreNamePattern
 
     $EntityFound = RunDBQuery $ValidateEntityQuery
 
@@ -51,7 +51,7 @@ function findEmulatedGame($DetectedEmulatorExe, $EmulatorCommandLine) {
 	Log "Finding emulated game for $DetectedEmulatorExe"
 
 	$pattern = SQLEscapedMatchPattern $DetectedEmulatorExe.Trim()
-	$GetRomExtensionsQuery = "SELECT rom_extensions FROM emulated_platforms WHERE exe_name LIKE '{0}'" -f $pattern
+	$GetRomExtensionsQuery = "SELECT rom_extensions FROM emulated_platforms WHERE exe_name LIKE '%{0}%'" -f $pattern
 	$RomExtensions = (RunDBQuery $GetRomExtensionsQuery).rom_extensions.Split(',')
 
 	$RomName = $null
@@ -74,7 +74,7 @@ function findEmulatedGameCore($DetectedEmulatorExe, $EmulatorCommandLine) {
 	Log "Finding core in use by $DetectedEmulatorExe"
 
 	$pattern = SQLEscapedMatchPattern $DetectedEmulatorExe.Trim()
-	$GetCoresQuery = "SELECT core FROM emulated_platforms WHERE exe_name LIKE '{0}'" -f $pattern
+	$GetCoresQuery = "SELECT core FROM emulated_platforms WHERE exe_name LIKE '%{0}%'" -f $pattern
 	$CoreName = $null
 	$Cores = (RunDBQuery $GetCoresQuery).core
 	if ( $Cores.Length -le 1)
@@ -100,12 +100,12 @@ function findEmulatedGamePlatform($DetectedEmulatorExe, $Core) {
 	$GetPlatformQuery = $null
 	if ($Core.Length -eq 0 ) {
 		Log "Finding platform for $DetectedEmulatorExe"
-		$GetPlatformQuery = "SELECT name FROM emulated_platforms WHERE exe_name LIKE '{0}' AND core LIKE ''" -f $ExePattern
+		$GetPlatformQuery = "SELECT name FROM emulated_platforms WHERE exe_name LIKE '%{0}%' AND core LIKE ''" -f $ExePattern
 	}
 	else {
 		Log "Finding platform for $DetectedEmulatorExe and core $Core"
 		$CorePattern = SQLEscapedMatchPattern $Core.Trim()
-		$GetPlatformQuery = "SELECT name FROM emulated_platforms WHERE exe_name LIKE '{0}' AND core LIKE '{1}'" -f $ExePattern, $CorePattern
+		$GetPlatformQuery = "SELECT name FROM emulated_platforms WHERE exe_name LIKE '%{0}%' AND core LIKE '{1}'" -f $ExePattern, $CorePattern
 	}
 	
 	$EmulatedGamePlatform = (RunDBQuery $GetPlatformQuery).name

@@ -29,18 +29,18 @@ function SaveGame(){
 function SavePlatform(){
     param(
         [string]$PlatformName,
-        [string]$EmulatorExeName,
+        [string]$EmulatorExeList,
 		[string]$CoreName,
 		[string]$RomExtensions
     )
 
     $AddPlatformQuery = "INSERT INTO emulated_platforms (name, exe_name, core, rom_extensions)" +
-                                    "VALUES (@PlatformName, @EmulatorExeName, @CoreName, @RomExtensions)"
+                                    "VALUES (@PlatformName, @EmulatorExeList, @CoreName, @RomExtensions)"
 
     Log "Adding $PlatformName in Database"
     RunDBQuery $AddPlatformQuery @{
         PlatformName = $PlatformName.Trim()
-        EmulatorExeName = $EmulatorExeName.Trim()
+        EmulatorExeList = $EmulatorExeList.Trim()
         CoreName = $CoreName.Trim()
         RomExtensions = $RomExtensions.Trim()
     }
@@ -93,18 +93,18 @@ function UpdateGameOnEdit() {
 function  UpdatePlatformOnEdit() {
     param(
         [string]$PlatformName,
-        [string]$EmulatorExeName,
+        [string]$EmulatorExeList,
 		[string]$EmulatorCore,
 		[string]$PlatformRomExtensions
     )
 
 	$PlatformNamePattern = SQLEscapedMatchPattern($PlatformName.Trim())
 
-    $UpdatePlatformQuery = "UPDATE emulated_platforms set exe_name = @EmulatorExeName, core = @EmulatorCore, rom_extensions = @PlatformRomExtensions WHERE name LIKE '{0}'" -f $PlatformNamePattern
+    $UpdatePlatformQuery = "UPDATE emulated_platforms set exe_name = @EmulatorExeList, core = @EmulatorCore, rom_extensions = @PlatformRomExtensions WHERE name LIKE '{0}'" -f $PlatformNamePattern
 
-    Log "Editing $GameName in database"
+    Log "Editing $PlatformName in database"
 	RunDBQuery $UpdatePlatformQuery @{
-        EmulatorExeName = $EmulatorExeName
+        EmulatorExeList = $EmulatorExeList
 		EmulatorCore = $EmulatorCore
         PlatformRomExtensions = $PlatformRomExtensions.Trim()
 	}

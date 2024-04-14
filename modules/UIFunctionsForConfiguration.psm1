@@ -172,32 +172,49 @@ function RenderEditGameForm($SelectedGame) {
 
 function RenderEditPlatformForm($SelectedPlatform) {
 
-	$EditPlatform =	CreateForm "Gaming Gaiden: Edit Platform" 410 255 ".\icons\running.ico"
+	$EditPlatform =	CreateForm "Gaming Gaiden: Edit Platform" 405  325 ".\icons\running.ico"
 
-	$labelName = Createlabel "Name:" 10 20;	$EditPlatform.Controls.Add($labelName)
+	$labelName = Createlabel "Platorm:" 10 20;	$EditPlatform.Controls.Add($labelName)
 	$textName = CreateTextBox $SelectedPlatform.name 85 20 200 20; $textName.ReadOnly = $true; $EditPlatform.Controls.Add($textName)
 
-	$labelExe = Createlabel "Exe:" 10 60; $EditPlatform.Controls.Add($labelExe)
-	$textExe = CreateTextBox ($SelectedPlatform.exe_name + ".exe") 85 60 200 20; $textExe.ReadOnly = $true;	$EditPlatform.Controls.Add($textExe)
+	$labelExe = Createlabel "Emulator`nExe List:" 10 79; $EditPlatform.Controls.Add($labelExe)
+	$exeList = ($SelectedPlatform.exe_name -replace "," , ".exe,") + ".exe"
+	$textExe = CreateTextBox ($exeList) 85 82 200 20; $textExe.ReadOnly = $true;$EditPlatform.Controls.Add($textExe)
 
-	$labelRomExt = Createlabel "Rom Extns:" 10 100;	$EditPlatform.Controls.Add($labelRomExt)
-	$textRomExt = CreateTextBox $SelectedPlatform.rom_extensions 85 100 200 20;	$EditPlatform.Controls.Add($textRomExt)
+	$labelRomExt = Createlabel "Rom Extns:" 10 146;	$EditPlatform.Controls.Add($labelRomExt)
+	$textRomExt = CreateTextBox $SelectedPlatform.rom_extensions 85 144 200 20;	$EditPlatform.Controls.Add($textRomExt)
 	
-	$buttonUpdateExe = CreateButton "Edit Exe" 300 58
+	$buttonUpdateExe = CreateButton "Add Exe" 300 65
 	$buttonUpdateExe.Add_Click({
 		$openFileDialog = OpenFileDialog "Select Executable" 'Executable (*.exe)|*.exe'
 		$result = $openFileDialog.ShowDialog()
 		if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
-			$textExe.Text = (Get-Item $openFileDialog.FileName).Name
+			$existingExes = $textExe.Text
+			$selectedExe = (Get-Item $openFileDialog.FileName).Name
+			if ($existingExes -eq "") {
+				$textExe.Text = $selectedExe
+			}
+			else {
+				
+				$textExe.Text = ("$existingExes,$selectedExe" -split ',' | Select-Object -Unique ) -join ','
+			}
 		}
 	})
 	$EditPlatform.Controls.Add($buttonUpdateExe)
 
-	if (-Not $SelectedPlatform.core -eq "") {
-		$labelCores = Createlabel "Cores:" 10 140; $EditPlatform.Controls.Add($labelCores)
-		$textCore = CreateTextBox $SelectedPlatform.core 85 140 200 20;	$textCore.ReadOnly = $true;	$EditPlatform.Controls.Add($textCore)
+	$buttonClearExe = CreateButton "Clear List" 300 95
+	$buttonClearExe.Add_Click({
+		$textExe.Text = ""
+	})
+	$EditPlatform.Controls.Add($buttonClearExe)
 
-		$buttonUpdateCore = CreateButton "Edit Core" 300 138
+	$HasCore = $false
+	if (-Not $SelectedPlatform.core -eq "") {
+		$HasCore = $true
+		$labelCores = Createlabel "Cores:" 10 208; $EditPlatform.Controls.Add($labelCores)
+		$textCore = CreateTextBox $SelectedPlatform.core 85 206 200 20;	$textCore.ReadOnly = $true;	$EditPlatform.Controls.Add($textCore)
+
+		$buttonUpdateCore = CreateButton "Edit Core" 300 204
 		$buttonUpdateCore.Add_Click({
 			$openFileDialog = OpenFileDialog "Select Retroarch Core" 'DLL (*.dll)|*.dll'
 			$result = $openFileDialog.ShowDialog()
@@ -221,7 +238,7 @@ function RenderEditPlatformForm($SelectedPlatform) {
 	})
 	$EditPlatform.Controls.Add($buttonRemove)
 
-	$buttonOK = CreateButton "OK" 85 175
+	$buttonOK = CreateButton "OK" 85 250
 	$buttonOK.Add_Click({
 		if ($textRomExt.Text -eq "") {
 			ShowMessage "Extensions field cannot be empty.`r`nResetting Extensions. Try again." "OK" "Error"
@@ -236,11 +253,11 @@ function RenderEditPlatformForm($SelectedPlatform) {
 		}
 
 		$PlatformName = $textName.Text
-		$EmulatorExeName = $textExe.Text -replace ".exe"
+		$EmulatorExeList = $textExe.Text -replace ".exe"
 		$EmulatorCore = ""
 		if (-Not $SelectedPlatform.core -eq "") { $EmulatorCore = $textCore.Text }
 		
-		UpdatePlatformOnEdit -PlatformName $PlatformName -EmulatorExeName $EmulatorExeName -EmulatorCore $EmulatorCore -PlatformRomExtensions $PlatformRomExtensions
+		UpdatePlatformOnEdit -PlatformName $PlatformName -EmulatorExeList $EmulatorExeList -EmulatorCore $EmulatorCore -PlatformRomExtensions $PlatformRomExtensions
 
 		ShowMessage "Updated '$PlatformName' in Database." "OK" "Asterisk"
 
@@ -248,8 +265,13 @@ function RenderEditPlatformForm($SelectedPlatform) {
 	})
 	$EditPlatform.Controls.Add($buttonOK)
 
-	$buttonCancel = CreateButton "Cancel" 210 175;	$buttonCancel.Add_Click({ $EditPlatform.Close() });	$EditPlatform.Controls.Add($buttonCancel)
+	$buttonCancel = CreateButton "Cancel" 210 250;	$buttonCancel.Add_Click({ $EditPlatform.Close() });	$EditPlatform.Controls.Add($buttonCancel)
 
+	if (-not $HasCore) {
+		$EditPlatform.Size = New-Object System.Drawing.Size(405, 275)
+		$buttonOK.Location = New-Object System.Drawing.Point(85, 200)
+		$buttonCancel.Location = New-Object System.Drawing.Point(210, 200)
+	}
 	$EditPlatform.ShowDialog()
 	$EditPlatform.Dispose()
 }
@@ -337,21 +359,21 @@ function RenderAddGameForm() {
 
 function RenderAddPlatformForm() {
 
-	$AddPlatform =	CreateForm "Gaming Gaiden: Add Emulator" 410 255 ".\icons\running.ico"
+	$AddPlatform =	CreateForm "Gaming Gaiden: Add Emulator" 405 275 ".\icons\running.ico"
 
 	$labelName = Createlabel "Platorm:" 10 20; $AddPlatform.Controls.Add($labelName)
 	$textName = CreateTextBox "" 85 20 200 20; $AddPlatform.Controls.Add($textName)
 
-	$labelExe = Createlabel "Emulator Exe:" 10 60; $AddPlatform.Controls.Add($labelExe)
-	$textExe = CreateTextBox "" 85 60 200 20; $textExe.ReadOnly = $true; $AddPlatform.Controls.Add($textExe)
+	$labelExe = Createlabel "Emulator`nExe List:" 10 79; $AddPlatform.Controls.Add($labelExe)
+	$textExe = CreateTextBox "" 85 82 200 20; $textExe.ReadOnly = $true; $AddPlatform.Controls.Add($textExe)
 
-	$labelRomExt = Createlabel "Rom Extns:" 10 100;	$AddPlatform.Controls.Add($labelRomExt)
-	$textRomExt = CreateTextBox "" 85 100 200 20; $AddPlatform.Controls.Add($textRomExt)
+	$labelRomExt = Createlabel "Rom Extns:" 10 146;	$AddPlatform.Controls.Add($labelRomExt)
+	$textRomExt = CreateTextBox "" 85 144 200 20; $AddPlatform.Controls.Add($textRomExt)
 	
-	$labelCores = Createlabel "Core:" 10 140; $labelCores.hide(); $AddPlatform.Controls.Add($labelCores)
-	$textCore = CreateTextBox "" 85 140 200 20;	$textCore.ReadOnly = $true;	$textCore.hide(); $AddPlatform.Controls.Add($textCore)
+	$labelCores = Createlabel "Core:" 10 208; $labelCores.hide(); $AddPlatform.Controls.Add($labelCores)
+	$textCore = CreateTextBox "" 85 206 200 20;	$textCore.ReadOnly = $true;	$textCore.hide(); $AddPlatform.Controls.Add($textCore)
 
-	$buttonAddCore = CreateButton "Add Core" 300 138; $buttonAddCore.hide()
+	$buttonAddCore = CreateButton "Add Core" 300 204; $buttonAddCore.hide()
 	$buttonAddCore.Add_Click({
 		$openFileDialog = OpenFileDialog "Select Retroarch Core" 'DLL (*.dll)|*.dll'
 		$result = $openFileDialog.ShowDialog()
@@ -361,14 +383,25 @@ function RenderAddPlatformForm() {
 	})
 	$AddPlatform.Controls.Add($buttonAddCore)
 
-	$buttonAddExe = CreateButton "Add Exe" 300 58
+	$buttonAddExe = CreateButton "Add Exe" 300 65
 	$buttonAddExe.Add_Click({
 		$openFileDialog = OpenFileDialog "Select Executable" 'Executable (*.exe)|*.exe'
 		$result = $openFileDialog.ShowDialog()
 		if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
-			$textExe.Text = $openFileDialog.FileName
-			$ExeName = (Get-Item $textExe.Text).BaseName
-			if ($ExeName.ToLower() -like "*retroarch*"){
+			$existingExes = $textExe.Text
+			$selectedExe = (Get-Item $openFileDialog.FileName).Name
+			if ($existingExes -eq "") {
+				$textExe.Text = $selectedExe
+			}
+			else {
+				$textExe.Text = ("$existingExes,$selectedExe" -split ',' | Select-Object -Unique ) -join ','
+			}
+			$EmulatorExeList = $textExe.Text
+			if ($EmulatorExeList.ToLower() -like "*retroarch*"){
+				$AddPlatform.Size = New-Object System.Drawing.Size(405, 325)
+				$buttonOK.Location = New-Object System.Drawing.Point(85, 250)
+				$buttonCancel.Location = New-Object System.Drawing.Point(210, 250)
+
 				$labelCores.show()
 				$textCore.show()
 				$buttonAddCore.show()
@@ -378,15 +411,22 @@ function RenderAddPlatformForm() {
 	})
 	$AddPlatform.Controls.Add($buttonAddExe)
 
-	$buttonOK = CreateButton "OK" 85 175
+	$buttonClearExe = CreateButton "Clear List" 300 95
+	$buttonClearExe.Add_Click({
+		$textExe.Text = ""
+	})
+	$AddPlatform.Controls.Add($buttonClearExe)
+
+	$buttonOK = CreateButton "OK" 85 200
 	$buttonOK.Add_Click({
 
 		if ($textExe.Text -eq "" -Or $textName.Text -eq "" -Or $textRomExt.Text -eq "")	{
 			ShowMessage "Platform, Exe and Extensions fields cannot be empty.`r`nTry again." "OK" "Error"
 			return
 		}
-		$EmulatorExeName = (Get-Item $textExe.Text).BaseName
-		if ($EmulatorExeName.ToLower() -like "*retroarch*") {
+
+		$EmulatorExeList = $textExe.Text -replace ".exe"
+		if ($EmulatorExeList.ToLower() -like "*retroarch*") {
 			if ($textCore.Text -eq "")
 			{
 				ShowMessage "Retroarch detected.`r`nYou must select Core for platform. Try again." "OK" "Error"
@@ -403,9 +443,9 @@ function RenderAddPlatformForm() {
 
 		$EmulatorCore = $textCore.Text
 
-		$ExeCoreComboFound = CheckExeCoreCombo $EmulatorExeName $EmulatorCore
+		$ExeCoreComboFound = CheckExeCoreCombo $EmulatorExeList $EmulatorCore
 		if ($null -ne $ExeCoreComboFound) {
-			ShowMessage "Executable '$EmulatorExeName.exe' is already registered with core '$EmulatorCore'.`r`nCannot register another platform with same Exe and Core Combination.`r`nUse Edit Platform setting to check existing platforms." "OK" "Error"
+			ShowMessage "Executables in the list '$EmulatorExeList' is already registered with core '$EmulatorCore'.`r`nCannot register another platform with same Exe and Core Combination.`r`nUse Edit Platform setting to check existing platforms." "OK" "Error"
 			return
 		}
 
@@ -415,7 +455,7 @@ function RenderAddPlatformForm() {
 			return
 		}
 
-		SavePlatform -PlatformName $PlatformName -EmulatorExeName $EmulatorExeName -CoreName $EmulatorCore -RomExtensions $PlatformRomExtensions
+		SavePlatform -PlatformName $PlatformName -EmulatorExeList $EmulatorExeList -CoreName $EmulatorCore -RomExtensions $PlatformRomExtensions
 
 		ShowMessage "Registered '$PlatformName' in Database." "OK" "Asterisk"
 
@@ -423,7 +463,7 @@ function RenderAddPlatformForm() {
 	})
 	$AddPlatform.Controls.Add($buttonOK)
 
-	$buttonCancel = CreateButton "Cancel" 210 175; $buttonCancel.Add_Click({ $AddPlatform.Close() }); $AddPlatform.Controls.Add($buttonCancel)
+	$buttonCancel = CreateButton "Cancel" 210 200; $buttonCancel.Add_Click({ $AddPlatform.Close() }); $AddPlatform.Controls.Add($buttonCancel)
 
 	$AddPlatform.ShowDialog()
 	$AddPlatform.Dispose()
