@@ -105,11 +105,21 @@ try {
 	}
 
 	function  ConfigureAction($Action, $WindowStyle = "Normal") {
+		$DatabaseFileHashBefore = CalculateFileHash '.\GamingGaiden.db'
+    	Log "Database hash before: $DatabaseFileHashBefore"
+
 		Log "Executing configuration action: $Action"
 	   	Start-Process -FilePath "powershell" -ArgumentList "-File","`".\Configure.ps1`"", "$Action" -NoNewWindow -Wait
-	   	Log "Rebooting tracker job to apply new configuration"
-		StopTrackerJob
-		StartTrackerJob
+
+		$DatabaseFileHashAfter = CalculateFileHash '.\GamingGaiden.db'
+		Log "Database hash after: $DatabaseFileHashAfter"
+	
+		if ($DatabaseFileHashAfter -ne $DatabaseFileHashBefore){
+			BackupDatabase
+			Log "Rebooting tracker job to apply new configuration"
+			StopTrackerJob
+			StartTrackerJob
+		}
 	}
 
 	function CreateMenuSeparator(){

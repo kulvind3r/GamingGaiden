@@ -57,21 +57,11 @@ try {
     Import-Module ".\modules\UIFunctionsForConfiguration.psm1"
     Import-Module ".\modules\StorageFunctions.psm1"
     
-    $DatabaseFileHashBefore = CalculateFileHash '.\GamingGaiden.db'
-    Log "Database hash before: $DatabaseFileHashBefore"
-
     switch ($Action) {
         "AddGame" { Clear-Host; AddGame }
         "AddPlatform" { Clear-Host; AddPlatform }
         "EditGame" { Clear-Host; EditGame }
         "EditPlatform" { Clear-Host; EditPlatform }
-    }
-
-    $DatabaseFileHashAfter = CalculateFileHash '.\GamingGaiden.db'
-    Log "Database hash after: $DatabaseFileHashAfter"
-
-    if ($DatabaseFileHashAfter -ne $DatabaseFileHashBefore){
-        BackupDatabase
     }
 }
 catch {
