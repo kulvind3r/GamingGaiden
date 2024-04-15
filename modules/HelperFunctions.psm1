@@ -6,7 +6,11 @@ function ResetLog($MSG) {
 
 function Log($MSG) {
 	$Timestamp = Get-date -f s
-	Write-Output "$Timestamp : $MSG" >> ".\GamingGaiden.log"
+	$mutex = New-Object System.Threading.Mutex($false, "LogFileLock")
+	if($mutex.WaitOne(500)) {
+		Write-Output "$Timestamp : $MSG" >> ".\GamingGaiden.log"
+		[void]$mutex.ReleaseMutex()
+	}
 }
 
 function CleanupTempFiles(){
