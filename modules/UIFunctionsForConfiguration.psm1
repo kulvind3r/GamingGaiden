@@ -82,6 +82,19 @@ function RenderEditGameForm($SelectedGame) {
 	$PlayTimeString = PlayTimeMinsToString $SelectedGame.play_time
 	$textPlayTime = CreateTextBox $PlayTimeString 245 140 200 20; $EditGameForm.Controls.Add($textPlayTime)
 
+	$buttonSearchIcon = CreateButton "Get Icon" 20 175
+	$buttonSearchIcon.Size = New-Object System.Drawing.Size(60, 23)
+	$buttonSearchIcon.Add_Click({
+		$GameName = $textName.Text
+		if ($GameName -eq "") { 
+			ShowMessage "Please enter a name first." "OK" "Error"
+			return
+		}
+		$GameNameEncoded = $GameName -replace " ","+"
+		Start-Process "https://www.google.com/search?as_q=$GameNameEncoded&imgar=s&udm=2"
+	})
+	$EditGameForm.Controls.Add($buttonSearchIcon)
+
 	$checkboxCompleted = New-Object Windows.Forms.CheckBox
     $checkboxCompleted.Text = "Finished"
 	if($SelectedGame.completed -eq 'TRUE') { $checkboxCompleted.Checked = $true	}
@@ -100,7 +113,8 @@ function RenderEditGameForm($SelectedGame) {
 	$pictureBox = CreatePictureBox $ImagePath 15 20 140 140
 	$EditGameForm.Controls.Add($pictureBox)
 
-	$buttonUpdateIcon = CreateButton "Edit Icon" 48 175
+	$buttonUpdateIcon = CreateButton "Edit Icon" 90 175
+	$buttonUpdateIcon.Size = New-Object System.Drawing.Size(60, 23)
 	$buttonUpdateIcon.Add_Click({
 		$openFileDialog = OpenFileDialog "Select Game Icon File" 'PNG (*.png)|*.png|JPEG (*.jpg)|*.jpg'
 		$result = $openFileDialog.ShowDialog()
@@ -292,11 +306,37 @@ function RenderAddGameForm() {
 	$labelPlayTime = Createlabel "PlayTime:" 170 140; $AddGameForm.Controls.Add($labelPlayTime)
 	$textPlayTime = CreateTextBox "0 Hr 0 Min" 245 140 200 20; $textPlayTime.ReadOnly = $true; $AddGameForm.Controls.Add($textPlayTime)
 
+	$buttonSearchIcon = CreateButton "Get Icon" 20 175
+	$buttonSearchIcon.Size = New-Object System.Drawing.Size(60, 23)
+	$buttonSearchIcon.Add_Click({
+		$GameName = $textName.Text
+		if ($GameName -eq "") { 
+			ShowMessage "Please enter a name first." "OK" "Error"
+			return
+		}
+		$GameNameEncoded = $GameName -replace " ","+"
+		Start-Process "https://www.google.com/search?as_q=$GameNameEncoded&imgar=s&udm=2"
+	})
+	$AddGameForm.Controls.Add($buttonSearchIcon)
+
 	$ImagePath = "./icons/default.png"
 	$pictureBoxImagePath = CreateTextBox $ImagePath 579 254 1 1; $pictureBoxImagePath.hide(); $AddGameForm.Controls.Add($pictureBoxImagePath)
 	
 	$pictureBox = CreatePictureBox $ImagePath 15 20 140 140
 	$AddGameForm.Controls.Add($pictureBox)
+
+	$buttonUpdateIcon = CreateButton "Add Icon" 90 175
+	$buttonUpdateIcon.Size = New-Object System.Drawing.Size(60, 23)
+	$buttonUpdateIcon.Add_Click({
+		$openFileDialog = OpenFileDialog "Select Game Icon File" 'PNG (*.png)|*.png|JPEG (*.jpg)|*.jpg'
+		$result = $openFileDialog.ShowDialog()
+		if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
+			$ImagePath = ResizeImage $openFileDialog.FileName $SelectedGame.name
+			$pictureBoxImagePath.Text = $ImagePath
+			$pictureBox.Image = [System.Drawing.Image]::FromFile($ImagePath)
+		}
+	})
+	$AddGameForm.Controls.Add($buttonUpdateIcon)
 
 	$buttonUpdateExe = CreateButton "Add Exe" 470 60
 	$buttonUpdateExe.Add_Click({
@@ -309,7 +349,7 @@ function RenderAddGameForm() {
 			$GameExeFile = Get-Item $textExe.Text
 			$GameExeName = $GameExeFile.BaseName
 
-			if ($textName.Text -eq "") { $textName.Text = $GameExeName	}
+			if ($textName.Text -eq "") { $textName.Text = $GameExeName }
 			
 			$EntityFound = DoesEntityExists "games" "exe_name" $GameExeName
 			if ($null -ne $EntityFound)
