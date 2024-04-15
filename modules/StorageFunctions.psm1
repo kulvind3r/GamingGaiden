@@ -66,28 +66,40 @@ function UpdateGameOnSession() {
 
 function UpdateGameOnEdit() {
     param(
+        [string]$OriginalGameName,
         [string]$GameName,
         [string]$GameExeName,
 		[string]$GameIconPath,
 		[string]$GamePlayTime,
         [string]$GameCompleteStatus,
-        [string]$GamePlatform
+        [string]$GamePlatform,
+        [string]$GameLastPlayDate
     )
 
     $GameIconBytes = (Get-Content -Path $GameIconPath -Encoding byte -Raw);
 
 	$GameNamePattern = SQLEscapedMatchPattern($GameName.Trim())
 
-	$UpdateGameQuery = "UPDATE games SET exe_name = @GameExeName, icon = @GameIconBytes, play_time = @GamePlayTime, completed = @GameCompleteStatus, platform = @GamePlatform WHERE name LIKE '{0}'" -f $GameNamePattern
-
-    Log "Editing $GameName in database"
-	RunDBQuery $UpdateGameQuery @{
-        GameExeName = $GameExeName.Trim()
-		GameIconBytes = $GameIconBytes
-        GamePlayTime = $GamePlayTime
-        GameCompleteStatus = $GameCompleteStatus
-        GamePlatform = $GamePlatform.Trim()
-	}
+    if ( $OriginalGameName -eq $GameName)
+    {
+        $UpdateGameQuery = "UPDATE games SET exe_name = @GameExeName, icon = @GameIconBytes, play_time = @GamePlayTime, completed = @GameCompleteStatus, platform = @GamePlatform WHERE name LIKE '{0}'" -f $GameNamePattern
+        
+        Log "Editing $GameName in database"
+        RunDBQuery $UpdateGameQuery @{
+            GameExeName = $GameExeName.Trim()
+            GameIconBytes = $GameIconBytes
+            GamePlayTime = $GamePlayTime
+            GameCompleteStatus = $GameCompleteStatus
+            GamePlatform = $GamePlatform.Trim()
+        }
+    }
+    else
+    {
+        Log "User changed game's name from $OriginalGameName to $GameName. Need to delete the game and add it again"
+        RemoveGame($OriginalGameName)
+        SaveGame -GameName $GameName -GameExeName $GameExeName -GameIconPath $GameIconPath `
+	 			-GamePlayTime $GamePlayTime -GameLastPlayDate $GameLastPlayDate -GameCompleteStatus $GameCompleteStatus -GamePlatform $GamePlatform
+    }
 }
 
 function  UpdatePlatformOnEdit() {

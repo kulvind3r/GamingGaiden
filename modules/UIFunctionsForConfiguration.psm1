@@ -67,10 +67,13 @@ function RenderListBoxForm($Prompt, $List) {
 
 function RenderEditGameForm($SelectedGame) {
 
+	$OriginalGameName = $SelectedGame.name
+	$GameLastPlayDate = $SelectedGame.last_play_date
+
 	$EditGameForm = CreateForm "Gaming Gaiden: Edit Game" 580 255 ".\icons\running.ico"
 	
 	$labelName = Createlabel "Name:" 170 20; $EditGameForm.Controls.Add($labelName)
-	$textName = CreateTextBox $SelectedGame.name 245 20 300 20;	$textName.ReadOnly = $true;	$EditGameForm.Controls.Add($textName)
+	$textName = CreateTextBox $SelectedGame.name 245 20 300 20;	$EditGameForm.Controls.Add($textName)
 
 	$labelExe = Createlabel "Exe:" 170 60; $EditGameForm.Controls.Add($labelExe)
 	$textExe = CreateTextBox ($SelectedGame.exe_name + ".exe") 245 60 200 20; $textExe.ReadOnly = $true; $EditGameForm.Controls.Add($textExe)
@@ -170,7 +173,7 @@ function RenderEditGameForm($SelectedGame) {
 		$GameCompleteStatus = $SelectedGame.completed
 		if ($checkboxCompleted.Checked -eq $true) {	$GameCompleteStatus = 'TRUE' }
 		
-		UpdateGameOnEdit -GameName $GameName -GameExeName $GameExeName -GameIconPath $pictureBoxImagePath.Text -GamePlayTime $PlayTimeInMin -GameCompleteStatus $GameCompleteStatus -GamePlatform $textPlatform.Text
+		UpdateGameOnEdit -OriginalGameName $OriginalGameName -GameName $GameName -GameExeName $GameExeName -GameIconPath $pictureBoxImagePath.Text -GamePlayTime $PlayTimeInMin -GameCompleteStatus $GameCompleteStatus -GamePlatform $textPlatform.Text -GameLastPlayDate $GameLastPlayDate
 
 		ShowMessage "Updated '$GameName' in Database." "OK" "Asterisk"
 

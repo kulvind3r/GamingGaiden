@@ -154,7 +154,7 @@ function GetGameDetails($Game) {
 	Log "Finding Details of $Game"
 
 	$pattern = SQLEscapedMatchPattern $Game.Trim()
-	$GetGameDetailsQuery = "SELECT name, exe_name, platform, play_time, completed, icon FROM games WHERE name LIKE '{0}'" -f $pattern
+	$GetGameDetailsQuery = "SELECT * FROM games WHERE name LIKE '{0}'" -f $pattern
 
 	$GameDetails = RunDBQuery $GetGameDetailsQuery
 
