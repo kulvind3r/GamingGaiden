@@ -56,6 +56,7 @@ try {
 		Import-Module ".\modules\QueryFunctions.psm1";
 		Import-Module ".\modules\StorageFunctions.psm1";
 		Import-Module ".\modules\PSSQLite";
+		Import-Module ".\modules\UserInput.psm1";
 	}
 
 	$TrackerJobScript = {

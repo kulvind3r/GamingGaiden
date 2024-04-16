@@ -4,6 +4,7 @@ function SaveGame(){
         [string]$GameExeName,
 		[string]$GameIconPath,
 		[string]$GamePlayTime,
+        [string]$GameIdleTime,
         [string]$GameLastPlayDate,
         [string]$GameCompleteStatus,
         [string]$GamePlatform
@@ -11,8 +12,8 @@ function SaveGame(){
 
     $GameIconBytes = (Get-Content -Path $GameIconPath -Encoding byte -Raw);
 
-    $AddGameQuery = "INSERT INTO games (name, exe_name, icon, play_time, last_play_date, completed, platform)" +
-						"VALUES (@GameName, @GameExeName, @GameIconBytes, @GamePlayTime, @GameLastPlayDate, @GameCompleteStatus, @GamePlatform)"
+    $AddGameQuery = "INSERT INTO games (name, exe_name, icon, play_time, idle_time, last_play_date, completed, platform)" +
+						"VALUES (@GameName, @GameExeName, @GameIconBytes, @GamePlayTime, @GameIdleTime, @GameLastPlayDate, @GameCompleteStatus, @GamePlatform)"
 
 	Log "Adding $GameName in Database"
     RunDBQuery $AddGameQuery @{
@@ -20,6 +21,7 @@ function SaveGame(){
         GameExeName = $GameExeName.Trim()
 		GameIconBytes = $GameIconBytes
         GamePlayTime = $GamePlayTime
+        GameIdleTime = $GameIdleTime
         GameLastPlayDate = $GameLastPlayDate
         GameCompleteStatus = $GameCompleteStatus
         GamePlatform = $GamePlatform.Trim()
@@ -50,16 +52,18 @@ function UpdateGameOnSession() {
 	param(
         [string]$GameName,
         [string]$GamePlayTime,
+        [string]$GameIdleTime,
         [string]$GameLastPlayDate
     )
 
 	$GameNamePattern = SQLEscapedMatchPattern($GameName.Trim())
 
-	$UpdateGamePlayTimeQuery = "UPDATE games SET play_time = @UpdatedPlayTime, last_play_date = @UpdatedLastPlayDate WHERE name LIKE '{0}'" -f $GameNamePattern
+	$UpdateGamePlayTimeQuery = "UPDATE games SET play_time = @UpdatedPlayTime, idle_time = @UpdatedIdleTime, last_play_date = @UpdatedLastPlayDate WHERE name LIKE '{0}'" -f $GameNamePattern
 
-    Log "Updating $GameName playtime to $GamePlayTime in database"
+    Log "Updating $GameName play time to $GamePlayTime min and idle time to $GameIdleTime min in database"
 	RunDBQuery $UpdateGamePlayTimeQuery @{ 
 		UpdatedPlayTime = $GamePlayTime
+        UpdatedIdleTime = $GameIdleTime
 		UpdatedLastPlayDate = $GameLastPlayDate
 	}
 }

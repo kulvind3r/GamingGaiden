@@ -30,6 +30,17 @@ try {
 
     Invoke-SqliteQuery -Query $CreateDailyPlaytimeTableQuery -SQLiteConnection $DBConnection
 
+    # Migration 1
+    $AddIdleTimeColumnInGamesTableQuery="ALTER TABLE games ADD COLUMN idle_time INTEGER DEFAULT 0"
+    $CheckIdleTimeColumnInGamesTableQuery="SELECT count(*) AS count FROM pragma_table_info('games') WHERE name='idle_time'"
+
+    $CheckResult = (Invoke-SqliteQuery -Query $CheckIdleTimeColumnInGamesTableQuery -SQLiteConnection $DBConnection).count
+    if ($CheckResult -lt 1)
+    {
+        Invoke-SqliteQuery -Query $AddIdleTimeColumnInGamesTableQuery -SQLiteConnection $DBConnection
+    }
+    # End Migration 1
+    
     $DBConnection.Close()
     $DBConnection.Dispose()
 }

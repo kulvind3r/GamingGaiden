@@ -43,8 +43,20 @@ function GetPlayTime($GameName) {
 
 	$RecordedGamePlayTime = (RunDBQuery $GetGamePlayTimeQuery).play_time
 
-	Log "Detected gameplay time: $RecordedGamePlayTime"
+	Log "Detected gameplay time: $RecordedGamePlayTime min"
 	return $RecordedGamePlayTime
+}
+
+function GetIdleTime($GameName) {
+	Log "Get existing game idle time for $GameName"
+
+	$GameNamePattern = SQLEscapedMatchPattern($GameName.Trim())
+	$GetGameIdleTimeQuery = "SELECT idle_time FROM games WHERE name LIKE '{0}'" -f $GameNamePattern
+
+	$RecordedGameIdleTime = (RunDBQuery $GetGameIdleTimeQuery).idle_time
+
+	Log "Detected game idle time: $RecordedGameIdleTime min"
+	return $RecordedGameIdleTime
 }
 
 function findEmulatedGame($DetectedEmulatorExe, $EmulatorCommandLine) {
