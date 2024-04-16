@@ -40,6 +40,17 @@ try {
         Invoke-SqliteQuery -Query $AddIdleTimeColumnInGamesTableQuery -SQLiteConnection $DBConnection
     }
     # End Migration 1
+
+    # Migration 2
+    $AddSessionCountColumnInGamesTableQuery="ALTER TABLE games ADD COLUMN session_count INTEGER DEFAULT 0"
+    $CheckSessionCountColumnInGamesTableQuery="SELECT count(*) AS count FROM pragma_table_info('games') WHERE name='session_count'"
+
+    $CheckResult = (Invoke-SqliteQuery -Query $CheckSessionCountColumnInGamesTableQuery -SQLiteConnection $DBConnection).count
+    if ($CheckResult -lt 1)
+    {
+        Invoke-SqliteQuery -Query $AddSessionCountColumnInGamesTableQuery -SQLiteConnection $DBConnection
+    }
+    # End Migration 2
     
     $DBConnection.Close()
     $DBConnection.Dispose()

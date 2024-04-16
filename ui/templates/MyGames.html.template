@@ -39,7 +39,7 @@
                 }
             },
             {
-                "targets": 5,
+                "targets": 6,
                 render: function (data, type, row, meta) {
                   if (type === "display" || type === 'filter') {
                     var utcSeconds = parseInt(data);
@@ -51,7 +51,7 @@
                 }
             }
           ],
-          order: [[5, 'desc']],
+          order: [[6, 'desc']],
           "ordering": true,
           "paging": "numbers",
           "pageLength": 9,

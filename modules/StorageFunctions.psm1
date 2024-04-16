@@ -7,13 +7,14 @@ function SaveGame(){
         [string]$GameIdleTime,
         [string]$GameLastPlayDate,
         [string]$GameCompleteStatus,
-        [string]$GamePlatform
+        [string]$GamePlatform,
+        [string]$GameSessionCount
     )
 
     $GameIconBytes = (Get-Content -Path $GameIconPath -Encoding byte -Raw);
 
-    $AddGameQuery = "INSERT INTO games (name, exe_name, icon, play_time, idle_time, last_play_date, completed, platform)" +
-						"VALUES (@GameName, @GameExeName, @GameIconBytes, @GamePlayTime, @GameIdleTime, @GameLastPlayDate, @GameCompleteStatus, @GamePlatform)"
+    $AddGameQuery = "INSERT INTO games (name, exe_name, icon, play_time, idle_time, last_play_date, completed, platform, session_count)" +
+						"VALUES (@GameName, @GameExeName, @GameIconBytes, @GamePlayTime, @GameIdleTime, @GameLastPlayDate, @GameCompleteStatus, @GamePlatform, @GameSessionCount)"
 
 	Log "Adding $GameName in Database"
     RunDBQuery $AddGameQuery @{
@@ -25,6 +26,7 @@ function SaveGame(){
         GameLastPlayDate = $GameLastPlayDate
         GameCompleteStatus = $GameCompleteStatus
         GamePlatform = $GamePlatform.Trim()
+        GameSessionCount = $GameSessionCount
     }
 }
 
@@ -58,13 +60,21 @@ function UpdateGameOnSession() {
 
 	$GameNamePattern = SQLEscapedMatchPattern($GameName.Trim())
 
-	$UpdateGamePlayTimeQuery = "UPDATE games SET play_time = @UpdatedPlayTime, idle_time = @UpdatedIdleTime, last_play_date = @UpdatedLastPlayDate WHERE name LIKE '{0}'" -f $GameNamePattern
+    $GetSessionCountQuery = "SELECT session_count FROM games WHERE name LIKE '{0}'" -f $GameNamePattern
+    $CurrentSessionCount = (RunDBQuery $GetSessionCountQuery).session_count
+
+    $NewSessionCount = $CurrentSessionCount + 1
+
+	$UpdateGamePlayTimeQuery = "UPDATE games SET play_time = @UpdatedPlayTime, idle_time = @UpdatedIdleTime, last_play_date = @UpdatedLastPlayDate, session_count = @GameSessionCount WHERE name LIKE '{0}'" -f $GameNamePattern
 
     Log "Updating $GameName play time to $GamePlayTime min and idle time to $GameIdleTime min in database"
+    Log "Updating session count from $CurrentSessionCount to $NewSessionCount in database"
+
 	RunDBQuery $UpdateGamePlayTimeQuery @{ 
 		UpdatedPlayTime = $GamePlayTime
         UpdatedIdleTime = $GameIdleTime
 		UpdatedLastPlayDate = $GameLastPlayDate
+        GameSessionCount = $NewSessionCount
 	}
 }
 

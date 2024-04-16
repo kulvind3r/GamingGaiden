@@ -387,7 +387,7 @@ function RenderAddGameForm() {
 		$GameLastPlayDate = (Get-Date -UFormat %s).Split('.').Get(0)
 
 		SaveGame -GameName $GameName -GameExeName $GameExeName -GameIconPath $GameIconPath `
-	 			-GamePlayTime 0 -GameIdleTime 0 -GameLastPlayDate $GameLastPlayDate -GameCompleteStatus 'FALSE' -GamePlatform 'PC'
+	 			-GamePlayTime 0 -GameIdleTime 0 -GameLastPlayDate $GameLastPlayDate -GameCompleteStatus 'FALSE' -GamePlatform 'PC' -GameSessionCount 0
 		ShowMessage "Registered '$GameName' in Database." "OK" "Asterisk"
 
 		$AddGameForm.Close()

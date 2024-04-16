@@ -52,15 +52,21 @@ td:first-child {
   text-align: center;
 }
 
-/* Define specific styles for the Status column */
+/* Define specific styles for the Session Count column */
 td:nth-child(5) {
+  width: 8%;
+  text-align: center;
+}
+
+/* Define specific styles for the Status column */
+td:nth-child(6) {
   width: 50px;
   text-align: center;
   font-size: 13px;
 }
 
 /* Reduce size of images in Status column */
-td:nth-child(5) img {
+td:nth-child(6) img {
   max-width: 70%;
 }
 
