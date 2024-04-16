@@ -23,6 +23,7 @@
           columnDefs: [
             {
                 "targets": 3,
+                className: 'playtimegradient',
                 render: function (data, type, row, meta) {
                   if (type === "display" || type === 'filter') {
                     var hours = parseInt(parseInt(data) / 60);
@@ -30,6 +31,11 @@
                     return hours + " Hr " + minutes + " Min";
                   }
                   return data;
+                },
+                createdCell: function (td, cellData, rowData, row, col) {
+                  var maxPlayTime = _MAXPLAYTIME_;
+                  var percentage = ((parseInt(cellData) / maxPlayTime) * 100).toFixed(2);
+                  $(td).css('background-size', percentage + '% 100%');
                 }
             },
             {

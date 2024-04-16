@@ -31,6 +31,9 @@ function RenderGameList() {
         return $false
     }
 
+	$GetMaxPlayTime = "SELECT max(play_time) as 'max_play_time' FROM games"
+	$MaxPlayTime = (RunDBQuery $GetMaxPlayTime).max_play_time
+	
 	$Games = @()
 	$TotalPlayTime = $null
 	foreach ($GameRecord in $GameRecords) {
@@ -63,6 +66,7 @@ function RenderGameList() {
 	$report = (Get-Content $WorkingDirectory\ui\templates\MyGames.html.template) -replace "_GAMESTABLE_", $Table
 	$report = $report -replace "Last_Played_On", "Last Played On"
 	$report = $report -replace "Completed", "Status"
+	$report = $report -replace "_MAXPLAYTIME_", $MaxPlayTime
 	$report = $report -replace "_TOTALGAMECOUNT_", $Games.length
 	$report = $report -replace "_TOTALPLAYTIME_", $TotalPlayTimeString
 	
