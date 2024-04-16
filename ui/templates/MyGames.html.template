@@ -34,8 +34,8 @@
                 },
                 createdCell: function (td, cellData, rowData, row, col) {
                   var maxPlayTime = _MAXPLAYTIME_;
-                  var percentage = ((parseInt(cellData) / maxPlayTime) * 100).toFixed(2);
-                  $(td).css('background-size', percentage + '% 100%');
+                  var percentage = ((parseInt(cellData) / maxPlayTime) * 95).toFixed(2);
+                  $(td).css('background-size', percentage + '% 85%');
                 }
             },
             {
