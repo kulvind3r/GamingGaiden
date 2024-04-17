@@ -56,7 +56,7 @@ function ResizeImage($ImagePath, $GameName) {
 	$Scale = $WIP.FilterInfos.Item("Scale").FilterId                    
 	$WIP.Filters.Add($Scale)
 	$WIP.Filters[1].Properties("MaximumWidth") = 100
-	$WIP.Filters[1].Properties("MaximumHeight") = 200
+	$WIP.Filters[1].Properties("MaximumHeight") = 140
 	$WIP.Filters[1].Properties("PreserveAspectRatio") = $true
 
 	$ScaledImage = $WIP.Apply($WIA)
