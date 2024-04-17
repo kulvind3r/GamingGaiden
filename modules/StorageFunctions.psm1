@@ -86,16 +86,14 @@ function UpdateGameOnEdit() {
 		[string]$GameIconPath,
 		[string]$GamePlayTime,
         [string]$GameCompleteStatus,
-        [string]$GamePlatform,
-        [string]$GameLastPlayDate
+        [string]$GamePlatform
     )
 
     $GameIconBytes = (Get-Content -Path $GameIconPath -Encoding byte -Raw);
 
-	$GameNamePattern = SQLEscapedMatchPattern($GameName.Trim())
+	$GameNamePattern = SQLEscapedMatchPattern($OriginalGameName.Trim())
 
-    if ( $OriginalGameName -eq $GameName)
-    {
+    if ( $OriginalGameName -eq $GameName) {
         $UpdateGameQuery = "UPDATE games SET exe_name = @GameExeName, icon = @GameIconBytes, play_time = @GamePlayTime, completed = @GameCompleteStatus, platform = @GamePlatform WHERE name LIKE '{0}'" -f $GameNamePattern
         
         Log "Editing $GameName in database"
@@ -107,15 +105,24 @@ function UpdateGameOnEdit() {
             GamePlatform = $GamePlatform.Trim()
         }
     }
-    else
-    {
+    else {
         Log "User changed game's name from $OriginalGameName to $GameName. Need to delete the game and add it again"
+
+        $GetSessionCountQuery = "SELECT session_count FROM games WHERE name LIKE '{0}'" -f $GameNamePattern
+        $GameSessionCount = (RunDBQuery $GetSessionCountQuery).session_count
+
+        $GetIdleTimeQuery = "SELECT idle_time FROM games WHERE name LIKE '{0}'" -f $GameNamePattern
+        $GameIdleTime = (RunDBQuery $GetIdleTimeQuery).idle_time
+
+        $GetLastPlayDateQuery = "SELECT last_play_date FROM games WHERE name LIKE '{0}'" -f $GameNamePattern
+        $GameLastPlayDate = (RunDBQuery $GetLastPlayDateQuery).last_play_date
+
         RemoveGame($OriginalGameName)
         SaveGame -GameName $GameName -GameExeName $GameExeName -GameIconPath $GameIconPath `
-	 			-GamePlayTime $GamePlayTime -GameLastPlayDate $GameLastPlayDate -GameCompleteStatus $GameCompleteStatus -GamePlatform $GamePlatform
+	 			-GamePlayTime $GamePlayTime -GameIdleTime $GameIdleTime -GameLastPlayDate $GameLastPlayDate -GameCompleteStatus $GameCompleteStatus -GamePlatform $GamePlatform -GameSessionCount $GameSessionCount
     }
 }
-
+ 
 function  UpdatePlatformOnEdit() {
     param(
         [string]$PlatformName,

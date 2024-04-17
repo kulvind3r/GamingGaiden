@@ -65,25 +65,76 @@ function RenderListBoxForm($Prompt, $List) {
 	return $listBox.SelectedItem
 }
 
-function RenderEditGameForm($SelectedGame) {
+function RenderEditGameForm($GamesList) {
 
-	$OriginalGameName = $SelectedGame.name
-	$GameLastPlayDate = $SelectedGame.last_play_date
+	$EditGameForm = CreateForm "Gaming Gaiden: Edit Game" 880 265 ".\icons\running.ico"
 
-	$EditGameForm = CreateForm "Gaming Gaiden: Edit Game" 580 265 ".\icons\running.ico"
+	$ImagePath = "./icons/default.png"
 	
+	# Hidden fields to save non user editable values
+	$pictureBoxImagePath = CreateTextBox $ImagePath 879 264 1 1; $pictureBoxImagePath.hide(); $EditGameForm.Controls.Add($pictureBoxImagePath)
+	$textOriginalGameName = CreateTextBox "" 879 264 1 1; $textOriginalGameName.hide(); $EditGameForm.Controls.Add($textOriginalGameName)
+	# Hidden fields end
+	
+	$listBox = New-Object System.Windows.Forms.ListBox
+	$listBox.Location = New-Object System.Drawing.Point(585,60)
+	$listBox.Size = New-Object System.Drawing.Size(260,20)
+	$listBox.Height = 150
+	[void] $listBox.Items.AddRange($GamesList)
+
+	$labelSearch = Createlabel "Search:" 585 20; $EditGameForm.Controls.Add($labelSearch)
+	$textSearch = CreateTextBox "" 645 20 200 20;	$EditGameForm.Controls.Add($textSearch)
+
+	$textSearch.Add_TextChanged({
+		FilterListBox -filterText $textSearch.Text -listBox $listBox -originalItems $GamesList
+	})
+
 	$labelName = Createlabel "Name:" 170 20; $EditGameForm.Controls.Add($labelName)
-	$textName = CreateTextBox $SelectedGame.name 245 20 300 20;	$EditGameForm.Controls.Add($textName)
+	$textName = CreateTextBox "" 245 20 300 20;	$EditGameForm.Controls.Add($textName)
 
 	$labelExe = Createlabel "Exe:" 170 60; $EditGameForm.Controls.Add($labelExe)
-	$textExe = CreateTextBox ($SelectedGame.exe_name + ".exe") 245 60 200 20; $textExe.ReadOnly = $true; $EditGameForm.Controls.Add($textExe)
+	$textExe = CreateTextBox "" 245 60 200 20; $textExe.ReadOnly = $true; $EditGameForm.Controls.Add($textExe)
 
 	$labelPlatform = Createlabel "Platform:" 170 100; $EditGameForm.Controls.Add($labelPlatform)
-	$textPlatform = CreateTextBox $SelectedGame.platform 245 100 200 20; $EditGameForm.Controls.Add($textPlatform)
+	$textPlatform = CreateTextBox "" 245 100 200 20; $EditGameForm.Controls.Add($textPlatform)
 
 	$labelPlayTime = Createlabel "PlayTime:" 170 140; $EditGameForm.Controls.Add($labelPlayTime)
-	$PlayTimeString = PlayTimeMinsToString $SelectedGame.play_time
-	$textPlayTime = CreateTextBox $PlayTimeString 245 140 200 20; $EditGameForm.Controls.Add($textPlayTime)
+	$textPlayTime = CreateTextBox "" 245 140 200 20; $EditGameForm.Controls.Add($textPlayTime)
+
+	$checkboxCompleted = New-Object Windows.Forms.CheckBox
+    $checkboxCompleted.Text = "Finished"
+    $checkboxCompleted.Top = 140
+    $checkboxCompleted.Left = 470
+	$EditGameForm.Controls.Add($checkboxCompleted)
+
+	$labelPictureBox = Createlabel "Game Icon" 57 165; $EditGameForm.Controls.Add($labelPictureBox)
+	$pictureBox = CreatePictureBox $ImagePath 15 20 140 140
+	$EditGameForm.Controls.Add($pictureBox)
+
+	$listBox.Add_SelectedIndexChanged({
+		$SelectedGame = GetGameDetails $listBox.SelectedItem
+		
+		$textName.Text = $SelectedGame.name
+		$textOriginalGameName.Text = $SelectedGame.name
+		$textExe.Text =  ($SelectedGame.exe_name + ".exe")
+		$textPlatform.Text = $SelectedGame.platform
+		$checkboxCompleted.Checked = ($SelectedGame.completed -eq 'TRUE')
+
+		$PlayTimeString = PlayTimeMinsToString $SelectedGame.play_time
+		$textPlayTime.Text = $PlayTimeString
+
+		$IconFileName = ToBase64 $SelectedGame.name
+		$ImagePath = "$env:TEMP\GG-{0}-$IconFileName.png" -f $(Get-Random)
+		$IconBitmap = BytesToBitmap $SelectedGame.icon
+		$IconBitmap.Save($ImagePath,[System.Drawing.Imaging.ImageFormat]::Png)
+		$ImagePath = ResizeImage -ImagePath $ImagePath -GameName $SelectedGame.name
+		$IconBitmap.Dispose()
+
+		$pictureBoxImagePath.Text = $ImagePath
+		$pictureBox.Image = [System.Drawing.Image]::FromFile($ImagePath)
+
+	})
+	$EditGameForm.Controls.Add($listBox)
 
 	$buttonSearchIcon = CreateButton "Search" 20 185
 	$buttonSearchIcon.Size = New-Object System.Drawing.Size(60, 23)
@@ -98,27 +149,6 @@ function RenderEditGameForm($SelectedGame) {
 	})
 	$EditGameForm.Controls.Add($buttonSearchIcon)
 
-	$checkboxCompleted = New-Object Windows.Forms.CheckBox
-    $checkboxCompleted.Text = "Finished"
-	if($SelectedGame.completed -eq 'TRUE') { $checkboxCompleted.Checked = $true	}
-    $checkboxCompleted.Top = 140
-    $checkboxCompleted.Left = 470
-	$EditGameForm.Controls.Add($checkboxCompleted)
-
-	$IconFileName = ToBase64 $SelectedGame.name
-	$ImagePath = "$env:TEMP\GG-{0}-$IconFileName.png" -f $(Get-Random)
-	$IconBitmap = BytesToBitmap $SelectedGame.icon
-	$IconBitmap.Save($ImagePath,[System.Drawing.Imaging.ImageFormat]::Png)
-	$ImagePath = ResizeImage -ImagePath $ImagePath -GameName $SelectedGame.name
-	$IconBitmap.Dispose()
-
-	$pictureBoxImagePath = CreateTextBox $ImagePath 579 254 1 1; $pictureBoxImagePath.hide(); $EditGameForm.Controls.Add($pictureBoxImagePath)
-	
-	$pictureBox = CreatePictureBox $ImagePath 15 20 140 140
-	$EditGameForm.Controls.Add($pictureBox)
-
-	$labelPictureBox = Createlabel "Game Icon" 57 165; $EditGameForm.Controls.Add($labelPictureBox)
-
 	$buttonUpdateIcon = CreateButton "Update" 90 185
 	$buttonUpdateIcon.Size = New-Object System.Drawing.Size(60, 23)
 	$buttonUpdateIcon.Add_Click({
@@ -126,7 +156,7 @@ function RenderEditGameForm($SelectedGame) {
 		$openFileDialog = OpenFileDialog "Select Game Icon File" 'Image (*.png, *.jpg, *.jpeg)|*.png;*.jpg;*.jpeg' $downloadsDirectoryPath
 		$result = $openFileDialog.ShowDialog()
 		if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
-			$ImagePath = ResizeImage $openFileDialog.FileName $SelectedGame.name
+			$ImagePath = ResizeImage $openFileDialog.FileName $textName.name
 			$pictureBoxImagePath.Text = $ImagePath
 			$pictureBox.Image = [System.Drawing.Image]::FromFile($ImagePath)
 		}
@@ -158,8 +188,8 @@ function RenderEditGameForm($SelectedGame) {
 
 	$buttonOK = CreateButton "OK" 245 185
 	$buttonOK.Add_Click({
-		if($textPlatform.Text -eq "" -Or $textPlayTime.Text -eq "")	{
-			ShowMessage "Platform, Playtime fields cannot be empty. Try Again." "OK" "Error"
+		if($textName.Text -eq "" -Or $textPlatform.Text -eq "" -Or $textPlayTime.Text -eq "")	{
+			ShowMessage "Name, Platform, Playtime fields cannot be empty. Try Again." "OK" "Error"
 			return
 		}
 
@@ -174,19 +204,19 @@ function RenderEditGameForm($SelectedGame) {
 
 		$GameExeName = $textExe.Text -replace ".exe"
 
-		$GameCompleteStatus = $SelectedGame.completed
-		if ($checkboxCompleted.Checked -eq $true) {	$GameCompleteStatus = 'TRUE' }
+		$GameCompleteStatus = $checkboxCompleted.Checked
 		
-		UpdateGameOnEdit -OriginalGameName $OriginalGameName -GameName $GameName -GameExeName $GameExeName -GameIconPath $pictureBoxImagePath.Text -GamePlayTime $PlayTimeInMin -GameCompleteStatus $GameCompleteStatus -GamePlatform $textPlatform.Text -GameLastPlayDate $GameLastPlayDate
+		UpdateGameOnEdit -OriginalGameName $textOriginalGameName.Text -GameName $GameName -GameExeName $GameExeName -GameIconPath $pictureBoxImagePath.Text -GamePlayTime $PlayTimeInMin -GameCompleteStatus $GameCompleteStatus -GamePlatform $textPlatform.Text
 
 		ShowMessage "Updated '$GameName' in Database." "OK" "Asterisk"
-
-		$EditGameForm.Close()
 	})
 	$EditGameForm.Controls.Add($buttonOK)
 
 	$buttonCancel = CreateButton "Cancel" 370 185; $buttonCancel.Add_Click({ $EditGameForm.Close() }); $EditGameForm.Controls.Add($buttonCancel)
-
+	
+	#Select the first game to populate the form before rendering for first time
+	$listBox.SelectedIndex = 0
+	
 	$EditGameForm.ShowDialog()
 	$EditGameForm.Dispose()
 }

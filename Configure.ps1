@@ -23,12 +23,8 @@ function EditGame {
         Log "Error: Games list empty. Returning"
         return
     }
-    
-    $SelectedGame = RenderListBoxForm "Select a Game" $GamesList
 
-    $SelectedGameDetails = GetGameDetails $SelectedGame
-    
-    RenderEditGameForm $SelectedGameDetails
+    RenderEditGameForm $GamesList
 }
 
 function EditPlatform {
