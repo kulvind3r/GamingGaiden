@@ -41,7 +41,7 @@ function SavePlatform(){
     $AddPlatformQuery = "INSERT INTO emulated_platforms (name, exe_name, core, rom_extensions)" +
                                     "VALUES (@PlatformName, @EmulatorExeList, @CoreName, @RomExtensions)"
 
-    Log "Adding $PlatformName in Database"
+    Log "Adding $PlatformName in database"
     RunDBQuery $AddPlatformQuery @{
         PlatformName = $PlatformName.Trim()
         EmulatorExeList = $EmulatorExeList.Trim()
@@ -125,22 +125,37 @@ function UpdateGameOnEdit() {
  
 function  UpdatePlatformOnEdit() {
     param(
+        [string]$OriginalPlatformName,
         [string]$PlatformName,
         [string]$EmulatorExeList,
 		[string]$EmulatorCore,
 		[string]$PlatformRomExtensions
     )
 
-	$PlatformNamePattern = SQLEscapedMatchPattern($PlatformName.Trim())
+	$PlatformNamePattern = SQLEscapedMatchPattern($OriginalPlatformName.Trim())
 
-    $UpdatePlatformQuery = "UPDATE emulated_platforms set exe_name = @EmulatorExeList, core = @EmulatorCore, rom_extensions = @PlatformRomExtensions WHERE name LIKE '{0}'" -f $PlatformNamePattern
+    if ( $OriginalPlatformName -eq $PlatformName) {
 
-    Log "Editing $PlatformName in database"
-	RunDBQuery $UpdatePlatformQuery @{
-        EmulatorExeList = $EmulatorExeList
-		EmulatorCore = $EmulatorCore
-        PlatformRomExtensions = $PlatformRomExtensions.Trim()
-	}
+        $UpdatePlatformQuery = "UPDATE emulated_platforms set exe_name = @EmulatorExeList, core = @EmulatorCore, rom_extensions = @PlatformRomExtensions WHERE name LIKE '{0}'" -f $PlatformNamePattern
+
+        Log "Editing $PlatformName in database"
+        RunDBQuery $UpdatePlatformQuery @{
+            EmulatorExeList = $EmulatorExeList
+            EmulatorCore = $EmulatorCore
+            PlatformRomExtensions = $PlatformRomExtensions.Trim()
+        }
+    } else {
+        Log "User changed platform's name from $OriginalPlatformName to $PlatformName. Need to delete the platform and add it again"
+        Log "All games mapped to $OriginalPlatformName will be updated to platform $PlatformName"
+
+        RemovePlatform($OriginalPlatformName)
+
+        SavePlatform -PlatformName $PlatformName -EmulatorExeList $EmulatorExeList -CoreName $EmulatorCore -RomExtensions $PlatformRomExtensions
+
+        $UpdateGamesPlatformQuery = "UPDATE games SET platform = @PlatformName WHERE platform LIKE '{0}'" -f $PlatformNamePattern
+
+        RunDBQuery $UpdateGamesPlatformQuery @{ PlatformName = $PlatformName }
+    }
 }
 
 function RemoveGame($GameName) {

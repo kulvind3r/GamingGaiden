@@ -36,12 +36,8 @@ function EditPlatform {
         Log "Error: Platform list empty. Returning"
         return
     }
-
-    $SelectedPlatform = RenderListBoxForm "Select a Platform" $PlatformsList
-
-    $SelectedPlatformDetails = GetPlatformDetails $SelectedPlatform
     
-    RenderEditPlatformForm $SelectedPlatformDetails
+    RenderEditPlatformForm $PlatformsList
 }
 
 try {

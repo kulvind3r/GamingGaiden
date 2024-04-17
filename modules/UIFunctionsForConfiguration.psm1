@@ -14,57 +14,6 @@ function FilterListBox {
     }
 }
 
-function RenderListBoxForm($Prompt, $List) {
-
-	$ListBoxForm = CreateForm "Gaming Gaiden" 300 400 ".\icons\running.ico"
-
-	$okButton = CreateButton "OK" 60 320
-	$okButton.DialogResult = [System.Windows.Forms.DialogResult]::OK
-	$ListBoxForm.AcceptButton = $okButton
-	$ListBoxForm.Controls.Add($okButton)
-
-	$cancelButton = CreateButton "Cancel" 150 320
-	$cancelButton.DialogResult = [System.Windows.Forms.DialogResult]::Cancel
-	$ListBoxForm.CancelButton = $cancelButton
-	$ListBoxForm.Controls.Add($cancelButton)
-
-	$label = Createlabel $Prompt 10 60;	$label.Size = New-Object System.Drawing.Size(280,20); $ListBoxForm.Controls.Add($label)
-
-	$listBox = New-Object System.Windows.Forms.ListBox
-	$listBox.Location = New-Object System.Drawing.Point(10,80)
-	$listBox.Size = New-Object System.Drawing.Size(265,20)
-	$listBox.Height = 230
-
-	$labelSearch = Createlabel "Search:" 10 20;	$ListBoxForm.Controls.Add($labelSearch)
-
-	$textSearch = CreateTextBox "" 70 20 200 20; $ListBoxForm.Controls.Add($textSearch)
-
-	$textSearch.Add_TextChanged({
-		FilterListBox -filterText $textSearch.Text -listBox $listBox -originalItems $List
-	})
-
-	[void] $listBox.Items.AddRange($List)
-
-	$ListBoxForm.Controls.Add($listBox)
-
-	$result = $ListBoxForm.ShowDialog()
-
-	if ( -Not ($result -eq [System.Windows.Forms.DialogResult]::OK)) {
-		Log "Error: Operation cancelled or closed abruptly. Returning";
-        exit 1
-	}
-	
-	if ($null -eq $listBox.SelectedItem) {
-		ShowMessage "You must select an item to proceed. Try Again." "OK" "Error"
-		Log "Error: No item selected in list operation. Returning";
-		exit 1
-	}
-
-	$ListBoxForm.Dispose()
-	
-	return $listBox.SelectedItem
-}
-
 function RenderEditGameForm($GamesList) {
 
 	$EditGameForm = CreateForm "Gaming Gaiden: Edit Game" 880 265 ".\icons\running.ico"
@@ -209,6 +158,10 @@ function RenderEditGameForm($GamesList) {
 		UpdateGameOnEdit -OriginalGameName $textOriginalGameName.Text -GameName $GameName -GameExeName $GameExeName -GameIconPath $pictureBoxImagePath.Text -GamePlayTime $PlayTimeInMin -GameCompleteStatus $GameCompleteStatus -GamePlatform $textPlatform.Text
 
 		ShowMessage "Updated '$GameName' in Database." "OK" "Asterisk"
+
+		$GamesList = (RunDBQuery "SELECT name FROM games").name
+		$listBox.Items.Clear(); $listBox.Items.AddRange($GamesList); 
+		$listBox.SelectedIndex = $listBox.FindString($GameName)
 	})
 	$EditGameForm.Controls.Add($buttonOK)
 
@@ -221,20 +174,86 @@ function RenderEditGameForm($GamesList) {
 	$EditGameForm.Dispose()
 }
 
-function RenderEditPlatformForm($SelectedPlatform) {
+function RenderEditPlatformForm($PlatformsList) {
 
-	$EditPlatform =	CreateForm "Gaming Gaiden: Edit Platform" 405  325 ".\icons\running.ico"
+	$EditPlatformForm =	CreateForm "Gaming Gaiden: Edit Platform" 655  330 ".\icons\running.ico"
 
-	$labelName = Createlabel "Platorm:" 10 20;	$EditPlatform.Controls.Add($labelName)
-	$textName = CreateTextBox $SelectedPlatform.name 85 20 200 20; $textName.ReadOnly = $true; $EditPlatform.Controls.Add($textName)
+	# Hidden fields to save non user editable values
+	$textOriginalPlatformName = CreateTextBox "" 654 329 1 1; $textOriginalPlatformName.hide(); $EditPlatformForm.Controls.Add($textOriginalPlatformName)
+	# Hidden fields end
 
-	$labelExe = Createlabel "Emulator`nExe List:" 10 79; $EditPlatform.Controls.Add($labelExe)
-	$exeList = ($SelectedPlatform.exe_name -replace "," , ".exe,") + ".exe"
-	$textExe = CreateTextBox ($exeList) 85 82 200 20; $textExe.ReadOnly = $true;$EditPlatform.Controls.Add($textExe)
+	$listBox = New-Object System.Windows.Forms.ListBox
+	$listBox.Location = New-Object System.Drawing.Point(400,65)
+	$listBox.Size = New-Object System.Drawing.Size(225,20)
+	$listBox.Height = 212
+	[void] $listBox.Items.AddRange($PlatformsList)
 
-	$labelRomExt = Createlabel "Rom Extns:" 10 146;	$EditPlatform.Controls.Add($labelRomExt)
-	$textRomExt = CreateTextBox $SelectedPlatform.rom_extensions 85 144 200 20;	$EditPlatform.Controls.Add($textRomExt)
+	$labelSearch = Createlabel "Search:" 400 20; $EditPlatformForm.Controls.Add($labelSearch)
+	$textSearch = CreateTextBox "" 465 20 160 20; $EditPlatformForm.Controls.Add($textSearch)
+
+	$textSearch.Add_TextChanged({
+		FilterListBox -filterText $textSearch.Text -listBox $listBox -originalItems $PlatformsList
+	})
 	
+	$labelName = Createlabel "Platorm:" 10 20; $EditPlatformForm.Controls.Add($labelName)
+	$textName = CreateTextBox "" 75 20 200 20; $EditPlatformForm.Controls.Add($textName)
+
+	$labelExe = Createlabel "Emulator`nExe List:" 10 79; $EditPlatformForm.Controls.Add($labelExe)
+	$textExe = CreateTextBox "" 75 82 200 20; $textExe.ReadOnly = $true;$EditPlatformForm.Controls.Add($textExe)
+
+	$labelRomExt = Createlabel "Rom Extns:" 10 146;	$EditPlatformForm.Controls.Add($labelRomExt)
+	$textRomExt = CreateTextBox "" 75 144 200 20;	$EditPlatformForm.Controls.Add($textRomExt)
+
+	$labelCores = Createlabel "Cores:" 10 208; $EditPlatformForm.Controls.Add($labelCores)
+	$textCore = CreateTextBox "" 75 206 200 20;	$textCore.ReadOnly = $true;	$EditPlatformForm.Controls.Add($textCore)
+
+	$listBox.Add_SelectedIndexChanged({
+		$SelectedPlatform = GetPlatformDetails $listBox.SelectedItem
+
+		$textName.Text = $SelectedPlatform.name
+		$textOriginalPlatformName.Text = $SelectedPlatform.name
+		$textRomExt.Text = $SelectedPlatform.rom_extensions
+
+		$exeList = ($SelectedPlatform.exe_name -replace "," , ".exe,") + ".exe"
+		$textExe.Text = $exeList
+
+		$HasCore = -Not ($SelectedPlatform.core -eq "")
+
+		if ($HasCore) {
+			$textCore.Text = $SelectedPlatform.core
+
+			$buttonUpdateCore.show()
+			$labelCores.show()
+			$textCore.show()
+
+			$EditPlatformForm.Size = New-Object System.Drawing.Size(655, 330)
+			$listBox.Height = 212
+			$buttonOK.Location = New-Object System.Drawing.Point(85, 254)
+			$buttonCancel.Location = New-Object System.Drawing.Point(210, 254)
+		}
+		else {
+			$buttonUpdateCore.hide()
+			$labelCores.hide()
+			$textCore.Text = ""; $textCore.hide()
+
+			$EditPlatformForm.Size = New-Object System.Drawing.Size(655, 277)
+			$listBox.Height = 166
+			$buttonOK.Location = New-Object System.Drawing.Point(85, 201)
+			$buttonCancel.Location = New-Object System.Drawing.Point(210, 201)
+		}
+	})
+	$EditPlatformForm.Controls.Add($listBox)
+	
+	$buttonUpdateCore = CreateButton "Edit Core" 300 204
+	$buttonUpdateCore.Add_Click({
+		$openFileDialog = OpenFileDialog "Select Retroarch Core" 'DLL (*.dll)|*.dll'
+		$result = $openFileDialog.ShowDialog()
+		if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
+			$textCore.Text = (Get-Item $openFileDialog.FileName).Name
+		}
+	})
+	$EditPlatformForm.Controls.Add($buttonUpdateCore)
+
 	$buttonUpdateExe = CreateButton "Add Exe" 300 65
 	$buttonUpdateExe.Add_Click({
 		$openFileDialog = OpenFileDialog "Select Executable" 'Executable (*.exe)|*.exe'
@@ -246,35 +265,17 @@ function RenderEditPlatformForm($SelectedPlatform) {
 				$textExe.Text = $selectedExe
 			}
 			else {
-				
 				$textExe.Text = ("$existingExes,$selectedExe" -split ',' | Select-Object -Unique ) -join ','
 			}
 		}
 	})
-	$EditPlatform.Controls.Add($buttonUpdateExe)
+	$EditPlatformForm.Controls.Add($buttonUpdateExe)
 
 	$buttonClearExe = CreateButton "Clear List" 300 95
 	$buttonClearExe.Add_Click({
 		$textExe.Text = ""
 	})
-	$EditPlatform.Controls.Add($buttonClearExe)
-
-	$HasCore = $false
-	if (-Not $SelectedPlatform.core -eq "") {
-		$HasCore = $true
-		$labelCores = Createlabel "Cores:" 10 208; $EditPlatform.Controls.Add($labelCores)
-		$textCore = CreateTextBox $SelectedPlatform.core 85 206 200 20;	$textCore.ReadOnly = $true;	$EditPlatform.Controls.Add($textCore)
-
-		$buttonUpdateCore = CreateButton "Edit Core" 300 204
-		$buttonUpdateCore.Add_Click({
-			$openFileDialog = OpenFileDialog "Select Retroarch Core" 'DLL (*.dll)|*.dll'
-			$result = $openFileDialog.ShowDialog()
-			if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
-				$textCore.Text = (Get-Item $openFileDialog.FileName).Name
-			}
-		})
-		$EditPlatform.Controls.Add($buttonUpdateCore)
-	}
+	$EditPlatformForm.Controls.Add($buttonClearExe)
 
 	$buttonRemove = CreateButton "Delete" 300 18
 	$buttonRemove.Add_Click({
@@ -284,16 +285,15 @@ function RenderEditPlatformForm($SelectedPlatform) {
 			RemovePlatform $PlatformName
 			ShowMessage "Removed '$PlatformName' from Database." "OK" "Asterisk"
 			Log "Removed '$PlatformName' from Database."
-			$EditPlatform.Close()
+			$EditPlatformForm.Close()
 		}
 	})
-	$EditPlatform.Controls.Add($buttonRemove)
+	$EditPlatformForm.Controls.Add($buttonRemove)
 
-	$buttonOK = CreateButton "OK" 85 250
+	$buttonOK = CreateButton "OK" 85 254
 	$buttonOK.Add_Click({
-		if ($textRomExt.Text -eq "") {
-			ShowMessage "Extensions field cannot be empty.`r`nResetting Extensions. Try again." "OK" "Error"
-			$textRomExt.Text = $SelectedPlatform.rom_extensions
+		if ($textRomExt.Text -eq "" -Or $textExe.Text -eq "") {
+			ShowMessage "Exe List or Rom Extensions field cannot be empty.`r`nTry again." "OK" "Error"
 			return
 		}
 
@@ -305,26 +305,24 @@ function RenderEditPlatformForm($SelectedPlatform) {
 
 		$PlatformName = $textName.Text
 		$EmulatorExeList = $textExe.Text -replace ".exe"
-		$EmulatorCore = ""
-		if (-Not $SelectedPlatform.core -eq "") { $EmulatorCore = $textCore.Text }
 		
-		UpdatePlatformOnEdit -PlatformName $PlatformName -EmulatorExeList $EmulatorExeList -EmulatorCore $EmulatorCore -PlatformRomExtensions $PlatformRomExtensions
+		UpdatePlatformOnEdit -OriginalPlatformName $textOriginalPlatformName.Text -PlatformName $PlatformName -EmulatorExeList $EmulatorExeList -EmulatorCore $textCore.Text -PlatformRomExtensions $PlatformRomExtensions
 
 		ShowMessage "Updated '$PlatformName' in Database." "OK" "Asterisk"
 
-		$EditPlatform.Close()
+		$PlatformsList = (RunDBQuery "SELECT name FROM emulated_platforms").name
+		$listBox.Items.Clear(); $listBox.Items.AddRange($PlatformsList); 
+		$listBox.SelectedIndex = $listBox.FindString($PlatformName)
 	})
-	$EditPlatform.Controls.Add($buttonOK)
+	$EditPlatformForm.Controls.Add($buttonOK)
 
-	$buttonCancel = CreateButton "Cancel" 210 250;	$buttonCancel.Add_Click({ $EditPlatform.Close() });	$EditPlatform.Controls.Add($buttonCancel)
+	$buttonCancel = CreateButton "Cancel" 210 254;	$buttonCancel.Add_Click({ $EditPlatformForm.Close() });	$EditPlatformForm.Controls.Add($buttonCancel)
 
-	if (-not $HasCore) {
-		$EditPlatform.Size = New-Object System.Drawing.Size(405, 275)
-		$buttonOK.Location = New-Object System.Drawing.Point(85, 200)
-		$buttonCancel.Location = New-Object System.Drawing.Point(210, 200)
-	}
-	$EditPlatform.ShowDialog()
-	$EditPlatform.Dispose()
+	#Select the first platform to populate the form before rendering for first time
+	$listBox.SelectedIndex = 0
+
+	$EditPlatformForm.ShowDialog()
+	$EditPlatformForm.Dispose()
 }
 
 function RenderAddGameForm() {
