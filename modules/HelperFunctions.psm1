@@ -81,9 +81,9 @@ function CreateNotifyIcon($ToolTip, $IconPath) {
 	return $NotifyIcon
 }
 
-function OpenFileDialog($Title, $Filters) {
+function OpenFileDialog($Title, $Filters, $DirectoryPath = [Environment]::GetFolderPath('Desktop')) {
 	$FileBrowser = New-Object System.Windows.Forms.OpenFileDialog -Property @{ 
-        InitialDirectory = [Environment]::GetFolderPath('Desktop')
+        InitialDirectory = $DirectoryPath
         Filter = $Filters
         Title = $Title
     }
