@@ -122,7 +122,7 @@ function RenderEditGameForm($SelectedGame) {
 	$buttonUpdateIcon = CreateButton "Update" 90 185
 	$buttonUpdateIcon.Size = New-Object System.Drawing.Size(60, 23)
 	$buttonUpdateIcon.Add_Click({
-		$openFileDialog = OpenFileDialog "Select Game Icon File" 'PNG (*.png)|*.png|JPEG (*.jpg)|*.jpg'
+		$openFileDialog = OpenFileDialog "Select Game Icon File" 'Image (*.png, *.jpg, *.jpeg)|*.png;*.jpg;*.jpeg'
 		$result = $openFileDialog.ShowDialog()
 		if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
 			$ImagePath = ResizeImage $openFileDialog.FileName $SelectedGame.name
@@ -336,7 +336,7 @@ function RenderAddGameForm() {
 	$buttonUpdateIcon = CreateButton "Update" 90 185
 	$buttonUpdateIcon.Size = New-Object System.Drawing.Size(60, 23)
 	$buttonUpdateIcon.Add_Click({
-		$openFileDialog = OpenFileDialog "Select Game Icon File" 'PNG (*.png)|*.png|JPEG (*.jpg)|*.jpg'
+		$openFileDialog = OpenFileDialog "Select Game Icon File" 'Image (*.png, *.jpg, *.jpeg)|*.png;*.jpg;*.jpeg'
 		$result = $openFileDialog.ShowDialog()
 		if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
 			$ImagePath = ResizeImage $openFileDialog.FileName "GG-NEW_GAME.png"
