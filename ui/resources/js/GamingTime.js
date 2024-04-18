@@ -99,7 +99,11 @@ function updateChart(selectedYear, selectedMonth, yearlySummaryEnabled = false) 
                 }
             },
             plugins: {
+                tooltip: {
+                    enabled: false
+                },
                 legend: {
+                    onClick: null,
                     labels: {
                         font: {
                             size: 15,

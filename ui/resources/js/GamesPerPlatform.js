@@ -26,6 +26,7 @@ function updateChart(gameCount) {
                     enabled: false
                 },
                 legend: {
+                    onClick: null,
                     position: 'bottom',
                     labels: {
                         boxWidth: 20,
