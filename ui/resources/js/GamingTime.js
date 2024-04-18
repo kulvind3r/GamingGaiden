@@ -81,10 +81,11 @@ function updateChart(selectedYear, selectedMonth, yearlySummaryEnabled = false) 
     
     chart = new Chart(ctx, {
         type: 'bar',
+        plugins: [ChartDataLabels],
         data: {
             labels: labels,
             datasets: [{
-                label: 'Playtime (hours)',
+                label: 'Playtime (Hours)',
                 data: datasetData,
                 borderWidth: 2
             }]
@@ -96,6 +97,31 @@ function updateChart(selectedYear, selectedMonth, yearlySummaryEnabled = false) 
                     max: ylimit,
                     callback: (value) => value + ' hrs'
                 }
+            },
+            plugins: {
+                legend: {
+                    labels: {
+                        font: {
+                            size: 15,
+                            family: 'monospace'
+                        }
+                    }
+                },
+                datalabels: {
+                    anchor: "end",
+                    align: "top",
+                    formatter: function(value) {
+                        var formattedValue = ""
+                        if(value != 0) {
+                            formattedValue = value
+                        }
+                        return formattedValue;
+                    },
+                    color: '#000000',
+                    font: {
+                        family: 'monospace'
+                    }
+                },
             },
             responsive: true,
             maintainAspectRatio: false
