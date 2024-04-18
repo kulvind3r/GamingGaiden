@@ -3,7 +3,7 @@ body {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    font-family: "JetBrains Mono",monospace;
+    font-family: monospace;
 }
 
 #chart-container {
@@ -24,13 +24,13 @@ body {
     margin-top: 20px;
     width: 500px;
     justify-content: space-around;
-    font-family: "JetBrains Mono",monospace;
+    font-family: monospace;
     font-size: 18px;
 }
 
 #warn-msg {
     color: red;
-    font-family: "JetBrains Mono",monospace;
+    font-family: monospace;
     font-size: 14px;
     margin-top: 0%;
     margin-bottom: 1%;
@@ -47,7 +47,7 @@ body {
   color: #36395A;
   cursor: pointer;
   display: inline-flex;
-  font-family: "JetBrains Mono",monospace;
+  font-family: monospace;
   height: 38px;
   justify-content: center;
   line-height: 1;

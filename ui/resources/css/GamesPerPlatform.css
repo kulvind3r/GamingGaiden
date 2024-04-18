@@ -3,7 +3,7 @@ body {
     flex-direction: column;
     align-items: center;
     text-align: center;
-    font-family: "JetBrains Mono",monospace;
+    font-family: monospace;
 }
 
 #chart-container {
