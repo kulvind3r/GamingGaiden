@@ -24,8 +24,8 @@
     </script>
 </head>
 <body>
+    <h1>Sessions Vs Playtime</h1>
     <div id="chart-container">
-        <h1>Sessions Vs Playtime</h1>
         <canvas id="session-vs-playtime-chart"></canvas>
     </div>
     <div>

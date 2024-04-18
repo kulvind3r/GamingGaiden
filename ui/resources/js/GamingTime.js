@@ -95,7 +95,28 @@ function updateChart(selectedYear, selectedMonth, yearlySummaryEnabled = false) 
                 y: {
                     beginAtZero: true,
                     max: ylimit,
-                    callback: (value) => value + ' hrs'
+                    title: {
+                        display: true,
+                        padding: 15,
+                        color: '#000',
+                        text: "PlayTime (Hours)",
+                        font: {
+                            size: 18,
+                            family: 'monospace'
+                        }
+                    }
+                },
+                x: {
+                    title: {
+                        display: true,
+                        padding: 15,
+                        color: '#000',
+                        text: "Day of Month",
+                        font: {
+                            size: 18,
+                            family: 'monospace'
+                        }
+                    }
                 }
             },
             plugins: {
@@ -103,13 +124,7 @@ function updateChart(selectedYear, selectedMonth, yearlySummaryEnabled = false) 
                     enabled: false
                 },
                 legend: {
-                    onClick: null,
-                    labels: {
-                        font: {
-                            size: 15,
-                            family: 'monospace'
-                        }
-                    }
+                    display: false,
                 },
                 datalabels: {
                     anchor: "end",
@@ -128,7 +143,7 @@ function updateChart(selectedYear, selectedMonth, yearlySummaryEnabled = false) 
                 },
             },
             responsive: true,
-            maintainAspectRatio: false
+            maintainAspectRatio: true
         }
     });
 }

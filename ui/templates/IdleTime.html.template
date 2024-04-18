@@ -24,11 +24,11 @@
     </script>
 </head>
 <body>
+    <h1>Time you left games Idle</h1>
     <div id="chart-container">
-        <h1>Time you left games Idle</h1>
         <canvas id="idle-time-chart"></canvas>
-        <div id="total-label">Total Time Wasted: _TOTALIDLETIME_</div>
     </div>
+    <div id="total-label">Total Time Wasted: _TOTALIDLETIME_</div>
     <div>
         _GAMESIDLETIMETABLE_
     </div>

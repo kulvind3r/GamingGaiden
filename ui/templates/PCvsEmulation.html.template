@@ -24,8 +24,8 @@
     </script>
 </head>
 <body>
+    <h1>PC Vs Emulation PlayTime</h1>
     <div id="chart-container">
-        <h1>PC Vs Emulation PlayTime</h1>
         <canvas id="pc-vs-emulation-chart"></canvas>
     </div>
     <div>

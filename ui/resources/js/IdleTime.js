@@ -42,6 +42,16 @@ function updateChart() {
                 x: {
                     ticks: {
                         stepSize: 5
+                    },
+                    title: {
+                        display: true,
+                        padding: 15,
+                        color: '#000',
+                        text: "Playtime (Hours)",
+                        font: {
+                            size: 18,
+                            family: 'monospace'
+                        }
                     }
                 }
             },
@@ -56,13 +66,7 @@ function updateChart() {
                     enabled: false
                 },
                 legend: {
-                    onClick: null,
-                    labels: {
-                        font: {
-                            size: 15,
-                            family: 'monospace'
-                        }
-                    }
+                    display: false
                 },
                 datalabels: {
                     anchor: "end",

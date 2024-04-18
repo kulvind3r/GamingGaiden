@@ -12,6 +12,7 @@ body {
     align-items: center;
     width: 100%;
     max-width: 1600px;
+    margin-right: 145px;
 }
 
 #total-label {
@@ -20,6 +21,6 @@ body {
     margin-bottom: 20px;
     width: 300px;
     justify-content: space-around;
-    font-family: "JetBrains Mono",monospace;
+    font-family: monospace;
     font-size: 18px;
 }
