@@ -77,7 +77,7 @@ function updateChart(gameCount) {
                     font: {
                         family: 'monospace'
                     }
-                },
+                }
             },
             maintainAspectRatio: true
         }
