@@ -54,6 +54,7 @@ function updateChart() {
             plugins: {
                 tooltip: {
                     enabled: true,
+                    mode: "nearest",
                     callbacks: {
                         label: function(context) {
                             label = context.parsed.y + ' hrs over ' + context.parsed.x + ' sessions'
