@@ -191,10 +191,12 @@ try {
 	$GamingTimeMenuItem = CreateMenuItem "Time Spent Gaming"
 	$MostPlayedMenuItem = CreateMenuItem "Most Played"
 	$IdleTimeMenuItem = CreateMenuItem "Idle Time"
+	$PCvsEmulationMenuItem = CreateMenuItem "PC vs Emulation Time"
 	$GamesPerPlatformMenuItem = CreateMenuItem "Games Per Platform"
 	$StatsSubMenuItem.DropDownItems.Add($GamingTimeMenuItem)
 	$StatsSubMenuItem.DropDownItems.Add($MostPlayedMenuItem)
 	$StatsSubMenuItem.DropDownItems.Add($IdleTimeMenuItem)
+	$StatsSubMenuItem.DropDownItems.Add($PCvsEmulationMenuItem)
 	$StatsSubMenuItem.DropDownItems.Add($GamesPerPlatformMenuItem)
 
 	$AppContextMenu = New-Object System.Windows.Forms.ContextMenuStrip
@@ -241,6 +243,13 @@ try {
 		$IdleTimeCheckResult = RenderIdleTime
 		if ($IdleTimeCheckResult -ne $false) {
 			Invoke-Item ".\ui\IdleTime.html"
+		}
+	})
+
+	$PCvsEmulationMenuItem.Add_Click({
+		$PCvsEmulationCheckResult = RenderPCvsEmulation
+		if ($PCvsEmulationCheckResult -ne $false) {
+			Invoke-Item ".\ui\PCvsEmulation.html"
 		}
 	})
 

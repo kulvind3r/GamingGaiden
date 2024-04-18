@@ -134,8 +134,8 @@ function RenderIdleTime() {
         return $false
     }
 
-	$TotalIdleTimeResult = RunDBQuery $GetTotalIdleTimeQuery
-	$TotalIdleTimeString = PlayTimeMinsToString $TotalIdleTimeResult.total_idle_time
+	$TotalIdleTime = (RunDBQuery $GetTotalIdleTimeQuery).total_idle_time
+	$TotalIdleTimeString = PlayTimeMinsToString $TotalIdleTime
 
 	$Table = $GamesIdleTimeData | ConvertTo-Html -Fragment
 	
@@ -165,6 +165,28 @@ function RenderGamesPerPlatform() {
 
 	[System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $WorkingDirectory\ui\GamesPerPlatform.html
 
+}
+
+function RenderPCvsEmulation() {
+	Log "Rendering PC vs Emulation"
+
+	$WorkingDirectory = (Get-Location).Path
+
+	$GetPCvsEmulationTimeQuery = "SELECT  platform, SUM(play_time) as play_time FROM games WHERE platform LIKE 'PC' UNION SELECT 'Emulation', SUM(play_time) as play_time FROM games WHERE platform NOT LIKE 'PC'"
+
+	$PCvsEmulationTime = RunDBQuery $GetPCvsEmulationTimeQuery
+	
+	if ($PCvsEmulationTime.Length -eq 0) {
+        ShowMessage "No Games found in DB. Please add some games first." "OK" "Error"
+        Log "Error: Games list empty. Returning"
+        return $false
+    }
+
+	$Table = $PCvsEmulationTime | ConvertTo-Html -Fragment
+	
+	$report = (Get-Content $WorkingDirectory\ui\templates\PCvsEmulation.html.template) -replace "_PCVSEMULATIONTABLE_", $Table
+
+	[System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $WorkingDirectory\ui\PCvsEmulation.html
 }
 
 function RenderAboutDialog() {
