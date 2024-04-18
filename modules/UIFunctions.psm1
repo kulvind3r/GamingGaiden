@@ -119,6 +119,27 @@ function RenderMostPlayed() {
 	[System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $WorkingDirectory\ui\MostPlayed.html
 }
 
+function RenderSessionVsPlayTime() {
+	Log "Rendering Sessions Vs PlayTime"
+
+	$WorkingDirectory = (Get-Location).Path
+
+	$GetGamesPlayTimeVsSessionDataQuery = "SELECT name, play_time, session_count FROM games"
+
+	$GamesPlayTimeVsSessionData = RunDBQuery $GetGamesPlayTimeVsSessionDataQuery
+	if ($GamesPlayTimeVsSessionData.Length -eq 0) {
+        ShowMessage "No Games found in DB. Please add some games first." "OK" "Error"
+        Log "Error: Games list empty. Returning"
+        return $false
+    }
+
+	$Table = $GamesPlayTimeVsSessionData | ConvertTo-Html -Fragment
+	
+	$report = (Get-Content $WorkingDirectory\ui\templates\SessionVsPlaytime.html.template) -replace "_SESSIONVSPLAYTIMETABLE_", $Table
+
+	[System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $WorkingDirectory\ui\SessionVsPlaytime.html
+}
+
 function RenderIdleTime() {
 	Log "Rendering Idle time"
 

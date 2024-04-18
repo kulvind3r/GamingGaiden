@@ -3,7 +3,7 @@ let chart;
 
 $('table')[0].setAttribute('id','data-table');
 
-function updateChart(gameCount) {
+function updateChart() {
 
     const ctx = document.getElementById('games-per-platform-chart').getContext('2d');
     
