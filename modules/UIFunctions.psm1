@@ -119,6 +119,32 @@ function RenderMostPlayed() {
 	[System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $WorkingDirectory\ui\MostPlayed.html
 }
 
+function RenderIdleTime() {
+	Log "Rendering Idle time"
+
+	$WorkingDirectory = (Get-Location).Path
+
+	$GetGamesIdleTimeDataQuery = "SELECT name, idle_time as time FROM games WHERE idle_time > 0 ORDER BY idle_time DESC"
+	$GetTotalIdleTimeQuery = "SELECT SUM(idle_time) as total_idle_time FROM games"
+
+	$GamesIdleTimeData = RunDBQuery $GetGamesIdleTimeDataQuery
+	if ($GamesIdleTimeData.Length -eq 0) {
+        ShowMessage "No Idle Games found in DB." "OK" "Error"
+        Log "Error: Idle Games list empty. Returning"
+        return $false
+    }
+
+	$TotalIdleTimeResult = RunDBQuery $GetTotalIdleTimeQuery
+	$TotalIdleTimeString = PlayTimeMinsToString $TotalIdleTimeResult.total_idle_time
+
+	$Table = $GamesIdleTimeData | ConvertTo-Html -Fragment
+	
+	$report = (Get-Content $WorkingDirectory\ui\templates\IdleTime.html.template) -replace "_GAMESIDLETIMETABLE_", $Table
+	$report = $report -replace "_TOTALIDLETIME_", $TotalIdleTimeString
+
+	[System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $WorkingDirectory\ui\IdleTime.html
+}
+
 function RenderGamesPerPlatform() {
 	Log "Rendering games per platform"
 

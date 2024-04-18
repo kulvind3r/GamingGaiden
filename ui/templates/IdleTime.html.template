@@ -1,0 +1,36 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Gaming Gaiden</title>
+    <link rel="icon" type="image/x-icon" href="./resources/images/favicon.ico">
+    <link rel="stylesheet" href="./resources/css/IdleTime.css">
+    <script src="./resources/js/jquery-3.7.1.min.js"></script>
+    <script src="./resources/js/chart.js"></script>
+    <script>
+        $(document).ready(
+          function() {
+            $('table').each(
+              function(){
+                var tHead = $(this).find('tr:first').html();
+                $(this).find('colgroup').remove();
+                $(this).find('tr:first').remove();
+                $(this).find('tbody').before('<thead>' + tHead + '</thead>');
+              }
+            );
+            $('table')[0].style.display = 'none';
+          }
+        );
+    </script>
+</head>
+<body>
+    <div id="chart-container">
+        <h1>Time you left games Idle</h1>
+        <canvas id="idle-time-chart"></canvas>
+        <div id="total-label">Total Idle For: _TOTALIDLETIME_</div>
+    </div>
+    <div>
+        _GAMESIDLETIMETABLE_
+    </div>
+    <script src="./resources/js/IdleTime.js"></script>
+</body>
+</html>

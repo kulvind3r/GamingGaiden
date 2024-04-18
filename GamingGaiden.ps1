@@ -190,9 +190,11 @@ try {
 	$StatsSubMenuItem = CreateMenuItem "Statistics"
 	$GamingTimeMenuItem = CreateMenuItem "Time Spent Gaming"
 	$MostPlayedMenuItem = CreateMenuItem "Most Played"
+	$IdleTimeMenuItem = CreateMenuItem "Idle Time"
 	$GamesPerPlatformMenuItem = CreateMenuItem "Games Per Platform"
 	$StatsSubMenuItem.DropDownItems.Add($GamingTimeMenuItem)
 	$StatsSubMenuItem.DropDownItems.Add($MostPlayedMenuItem)
+	$StatsSubMenuItem.DropDownItems.Add($IdleTimeMenuItem)
 	$StatsSubMenuItem.DropDownItems.Add($GamesPerPlatformMenuItem)
 
 	$AppContextMenu = New-Object System.Windows.Forms.ContextMenuStrip
@@ -232,6 +234,13 @@ try {
 		$MostPlayedCheckResult = RenderMostPlayed
 		if ($MostPlayedCheckResult -ne $false) {
 			Invoke-Item ".\ui\MostPlayed.html"
+		}
+	})
+
+	$IdleTimeMenuItem.Add_Click({
+		$IdleTimeCheckResult = RenderIdleTime
+		if ($IdleTimeCheckResult -ne $false) {
+			Invoke-Item ".\ui\IdleTime.html"
 		}
 	})
 
