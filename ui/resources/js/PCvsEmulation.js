@@ -25,28 +25,28 @@ function updateChart(gameCount) {
                     enabled: false
                 },
                 legend: {
-                position: 'bottom',
-                labels: {
-                    boxWidth: 20,
-                    padding: 40,
+                    position: 'bottom',
+                    labels: {
+                        boxWidth: 20,
+                        padding: 40,
+                        font: {
+                            size: 18,
+                            weight: 'bold',
+                            family: 'monospace'
+                        }
+                    }   
+                },
+                datalabels: {
+                    formatter: function(value) {
+                        return value + ' Hrs';
+                    },
+                    color: '#000000',
                     font: {
                         size: 18,
                         weight: 'bold',
                         family: 'monospace'
                     }
                 }
-              },
-              datalabels: {
-                formatter: function(value) {
-                    return value + ' Hrs';
-                },
-                color: '#000000',
-                font: {
-                    size: 18,
-                    weight: 'bold',
-                    family: 'monospace'
-                }
-              }
             }
         }
     });
