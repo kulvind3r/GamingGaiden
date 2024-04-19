@@ -130,7 +130,6 @@ function RenderEditGameForm($GamesList) {
 			RemoveGame $GameName
 			ShowMessage "Removed '$GameName' from Database." "OK" "Asterisk"
 			Log "Removed '$GameName' from Database."
-			$EditGameForm.Close()
 		}
 	})
 	$EditGameForm.Controls.Add($buttonRemove)
@@ -285,7 +284,6 @@ function RenderEditPlatformForm($PlatformsList) {
 			RemovePlatform $PlatformName
 			ShowMessage "Removed '$PlatformName' from Database." "OK" "Asterisk"
 			Log "Removed '$PlatformName' from Database."
-			$EditPlatformForm.Close()
 		}
 	})
 	$EditPlatformForm.Controls.Add($buttonRemove)
