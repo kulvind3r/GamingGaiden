@@ -48,7 +48,7 @@ A simple windows system tray application written in powershell to track your gam
 - [HWiNFO Sensor](https://youtu.be/pFe80EzFog8)
 
 ## Vs Steam, Playnite etc.
-For purely tracking play time, Gaming Gaiden has much more features than the above launchers. Ease of use with Emulators is much higher. You don't need to add each emulated game individually. HWiNFO integration and lightweight background process that you can launch and forget are other important ones.
+For purely tracking play time, Gaming Gaiden has much more features than the above launchers. Ease of use with Emulators is much higher. You don't need to add each emulated game individually. It has HWiNFO integration and consumes very less resources.
 
 Biggest feature though are the stastics that it generates from your data. The launchers do time tracking at best as a side feature. Gaming Gaiden is designed to give you insights to your hobby. It's stastics feature will answer questions like 
 - *Are you really gaming for same hours as you used to? Is your beloved hobby still alive?*
@@ -56,7 +56,7 @@ Biggest feature though are the stastics that it generates from your data. The la
 - *Did you play enough games / enough hours since you bought that new PC to justify it's cost?*
 - *You setup such complex emulation setup, how many emulated games you actually played?*
 
-This application should add value to your gaming hobby by gathering data quietly in background and then making it super easy for you to draw conclusions and bring changes.
+Id adds value to your gaming hobby by gathering data quietly in background and then making it super easy for you to draw conclusions and bring changes.
 
 ## How to install
 1. Download ***GamingGaiden.zip*** from the [latest release](https://github.com/kulvind3r/GamingGaiden/releases/latest).
@@ -93,6 +93,3 @@ As a single dev, i have tested the application to best of my ability before maki
 I will try my best to fix bugs that are valid for the current set of features. If a bug report looks more like a new feature being requested instead of something broken in existing features. I may chose not to work on that. I believe the application is feature complete for what it is trying to do and i don't plan to add any additional features for most part.
 
 I would much rather actually play games than keep on developing this.
-
-## I have More Questions
-Check [FAQ](./readme-files/FAQ.md)
