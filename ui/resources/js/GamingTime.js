@@ -85,7 +85,6 @@ function updateChart(selectedYear, selectedMonth, yearlySummaryEnabled = false) 
         data: {
             labels: labels,
             datasets: [{
-                label: 'Playtime (Hours)',
                 data: datasetData,
                 borderWidth: 2
             }]
@@ -115,6 +114,15 @@ function updateChart(selectedYear, selectedMonth, yearlySummaryEnabled = false) 
                         font: {
                             size: 18,
                             family: 'monospace'
+                        }
+                    },
+                    ticks: {
+                        color: (tickObj) => {
+                            const date = new Date(selectedYear,selectedMonth,tickObj['tick']['label'])
+                            day = date.getDay()
+                            if (day === 0 || day === 6){
+                                return 'red';
+                            }
                         }
                     }
                 }
