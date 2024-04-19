@@ -42,7 +42,7 @@ function TimeTrackerLoop($DetectedExe) {
 		if ($IdleTime -ge 10)
 		{
 			# Entered idle Session
-			while( $IdleTime -ge 10)
+			while( $IdleTime -ge 5)
 			{
 				# Track idle Time for current Idle Session
 				$IdleSessions[$IdleSessionsCount] = $IdleTime
