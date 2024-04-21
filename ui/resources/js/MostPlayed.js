@@ -45,6 +45,19 @@ function updateChart(gameCount) {
                         autoSkip: false
                     }
                 },
+                // Alignment Hack: Add an identical y scale on right side, to center the graph on page.
+                // Then hide the right side scale by setting label color identical to background.
+                yRight: {
+					position: 'right',
+					grid: {
+						display: false
+					},
+					ticks: {
+						color: () => {
+                            return window.getComputedStyle(document.body ,null).getPropertyValue('background-color');
+                        }
+					}
+				},
                 x: {
                     ticks: {
                         stepSize: 10

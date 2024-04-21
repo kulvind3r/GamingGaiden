@@ -31,6 +31,30 @@ function updateChart() {
                         stepSize: 10
                     }
                 },
+                // Alignment Hack: Add an identical y scale on right side, to center the graph on page.
+                // Then hide the right side scale by setting ticks and title color identical to background.
+                yRight: {
+					position: 'right',
+					grid: {
+						display: false
+					},
+                    title: {
+                        display: true,
+                        text: "PlayTime (Hours)",
+                        font: {
+                            size: 18,
+                            family: 'monospace',
+                        },
+						color: () => {
+                            return window.getComputedStyle(document.body ,null).getPropertyValue('background-color');
+                        }
+                    },
+					ticks: {
+                        color: () => {
+                            return window.getComputedStyle(document.body ,null).getPropertyValue('background-color');
+                        }
+                    }
+				},
                 x: {
                     title: {
                         display: true,
