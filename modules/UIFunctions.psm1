@@ -124,7 +124,7 @@ function RenderSessionVsPlayTime() {
 
 	$WorkingDirectory = (Get-Location).Path
 
-	$GetGamesPlayTimeVsSessionDataQuery = "SELECT name, play_time, session_count FROM games"
+	$GetGamesPlayTimeVsSessionDataQuery = "SELECT name, play_time, session_count, completed FROM games"
 
 	$GamesPlayTimeVsSessionData = RunDBQuery $GetGamesPlayTimeVsSessionDataQuery
 	if ($GamesPlayTimeVsSessionData.Length -eq 0) {

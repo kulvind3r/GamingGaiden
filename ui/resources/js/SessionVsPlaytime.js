@@ -12,8 +12,18 @@ function updateChart() {
         data: {
             labels: gamingData.map(row => row.name),
             datasets: [{
-                data: gamingData.map(row => ({x:row.sessions, y:row.playtime})),
+                data: gamingData.map(row => ({x:row.sessions, y:row.playtime, completed:row.completed})),
                 borderWidth: 2,
+                pointBackgroundColor: function(context) {
+                    var index = context.dataIndex;
+                    var value = context.dataset.data[index].completed;
+                    return value == 'FALSE' ? '#ffb1bf' : '#9ad0f5'
+                },
+                pointBorderColor: function(context) {
+                    var index = context.dataIndex;
+                    var value = context.dataset.data[index].completed;
+                    return value == 'FALSE' ? '#ff6481' : '#36a2eb'
+                }
             }]
         },
         options: {
@@ -104,8 +114,9 @@ function loadDataFromTable() {
         const name = row.cells[0].textContent;
         const playtime = (parseFloat(row.cells[1].textContent) / 60).toFixed(1);
         const sessions = parseFloat(row.cells[2].textContent)
+        const completed = row.cells[3].textContent
 
-        return { name, playtime, sessions };
+        return { name, playtime, sessions, completed };
     });
 
     // Remove header row data

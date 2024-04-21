@@ -13,3 +13,28 @@ body {
     width: 100%;
     max-width: 1600px;
 }
+
+#legend {
+    display: flex;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    width: 300px;
+    justify-content: space-around;
+    align-items: center;
+    font-family: monospace;
+    font-size: 18px;
+}
+
+#finished-icon {
+  background: #36a2eb;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+#progress-icon {
+  background: #ff6481;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}

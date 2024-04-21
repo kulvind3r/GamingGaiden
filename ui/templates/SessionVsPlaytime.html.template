@@ -25,6 +25,10 @@
 </head>
 <body>
     <h1>Sessions Vs Playtime</h1>
+    <div id="legend">
+      <div id="progress-icon"></div><div style="color:#ff6481">In Progress</div>
+      <div id="finished-icon"></div><div style="color:#36a2eb">Finished</div>
+    </div>
     <div id="chart-container">
         <canvas id="session-vs-playtime-chart"></canvas>
     </div>
