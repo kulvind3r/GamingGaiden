@@ -133,13 +133,19 @@ function RenderSummary() {
         return $false
     }
 
-	$GetGamesSummaryDataQuery = "SELECT COUNT(*) as total_games, SUM(play_time) as total_play_time, SUM(session_count) as total_sessions, SUM(idle_time) as total_idle_time from games"
+	$GetGamesSummaryDataQuery = "SELECT COUNT(*) AS total_games, SUM(play_time) AS total_play_time, SUM(session_count) AS total_sessions, SUM(idle_time) AS total_idle_time FROM games"
 	$GamesSummaryData = RunDBQuery $GetGamesSummaryDataQuery
+
+	$GetPlayDateSummaryQuery = "SELECT MIN(play_date) AS min_play_date, MAX(play_date) AS max_play_date FROM daily_playtime"
+	$PlayDateSummary = RunDBQuery $GetPlayDateSummaryQuery
+
+	$StartDate = Get-Date -Date $PlayDateSummary.min_play_date -Format "MMM yyyy"
+	$EndDate = Get-Date -Date $PlayDateSummary.max_play_date -Format "MMM yyyy"
 
 	$TotalPlayTime =  PlayTimeMinsToString $GamesSummaryData.total_play_time
 	$TotalIdleTime = PlayTimeMinsToString $GamesSummaryData.total_idle_time
 
-	$SummaryStatement = "$($GamesSummaryData.total_games) games played in $($GamesSummaryData.total_sessions) sessions over $TotalPlayTime. You left games idling for $TotalIdleTime."
+	$SummaryStatement = "From $StartDate to $EndDate you played $($GamesSummaryData.total_games) games in $($GamesSummaryData.total_sessions) sessions. You clocked  $TotalPlayTime of gaming time with $TotalIdleTime spent idling."
 
 	$Table = $GamesPlayTimeVsSessionData | ConvertTo-Html -Fragment
 	
