@@ -119,8 +119,8 @@ function RenderMostPlayed() {
 	[System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $WorkingDirectory\ui\MostPlayed.html
 }
 
-function RenderSessionVsPlayTime() {
-	Log "Rendering Sessions Vs PlayTime"
+function RenderSummary() {
+	Log "Rendering life time summary"
 
 	$WorkingDirectory = (Get-Location).Path
 
@@ -133,11 +133,20 @@ function RenderSessionVsPlayTime() {
         return $false
     }
 
+	$GetGamesSummaryDataQuery = "SELECT COUNT(*) as total_games, SUM(play_time) as total_play_time, SUM(session_count) as total_sessions, SUM(idle_time) as total_idle_time from games"
+	$GamesSummaryData = RunDBQuery $GetGamesSummaryDataQuery
+
+	$TotalPlayTime =  PlayTimeMinsToString $GamesSummaryData.total_play_time
+	$TotalIdleTime = PlayTimeMinsToString $GamesSummaryData.total_idle_time
+
+	$SummaryStatement = "$($GamesSummaryData.total_games) games played in $($GamesSummaryData.total_sessions) sessions over $TotalPlayTime. You left games idling for $TotalIdleTime."
+
 	$Table = $GamesPlayTimeVsSessionData | ConvertTo-Html -Fragment
 	
-	$report = (Get-Content $WorkingDirectory\ui\templates\SessionVsPlaytime.html.template) -replace "_SESSIONVSPLAYTIMETABLE_", $Table
+	$report = (Get-Content $WorkingDirectory\ui\templates\Summary.html.template) -replace "_SUMMARYTABLE_", $Table
+	$report = $report -replace "_SUMMARYSTATEMENT_", $SummaryStatement
 
-	[System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $WorkingDirectory\ui\SessionVsPlaytime.html
+	[System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $WorkingDirectory\ui\Summary.html
 }
 
 function RenderIdleTime() {

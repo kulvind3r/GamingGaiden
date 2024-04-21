@@ -3,7 +3,7 @@
 <head>
     <title>Gaming Gaiden</title>
     <link rel="icon" type="image/x-icon" href="./resources/images/favicon.ico">
-    <link rel="stylesheet" href="./resources/css/SessionVsPlaytime.css">
+    <link rel="stylesheet" href="./resources/css/Summary.css">
     <script src="./resources/js/jquery-3.7.1.min.js"></script>
     <script src="./resources/js/chart.js"></script>
     <script src="./resources/js/chartjs-plugin-datalabels-2.0.0.js"></script>
@@ -24,7 +24,8 @@
     </script>
 </head>
 <body>
-    <h1>Sessions Vs Playtime</h1>
+    <h1>Life Time Summary</h1>
+    <div id="summary">_SUMMARYSTATEMENT_</div>
     <div id="legend">
       <div id="progress-icon"></div><div id="progress-count" style="color:#ff6481"></div>
       <div id="finished-icon"></div><div id="finished-count" style="color:#36a2eb"></div>
@@ -33,8 +34,8 @@
         <canvas id="session-vs-playtime-chart"></canvas>
     </div>
     <div>
-        _SESSIONVSPLAYTIMETABLE_
+        _SUMMARYTABLE_
     </div>
-    <script src="./resources/js/SessionVsPlaytime.js"></script>
+    <script src="./resources/js/Summary.js"></script>
 </body>
 </html>

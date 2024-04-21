@@ -126,8 +126,8 @@ function loadDataFromTable() {
     // Remove header row data, deduct one extra game added to finished count due to header row
     gamingData.shift(); finishedCount--;
 
-    document.getElementById("progress-count").innerText = inProgressCount + ' In Progress'
-    document.getElementById("finished-count").innerText = finishedCount + ' Finished'
+    document.getElementById("progress-count").innerText = inProgressCount + ' Games In Progress'
+    document.getElementById("finished-count").innerText = finishedCount + ' Games Finished'
     updateChart();
 }
 

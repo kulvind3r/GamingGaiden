@@ -192,14 +192,15 @@ try {
 	$MostPlayedMenuItem = CreateMenuItem "Most Played"
 	$IdleTimeMenuItem = CreateMenuItem "Idle Time"
 	$PCvsEmulationMenuItem = CreateMenuItem "PC vs Emulation Time"
-	$SessionVsPlaytimeItem = CreateMenuItem "Sessions vs PlayTime"
+	$SummaryItem = CreateMenuItem "Life Time Summary"
 	$GamesPerPlatformMenuItem = CreateMenuItem "Games Per Platform"
+	$StatsSubMenuItem.DropDownItems.Add($SummaryItem)
 	$StatsSubMenuItem.DropDownItems.Add($GamingTimeMenuItem)
+	$StatsSubMenuItem.DropDownItems.Add($GamesPerPlatformMenuItem)
 	$StatsSubMenuItem.DropDownItems.Add($MostPlayedMenuItem)
 	$StatsSubMenuItem.DropDownItems.Add($IdleTimeMenuItem)
 	$StatsSubMenuItem.DropDownItems.Add($PCvsEmulationMenuItem)
-	$StatsSubMenuItem.DropDownItems.Add($SessionVsPlaytimeItem)
-	$StatsSubMenuItem.DropDownItems.Add($GamesPerPlatformMenuItem)
+	
 
 	$AppContextMenu = New-Object System.Windows.Forms.ContextMenuStrip
 	$AppContextMenu.Items.AddRange(@($MyGamesMenuItem, $MenuItemSeparator2, $StatsSubMenuItem, $MenuItemSeparator3, $SettingsSubMenuItem, $MenuItemSeparator4, $StartTrackerMenuItem, $StopTrackerMenuItem, $MenuItemSeparator5, $HelpMenuItem, $AboutMenuItem, $MenuItemSeparator6, $ExitMenuItem))
@@ -255,10 +256,10 @@ try {
 		}
 	})
 
-	$SessionVsPlaytimeItem.Add_Click({
-		$SessionVsPlaytimeCheckResult = RenderSessionVsPlayTime
+	$SummaryItem.Add_Click({
+		$SessionVsPlaytimeCheckResult = RenderSummary
 		if ($SessionVsPlaytimeCheckResult -ne $false) {
-			Invoke-Item ".\ui\SessionVsPlaytime.html"
+			Invoke-Item ".\ui\Summary.html"
 		}
 	})
 
