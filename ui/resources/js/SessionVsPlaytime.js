@@ -1,5 +1,7 @@
 let gamingData = [];
 let chart;
+let finishedCount = 0;
+let inProgressCount = 0;
 
 $('table')[0].setAttribute('id','data-table');
 
@@ -116,12 +118,16 @@ function loadDataFromTable() {
         const sessions = parseFloat(row.cells[2].textContent)
         const completed = row.cells[3].textContent
 
+        completed == 'FALSE' ? inProgressCount++ : finishedCount++
+
         return { name, playtime, sessions, completed };
     });
 
-    // Remove header row data
-    gamingData.shift()
+    // Remove header row data, deduct one extra game added to finished count due to header row
+    gamingData.shift(); finishedCount--;
 
+    document.getElementById("progress-count").innerText = inProgressCount + ' In Progress'
+    document.getElementById("finished-count").innerText = finishedCount + ' Finished'
     updateChart();
 }
 
