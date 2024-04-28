@@ -145,7 +145,7 @@ function RenderSummary() {
 	$TotalPlayTime =  PlayTimeMinsToString $GamesSummaryData.total_play_time
 	$TotalIdleTime = PlayTimeMinsToString $GamesSummaryData.total_idle_time
 
-	$SummaryStatement = "From $StartDate to $EndDate you played $($GamesSummaryData.total_games) games in $($GamesSummaryData.total_sessions) sessions. You clocked  $TotalPlayTime of gaming time with $TotalIdleTime spent idling."
+	$SummaryStatement = "From <b>$StartDate to $EndDate</b> you played <b>$($GamesSummaryData.total_games) games</b> in <b>$($GamesSummaryData.total_sessions) sessions</b>. Total <b>play time is $TotalPlayTime</b> with <b>$TotalIdleTime spent idling</b>."
 
 	$Table = $GamesPlayTimeVsSessionData | ConvertTo-Html -Fragment
 	

@@ -77,7 +77,7 @@ function updateChart(gameCount) {
                     borderWidth: 1,
                 }
             },
-            responsive: true, // Make the chart responsive
+            responsive: true,
             plugins: {
                 tooltip: {
                     enabled: false

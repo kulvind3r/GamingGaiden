@@ -147,12 +147,7 @@ function updateChart() {
                     }
                 }
             },
-            elements: {
-                bar: {
-                    borderWidth: 1,
-                }
-            },
-            responsive: true, // Make the chart responsive
+            responsive: true,
             plugins: {
                 tooltip: {
                     enabled: true,
