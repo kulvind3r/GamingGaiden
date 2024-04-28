@@ -23,7 +23,14 @@ function updateChart() {
             maintainAspectRatio: true,
             plugins: {
                 tooltip: {
-                    enabled: false
+					displayColors: false,
+					yAlign: 'top',
+					caretPadding: 7,
+                    callbacks: {
+                        label: function(context) {
+                            return ''
+                        }
+                    }
                 },
                 legend: {
                     onClick: null,

@@ -152,6 +152,7 @@ function updateChart() {
                 tooltip: {
                     enabled: true,
                     mode: "nearest",
+					caretPadding: 7,
                     displayColors: false,
                     callbacks: {
                         label: function(context) {
