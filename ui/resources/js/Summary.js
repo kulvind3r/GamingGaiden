@@ -57,14 +57,10 @@ function updateChart() {
                             size: 18,
                             family: 'monospace',
                         },
-						color: () => {
-                            return window.getComputedStyle(document.body ,null).getPropertyValue('background-color');
-                        }
+						color: 'white'
                     },
 					ticks: {
-                        color: () => {
-                            return window.getComputedStyle(document.body ,null).getPropertyValue('background-color');
-                        }
+                        color: 'white'
                     }
 				},
                 x: {

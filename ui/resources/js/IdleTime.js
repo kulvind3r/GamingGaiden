@@ -47,9 +47,7 @@ function updateChart() {
 						display: false
 					},
 					ticks: {
-						color: () => {
-                            return window.getComputedStyle(document.body ,null).getPropertyValue('background-color');
-                        }
+						color: 'white'
 					}
 				},
                 x: {
