@@ -77,7 +77,7 @@ function MonitorGame($DetectedExe) {
 	$GameName = $null
 	$EntityFound = $null
 	$UpdatedPlayTime = 0
-	$UpdatedLastPlayDate = (Get-Date -UFormat %s).Split('.').Get(0)
+	$UpdatedLastPlayDate = (Get-Date ([datetime]::UtcNow) -UFormat %s).Split('.').Get(0)
 
 	if (IsExeEmulator $DetectedExe)
 	{
