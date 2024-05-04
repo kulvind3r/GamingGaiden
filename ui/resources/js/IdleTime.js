@@ -11,7 +11,7 @@ function updateChart() {
     for (i=0; i<gamingData.length; i++)
     {
         labels.push(gamingData[i].name)
-        data.push({"game":gamingData[i].name, "time": gamingData[i].time });
+        data.push({"game":gamingData[i].name, "time": (gamingData[i].time / 60).toFixed(1) });
     }
     
     if (chart) {
@@ -52,13 +52,13 @@ function updateChart() {
 				},
                 x: {
                     ticks: {
-                        stepSize: 5
+                        stepSize: 1
                     },
                     title: {
                         display: true,
                         padding: 15,
                         color: '#000',
-                        text: "Playtime (Hours)",
+                        text: "Idle Time (Hours)",
                         font: {
                             size: 18,
                             family: 'monospace'
