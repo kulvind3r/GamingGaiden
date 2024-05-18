@@ -51,7 +51,7 @@
                 }
             }
           ],
-          order: [[6, 'desc']],
+          order: [[5, 'desc'], [6, 'desc']],
           "ordering": true,
           "paging": "numbers",
           "pageLength": 9,
