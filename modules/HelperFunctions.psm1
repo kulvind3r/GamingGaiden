@@ -30,6 +30,11 @@ function PlayTimeMinsToString($PlayTime) {
 	return ("{0} Hr {1} Min" -f $Hours, $Minutes)
 }
 
+function PlayDateEpochToString($PlayDateEpoch) {
+	[datetime]$origin = '1970-01-01 00:00:00'
+	return $origin.AddSeconds($PlayDateEpoch).ToLocalTime().ToString("dd MMMM yyyy")
+}
+
 function PlayTimeStringToMin($PlayTime) {
 	if ( -Not ($PlayTime -match '^[0-9]{0,5} Hr [0-5]{0,1}[0-9]{1} Min$') ) {
         Log "Error: Incorrect playtime format. Returning null"

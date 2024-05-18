@@ -3,7 +3,7 @@
 <head>
   <title>Gaming Gaiden</title>
   <link rel="icon" type="image/x-icon" href="./resources/images/favicon.ico">
-  <link rel="stylesheet" href="./resources/css/MyGames.css">
+  <link rel="stylesheet" href="./resources/css/AllGames.css">
   <link rel="stylesheet" href="./resources/css/jquery.dataTables.css" />
   <script src="./resources/js/jquery-3.7.1.min.js"></script>
   <script src="./resources/js/jquery.dataTables.min.js"></script>

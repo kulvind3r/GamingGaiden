@@ -65,7 +65,7 @@ function RenderGameList() {
 
 	$Table = $Games | ConvertTo-Html -Fragment
 	
-	$report = (Get-Content $WorkingDirectory\ui\templates\MyGames.html.template) -replace "_GAMESTABLE_", $Table
+	$report = (Get-Content $WorkingDirectory\ui\templates\AllGames.html.template) -replace "_GAMESTABLE_", $Table
 	$report = $report -replace "Last_Played_On", "Last Played On"
 	$report = $report -replace "Session_Count", "Session Count"
 	$report = $report -replace "Completed", "Status"
@@ -73,7 +73,7 @@ function RenderGameList() {
 	$report = $report -replace "_TOTALGAMECOUNT_", $Games.length
 	$report = $report -replace "_TOTALPLAYTIME_", $TotalPlayTimeString
 	
-	[System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $WorkingDirectory\ui\MyGames.html
+	[System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $WorkingDirectory\ui\AllGames.html
 }
 
 function RenderGamingTime() {
