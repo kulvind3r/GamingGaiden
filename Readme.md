@@ -62,7 +62,7 @@ Id adds value to your gaming hobby by gathering data quietly in background and t
 1. Download ***GamingGaiden.zip*** from the [latest release](https://github.com/kulvind3r/GamingGaiden/releases/latest).
 2. Extract "GamingGaiden" folder and copy it to a location where you would like to run it from. 
 
-***DO NOT USE ANY FOLDER ON OS DRIVE i.e. "C:/" OR ANY OTHER FOLDER THAT NEEDS ADMIN ACESS.***
+***DO NOT USE ANY FOLDER ON OS DRIVE i.e. "C:/" OR ANY OTHER FOLDER THAT NEEDS ADMIN ACCESS.***
 
 3. Right click `Install.bat` and click `Run as administrator`.
 4. Optionally choose to setup a scheduled task to autostart at user login.
