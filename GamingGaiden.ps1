@@ -221,8 +221,9 @@ try {
 	$dataGridView.RowHeadersVisible = $false
 	$dataGridView.CellBorderStyle = "None"
 	$dataGridView.AutoSizeColumnsMode = "Fill"
+	$dataGridView.Enabled = $false
 	$dataGridView.DefaultCellStyle.Padding = New-Object System.Windows.Forms.Padding(2, 2, 2, 2)
-	$dataGridView.SelectionMode = [System.Windows.Forms.DataGridViewSelectionMode]::FullRowSelect
+	$dataGridView.DefaultCellStyle.BackColor = [System.Drawing.Color]::FromArgb(200, 200, 200)
 
 	$iconColumn = New-Object System.Windows.Forms.DataGridViewImageColumn
 	$iconColumn.Name = "icon"
@@ -243,6 +244,11 @@ try {
 	# Event handler to hide the form when it loses focus
 	$QuickViewForm.Add_Deactivate({
 		$QuickViewForm.Hide()
+	})
+
+	# Event handler to clear selection when form is shown
+	$QuickViewForm.Add_Shown({
+		$dataGridView.ClearSelection()
 	})
 
 	# Event handler to hide the form when it is closed by User
@@ -285,6 +291,7 @@ try {
 			$row.Resizable = [System.Windows.Forms.DataGridViewTriState]::False
 		}
 
+		$dataGridView.ClearSelection()
 		$QuickViewForm.Show()
 		$QuickViewForm.Activate()
 	}
