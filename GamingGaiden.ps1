@@ -223,7 +223,7 @@ try {
 	$dataGridView.AutoSizeColumnsMode = "Fill"
 	$dataGridView.Enabled = $false
 	$dataGridView.DefaultCellStyle.Padding = New-Object System.Windows.Forms.Padding(2, 2, 2, 2)
-	$dataGridView.DefaultCellStyle.BackColor = [System.Drawing.Color]::FromArgb(200, 200, 200)
+	$dataGridView.DefaultCellStyle.BackColor = [System.Drawing.Color]::FromArgb(240, 240, 240)
 
 	$iconColumn = New-Object System.Windows.Forms.DataGridViewImageColumn
 	$iconColumn.Name = "icon"

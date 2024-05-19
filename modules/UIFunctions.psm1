@@ -227,7 +227,6 @@ function RenderPCvsEmulation() {
 
 function RenderAboutDialog() {
 	$AboutForm = CreateForm "About" 350 280 ".\icons\running.ico"
-	$AboutForm.BackColor = [System.Drawing.Color]::FromArgb(200, 200, 200)
 
 	$PictureBox = CreatePictureBox "./icons/banner.png" 6 20 322 60
 	$AboutForm.Controls.Add($pictureBox)
