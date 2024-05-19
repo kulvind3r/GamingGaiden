@@ -152,7 +152,7 @@ function RenderEditGameForm($GamesList) {
 
 		$GameExeName = $textExe.Text -replace ".exe"
 
-		$GameCompleteStatus = $checkboxCompleted.Checked
+		$GameCompleteStatus = if ($checkboxCompleted.Checked) { "TRUE" } else { "FALSE" }
 		
 		UpdateGameOnEdit -OriginalGameName $textOriginalGameName.Text -GameName $GameName -GameExeName $GameExeName -GameIconPath $pictureBoxImagePath.Text -GamePlayTime $PlayTimeInMin -GameCompleteStatus $GameCompleteStatus -GamePlatform $textPlatform.Text
 
