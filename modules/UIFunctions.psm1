@@ -260,42 +260,6 @@ function RenderAboutDialog() {
 }
 
 function RenderQuickView() {
-	$QuickViewForm = CreateForm "Currently Playing / Recently Finished Games" 400 388 ".\icons\running.ico"
-	$QuickViewForm.MaximizeBox = $false; $QuickViewForm.MinimizeBox = $false;
-	$QuickViewForm.StartPosition = [System.Windows.Forms.FormStartPosition]::Manual
-
-	$screenBounds = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
-	$formWidth = $QuickViewForm.Width
-	$formHeight = $QuickViewForm.Height
-	$QuickViewForm.Left = $screenBounds.Width - $formWidth - 20
-	$QuickViewForm.Top = $screenBounds.Height - $formHeight - 40
-
-	$dataGridView = New-Object System.Windows.Forms.DataGridView
-	$dataGridView.Dock = [System.Windows.Forms.DockStyle]::Fill
-	$dataGridView.BorderStyle = [System.Windows.Forms.BorderStyle]::None
-	$dataGridView.RowTemplate.Height = 65
-	$dataGridView.AllowUserToAddRows = $false
-	$dataGridView.RowHeadersVisible = $false
-	$dataGridView.CellBorderStyle = "None"
-	$dataGridView.AutoSizeColumnsMode = "Fill"
-	$dataGridView.Enabled = $false
-	$dataGridView.DefaultCellStyle.Padding = New-Object System.Windows.Forms.Padding(2, 2, 2, 2)
-	$dataGridView.DefaultCellStyle.BackColor = [System.Drawing.Color]::FromArgb(240, 240, 240)
-
-	$iconColumn = New-Object System.Windows.Forms.DataGridViewImageColumn
-	$iconColumn.Name = "icon"
-	$iconColumn.HeaderText = ""
-	$iconColumn.ImageLayout = [System.Windows.Forms.DataGridViewImageCellLayout]::Zoom
-	$dataGridView.Columns.Add($iconColumn)
-
-	$dataGridView.Columns.Add("name", "Name")
-	$dataGridView.Columns.Add("play_time", "Playtime")
-	$dataGridView.Columns.Add("last_play_date", "Last Played On")
-
-	foreach ($column in $dataGridView.Columns) {
-		$column.Resizable = [System.Windows.Forms.DataGridViewTriState]::False
-	}
-
 	$LastFiveGamesQuery = "Select icon, name, play_time, last_play_date from games ORDER BY completed, last_play_date DESC LIMIT 5"
 	$GameRecords = RunDBQuery $LastFiveGamesQuery
 	if ($GameRecords.Length -eq 0) {
@@ -304,25 +268,60 @@ function RenderQuickView() {
 		return
 	}
 
-	foreach ($row in $GameRecords) {
-		$image = BytesToBitmap $row.icon
-		$playTimeFormatted = PlayTimeMinsToString $row.play_time
-		$dateFormatted = PlayDateEpochToString $row.last_play_date
-		$dataGridView.Rows.Add($image, $row.name, $playTimeFormatted, $dateFormatted)
+	$QuickViewForm = CreateForm "Currently Playing / Recently Finished Games" 400 388 ".\icons\running.ico"
+	$QuickViewForm.MaximizeBox = $false; $QuickViewForm.MinimizeBox = $false;
+	$QuickViewForm.StartPosition = [System.Windows.Forms.FormStartPosition]::Manual
+	$QuickViewForm.ShowInTaskbar = $false
+
+	$ScreenBounds = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
+	$QuickViewForm.Left = $ScreenBounds.Width - $QuickViewForm.Width - 20
+	$QuickViewForm.Top = $ScreenBounds.Height - $QuickViewForm.Height - 40
+
+	$DataGridView = New-Object System.Windows.Forms.DataGridView
+	$DataGridView.Dock = [System.Windows.Forms.DockStyle]::Fill
+	$DataGridView.BorderStyle = [System.Windows.Forms.BorderStyle]::None
+	$DataGridView.RowTemplate.Height = 65
+	$DataGridView.AllowUserToAddRows = $false
+	$DataGridView.RowHeadersVisible = $false
+	$DataGridView.CellBorderStyle = "None"
+	$DataGridView.AutoSizeColumnsMode = "Fill"
+	$DataGridView.Enabled = $false
+	$DataGridView.DefaultCellStyle.Padding = New-Object System.Windows.Forms.Padding(2, 2, 2, 2)
+	$DataGridView.DefaultCellStyle.BackColor = [System.Drawing.Color]::FromArgb(240, 240, 240)
+
+	$IconColumn = New-Object System.Windows.Forms.DataGridViewImageColumn
+	$IconColumn.Name = "icon"
+	$IconColumn.HeaderText = ""
+	$IconColumn.ImageLayout = [System.Windows.Forms.DataGridViewImageCellLayout]::Zoom
+	$DataGridView.Columns.Add($IconColumn)
+
+	$DataGridView.Columns.Add("name", "Name")
+	$DataGridView.Columns.Add("play_time", "Playtime")
+	$DataGridView.Columns.Add("last_play_date", "Last Played On")
+
+	foreach ($column in $DataGridView.Columns) {
+		$column.Resizable = [System.Windows.Forms.DataGridViewTriState]::False
 	}
 
-	foreach ($row in $dataGridView.Rows) {
+	foreach ($row in $GameRecords) {
+		$GameIcon = BytesToBitmap $row.icon
+		$PlayTimeFormatted = PlayTimeMinsToString $row.play_time
+		$DateFormatted = PlayDateEpochToString $row.last_play_date
+		$DataGridView.Rows.Add($GameIcon, $row.name, $PlayTimeFormatted, $DateFormatted)
+	}
+
+	foreach ($row in $DataGridView.Rows) {
 		$row.Resizable = [System.Windows.Forms.DataGridViewTriState]::False
 	}
 
-	$QuickViewForm.Controls.Add($dataGridView)
+	$QuickViewForm.Controls.Add($DataGridView)
 
 	$QuickViewForm.Add_Deactivate({
 		$QuickViewForm.Dispose()
 	})
 
 	$QuickViewForm.Add_Shown({
-		$dataGridView.ClearSelection()
+		$DataGridView.ClearSelection()
 		$QuickViewForm.Activate()
 	})
 

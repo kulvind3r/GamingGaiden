@@ -210,8 +210,7 @@ try {
 		}
 
 		If ($_.Button -eq [Windows.Forms.MouseButtons]::Right) {
-			$AppNotifyIcon.GetType().GetMethod("ShowContextMenu",[System.Reflection.BindingFlags]::Instance `
-			-bor [System.Reflection.BindingFlags]::NonPublic).Invoke($AppNotifyIcon,$null)
+			$AppNotifyIcon.ShowContextMenu
 		}
 	})
 
