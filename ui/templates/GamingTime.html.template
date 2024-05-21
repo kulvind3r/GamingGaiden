@@ -31,10 +31,9 @@
         <canvas id="gaming-time-chart"></canvas>
     </div>
     <div id="navigation-bar">
-        <button class="custom-button" id="prev-button">
-            <<< /button>
-                <p id="time-period-display"></p>
-                <button class="custom-button" id="next-button">>></button>
+        <button class="custom-button" id="prev-button">&#11164;</button>
+        <p id="time-period-display"></p>
+        <button class="custom-button" id="next-button">&#11166;</button>
     </div>
     <p id="warn-msg"></p>
     <button class="custom-button" id="period-button">Yearly Summary</button>
