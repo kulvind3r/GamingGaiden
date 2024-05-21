@@ -1,12 +1,12 @@
 let gamingData = [];
 let chart;
 
-$('table')[0].setAttribute('id','data-table');
+$('table')[0].setAttribute('id', 'data-table');
 
 function updateChart(gameCount) {
 
     const ctx = document.getElementById('pc-vs-emulation-chart').getContext('2d');
-    
+
     chart = new Chart(ctx, {
         type: 'pie',
         plugins: [ChartDataLabels],
@@ -22,11 +22,11 @@ function updateChart(gameCount) {
             maintainAspectRatio: true,
             plugins: {
                 tooltip: {
-					displayColors: false,
-					yAlign: 'top',
-					caretPadding: 7,
+                    displayColors: false,
+                    yAlign: 'top',
+                    caretPadding: 7,
                     callbacks: {
-                        label: function(context) {
+                        label: function (context) {
                             return ''
                         }
                     }
@@ -42,10 +42,10 @@ function updateChart(gameCount) {
                             weight: 'bold',
                             family: 'monospace'
                         }
-                    }   
+                    }
                 },
                 datalabels: {
-                    formatter: function(value) {
+                    formatter: function (value) {
                         return value + ' Hrs';
                     },
                     color: '#000000',
