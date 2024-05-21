@@ -271,7 +271,6 @@ function RenderQuickView() {
 	$QuickViewForm = CreateForm "Currently Playing / Recently Finished Games" 400 388 ".\icons\running.ico"
 	$QuickViewForm.MaximizeBox = $false; $QuickViewForm.MinimizeBox = $false;
 	$QuickViewForm.StartPosition = [System.Windows.Forms.FormStartPosition]::Manual
-	$QuickViewForm.ShowInTaskbar = $false
 
 	$ScreenBounds = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
 	$QuickViewForm.Left = $ScreenBounds.Width - $QuickViewForm.Width - 20

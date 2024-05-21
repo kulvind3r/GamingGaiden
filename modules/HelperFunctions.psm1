@@ -151,6 +151,7 @@ function CreateForm($Text, $SizeX, $SizeY, $IconPath) {
 	$form.FormBorderStyle = 'FixedDialog'
 	$form.Icon = [System.Drawing.Icon]::new($IconPath)
 	$form.Topmost = $true
+	$form.ShowInTaskbar = $false
 
 	return $form
 }
