@@ -29,19 +29,19 @@ body {
 }
 
 #finished-icon {
-  background: #36a2eb;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  margin-left: 20px;
+    background: #36a2eb;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-left: 20px;
 }
 
 #progress-icon {
-  background: #ff6481;
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-  margin: auto;
+    background: #ff6481;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin: auto;
 }
 
 #progress-count {

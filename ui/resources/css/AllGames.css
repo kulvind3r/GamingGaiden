@@ -1,169 +1,169 @@
 body {
-  font-family: monospace;
-  font-size: 14px;
-  background-color: white;
+    font-family: monospace;
+    font-size: 14px;
+    background-color: white;
 }
 
 table {
-  width: 97.5% !important;
-  border: 1px solid #333;
+    width: 97.5% !important;
+    border: 1px solid #333;
 }
 
 th {
-  background-color: #333;
-  color: #fff;
-  font-weight: bold;
-  text-align: center !important;
-  padding: 10px;
+    background-color: #333;
+    color: #fff;
+    font-weight: bold;
+    text-align: center !important;
+    padding: 10px;
 }
 
 tr:hover {
-  background-color: gray !important;
+    background-color: gray !important;
 }
 
 tr:nth-child(even):hover {
-  background-color: gray !important;
+    background-color: gray !important;
 }
 
 /* Style alternate table rows */
 tr:nth-child(even) {
-  background-color: #bccad6 !important;
+    background-color: #bccad6 !important;
 }
 
 /* Set cell borders */
 td {
-  border: 1px solid #333;
+    border: 1px solid #333;
 }
 
 /* set style for cells with images */
 td img {
-  max-width: 100%;
-  max-height: 100%;
+    max-width: 100%;
+    max-height: 100%;
 }
 
 /* hide the text in the first column header */
 th:first-child {
-  color: #333;
+    color: #333;
 }
 
 /* Define specific styles for the Icon column */
 td:first-child {
-  width: 50px;
-  text-align: center;
+    width: 50px;
+    text-align: center;
 }
 
 /* Define specific styles for the Session Count column */
 td:nth-child(5) {
-  width: 8%;
-  text-align: center;
+    width: 8%;
+    text-align: center;
 }
 
 /* Define specific styles for the Status column */
 td:nth-child(6) {
-  width: 50px;
-  text-align: center;
-  font-size: 13px;
+    width: 50px;
+    text-align: center;
+    font-size: 13px;
 }
 
 /* Reduce size of images in Status column */
 td:nth-child(6) img {
-  max-width: 70%;
+    max-width: 70%;
 }
 
 /* Define specific styles for the Name column */
 td:nth-child(2) {
-  font-weight: bold;
-  text-transform: uppercase;
+    font-weight: bold;
+    text-transform: uppercase;
 }
 
 #DataTables_Table_0_filter {
-  float: right;
-  margin-top: 10px;
-  margin-bottom: 20px;
-  margin-right: 1.3%;
+    float: right;
+    margin-top: 10px;
+    margin-bottom: 20px;
+    margin-right: 1.3%;
 }
 
 #TotalPlaytime {
-  float: left;
-  white-space: pre;
-  margin-top: 10px;
-  margin-left: 1.3%;
-  margin-bottom: 9px;
+    float: left;
+    white-space: pre;
+    margin-top: 10px;
+    margin-left: 1.3%;
+    margin-bottom: 9px;
 }
 
 #AllGames {
-  position: absolute;
-  margin-top: 5px;
-  left: 50%;
-  transform: translateX(-45%);
-  font-weight: bold;
-  font-size: 20px;
-  text-transform: uppercase;
-  text-align: center;
-  white-space: pre;
+    position: absolute;
+    margin-top: 5px;
+    left: 50%;
+    transform: translateX(-45%);
+    font-weight: bold;
+    font-size: 20px;
+    text-transform: uppercase;
+    text-align: center;
+    white-space: pre;
 }
 
 #DataTables_Table_0_info {
-  margin-left: 1.3%;
+    margin-left: 1.3%;
 }
 
 #DataTables_Table_0_paginate .disabled {
-  color: white !important;
+    color: white !important;
 }
 
 #button-container {
-  display: flex;
-  justify-content: center;
+    display: flex;
+    justify-content: center;
 }
 
 .custom-button {
-  align-items: center;
-  appearance: none;
-  background-color: #FCFCFD;
-  border-radius: 4px;
-  border-width: 0;
-  box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,rgba(45, 35, 66, 0.3) 0 7px 13px -3px,#D6D6E7 0 -3px 0 inset;
-  box-sizing: border-box;
-  color: #36395A;
-  cursor: pointer;
-  display: inline-flex;
-  font-family: monospace;
-  height: 38px;
-  justify-content: center;
-  line-height: 1;
-  list-style: none;
-  overflow: hidden;
-  padding-left: 16px;
-  padding-right: 16px;
-  position: relative;
-  text-align: left;
-  text-decoration: none;
-  transition: box-shadow .15s,transform .15s;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-  white-space: nowrap;
-  will-change: box-shadow,transform;
-  font-size: 18px;
+    align-items: center;
+    appearance: none;
+    background-color: #FCFCFD;
+    border-radius: 4px;
+    border-width: 0;
+    box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
+    box-sizing: border-box;
+    color: #36395A;
+    cursor: pointer;
+    display: inline-flex;
+    font-family: monospace;
+    height: 38px;
+    justify-content: center;
+    line-height: 1;
+    list-style: none;
+    overflow: hidden;
+    padding-left: 16px;
+    padding-right: 16px;
+    position: relative;
+    text-align: left;
+    text-decoration: none;
+    transition: box-shadow .15s, transform .15s;
+    user-select: none;
+    -webkit-user-select: none;
+    touch-action: manipulation;
+    white-space: nowrap;
+    will-change: box-shadow, transform;
+    font-size: 18px;
 }
 
 .custom-button:focus {
-  box-shadow: #D6D6E7 0 0 0 1.5px inset, rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
+    box-shadow: #D6D6E7 0 0 0 1.5px inset, rgba(45, 35, 66, 0.4) 0 2px 4px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
 }
 
 .custom-button:hover {
-  box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
-  transform: translateY(-2px);
+    box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px, rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #D6D6E7 0 -3px 0 inset;
+    transform: translateY(-2px);
 }
 
 .custom-button:active {
-  box-shadow: #D6D6E7 0 3px 7px inset;
-  transform: translateY(2px);
+    box-shadow: #D6D6E7 0 3px 7px inset;
+    transform: translateY(2px);
 }
 
 .playtimegradient:not(th) {
-  background-image: linear-gradient(rgba(55, 162, 235,0.5),rgba(55, 162, 235,0.5));
-  background-repeat: no-repeat;
-  background-position-x: 6px;
-  background-position-y: 6px;
+    background-image: linear-gradient(rgba(55, 162, 235, 0.5), rgba(55, 162, 235, 0.5));
+    background-repeat: no-repeat;
+    background-position-x: 6px;
+    background-position-y: 6px;
 }
