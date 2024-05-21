@@ -17,27 +17,27 @@ function AddPlatform {
 function EditGame {
     Log "Starting game editing"
 
-    $GamesList = (RunDBQuery "SELECT name FROM games").name
-    if ($GamesList.Length -eq 0){
+    $gamesList = (RunDBQuery "SELECT name FROM games").name
+    if ($gamesList.Length -eq 0) {
         ShowMessage "No Games found in database. Please add few games first." "OK" "Error"
         Log "Error: Games list empty. Returning"
         return
     }
 
-    RenderEditGameForm $GamesList
+    RenderEditGameForm $gamesList
 }
 
 function EditPlatform {
     Log "Starting platform editing"
 
-    $PlatformsList = (RunDBQuery "SELECT name FROM emulated_platforms").name 
-    if ($PlatformsList.Length -eq 0){
+    $platformsList = (RunDBQuery "SELECT name FROM emulated_platforms").name 
+    if ($platformsList.Length -eq 0) {
         ShowMessage "No Platforms found in database. Please add few emulators first." "OK" "Error"
         Log "Error: Platform list empty. Returning"
         return
     }
     
-    RenderEditPlatformForm $PlatformsList
+    RenderEditPlatformForm $platformsList
 }
 
 try {
@@ -58,10 +58,10 @@ try {
 }
 catch {
     [System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms')    | out-null
-    [System.Windows.Forms.MessageBox]::Show("Exception: $($_.Exception.Message). Check log for details",'Gaming Gaiden', "OK", "Error")
+    [System.Windows.Forms.MessageBox]::Show("Exception: $($_.Exception.Message). Check log for details", 'Gaming Gaiden', "OK", "Error")
 
-    $Timestamp = Get-date -f s
-    Write-Output "$Timestamp : Error: A user or system error has caused an exception. Check log for details" >> ".\GamingGaiden.log"
-    Write-Output "$Timestamp : Exception: $($_.Exception.Message)" >> ".\GamingGaiden.log"
+    $timestamp = Get-date -f s
+    Write-Output "$timestamp : Error: A user or system error has caused an exception. Check log for details" >> ".\GamingGaiden.log"
+    Write-Output "$timestamp : Exception: $($_.Exception.Message)" >> ".\GamingGaiden.log"
     exit 1;
 }

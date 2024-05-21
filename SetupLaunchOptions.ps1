@@ -1,6 +1,6 @@
 #Requires -Version 5.1
 param(
-	[string]$InstallDirectory
+    [string]$InstallDirectory
 ) 
 
 Set-Location $InstallDirectory
@@ -11,27 +11,28 @@ function UserPrompt($Msg, $Color = "Green") {
 }
 
 function CreateShortcut() {
-    $GamingGaidenScript = (Get-Item ".\GamingGaiden.ps1")
-    $GamingGaidenPath = $GamingGaidenScript.FullName
-    $WorkingDirectory = $GamingGaidenScript.Directory.FullName
+    $gamingGaidenScript = (Get-Item ".\GamingGaiden.ps1")
+    $gamingGaidenPath = $gamingGaidenScript.FullName
+    $workingDirectory = $gamingGaidenScript.Directory.FullName
 
-    $IconPath = (Get-Item ".\icons\running.ico").FullName
+    $iconPath = (Get-Item ".\icons\running.ico").FullName
 
     $shortcut = (New-Object -ComObject Wscript.Shell).CreateShortcut("$DesktopPath\Gaming Gaiden.lnk")
     $shortcut.TargetPath = 'powershell'
-    $shortcut.Arguments = "-NoLogo -ExecutionPolicy bypass -File `"$GamingGaidenPath`""
-    $shortcut.IconLocation = $IconPath
-    $shortcut.WorkingDirectory = "$WorkingDirectory"
+    $shortcut.Arguments = "-NoLogo -ExecutionPolicy bypass -File `"$gamingGaidenPath`""
+    $shortcut.IconLocation = $iconPath
+    $shortcut.WorkingDirectory = "$workingDirectory"
     $shortcut.WindowStyle = 7 # Takes only int values, 7 is "Minimized" style
     $shortcut.Save()
+    
     Copy-Item "$DesktopPath\Gaming Gaiden.lnk" .
     Copy-Item "$DesktopPath\Gaming Gaiden.lnk" "$env:APPDATA\Microsoft\Windows\Start Menu\Programs\"
 }
 
 function SetupAutoStart() {
-    $StartupPath = [Environment]::GetFolderPath('Startup')
+    $startupPath = [Environment]::GetFolderPath('Startup')
 
-    Copy-Item "$DesktopPath\Gaming Gaiden.lnk" "$StartupPath\"
+    Copy-Item "$DesktopPath\Gaming Gaiden.lnk" "$startupPath\"
 }
 
 UserPrompt "Creating Shortcuts"
