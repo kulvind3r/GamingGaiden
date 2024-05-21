@@ -123,10 +123,6 @@ try {
 		}
 	}
 
-	function CreateMenuSeparator(){
-		return New-Object Windows.Forms.ToolStripSeparator
-	}
-
 	function UpdateAppIconToShowTracking(){
 		if (Test-Path "$env:TEMP\GG-TrackingGame.txt")
 		{
@@ -207,100 +203,10 @@ try {
 	$AppNotifyIcon.ContextMenuStrip = $AppContextMenu
 
 	#------------------------------------------
-	# Setup Quick View Form
-	$QuickViewForm = CreateForm "Currently Playing / Recently Finished Games" 400 388 ".\icons\running.ico"
-	$QuickViewForm.MaximizeBox = $false; $QuickViewForm.MinimizeBox = $false;
-	$QuickViewForm.StartPosition = [System.Windows.Forms.FormStartPosition]::Manual
-	$QuickViewForm.TopMost = $true
-
-	$dataGridView = New-Object System.Windows.Forms.DataGridView
-	$dataGridView.Dock = [System.Windows.Forms.DockStyle]::Fill
-	$dataGridView.BorderStyle = [System.Windows.Forms.BorderStyle]::None
-	$dataGridView.RowTemplate.Height = 65
-	$dataGridView.AllowUserToAddRows = $false
-	$dataGridView.RowHeadersVisible = $false
-	$dataGridView.CellBorderStyle = "None"
-	$dataGridView.AutoSizeColumnsMode = "Fill"
-	$dataGridView.Enabled = $false
-	$dataGridView.DefaultCellStyle.Padding = New-Object System.Windows.Forms.Padding(2, 2, 2, 2)
-	$dataGridView.DefaultCellStyle.BackColor = [System.Drawing.Color]::FromArgb(240, 240, 240)
-
-	$iconColumn = New-Object System.Windows.Forms.DataGridViewImageColumn
-	$iconColumn.Name = "icon"
-	$iconColumn.HeaderText = ""
-	$iconColumn.ImageLayout = [System.Windows.Forms.DataGridViewImageCellLayout]::Zoom
-	$dataGridView.Columns.Add($iconColumn)
-
-	$dataGridView.Columns.Add("name", "Name")
-	$dataGridView.Columns.Add("play_time", "Playtime")
-	$dataGridView.Columns.Add("last_play_date", "Last Played On")
-
-	foreach ($column in $dataGridView.Columns) {
-		$column.Resizable = [System.Windows.Forms.DataGridViewTriState]::False
-	}
-
-	$QuickViewForm.Controls.Add($dataGridView)
-
-	# Event handler to hide the form when it loses focus
-	$QuickViewForm.Add_Deactivate({
-		$QuickViewForm.Hide()
-	})
-
-	# Event handler to clear selection when form is shown
-	$QuickViewForm.Add_Shown({
-		$dataGridView.ClearSelection()
-	})
-
-	# Event handler to hide the form when it is closed by User
-	$IsParentAppBeingShutdown = $false
-	$QuickViewForm.Add_FormClosing({
-		param($sender, $e)
-
-		# If gaming gaiden is not exiting, just hide instead of closing
-		if (-not $IsParentAppBeingShutdown) {
-			$e.Cancel = $true
-			$sender.Hide()
-		}
-	})
-
-	function ShowPopup {
-		$screenBounds = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
-		$formWidth = $QuickViewForm.Width
-		$formHeight = $QuickViewForm.Height
-		$QuickViewForm.Left = $screenBounds.Width - $formWidth - 20
-		$QuickViewForm.Top = $screenBounds.Height - $formHeight - 40
-
-		$LastFiveGamesQuery = "Select icon, name, play_time, last_play_date from games ORDER BY completed, last_play_date DESC LIMIT 5"
-		$GameRecords = RunDBQuery $LastFiveGamesQuery
-		if ($GameRecords.Length -eq 0) {
-			ShowMessage "No Games found in DB. Please add some games first." "OK" "Error"
-			Log "Error: Games list empty. Returning"
-			return
-		}
-		
-		$dataGridView.Rows.Clear()
-
-		foreach ($row in $GameRecords) {
-			$image = BytesToBitmap $row.icon
-			$playTimeFormatted = PlayTimeMinsToString $row.play_time
-			$dateFormatted = PlayDateEpochToString $row.last_play_date
-			$dataGridView.Rows.Add($image, $row.name, $playTimeFormatted, $dateFormatted)
-		}
-
-		foreach ($row in $dataGridView.Rows) {
-			$row.Resizable = [System.Windows.Forms.DataGridViewTriState]::False
-		}
-
-		$dataGridView.ClearSelection()
-		$QuickViewForm.Show()
-		$QuickViewForm.Activate()
-	}
-
-	#------------------------------------------
 	# Setup Tray Icon Actions
 	$AppNotifyIcon.Add_Click({
 		If ($_.Button -eq [Windows.Forms.MouseButtons]::Left) {
-			ShowPopup
+			RenderQuickView
 		}
 
 		If ($_.Button -eq [Windows.Forms.MouseButtons]::Right) {
@@ -390,8 +296,6 @@ try {
 		Stop-Job -Name "TrackerJob";
 		$Timer.Stop()
 		$Timer.Dispose()
-		$global:IsParentAppBeingShutdown = $true
-		$QuickViewForm.Close()
 		[System.Windows.Forms.Application]::Exit(); 
 	})
 	#------------------------------------------

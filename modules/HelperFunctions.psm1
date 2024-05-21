@@ -77,6 +77,10 @@ function CreateMenuItem($Text) {
     return $MenuItem
 }
 
+function CreateMenuSeparator(){
+	return New-Object Windows.Forms.ToolStripSeparator
+}
+
 function CreateNotifyIcon($ToolTip, $IconPath) {
 	$NotifyIcon = New-Object System.Windows.Forms.NotifyIcon
 	$Icon = [System.Drawing.Icon]::new($IconPath)
