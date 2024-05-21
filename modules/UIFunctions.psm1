@@ -314,6 +314,10 @@ function RenderQuickView() {
 		$row.Resizable = [System.Windows.Forms.DataGridViewTriState]::False
 	}
 
+	# Remove flickering in Data Grid View
+	$DoubleBufferProperty = $DataGridView.GetType().GetProperty('DoubleBuffered', [System.Reflection.BindingFlags]::NonPublic -bor [System.Reflection.BindingFlags]::Instance)
+	$DoubleBufferProperty.SetValue($DataGridView, $true, $null)
+
 	$QuickViewForm.Controls.Add($DataGridView)
 
 	$QuickViewForm.Add_Deactivate({
