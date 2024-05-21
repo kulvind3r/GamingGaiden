@@ -1,9 +1,9 @@
-function SaveGame(){
+function SaveGame() {
     param(
         [string]$GameName,
         [string]$GameExeName,
-		[string]$GameIconPath,
-		[string]$GamePlayTime,
+        [string]$GameIconPath,
+        [string]$GamePlayTime,
         [string]$GameIdleTime,
         [string]$GameLastPlayDate,
         [string]$GameCompleteStatus,
@@ -11,71 +11,71 @@ function SaveGame(){
         [string]$GameSessionCount
     )
 
-    $GameIconBytes = (Get-Content -Path $GameIconPath -Encoding byte -Raw);
+    $gameIconBytes = (Get-Content -Path $GameIconPath -Encoding byte -Raw);
 
-    $AddGameQuery = "INSERT INTO games (name, exe_name, icon, play_time, idle_time, last_play_date, completed, platform, session_count)" +
-						"VALUES (@GameName, @GameExeName, @GameIconBytes, @GamePlayTime, @GameIdleTime, @GameLastPlayDate, @GameCompleteStatus, @GamePlatform, @GameSessionCount)"
+    $addGameQuery = "INSERT INTO games (name, exe_name, icon, play_time, idle_time, last_play_date, completed, platform, session_count)" +
+    "VALUES (@GameName, @GameExeName, @gameIconBytes, @GamePlayTime, @GameIdleTime, @GameLastPlayDate, @GameCompleteStatus, @GamePlatform, @GameSessionCount)"
 
-	Log "Adding $GameName in Database"
-    RunDBQuery $AddGameQuery @{
-        GameName = $GameName.Trim()
-        GameExeName = $GameExeName.Trim()
-		GameIconBytes = $GameIconBytes
-        GamePlayTime = $GamePlayTime
-        GameIdleTime = $GameIdleTime
-        GameLastPlayDate = $GameLastPlayDate
+    Log "Adding $GameName in Database"
+    RunDBQuery $addGameQuery @{
+        GameName           = $GameName.Trim()
+        GameExeName        = $GameExeName.Trim()
+        gameIconBytes      = $gameIconBytes
+        GamePlayTime       = $GamePlayTime
+        GameIdleTime       = $GameIdleTime
+        GameLastPlayDate   = $GameLastPlayDate
         GameCompleteStatus = $GameCompleteStatus
-        GamePlatform = $GamePlatform.Trim()
-        GameSessionCount = $GameSessionCount
+        GamePlatform       = $GamePlatform.Trim()
+        GameSessionCount   = $GameSessionCount
     }
 }
 
-function SavePlatform(){
+function SavePlatform() {
     param(
         [string]$PlatformName,
         [string]$EmulatorExeList,
-		[string]$CoreName,
-		[string]$RomExtensions
+        [string]$CoreName,
+        [string]$RomExtensions
     )
 
-    $AddPlatformQuery = "INSERT INTO emulated_platforms (name, exe_name, core, rom_extensions)" +
-                                    "VALUES (@PlatformName, @EmulatorExeList, @CoreName, @RomExtensions)"
+    $addPlatformQuery = "INSERT INTO emulated_platforms (name, exe_name, core, rom_extensions)" +
+    "VALUES (@PlatformName, @EmulatorExeList, @CoreName, @RomExtensions)"
 
     Log "Adding $PlatformName in database"
-    RunDBQuery $AddPlatformQuery @{
-        PlatformName = $PlatformName.Trim()
+    RunDBQuery $addPlatformQuery @{
+        PlatformName    = $PlatformName.Trim()
         EmulatorExeList = $EmulatorExeList.Trim()
-        CoreName = $CoreName.Trim()
-        RomExtensions = $RomExtensions.Trim()
+        CoreName        = $CoreName.Trim()
+        RomExtensions   = $RomExtensions.Trim()
     }
 }
 
 function UpdateGameOnSession() {
-	param(
+    param(
         [string]$GameName,
         [string]$GamePlayTime,
         [string]$GameIdleTime,
         [string]$GameLastPlayDate
     )
 
-	$GameNamePattern = SQLEscapedMatchPattern($GameName.Trim())
+    $gameNamePattern = SQLEscapedMatchPattern($GameName.Trim())
 
-    $GetSessionCountQuery = "SELECT session_count FROM games WHERE name LIKE '{0}'" -f $GameNamePattern
-    $CurrentSessionCount = (RunDBQuery $GetSessionCountQuery).session_count
+    $getSessionCountQuery = "SELECT session_count FROM games WHERE name LIKE '{0}'" -f $gameNamePattern
+    $currentSessionCount = (RunDBQuery $getSessionCountQuery).session_count
 
-    $NewSessionCount = $CurrentSessionCount + 1
+    $newSessionCount = $currentSessionCount + 1
 
-	$UpdateGamePlayTimeQuery = "UPDATE games SET play_time = @UpdatedPlayTime, idle_time = @UpdatedIdleTime, last_play_date = @UpdatedLastPlayDate, session_count = @GameSessionCount WHERE name LIKE '{0}'" -f $GameNamePattern
+    $updateGamePlayTimeQuery = "UPDATE games SET play_time = @UpdatedPlayTime, idle_time = @UpdatedIdleTime, last_play_date = @UpdatedLastPlayDate, session_count = @newSessionCount WHERE name LIKE '{0}'" -f $gameNamePattern
 
     Log "Updating $GameName play time to $GamePlayTime min and idle time to $GameIdleTime min in database"
-    Log "Updating session count from $CurrentSessionCount to $NewSessionCount in database"
+    Log "Updating session count from $currentSessionCount to $newSessionCount in database"
 
-	RunDBQuery $UpdateGamePlayTimeQuery @{ 
-		UpdatedPlayTime = $GamePlayTime
-        UpdatedIdleTime = $GameIdleTime
-		UpdatedLastPlayDate = $GameLastPlayDate
-        GameSessionCount = $NewSessionCount
-	}
+    RunDBQuery $updateGamePlayTimeQuery @{ 
+        UpdatedPlayTime     = $GamePlayTime
+        UpdatedIdleTime     = $GameIdleTime
+        UpdatedLastPlayDate = $GameLastPlayDate
+        newSessionCount     = $newSessionCount
+    }
 }
 
 function UpdateGameOnEdit() {
@@ -83,43 +83,43 @@ function UpdateGameOnEdit() {
         [string]$OriginalGameName,
         [string]$GameName,
         [string]$GameExeName,
-		[string]$GameIconPath,
-		[string]$GamePlayTime,
+        [string]$GameIconPath,
+        [string]$GamePlayTime,
         [string]$GameCompleteStatus,
         [string]$GamePlatform
     )
 
-    $GameIconBytes = (Get-Content -Path $GameIconPath -Encoding byte -Raw);
+    $gameIconBytes = (Get-Content -Path $GameIconPath -Encoding byte -Raw);
 
-	$GameNamePattern = SQLEscapedMatchPattern($OriginalGameName.Trim())
+    $gameNamePattern = SQLEscapedMatchPattern($OriginalGameName.Trim())
 
     if ( $OriginalGameName -eq $GameName) {
-        $UpdateGameQuery = "UPDATE games SET exe_name = @GameExeName, icon = @GameIconBytes, play_time = @GamePlayTime, completed = @GameCompleteStatus, platform = @GamePlatform WHERE name LIKE '{0}'" -f $GameNamePattern
+        $updateGameQuery = "UPDATE games SET exe_name = @GameExeName, icon = @gameIconBytes, play_time = @GamePlayTime, completed = @GameCompleteStatus, platform = @GamePlatform WHERE name LIKE '{0}'" -f $gameNamePattern
         
         Log "Editing $GameName in database"
-        RunDBQuery $UpdateGameQuery @{
-            GameExeName = $GameExeName.Trim()
-            GameIconBytes = $GameIconBytes
-            GamePlayTime = $GamePlayTime
+        RunDBQuery $updateGameQuery @{
+            GameExeName        = $GameExeName.Trim()
+            gameIconBytes      = $gameIconBytes
+            GamePlayTime       = $GamePlayTime
             GameCompleteStatus = $GameCompleteStatus
-            GamePlatform = $GamePlatform.Trim()
+            GamePlatform       = $GamePlatform.Trim()
         }
     }
     else {
         Log "User changed game's name from $OriginalGameName to $GameName. Need to delete the game and add it again"
 
-        $GetSessionCountQuery = "SELECT session_count FROM games WHERE name LIKE '{0}'" -f $GameNamePattern
-        $GameSessionCount = (RunDBQuery $GetSessionCountQuery).session_count
+        $getSessionCountQuery = "SELECT session_count FROM games WHERE name LIKE '{0}'" -f $gameNamePattern
+        $gameSessionCount = (RunDBQuery $getSessionCountQuery).session_count
 
-        $GetIdleTimeQuery = "SELECT idle_time FROM games WHERE name LIKE '{0}'" -f $GameNamePattern
-        $GameIdleTime = (RunDBQuery $GetIdleTimeQuery).idle_time
+        $getIdleTimeQuery = "SELECT idle_time FROM games WHERE name LIKE '{0}'" -f $gameNamePattern
+        $gameIdleTime = (RunDBQuery $getIdleTimeQuery).idle_time
 
-        $GetLastPlayDateQuery = "SELECT last_play_date FROM games WHERE name LIKE '{0}'" -f $GameNamePattern
-        $GameLastPlayDate = (RunDBQuery $GetLastPlayDateQuery).last_play_date
+        $getLastPlayDateQuery = "SELECT last_play_date FROM games WHERE name LIKE '{0}'" -f $gameNamePattern
+        $gameLastPlayDate = (RunDBQuery $getLastPlayDateQuery).last_play_date
 
         RemoveGame($OriginalGameName)
         SaveGame -GameName $GameName -GameExeName $GameExeName -GameIconPath $GameIconPath `
-	 			-GamePlayTime $GamePlayTime -GameIdleTime $GameIdleTime -GameLastPlayDate $GameLastPlayDate -GameCompleteStatus $GameCompleteStatus -GamePlatform $GamePlatform -GameSessionCount $GameSessionCount
+            -GamePlayTime $GamePlayTime -GameIdleTime $gameIdleTime -GameLastPlayDate $gameLastPlayDate -GameCompleteStatus $GameCompleteStatus -GamePlatform $GamePlatform -GameSessionCount $gameSessionCount
     }
 }
  
@@ -128,23 +128,24 @@ function  UpdatePlatformOnEdit() {
         [string]$OriginalPlatformName,
         [string]$PlatformName,
         [string]$EmulatorExeList,
-		[string]$EmulatorCore,
-		[string]$PlatformRomExtensions
+        [string]$EmulatorCore,
+        [string]$PlatformRomExtensions
     )
 
-	$PlatformNamePattern = SQLEscapedMatchPattern($OriginalPlatformName.Trim())
+    $platformNamePattern = SQLEscapedMatchPattern($OriginalPlatformName.Trim())
 
     if ( $OriginalPlatformName -eq $PlatformName) {
 
-        $UpdatePlatformQuery = "UPDATE emulated_platforms set exe_name = @EmulatorExeList, core = @EmulatorCore, rom_extensions = @PlatformRomExtensions WHERE name LIKE '{0}'" -f $PlatformNamePattern
+        $updatePlatformQuery = "UPDATE emulated_platforms set exe_name = @EmulatorExeList, core = @EmulatorCore, rom_extensions = @PlatformRomExtensions WHERE name LIKE '{0}'" -f $platformNamePattern
 
         Log "Editing $PlatformName in database"
-        RunDBQuery $UpdatePlatformQuery @{
-            EmulatorExeList = $EmulatorExeList
-            EmulatorCore = $EmulatorCore
+        RunDBQuery $updatePlatformQuery @{
+            EmulatorExeList       = $EmulatorExeList
+            EmulatorCore          = $EmulatorCore
             PlatformRomExtensions = $PlatformRomExtensions.Trim()
         }
-    } else {
+    }
+    else {
         Log "User changed platform's name from $OriginalPlatformName to $PlatformName. Need to delete the platform and add it again"
         Log "All games mapped to $OriginalPlatformName will be updated to platform $PlatformName"
 
@@ -152,45 +153,43 @@ function  UpdatePlatformOnEdit() {
 
         SavePlatform -PlatformName $PlatformName -EmulatorExeList $EmulatorExeList -CoreName $EmulatorCore -RomExtensions $PlatformRomExtensions
 
-        $UpdateGamesPlatformQuery = "UPDATE games SET platform = @PlatformName WHERE platform LIKE '{0}'" -f $PlatformNamePattern
+        $updateGamesPlatformQuery = "UPDATE games SET platform = @PlatformName WHERE platform LIKE '{0}'" -f $platformNamePattern
 
-        RunDBQuery $UpdateGamesPlatformQuery @{ PlatformName = $PlatformName }
+        RunDBQuery $updateGamesPlatformQuery @{ PlatformName = $PlatformName }
     }
 }
 
 function RemoveGame($GameName) {
-    $GameNamePattern = SQLEscapedMatchPattern($GameName.Trim())
-    $RemoveGameQuery = "DELETE FROM games WHERE name LIKE '{0}'" -f $GameNamePattern
+    $gameNamePattern = SQLEscapedMatchPattern($GameName.Trim())
+    $removeGameQuery = "DELETE FROM games WHERE name LIKE '{0}'" -f $gameNamePattern
 
     Log "Removing $GameName from database"
-    RunDBQuery $RemoveGameQuery
+    RunDBQuery $removeGameQuery
 }
 
 function RemovePlatform($PlatformName) {
-    $PlatformNamePattern = SQLEscapedMatchPattern($PlatformName.Trim())
-    $RemovePlatformQuery = "DELETE FROM emulated_platforms WHERE name LIKE '{0}'" -f $PlatformNamePattern
+    $platformNamePattern = SQLEscapedMatchPattern($PlatformName.Trim())
+    $removePlatformQuery = "DELETE FROM emulated_platforms WHERE name LIKE '{0}'" -f $platformNamePattern
 
     Log "Removing $PlatformName from database"
-    RunDBQuery $RemovePlatformQuery
+    RunDBQuery $removePlatformQuery
 }
 
 function RecordPlaytimOnDate($PlayTime) {
-    $ExistingPlayTimeQuery = "SELECT play_time FROM daily_playtime WHERE play_date like DATE('now')"
+    $existingPlayTimeQuery = "SELECT play_time FROM daily_playtime WHERE play_date like DATE('now')"
 
-    $ExistingPlayTime = (RunDBQuery $ExistingPlayTimeQuery).play_time
+    $existingPlayTime = (RunDBQuery $existingPlayTimeQuery).play_time
     
-    $RecordPlayTimeQuery = ""
-    if ($null -eq $ExistingPlayTime)
-    {
-        $RecordPlayTimeQuery = "INSERT INTO daily_playtime(play_date, play_time) VALUES (DATE('now'), {0})" -f $PlayTime
+    $recordPlayTimeQuery = ""
+    if ($null -eq $existingPlayTime) {
+        $recordPlayTimeQuery = "INSERT INTO daily_playtime(play_date, play_time) VALUES (DATE('now'), {0})" -f $PlayTime
     }
-    else
-    {
-        $UpdatedPlayTime = $PlayTime + $ExistingPlayTime
+    else {
+        $updatedPlayTime = $PlayTime + $existingPlayTime
 
-        $RecordPlayTimeQuery = "UPDATE daily_playtime SET play_time = {0} WHERE play_date like DATE('now')" -f $UpdatedPlayTime
+        $recordPlayTimeQuery = "UPDATE daily_playtime SET play_time = {0} WHERE play_date like DATE('now')" -f $updatedPlayTime
     }
 
     Log "Updating playTime for today in database"
-    RunDBQuery $RecordPlayTimeQuery
+    RunDBQuery $recordPlayTimeQuery
 }
