@@ -131,6 +131,10 @@ function RenderEditGameForm($GamesList) {
             ShowMessage "Removed '$gameName' from Database." "OK" "Asterisk"
             Log "Removed '$gameName' from Database."
         }
+
+        $gamesList = (RunDBQuery "SELECT name FROM games").name
+        $listBox.Items.Clear(); $listBox.Items.AddRange($gamesList);
+        $listBox.SelectedIndex = 0
     })
     $editGameForm.Controls.Add($buttonRemove)
 
@@ -285,6 +289,10 @@ function RenderEditPlatformForm($PlatformsList) {
             ShowMessage "Removed '$platformName' from Database." "OK" "Asterisk"
             Log "Removed '$platformName' from Database."
         }
+
+        $platformsList = (RunDBQuery "SELECT name FROM emulated_platforms").name
+        $listBox.Items.Clear(); $listBox.Items.AddRange($platformsList);
+        $listBox.SelectedIndex = 0
     })
     $editPlatformForm.Controls.Add($buttonRemove)
 
@@ -309,7 +317,7 @@ function RenderEditPlatformForm($PlatformsList) {
         ShowMessage "Updated '$platformName' in Database." "OK" "Asterisk"
 
         $platformsList = (RunDBQuery "SELECT name FROM emulated_platforms").name
-        $listBox.Items.Clear(); $listBox.Items.AddRange($platformsList); 
+        $listBox.Items.Clear(); $listBox.Items.AddRange($platformsList);
         $listBox.SelectedIndex = $listBox.FindString($platformName)
     })
     $editPlatformForm.Controls.Add($buttonOK)
