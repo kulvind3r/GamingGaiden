@@ -76,10 +76,10 @@ function findEmulatedGame($DetectedEmulatorExe, $EmulatorCommandLine) {
         }
     }
 
-    $emulatedGame = [regex]::Replace($romName, '\([^)]*\)|\[[^\]]*\]', "")
+    $romBasedGameName = [regex]::Replace($romName, '\([^)]*\)|\[[^\]]*\]', "")
 
-    Log ("Detected game: {0}" -f $emulatedGame.Trim())
-    return $emulatedGame.Trim()
+    Log ("Detected game: {0}" -f $romBasedGameName.Trim())
+    return $romBasedGameName.Trim()
 }
 
 function findEmulatedGameCore($DetectedEmulatorExe, $EmulatorCommandLine) {
@@ -128,8 +128,8 @@ function findEmulatedGameDetails($DetectedEmulatorExe) {
 
     $emulatorCommandLine = Get-WmiObject Win32_Process -Filter "name = '$DetectedEmulatorExe.exe'" | Select-Object -ExpandProperty CommandLine
 
-    $emulatedGameName = findEmulatedGame $DetectedEmulatorExe $emulatorCommandLine
-    if ($emulatedGameName.Length -eq 0) {
+    $emulatedGameRomBasedName = findEmulatedGame $DetectedEmulatorExe $emulatorCommandLine
+    if ($emulatedGameRomBasedName.Length -eq 0) {
         Log "Error: Detected emulated game name of 0 char length. Returning"
         return $false
     }
@@ -152,8 +152,8 @@ function findEmulatedGameDetails($DetectedEmulatorExe) {
         return $false
     }
 
-    Log "Found emulated game details. Name: $emulatedGameName, Exe: $DetectedEmulatorExe, Platform: $emulatedGamePlatform"
-    return New-Object PSObject -Property @{ Name = $emulatedGameName; Exe = $DetectedEmulatorExe ; Platform = $emulatedGamePlatform }
+    Log "Found emulated game details. Rom Based Name: $emulatedGameRomBasedName, Exe: $DetectedEmulatorExe, Platform: $emulatedGamePlatform"
+    return New-Object PSObject -Property @{ RomBasedName = $emulatedGameRomBasedName; Exe = $DetectedEmulatorExe ; Platform = $emulatedGamePlatform }
 }
 
 function GetGameDetails($Game) {

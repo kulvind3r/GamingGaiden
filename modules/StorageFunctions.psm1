@@ -8,25 +8,53 @@ function SaveGame() {
         [string]$GameLastPlayDate,
         [string]$GameCompleteStatus,
         [string]$GamePlatform,
-        [string]$GameSessionCount
+        [string]$GameSessionCount,
+        [string]$GameRomBasedName = ""
     )
 
     $gameIconBytes = (Get-Content -Path $GameIconPath -Encoding byte -Raw);
 
-    $addGameQuery = "INSERT INTO games (name, exe_name, icon, play_time, idle_time, last_play_date, completed, platform, session_count)" +
-    "VALUES (@GameName, @GameExeName, @gameIconBytes, @GamePlayTime, @GameIdleTime, @GameLastPlayDate, @GameCompleteStatus, @GamePlatform, @GameSessionCount)"
+    $addGameQuery = "INSERT INTO games (name, exe_name, icon, play_time, idle_time, last_play_date, completed, platform, session_count, rom_based_name)" +
+    "VALUES (@GameName, @GameExeName, @gameIconBytes, @GamePlayTime, @GameIdleTime, @GameLastPlayDate, @GameCompleteStatus, @GamePlatform, @GameSessionCount, @GameRomBasedName)"
 
     Log "Adding $GameName in Database"
-    RunDBQuery $addGameQuery @{
-        GameName           = $GameName.Trim()
-        GameExeName        = $GameExeName.Trim()
-        gameIconBytes      = $gameIconBytes
-        GamePlayTime       = $GamePlayTime
-        GameIdleTime       = $GameIdleTime
-        GameLastPlayDate   = $GameLastPlayDate
-        GameCompleteStatus = $GameCompleteStatus
-        GamePlatform       = $GamePlatform.Trim()
-        GameSessionCount   = $GameSessionCount
+
+    # Forced to repeat complete RunDBQuery command twice in if/else because the following code doesn't work.
+    #
+    #    $var = $GameRomBasedName.Trim()
+    #    if ($GameRomBasedName -eq "") {
+    #       $var = [System.DBNull]::Value
+    #    } 
+    #    RunDBQuery $addGameQuery @{ ..., GameRomBasedName = $var }
+    #
+    # On using the above code, [System.DBNull]::Value gets casted to string for some reason and gets inserted in DB as blank string instead of a true NULL. 
+    
+    if ($GameRomBasedName -eq "") {
+        RunDBQuery $addGameQuery @{
+            GameName           = $GameName.Trim()
+            GameExeName        = $GameExeName.Trim()
+            gameIconBytes      = $gameIconBytes
+            GamePlayTime       = $GamePlayTime
+            GameIdleTime       = $GameIdleTime
+            GameLastPlayDate   = $GameLastPlayDate
+            GameCompleteStatus = $GameCompleteStatus
+            GamePlatform       = $GamePlatform.Trim()
+            GameSessionCount   = $GameSessionCount
+            GameRomBasedName   = [System.DBNull]::Value
+        }
+    } else {
+        RunDBQuery $addGameQuery @{
+            GameName           = $GameName.Trim()
+            GameExeName        = $GameExeName.Trim()
+            gameIconBytes      = $gameIconBytes
+            GamePlayTime       = $GamePlayTime
+            GameIdleTime       = $GameIdleTime
+            GameLastPlayDate   = $GameLastPlayDate
+            GameCompleteStatus = $GameCompleteStatus
+            GamePlatform       = $GamePlatform.Trim()
+            GameSessionCount   = $GameSessionCount
+            GameRomBasedName   = $GameRomBasedName.Trim()
+        }
     }
 }
 
@@ -117,9 +145,18 @@ function UpdateGameOnEdit() {
         $getLastPlayDateQuery = "SELECT last_play_date FROM games WHERE name LIKE '{0}'" -f $gameNamePattern
         $gameLastPlayDate = (RunDBQuery $getLastPlayDateQuery).last_play_date
 
-        RemoveGame($OriginalGameName)
-        SaveGame -GameName $GameName -GameExeName $GameExeName -GameIconPath $GameIconPath `
+        if (IsExeEmulator $GameExeName) {
+            $getRomBasedNameQuery = "SELECT rom_based_name FROM games WHERE name LIKE '{0}'" -f $gameNamePattern
+            $romBasedName = (RunDBQuery $getRomBasedNameQuery).rom_based_name
+
+            SaveGame -GameName $GameName -GameExeName $GameExeName -GameIconPath $GameIconPath `
+            -GamePlayTime $GamePlayTime -GameIdleTime $gameIdleTime -GameLastPlayDate $gameLastPlayDate -GameCompleteStatus $GameCompleteStatus -GamePlatform $GamePlatform -GameSessionCount $gameSessionCount -GameRomBasedName $romBasedName
+        } else {
+            SaveGame -GameName $GameName -GameExeName $GameExeName -GameIconPath $GameIconPath `
             -GamePlayTime $GamePlayTime -GameIdleTime $gameIdleTime -GameLastPlayDate $gameLastPlayDate -GameCompleteStatus $GameCompleteStatus -GamePlatform $GamePlatform -GameSessionCount $gameSessionCount
+        }
+
+        RemoveGame($OriginalGameName)
     }
 }
  

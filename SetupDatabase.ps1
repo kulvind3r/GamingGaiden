@@ -49,6 +49,19 @@ try {
         Invoke-SqliteQuery -Query $addSessionCountColumnInGamesTableQuery -SQLiteConnection $dbConnection
     }
     # End Migration 2
+
+    # Migration 3
+    $addRomBasedNameColumnInGamesTableQuery = "ALTER TABLE games ADD COLUMN rom_based_name TEXT"
+    $checkRomBasedNameColumnInGamesTableQuery = "SELECT count(*) AS count FROM pragma_table_info('games') WHERE name='rom_based_name'"
+
+    $updateRomBasedNameColumnValues = "UPDATE games SET rom_based_name = name WHERE exe_name IN (SELECT DISTINCT exe_name FROM emulated_platforms)"
+    $checkResult = (Invoke-SqliteQuery -Query $checkRomBasedNameColumnInGamesTableQuery -SQLiteConnection $dbConnection).count
+    
+    if ($checkResult -lt 1) {
+        Invoke-SqliteQuery -Query $addRomBasedNameColumnInGamesTableQuery -SQLiteConnection $dbConnection
+        Invoke-SqliteQuery -Query $updateRomBasedNameColumnValues -SQLiteConnection $dbConnection
+    }
+    # End Migration 3
     
     $dbConnection.Close()
     $dbConnection.Dispose()

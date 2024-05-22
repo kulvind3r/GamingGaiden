@@ -77,6 +77,7 @@ function MonitorGame($DetectedExe) {
 
     $emulatedGameDetails = $null
     $gameName = $null
+    $romBasedName = $null
     $entityFound = $null
     $updatedPlayTime = 0
     $updatedLastPlayDate = (Get-Date ([datetime]::UtcNow) -UFormat %s).Split('.').Get(0)
@@ -90,14 +91,12 @@ function MonitorGame($DetectedExe) {
             TimeTrackerLoop $DetectedExe
             return
         }
-        $gameName = $emulatedGameDetails.Name
-        $entityFound = DoesEntityExists "games" "name" $gameName
+
+        $romBasedName = $emulatedGameDetails.RomBasedName
+        $entityFound = DoesEntityExists "games" "rom_based_name" $romBasedName
     }
     else {
-        $detectedExePattern = SQLEscapedMatchPattern($DetectedExe.Trim())
-        $getGameNameQuery = "SELECT name FROM games WHERE exe_name LIKE '{0}'" -f $detectedExePattern
-        $entityFound = RunDBQuery $getGameNameQuery
-        $gameName = $entityFound.name
+        $entityFound = DoesEntityExists "games" "exe_name" $DetectedExe
     }
     
     # Create Temp file to signal parent process to update notification icon color to show game is running
@@ -110,7 +109,7 @@ function MonitorGame($DetectedExe) {
 
     if ($null -ne $entityFound) {
         Log "Game Already Exists. Updating PlayTime and Last Played Date"
-        
+        $gameName = $entityFound.name
         $recordedGamePlayTime = GetPlayTime $gameName
         $recordedGameIdleTime = GetIdleTime $gameName
         $updatedPlayTime = $recordedGamePlayTime + $currentPlayTime
@@ -119,9 +118,10 @@ function MonitorGame($DetectedExe) {
         UpdateGameOnSession -GameName $gameName -GamePlayTime $updatedPlayTime -GameIdleTime $updatedIdleTime -GameLastPlayDate $updatedLastPlayDate
     }
     else {
-        Log "Game Doesn't Exists. Adding New Game"
-        SaveGame -GameName $gameName -GameExeName $DetectedExe -GameIconPath "./icons/default.png" `
-            -GamePlayTime $currentPlayTime -GameIdleTime $currentIdleTime -GameLastPlayDate $updatedLastPlayDate -GameCompleteStatus 'FALSE' -GamePlatform $emulatedGameDetails.Platform -GameSessionCount 1
+        Log "New Emulated Game Doesn't Exists. Adding."
+        
+        SaveGame -GameName $romBasedName -GameExeName $DetectedExe -GameIconPath "./icons/default.png" `
+        -GamePlayTime $currentPlayTime -GameIdleTime $currentIdleTime -GameLastPlayDate $updatedLastPlayDate -GameCompleteStatus 'FALSE' -GamePlatform $emulatedGameDetails.Platform -GameSessionCount 1 -GameRomBasedName $romBasedName
     }
 
     RecordPlaytimOnDate($currentPlayTime)
