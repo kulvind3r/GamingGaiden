@@ -94,7 +94,7 @@ function RenderEditGameForm($GamesList) {
             return
         }
         $gameNameEncoded = $gameName -replace " ", "+"
-        Start-Process "https://www.google.com/search?as_q=Cover+Art+$gameNameEncoded+Game&imgar=s&udm=2"
+        Start-Process "https://www.google.com/search?as_q=$gameNameEncoded+Game&imgar=s&udm=2"
     })
     $editGameForm.Controls.Add($buttonSearchIcon)
 
@@ -355,7 +355,7 @@ function RenderAddGameForm() {
             return
         }
         $gameNameEncoded = $gameName -replace " ", "+"
-        Start-Process "https://www.google.com/search?as_q=Cover+Art+$gameNameEncoded+Game&imgar=s&udm=2"
+        Start-Process "https://www.google.com/search?as_q=$gameNameEncoded+Game&imgar=s&udm=2"
     })
     $addGameForm.Controls.Add($buttonSearchIcon)
 
