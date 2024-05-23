@@ -9,7 +9,11 @@ try {
     Import-Module ".\modules\ThreadJob"
     Import-Module ".\modules\HelperFunctions.psm1"
     Import-Module ".\modules\UIFunctions.psm1"
+    Import-Module ".\modules\QueryFunctions.psm1"
+    Import-Module ".\modules\UIFunctionsForConfiguration.psm1"
+    Import-Module ".\modules\StorageFunctions.psm1"
     
+    #------------------------------------------
     # Check if Gaming Gaiden is already Running 
     $psScriptsRunning = get-wmiobject win32_process | Where-Object { $_.processname -eq 'powershell.exe' } | select-object commandline, ProcessId
 
@@ -24,11 +28,14 @@ try {
         }
     }
 
+    #------------------------------------------
+    # Setup Database
     ResetLog
     Log "Executing database setup"
     Start-Process -FilePath "powershell" -ArgumentList "-File", "`".\SetupDatabase.ps1`"" -WindowStyle Hidden -Wait
     Log "Database setup complete"
 
+    #------------------------------------------
     # Integrate With HWiNFO
     $HWInfoSensorTracking = 'HKCU:\SOFTWARE\HWiNFO64\Sensors\Custom\Gaming Gaiden\Other0'
     $HWInfoSensorSession = 'HKCU:\SOFTWARE\HWiNFO64\Sensors\Custom\Gaming Gaiden\Other1'
@@ -49,7 +56,7 @@ try {
     }
     
     #------------------------------------------
-    # Setup tracker Job Scripts and Other Functions
+    # Tracker Job Scripts
     $TrackerJobInitializationScript = {
         Import-Module ".\modules\ProcessFunctions.psm1";
         Import-Module ".\modules\HelperFunctions.psm1";
@@ -75,6 +82,8 @@ try {
         }
     }
 
+    #------------------------------------------
+    # Functions
     function ResetIconAndSensors() {
         Log "Resetting Icon and Sensors"
         Remove-Item "$env:TEMP\GG-TrackingGame.txt" -ErrorAction silentlycontinue
@@ -105,15 +114,22 @@ try {
         Log "Stopped tracker"
     }
 
-    function  ConfigureAction($Action, $WindowStyle = "Normal") {
-        $databaseFileHashBefore = CalculateFileHash '.\GamingGaiden.db'
-        Log "Database hash before: $databaseFileHashBefore"
+    function  ExecuteConfigureAction() {
+        Param(
+            [scriptblock]$ConfigureFunctionToCall,
+            [string[]]$EntityList = $null
+        )
 
-        Log "Executing configuration action: $Action"
-        Start-Process -FilePath "powershell" -ArgumentList "-File", "`".\Configure.ps1`"", "$Action" -NoNewWindow -Wait
+        $databaseFileHashBefore = CalculateFileHash '.\GamingGaiden.db'; Log "Database hash before: $databaseFileHashBefore"
 
-        $databaseFileHashAfter = CalculateFileHash '.\GamingGaiden.db'
-        Log "Database hash after: $databaseFileHashAfter"
+        if ($null -eq $EntityList) {
+            $ConfigureFunctionToCall.Invoke()
+        } 
+        else {
+            $ConfigureFunctionToCall.Invoke((, $EntityList))
+        }
+        
+        $databaseFileHashAfter = CalculateFileHash '.\GamingGaiden.db'; Log "Database hash after: $databaseFileHashAfter"
     
         if ($databaseFileHashAfter -ne $databaseFileHashBefore) {
             BackupDatabase
@@ -211,6 +227,8 @@ try {
         }
     })
 
+    #------------------------------------------
+    # Setup Tray Icon Context Menu Actions
     $allGamesMenuItem.Add_Click({
         $gamesCheckResult = RenderGameList
         if ($gamesCheckResult -ne $false) {
@@ -218,10 +236,53 @@ try {
         }
     })
 
+    $StartTrackerMenuItem.Add_Click({ 
+        StartTrackerJob;
+        $AppNotifyIcon.ShowBalloonTip(3000, "Gaming Gaiden", "Tracker Started.", [System.Windows.Forms.ToolTipIcon]::Info)
+    })
+
+    $StopTrackerMenuItem.Add_Click({ 
+        StopTrackerJob
+        $AppNotifyIcon.ShowBalloonTip(3000, "Gaming Gaiden", "Tracker Stopped.", [System.Windows.Forms.ToolTipIcon]::Info)
+    })
+
+    $helpMenuItem.Add_Click({
+        Log "Showing help"
+        Invoke-Item ".\ui\Manual.html"
+    })
+
+    $aboutMenuItem.Add_Click({
+        RenderAboutDialog
+    })
+
+    $exitMenuItem.Add_Click({ 
+        $AppNotifyIcon.Visible = $false; 
+        Stop-Job -Name "TrackerJob";
+        $Timer.Stop()
+        $Timer.Dispose()
+        [System.Windows.Forms.Application]::Exit(); 
+    })
+
+    #------------------------------------------
+    # Statistics Sub Menu Actions
+    $summaryItem.Add_Click({
+        $sessionVsPlaytimeCheckResult = RenderSummary
+        if ($sessionVsPlaytimeCheckResult -ne $false) {
+            Invoke-Item ".\ui\Summary.html"
+        }
+    })
+
     $gamingTimeMenuItem.Add_Click({
         $gameTimeCheckResult = RenderGamingTime
         if ($gameTimeCheckResult -ne $false) {
             Invoke-Item ".\ui\GamingTime.html"
+        }
+    })
+
+    $gamesPerPlatformMenuItem.Add_Click({
+        $gamesPerPlatformCheckResult = RenderGamesPerPlatform
+        if ($gamesPerPlatformCheckResult -ne $false) {
+            Invoke-Item ".\ui\GamesPerPlatform.html"
         }
     })
 
@@ -246,56 +307,52 @@ try {
         }
     })
 
-    $summaryItem.Add_Click({
-        $sessionVsPlaytimeCheckResult = RenderSummary
-        if ($sessionVsPlaytimeCheckResult -ne $false) {
-            Invoke-Item ".\ui\Summary.html"
-        }
-    })
-
-    $gamesPerPlatformMenuItem.Add_Click({
-        $gamesPerPlatformCheckResult = RenderGamesPerPlatform
-        if ($gamesPerPlatformCheckResult -ne $false) {
-            Invoke-Item ".\ui\GamesPerPlatform.html"
-        }
-    })
-
-    $helpMenuItem.Add_Click({
-        Log "Showing help"
-        Invoke-Item ".\ui\Manual.html"
-    })
-
-    $aboutMenuItem.Add_Click({
-        RenderAboutDialog
-    })
-
-    $StartTrackerMenuItem.Add_Click({ 
-        StartTrackerJob;
-        $AppNotifyIcon.ShowBalloonTip(3000, "Gaming Gaiden", "Tracker Started.", [System.Windows.Forms.ToolTipIcon]::Info)
-    })
-
-    $StopTrackerMenuItem.Add_Click({ 
-        StopTrackerJob
-        $AppNotifyIcon.ShowBalloonTip(3000, "Gaming Gaiden", "Tracker Stopped.", [System.Windows.Forms.ToolTipIcon]::Info)
-    })
-
-    $addGameMenuItem.Add_Click({ ConfigureAction "AddGame"; CleanupTempFiles })
-
-    $addPlatformMenuItem.Add_Click({ ConfigureAction "AddPlatform"; })
-
-    $editGameMenuItem.Add_Click({ ConfigureAction "EditGame"; CleanupTempFiles })
-
-    $editPlatformMenuItem.Add_Click({ ConfigureAction "EditPlatform"; })
-
-    $exitMenuItem.Add_Click({ 
-        $AppNotifyIcon.Visible = $false; 
-        Stop-Job -Name "TrackerJob";
-        $Timer.Stop()
-        $Timer.Dispose()
-        [System.Windows.Forms.Application]::Exit(); 
-    })
     #------------------------------------------
+    # Settings Sub Menu Actions
+    $addGameMenuItem.Add_Click({ 
+        Log "Starting game registration"
 
+        ExecuteConfigureAction -ConfigureFunctionToCall $function:RenderAddGameForm
+
+        CleanupTempFiles 
+    })
+
+    $addPlatformMenuItem.Add_Click({ 
+        Log "Starting emulated platform registration"
+
+        ExecuteConfigureAction -ConfigureFunctionToCall $function:RenderAddPlatformForm 
+    })
+
+    $editGameMenuItem.Add_Click({ 
+        Log "Starting game editing"
+
+        $gamesList = (RunDBQuery "SELECT name FROM games").name
+        if ($gamesList.Length -eq 0) {
+            ShowMessage "No Games found in database. Please add few games first." "OK" "Error"
+            Log "Error: Games list empty. Returning"
+            return
+        }
+
+        ExecuteConfigureAction -ConfigureFunctionToCall $function:RenderEditGameForm -EntityList $gamesList
+
+        CleanupTempFiles 
+    })
+
+    $editPlatformMenuItem.Add_Click({ 
+        Log "Starting platform editing"
+
+        $platformsList = (RunDBQuery "SELECT name FROM emulated_platforms").name 
+        if ($platformsList.Length -eq 0) {
+            ShowMessage "No Platforms found in database. Please add few emulators first." "OK" "Error"
+            Log "Error: Platform list empty. Returning"
+            return
+        }
+        
+        ExecuteConfigureAction -ConfigureFunctionToCall $function:RenderEditPlatformForm -EntityList $platformsList
+    })
+
+    #------------------------------------------
+    # Launch Application
     Log "Starting tracker on app boot"
     StartTrackerJob
 
