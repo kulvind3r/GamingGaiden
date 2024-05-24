@@ -182,7 +182,7 @@ try {
     $exitMenuItem = CreateMenuItem "Exit"
     $StartTrackerMenuItem = CreateMenuItem "Start Tracker"
     $StopTrackerMenuItem = CreateMenuItem "Stop Tracker"
-    $helpMenuItem = CreateMenuItem "Help"
+    $helpMenuItem = CreateMenuItem "Help / FAQs"
     $aboutMenuItem = CreateMenuItem "About"
     
     $settingsSubMenuItem = CreateMenuItem "Settings"
