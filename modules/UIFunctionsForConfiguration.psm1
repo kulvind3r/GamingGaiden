@@ -9,7 +9,7 @@ function FilterListBox {
 
     foreach ($item in $originalItems) {
         if ($item -like "*$filterText*") {
-            $listBox.Items.Add($item)
+            $null = $listBox.Items.Add($item)
         }
     }
 }

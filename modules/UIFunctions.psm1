@@ -68,7 +68,7 @@ function RenderGameList() {
 		
         $currentGame = [Game]::new($iconUri, $name, $gameRecord.platform, $gameRecord.play_time, $gameRecord.session_count, $statusUri, $gameRecord.last_play_date)
 
-        $games.Add($currentGame)
+        $null = $games.Add($currentGame)
         $totalPlayTime += $gameRecord.play_time
     }
 	
