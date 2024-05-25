@@ -35,7 +35,7 @@ function RenderGameList() {
     $getMaxPlayTime = "SELECT max(play_time) as 'max_play_time' FROM games"
     $maxPlayTime = (RunDBQuery $getMaxPlayTime).max_play_time
 	
-    $games = @()
+    $games = [System.Collections.Generic.List[Game]]::new()
     $iconUri= $null
     $totalPlayTime = $null
     foreach ($gameRecord in $gameRecords) {
@@ -68,7 +68,7 @@ function RenderGameList() {
 		
         $currentGame = [Game]::new($iconUri, $name, $gameRecord.platform, $gameRecord.play_time, $gameRecord.session_count, $statusUri, $gameRecord.last_play_date)
 
-        $games += $currentGame
+        $games.Add($currentGame)
         $totalPlayTime += $gameRecord.play_time
     }
 	
@@ -81,7 +81,7 @@ function RenderGameList() {
     $report = $report -replace "Session_Count", "Session Count"
     $report = $report -replace "Completed", "Status"
     $report = $report -replace "_MAXPLAYTIME_", $maxPlayTime
-    $report = $report -replace "_TOTALGAMECOUNT_", $games.length
+    $report = $report -replace "_TOTALGAMECOUNT_", $games.Count
     $report = $report -replace "_TOTALPLAYTIME_", $totalPlayTimeString
 	
     [System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $workingDirectory\ui\AllGames.html
