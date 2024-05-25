@@ -19,10 +19,9 @@ class Game {
 }
 
 function RenderGameList() {
-    Log "Rendering my games list"
+    Log "Rendering all games list."
 	
     $workingDirectory = (Get-Location).Path
-    mkdir -f $workingDirectory\ui\resources\images
 	
     $getAllGamesQuery = "SELECT name, icon, platform, play_time, session_count, completed, last_play_date FROM games"
     $gameRecords = RunDBQuery $getAllGamesQuery
@@ -38,24 +37,27 @@ function RenderGameList() {
     $games = [System.Collections.Generic.List[Game]]::new()
     $iconUri= $null
     $totalPlayTime = $null
+
     foreach ($gameRecord in $gameRecords) {
         $name = $gameRecord.name
         $imageFileName = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($name))
 
-        # Check if image is pre loaded for ui. Render if not found
-        if((Test-Path "$workingDirectory\ui\resources\images\$imageFileName.jpg")) {
+        # Check if image is pre loaded for ui. Render if not found.
+        if ( (Test-Path "$workingDirectory\ui\resources\images\$imageFileName.jpg") ) {
             $iconUri = "<img src=`".\resources\images\$imageFileName.jpg`">"
-        } elseif ((Test-Path "$workingDirectory\ui\resources\images\$imageFileName.png")) {
+        } 
+        elseif ( (Test-Path "$workingDirectory\ui\resources\images\$imageFileName.png") ) {
             $iconUri = "<img src=`".\resources\images\$imageFileName.png`">"
-        } else {
-
+        } 
+        else {
             $iconByteStream = [System.IO.MemoryStream]::new($gameRecord.icon)
             $iconBitmap = [System.Drawing.Bitmap]::FromStream($iconByteStream)
 
             if ($iconBitmap.PixelFormat -eq "Format32bppArgb") {
                 $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.png", [System.Drawing.Imaging.ImageFormat]::Png)
                 $iconUri = "<img src=`".\resources\images\$imageFileName.png`">"
-            } else {
+            } 
+            else {
                 $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.jpg", [System.Drawing.Imaging.ImageFormat]::Jpeg)
                 $iconUri = "<img src=`".\resources\images\$imageFileName.jpg`">"
             }
@@ -70,7 +72,9 @@ function RenderGameList() {
 		
         $currentGame = [Game]::new($iconUri, $name, $gameRecord.platform, $gameRecord.play_time, $gameRecord.session_count, $statusUri, $gameRecord.last_play_date)
 
+        # Assign to null to avoid appending output to pipeline, improves performance and resource consumption
         $null = $games.Add($currentGame)
+
         $totalPlayTime += $gameRecord.play_time
     }
 	

@@ -18,14 +18,14 @@ try {
     # Check if Gaming Gaiden is already Running 
     $psScriptsRunning = get-wmiobject win32_process | Where-Object { $_.processname -eq 'powershell.exe' } | select-object commandline, ProcessId
 
-    ForEach ($psCmdLine in $psScriptsRunning) {
+    foreach ($psCmdLine in $psScriptsRunning) {
         [Int32]$otherPID = $psCmdLine.ProcessId
         [String]$otherCmdLine = $psCmdLine.commandline
     
-        If (($otherCmdLine -like "*GamingGaiden.ps1*") -And ($otherPID -ne $PID) ) {
+        if (($otherCmdLine -like "*GamingGaiden.ps1*") -And ($otherPID -ne $PID) ) {
             ShowMessage "Gaming Gaiden is already running as PID [$otherPID]. Not Starting another Instance." "Ok" "Error"
             Log "Error: Gaming Gaiden already running as PID [$otherPID]. Not Starting another Instance."
-            Exit
+            exit 1;
         }
     }
 
@@ -37,7 +37,6 @@ try {
 
     #------------------------------------------
     # Setup Database
-    
     Log "Executing database setup"
     Start-Process -FilePath "powershell" -ArgumentList "-File", "`".\SetupDatabase.ps1`"" -WindowStyle Hidden -Wait
     Log "Database setup complete"
@@ -99,7 +98,7 @@ try {
         $AppNotifyIcon.Text = "Gaming Gaiden"
     }
 
-    function  StartTrackerJob {
+    function  StartTrackerJob() {
         Start-ThreadJob -InitializationScript $TrackerJobInitializationScript -ScriptBlock $TrackerJobScript -Name "TrackerJob"
         $StopTrackerMenuItem.Enabled = $true
         $StartTrackerMenuItem.Enabled = $false
@@ -107,10 +106,10 @@ try {
         # Reset App Icon & Cleanup Tracking file/reset sensors before starting tracker
         ResetIconAndSensors
         $AppNotifyIcon.Icon = $IconRunning
-        Log "Started tracker"
+        Log "Started tracker."
     }
 
-    function  StopTrackerJob {
+    function  StopTrackerJob() {
         Stop-Job "TrackerJob" -ErrorAction silentlycontinue
         $StopTrackerMenuItem.Enabled = $false
         $StartTrackerMenuItem.Enabled = $true
@@ -186,7 +185,6 @@ try {
     $AppNotifyIcon.Visible = $true
 
     $allGamesMenuItem = CreateMenuItem "All Games"
-    $allGamesMenuItem.Font = New-Object Drawing.Font("Segoe UI", 9, [Drawing.FontStyle]::Bold)
 
     $exitMenuItem = CreateMenuItem "Exit"
     $StartTrackerMenuItem = CreateMenuItem "Start Tracker"
@@ -218,7 +216,6 @@ try {
     $statsSubMenuItem.DropDownItems.Add($mostPlayedMenuItem)
     $statsSubMenuItem.DropDownItems.Add($idleTimeMenuItem)
     $statsSubMenuItem.DropDownItems.Add($pcVsEmulationMenuItem)
-    
 
     $appContextMenu = New-Object System.Windows.Forms.ContextMenuStrip
     $appContextMenu.Items.AddRange(@($allGamesMenuItem, $menuItemSeparator2, $statsSubMenuItem, $menuItemSeparator3, $settingsSubMenuItem, $menuItemSeparator4, $StartTrackerMenuItem, $StopTrackerMenuItem, $menuItemSeparator5, $helpMenuItem, $aboutMenuItem, $menuItemSeparator6, $exitMenuItem))
@@ -227,11 +224,11 @@ try {
     #------------------------------------------
     # Setup Tray Icon Actions
     $AppNotifyIcon.Add_Click({
-        If ($_.Button -eq [Windows.Forms.MouseButtons]::Left) {
+        if ($_.Button -eq [Windows.Forms.MouseButtons]::Left) {
             RenderQuickView
         }
 
-        If ($_.Button -eq [Windows.Forms.MouseButtons]::Right) {
+        if ($_.Button -eq [Windows.Forms.MouseButtons]::Right) {
             $AppNotifyIcon.ShowContextMenu
         }
     })

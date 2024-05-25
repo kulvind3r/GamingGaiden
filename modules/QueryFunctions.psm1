@@ -85,9 +85,10 @@ function findEmulatedGame($DetectedEmulatorExe, $EmulatorCommandLine) {
 function findEmulatedGameCore($DetectedEmulatorExe, $EmulatorCommandLine) {
     Log "Finding core in use by $DetectedEmulatorExe"
 
+    $coreName = $null
+
     $pattern = SQLEscapedMatchPattern $DetectedEmulatorExe.Trim()
     $getCoresQuery = "SELECT core FROM emulated_platforms WHERE exe_name LIKE '%{0}%'" -f $pattern
-    $coreName = $null
     $cores = (RunDBQuery $getCoresQuery).core
     if ( $cores.Length -le 1) {
         $coreName = $cores[0]
@@ -104,9 +105,10 @@ function findEmulatedGameCore($DetectedEmulatorExe, $EmulatorCommandLine) {
     return $coreName
 }
 
-function findEmulatedGamePlatform($DetectedEmulatorExe, $Core) {	
-    $exePattern = SQLEscapedMatchPattern $DetectedEmulatorExe.Trim()
+function findEmulatedGamePlatform($DetectedEmulatorExe, $Core) {
     $getPlatformQuery = $null
+
+    $exePattern = SQLEscapedMatchPattern $DetectedEmulatorExe.Trim()
     if ($Core.Length -eq 0 ) {
         Log "Finding platform for $DetectedEmulatorExe"
         $getPlatformQuery = "SELECT name FROM emulated_platforms WHERE exe_name LIKE '%{0}%' AND core LIKE ''" -f $exePattern

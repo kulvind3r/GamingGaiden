@@ -9,6 +9,7 @@ function FilterListBox {
 
     foreach ($item in $originalItems) {
         if ($item -like "*$filterText*") {
+            # Assign to null to avoid appending output to pipeline, improves performance and resource consumption
             $null = $listBox.Items.Add($item)
         }
     }
@@ -214,8 +215,8 @@ function RenderEditPlatformForm($PlatformsList) {
     $textSearch = CreateTextBox "" 465 20 160 20; $editPlatformForm.Controls.Add($textSearch)
 
     $textSearch.Add_TextChanged({
-            FilterListBox -filterText $textSearch.Text -listBox $listBox -originalItems $PlatformsList
-        })
+        FilterListBox -filterText $textSearch.Text -listBox $listBox -originalItems $PlatformsList
+    })
 	
     $labelName = Createlabel "Platorm:" 10 20; $editPlatformForm.Controls.Add($labelName)
     $textName = CreateTextBox "" 75 20 200 20; $editPlatformForm.Controls.Add($textName)

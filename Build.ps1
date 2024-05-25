@@ -1,6 +1,7 @@
 [System.Reflection.Assembly]::LoadWithPartialName('System.Web') | out-null
 
 mkdir -f .\build\GamingGaiden
+
 Remove-Item .\ui\*.html -ErrorAction SilentlyContinue
 
 pandoc.exe --ascii .\Manual.md -o .\ui\Manual.html

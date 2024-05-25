@@ -42,7 +42,8 @@ function SaveGame() {
             GameSessionCount   = $GameSessionCount
             GameRomBasedName   = [System.DBNull]::Value
         }
-    } else {
+    }
+    else {
         RunDBQuery $addGameQuery @{
             GameName           = $GameName.Trim()
             GameExeName        = $GameExeName.Trim()
