@@ -40,18 +40,27 @@ function RenderGameList() {
     $totalPlayTime = $null
     foreach ($gameRecord in $gameRecords) {
         $name = $gameRecord.name
-        
         $imageFileName = ToBase64 $name
-        $iconBitmap = BytesToBitmap $gameRecord.icon
-        if ($iconBitmap.PixelFormat -eq "Format32bppArgb") {
-            $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.png", [System.Drawing.Imaging.ImageFormat]::Png)
+
+        # Check if image is pre loaded for ui. Render if not found
+        if((Test-Path "$workingDirectory\ui\resources\images\$imageFileName.jpg")) {
+            $iconUri = "<img src=`".\resources\images\$imageFileName.jpg`">"
+        } elseif ((Test-Path "$workingDirectory\ui\resources\images\$imageFileName.png")) {
             $iconUri = "<img src=`".\resources\images\$imageFileName.png`">"
         } else {
-            $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.jpg", [System.Drawing.Imaging.ImageFormat]::Jpeg)
-            $iconUri = "<img src=`".\resources\images\$imageFileName.jpg`">"
+
+            $iconBitmap = BytesToBitmap $gameRecord.icon
+            if ($iconBitmap.PixelFormat -eq "Format32bppArgb") {
+                $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.png", [System.Drawing.Imaging.ImageFormat]::Png)
+                $iconUri = "<img src=`".\resources\images\$imageFileName.png`">"
+            } else {
+                $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.jpg", [System.Drawing.Imaging.ImageFormat]::Jpeg)
+                $iconUri = "<img src=`".\resources\images\$imageFileName.jpg`">"
+            }
+
+            $iconBitmap.Dispose()
         }
         
-        $iconBitmap.Dispose()
         $statusUri = "<div>Finished</div><img src=`".\resources\images\finished.png`">"
         if ($gameRecord.completed -eq 'FALSE') {
             $statusUri = "<div>Playing</div><img src=`".\resources\images\playing.png`">"

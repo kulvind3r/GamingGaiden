@@ -3,6 +3,7 @@
 [System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms')    | Out-null
 [System.Reflection.Assembly]::LoadWithPartialName('System.Drawing')          | Out-null
 [System.Reflection.Assembly]::LoadWithPartialName('System.Web')          	 | Out-null
+[System.Reflection.assembly]::LoadwithPartialname("Microsoft.VisualBasic")   | Out-Null
 
 try {
     Import-Module ".\modules\PSSQLite"

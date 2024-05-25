@@ -168,6 +168,12 @@ function RenderEditGameForm($GamesList) {
 
         ShowMessage "Updated '$gameName' in Database." "OK" "Asterisk"
 
+        # Pre Load image in ui\resources\images folder for rendering 'All Games' list faster
+        $imageFileName = ToBase64 $gameName
+        $gameIconPath = $pictureBoxImagePath.Text
+        $imageFileExtension = $gameIconPath.Split(".")[-1]
+        Copy-Item -Path $gameIconPath -Destination ".\ui\resources\images\$imageFileName.$imageFileExtension"
+
         $gamesList = (RunDBQuery "SELECT name FROM games").name
         $listBox.Items.Clear(); $listBox.Items.AddRange($gamesList); 
         $listBox.SelectedIndex = $listBox.FindString($gameName)
@@ -406,7 +412,7 @@ function RenderAddGameForm() {
                 return
             }
 
-            $gameIconPath = "$env:TEMP\GG-{0}.ico" -f $(Get-Random)
+            $gameIconPath = "$env:TEMP\GG-{0}.jpg" -f $(Get-Random)
             $gameIcon = [System.Drawing.Icon]::ExtractAssociatedIcon($gameExeFile)
             $gameIcon.ToBitmap().save($gameIconPath)
     
@@ -431,6 +437,11 @@ function RenderAddGameForm() {
 
         SaveGame -GameName $gameName -GameExeName $gameExeName -GameIconPath $gameIconPath `
         -GamePlayTime 0 -GameIdleTime 0 -GameLastPlayDate $gameLastPlayDate -GameCompleteStatus 'FALSE' -GamePlatform 'PC' -GameSessionCount 0
+
+        # Pre Load image in ui\resources\images folder for rendering 'All Games' list faster
+        $imageFileName = ToBase64 $gameName
+        $imageFileExtension = $gameIconPath.Split(".")[-1]
+        Copy-Item -Path $gameIconPath -Destination ".\ui\resources\images\$imageFileName.$imageFileExtension"
 
         ShowMessage "Registered '$gameName' in Database." "OK" "Asterisk"
 
