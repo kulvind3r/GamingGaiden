@@ -1,9 +1,3 @@
-function ResetLog() {
-    Remove-Item ".\GamingGaiden.log" -ErrorAction silentlycontinue
-    $timestamp = Get-date -f s
-    Write-Output "$timestamp : Cleared log at application boot" >> ".\GamingGaiden.log"
-}
-
 function Log($MSG) {
     $timestamp = Get-date -f s
     $mutex = New-Object System.Threading.Mutex($false, "LogFileLock")
@@ -12,10 +6,6 @@ function Log($MSG) {
         Write-Output "$timestamp : $MSG" >> ".\GamingGaiden.log"
         [void]$mutex.ReleaseMutex()
     }
-}
-
-function CleanupTempFiles() {
-    Remove-Item -Force "$env:TEMP\GG-*.png"
 }
 
 function SQLEscapedMatchPattern($pattern) {
@@ -29,29 +19,6 @@ function ToBase64($String) {
 function PlayTimeMinsToString($PlayTime) {
     $minutes = $null; $hours = [math]::divrem($PlayTime, 60, [ref]$minutes);
     return ("{0} Hr {1} Min" -f $hours, $minutes)
-}
-
-function PlayDateEpochToString($PlayDateEpoch) {
-    [datetime]$origin = '1970-01-01 00:00:00'
-    return $origin.AddSeconds($PlayDateEpoch).ToLocalTime().ToString("dd MMMM yyyy")
-}
-
-function PlayTimeStringToMin($PlayTime) {
-    if ( -Not ($PlayTime -match '^[0-9]{0,5} Hr [0-5]{0,1}[0-9]{1} Min$') ) {
-        Log "Error: Incorrect playtime format. Returning null"
-        return $null
-    }
-
-    $hours = $PlayTime.Split(" ")[0]
-    $minutes = $PlayTime.Split(" ")[2]
-
-    return ([int]$hours * 60) + [int]$minutes
-}
-
-function BytesToBitmap($ImageBytes) {
-    $iconByteStream = [System.IO.MemoryStream]::new($ImageBytes)
-    $iconBitmap = [System.Drawing.Bitmap]::FromStream($iconByteStream)
-    return $iconBitmap
 }
 
 function ResizeImage($ImagePath, $GameName) {
@@ -84,19 +51,6 @@ function CreateMenuItem($Text) {
     return $menuItem
 }
 
-function CreateMenuSeparator() {
-    return New-Object Windows.Forms.ToolStripSeparator
-}
-
-function CreateNotifyIcon($ToolTip, $IconPath) {
-    $notifyIcon = New-Object System.Windows.Forms.NotifyIcon
-    $icon = [System.Drawing.Icon]::new($IconPath)
-    $notifyIcon.Text = $ToolTip; 
-    $notifyIcon.Icon = $icon;
-
-    return $notifyIcon
-}
-
 function OpenFileDialog($Title, $Filters, $DirectoryPath = [Environment]::GetFolderPath('Desktop')) {
     $fileBrowser = New-Object System.Windows.Forms.OpenFileDialog -Property @{ 
         InitialDirectory = $DirectoryPath
@@ -108,10 +62,6 @@ function OpenFileDialog($Title, $Filters, $DirectoryPath = [Environment]::GetFol
 
 function ShowMessage($Msg, $Buttons, $Type) {
     [System.Windows.Forms.MessageBox]::Show($Msg, 'Gaming Gaiden', $Buttons, $Type)
-}
-
-function UserConfirmationDialog($Title, $Prompt) {
-    return [microsoft.visualbasic.interaction]::MsgBox($Prompt, "YesNo,Question", $Title).ToString()
 }
 
 function CalculateFileHash ($FilePath) {

@@ -69,11 +69,13 @@ function RenderEditGameForm($GamesList) {
         $textPlatform.Text = $selectedGame.platform
         $checkboxCompleted.Checked = ($selectedGame.completed -eq 'TRUE')
 
-        $playTimeString = PlayTimeMinsToString $selectedGame.play_time
-        $textPlayTime.Text = $playTimeString
+        $textPlayTime.Text = PlayTimeMinsToString $selectedGame.play_time
 
         $iconFileName = ToBase64 $selectedGame.name
-        $iconBitmap = BytesToBitmap $selectedGame.icon
+
+        $iconByteStream = [System.IO.MemoryStream]::new($selectedGame.icon)
+        $iconBitmap = [System.Drawing.Bitmap]::FromStream($iconByteStream)
+
         if ($iconBitmap.PixelFormat -eq "Format32bppArgb") {
             $imagePath = "$env:TEMP\GG-{0}-$iconFileName.png" -f $(Get-Random)
             $iconBitmap.Save($imagePath, [System.Drawing.Imaging.ImageFormat]::Png)
@@ -131,34 +133,39 @@ function RenderEditGameForm($GamesList) {
     $buttonRemove = CreateButton "Delete" 470 100
     $buttonRemove.Add_Click({
         $gameName = $textName.Text
-        $userInput = UserConfirmationDialog "Confirm Game Removal" "All Data about '$gameName' will be lost.`r`nAre you sure?"
+        
+        $userInput = [microsoft.visualbasic.interaction]::MsgBox("All Data about '$gameName' will be lost.`r`nAre you sure?", "YesNo,Question", "Confirm Game Removal").ToString()
         if ($userInput.ToLower() -eq 'yes')	{
             RemoveGame $gameName
             ShowMessage "Removed '$gameName' from Database." "OK" "Asterisk"
             Log "Removed '$gameName' from Database."
-        }
 
-        $gamesList = (RunDBQuery "SELECT name FROM games").name
-        $listBox.Items.Clear(); $listBox.Items.AddRange($gamesList);
-        $listBox.SelectedIndex = 0
+            $gamesList = (RunDBQuery "SELECT name FROM games").name
+            $listBox.Items.Clear(); $listBox.Items.AddRange($gamesList);
+            $listBox.SelectedIndex = 0
+        }
     })
     $editGameForm.Controls.Add($buttonRemove)
 
     $buttonOK = CreateButton "OK" 245 185
     $buttonOK.Add_Click({
+        $currentlySelectedIndex = $listBox.SelectedIndex
+
         if ($textName.Text -eq "" -Or $textPlatform.Text -eq "" -Or $textPlayTime.Text -eq "")	{
             ShowMessage "Name, Platform, Playtime fields cannot be empty. Try Again." "OK" "Error"
+            $listBox.SetSelected($currentlySelectedIndex, $true)
             return
         }
 
         $gameName = $textName.Text
 
-        $playTimeInMin = PlayTimeStringToMin $textPlayTime.Text
-        if ($null -eq $playTimeInMin) {
-            ShowMessage "Incorrect Playtime Format. Enter exactly 'x Hr y Min'. Resetting PlayTime" "OK" "Error"
-            $textPlayTime.Text = $playTimeString
+        $playTime = $textPlayTime.Text
+        if ( -Not ($playTime -match '^[0-9]{0,5} Hr [0-5]{0,1}[0-9]{1} Min$') ) {
+            ShowMessage "Incorrect Playtime Format. Enter exactly 'x Hr y Min'." "OK" "Error"
+            $listBox.SetSelected($currentlySelectedIndex, $true)
             return
         }
+        $playTimeInMin = ([int]$playTime.Split(" ")[0] * 60) + [int]$playTime.Split(" ")[2]
 
         $gameExeName = $textExe.Text -replace ".exe"
 
@@ -295,29 +302,34 @@ function RenderEditPlatformForm($PlatformsList) {
     $buttonRemove = CreateButton "Delete" 300 18
     $buttonRemove.Add_Click({
         $platformName = $textName.Text
-        $userInput = UserConfirmationDialog "Confirm Platform Removal" "All Data about '$platformName' will be lost.`r`nAre you sure?"
+
+        $userInput = [microsoft.visualbasic.interaction]::MsgBox("All Data about '$platformName' will be lost.`r`nAre you sure?", "YesNo,Question", "Confirm Platform Removal").ToString()
         if ($userInput.ToLower() -eq 'yes')	{
             RemovePlatform $platformName
             ShowMessage "Removed '$platformName' from Database." "OK" "Asterisk"
             Log "Removed '$platformName' from Database."
-        }
 
-        $platformsList = (RunDBQuery "SELECT name FROM emulated_platforms").name
-        $listBox.Items.Clear(); $listBox.Items.AddRange($platformsList);
-        $listBox.SelectedIndex = 0
+            $platformsList = (RunDBQuery "SELECT name FROM emulated_platforms").name
+            $listBox.Items.Clear(); $listBox.Items.AddRange($platformsList);
+            $listBox.SelectedIndex = 0
+        }
     })
     $editPlatformForm.Controls.Add($buttonRemove)
 
     $buttonOK = CreateButton "OK" 85 254
     $buttonOK.Add_Click({
-        if ($textRomExt.Text -eq "" -Or $textExe.Text -eq "") {
-            ShowMessage "Exe List or Rom Extensions field cannot be empty.`r`nTry again." "OK" "Error"
+        $currentlySelectedIndex = $listBox.SelectedIndex
+
+        if ($textRomExt.Text -eq "" -Or $textExe.Text -eq "" -Or $textName.Text -eq "") {
+            ShowMessage "Platform Name, Exe List or Rom Extensions field cannot be empty.`r`nTry again." "OK" "Error"
+            $listBox.SetSelected($currentlySelectedIndex, $true)
             return
         }
 
         $platformRomExtensions = $textRomExt.Text
         if (-Not ($platformRomExtensions -match '^([a-z]{3},)*([a-z]{3}){1}$')) {
-            ShowMessage "Error in rom extensions. Please submit extensions as a ',' separated list without the leading '.'`r`ne.g. zip,iso,chd OR zip,iso OR zip" "OK" "Error"
+            ShowMessage "Error in rom extensions. Please submit extensions as a ',' separated list without the leading '.' or spaces.`r`n`r`ne.g. zip,iso,chd OR zip,iso OR zip" "OK" "Error"
+            $listBox.SetSelected($currentlySelectedIndex, $true)
             return
         }
 

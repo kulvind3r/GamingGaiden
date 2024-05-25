@@ -30,8 +30,14 @@ try {
     }
 
     #------------------------------------------
+    # Reset Log At Application Boot
+    Remove-Item ".\GamingGaiden.log" -ErrorAction silentlycontinue
+    $timestamp = Get-date -f s
+    Write-Output "$timestamp : Cleared log at application boot" >> ".\GamingGaiden.log"
+
+    #------------------------------------------
     # Setup Database
-    ResetLog
+    
     Log "Executing database setup"
     Start-Process -FilePath "powershell" -ArgumentList "-File", "`".\SetupDatabase.ps1`"" -WindowStyle Hidden -Wait
     Log "Database setup complete"
@@ -163,18 +169,20 @@ try {
 
     #------------------------------------------
     # Setup Tray Icon
-    $menuItemSeparator1 = CreateMenuSeparator
-    $menuItemSeparator2 = CreateMenuSeparator
-    $menuItemSeparator3 = CreateMenuSeparator
-    $menuItemSeparator4 = CreateMenuSeparator
-    $menuItemSeparator5 = CreateMenuSeparator
-    $menuItemSeparator6 = CreateMenuSeparator
+    $menuItemSeparator1 = New-Object Windows.Forms.ToolStripSeparator
+    $menuItemSeparator2 = New-Object Windows.Forms.ToolStripSeparator
+    $menuItemSeparator3 = New-Object Windows.Forms.ToolStripSeparator
+    $menuItemSeparator4 = New-Object Windows.Forms.ToolStripSeparator
+    $menuItemSeparator5 = New-Object Windows.Forms.ToolStripSeparator
+    $menuItemSeparator6 = New-Object Windows.Forms.ToolStripSeparator
 
     $IconRunning = [System.Drawing.Icon]::new(".\icons\running.ico")
     $IconTracking = [System.Drawing.Icon]::new(".\icons\tracking.ico")
     $IconStopped = [System.Drawing.Icon]::new(".\icons\stopped.ico")
 
-    $AppNotifyIcon = CreateNotifyIcon "Gaming Gaiden" ".\icons\running.ico"
+    $AppNotifyIcon = New-Object System.Windows.Forms.NotifyIcon
+    $AppNotifyIcon.Text = "Gaming Gaiden"
+    $AppNotifyIcon.Icon = $IconRunning
     $AppNotifyIcon.Visible = $true
 
     $allGamesMenuItem = CreateMenuItem "All Games"
@@ -315,7 +323,8 @@ try {
 
         ExecuteConfigureAction -ConfigureFunctionToCall $function:RenderAddGameForm
 
-        CleanupTempFiles 
+        # Cleanup temp Files
+        Remove-Item -Force "$env:TEMP\GG-*.png"
     })
 
     $addPlatformMenuItem.Add_Click({ 
@@ -336,7 +345,8 @@ try {
 
         ExecuteConfigureAction -ConfigureFunctionToCall $function:RenderEditGameForm -EntityList $gamesList
 
-        CleanupTempFiles 
+        # Cleanup temp Files
+        Remove-Item -Force "$env:TEMP\GG-*.png"
     })
 
     $editPlatformMenuItem.Add_Click({ 

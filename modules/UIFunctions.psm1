@@ -40,7 +40,7 @@ function RenderGameList() {
     $totalPlayTime = $null
     foreach ($gameRecord in $gameRecords) {
         $name = $gameRecord.name
-        $imageFileName = ToBase64 $name
+        $imageFileName = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($name))
 
         # Check if image is pre loaded for ui. Render if not found
         if((Test-Path "$workingDirectory\ui\resources\images\$imageFileName.jpg")) {
@@ -49,7 +49,9 @@ function RenderGameList() {
             $iconUri = "<img src=`".\resources\images\$imageFileName.png`">"
         } else {
 
-            $iconBitmap = BytesToBitmap $gameRecord.icon
+            $iconByteStream = [System.IO.MemoryStream]::new($gameRecord.icon)
+            $iconBitmap = [System.Drawing.Bitmap]::FromStream($iconByteStream)
+
             if ($iconBitmap.PixelFormat -eq "Format32bppArgb") {
                 $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.png", [System.Drawing.Imaging.ImageFormat]::Png)
                 $iconUri = "<img src=`".\resources\images\$imageFileName.png`">"
@@ -305,9 +307,16 @@ function RenderQuickView() {
     }
 
     foreach ($row in $GameRecords) {
-        $gameIcon = BytesToBitmap $row.icon
-        $playTimeFormatted = PlayTimeMinsToString $row.play_time
-        $dateFormatted = PlayDateEpochToString $row.last_play_date
+
+        $iconByteStream = [System.IO.MemoryStream]::new($row.icon)
+        $gameIcon = [System.Drawing.Bitmap]::FromStream($iconByteStream)
+
+        $minutes = $null; $hours = [math]::divrem($row.play_time, 60, [ref]$minutes);
+        $playTimeFormatted = "{0} Hr {1} Min" -f $hours, $minutes
+
+        [datetime]$origin = '1970-01-01 00:00:00'
+        $dateFormatted = $origin.AddSeconds($row.last_play_date).ToLocalTime().ToString("dd MMMM yyyy")
+
         $dataGridView.Rows.Add($gameIcon, $row.name, $playTimeFormatted, $dateFormatted)
     }
 
