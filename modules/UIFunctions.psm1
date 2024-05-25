@@ -36,19 +36,22 @@ function RenderGameList() {
     $maxPlayTime = (RunDBQuery $getMaxPlayTime).max_play_time
 	
     $games = @()
+    $iconUri= $null
     $totalPlayTime = $null
     foreach ($gameRecord in $gameRecords) {
         $name = $gameRecord.name
-
-        $IconUri = "<img src=`".\resources\images\default.png`">"
-        if ($null -ne $gameRecord.icon)	{
-            $imageFileName = ToBase64 $name
-            $iconBitmap = BytesToBitmap $gameRecord.icon
+        
+        $imageFileName = ToBase64 $name
+        $iconBitmap = BytesToBitmap $gameRecord.icon
+        if ($iconBitmap.PixelFormat -eq "Format32bppArgb") {
             $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.png", [System.Drawing.Imaging.ImageFormat]::Png)
-            $iconBitmap.Dispose()
             $iconUri = "<img src=`".\resources\images\$imageFileName.png`">"
+        } else {
+            $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.jpg", [System.Drawing.Imaging.ImageFormat]::Jpeg)
+            $iconUri = "<img src=`".\resources\images\$imageFileName.jpg`">"
         }
-
+        
+        $iconBitmap.Dispose()
         $statusUri = "<div>Finished</div><img src=`".\resources\images\finished.png`">"
         if ($gameRecord.completed -eq 'FALSE') {
             $statusUri = "<div>Playing</div><img src=`".\resources\images\playing.png`">"

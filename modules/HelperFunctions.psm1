@@ -66,7 +66,13 @@ function ResizeImage($ImagePath, $GameName) {
     $WIP.Filters[1].Properties("PreserveAspectRatio") = $true
 
     $scaledImage = $WIP.Apply($WIA)
-    $scaledImagePath = "$env:TEMP\GG-{0}-$imageFileName.png" -f $(Get-Random)
+    $scaledImagePath = $null
+    if ($ImagePath -like '*.png') {
+        $scaledImagePath = "$env:TEMP\GG-{0}-$imageFileName.png" -f $(Get-Random)    
+    } else {
+        $scaledImagePath = "$env:TEMP\GG-{0}-$imageFileName.jpg" -f $(Get-Random)
+    }
+
     $scaledImage.SaveFile($scaledImagePath)
     return $scaledImagePath
 }

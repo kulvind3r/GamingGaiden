@@ -118,7 +118,7 @@ function MonitorGame($DetectedExe) {
         UpdateGameOnSession -GameName $gameName -GamePlayTime $updatedPlayTime -GameIdleTime $updatedIdleTime -GameLastPlayDate $updatedLastPlayDate
     }
     else {
-        Log "New Emulated Game Doesn't Exists. Adding."
+        Log "Detected emulated game is new and doesn't exist already. Adding to database."
         
         SaveGame -GameName $romBasedName -GameExeName $DetectedExe -GameIconPath "./icons/default.png" `
         -GamePlayTime $currentPlayTime -GameIdleTime $currentIdleTime -GameLastPlayDate $updatedLastPlayDate -GameCompleteStatus 'FALSE' -GamePlatform $emulatedGameDetails.Platform -GameSessionCount 1 -GameRomBasedName $romBasedName

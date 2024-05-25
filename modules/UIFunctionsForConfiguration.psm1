@@ -73,9 +73,15 @@ function RenderEditGameForm($GamesList) {
         $textPlayTime.Text = $playTimeString
 
         $iconFileName = ToBase64 $selectedGame.name
-        $imagePath = "$env:TEMP\GG-{0}-$iconFileName.png" -f $(Get-Random)
         $iconBitmap = BytesToBitmap $selectedGame.icon
-        $iconBitmap.Save($imagePath, [System.Drawing.Imaging.ImageFormat]::Png)
+        if ($iconBitmap.PixelFormat -eq "Format32bppArgb") {
+            $imagePath = "$env:TEMP\GG-{0}-$iconFileName.png" -f $(Get-Random)
+            $iconBitmap.Save($imagePath, [System.Drawing.Imaging.ImageFormat]::Png)
+        } else {
+            $imagePath = "$env:TEMP\GG-{0}-$iconFileName.jpg" -f $(Get-Random)
+            $iconBitmap.Save($imagePath, [System.Drawing.Imaging.ImageFormat]::Jpeg)
+        }
+
         $imagePath = ResizeImage -ImagePath $imagePath -GameName $selectedGame.name
         $iconBitmap.Dispose()
 
@@ -374,7 +380,7 @@ function RenderAddGameForm() {
         $openFileDialog = OpenFileDialog "Select Game Icon File" 'Image (*.png, *.jpg, *.jpeg)|*.png;*.jpg;*.jpeg' $downloadsDirectoryPath
         $result = $openFileDialog.ShowDialog()
         if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
-            $imagePath = ResizeImage $openFileDialog.FileName "GG-NEW_GAME.png"
+            $imagePath = ResizeImage $openFileDialog.FileName "GG-NEW_GAME"
             $pictureBoxImagePath.Text = $imagePath
             $pictureBox.Image = [System.Drawing.Image]::FromFile($imagePath)
         }
@@ -400,7 +406,7 @@ function RenderAddGameForm() {
                 return
             }
 
-            $gameIconPath = "$env:TEMP\GG-{0}.png" -f $(Get-Random)
+            $gameIconPath = "$env:TEMP\GG-{0}.ico" -f $(Get-Random)
             $gameIcon = [System.Drawing.Icon]::ExtractAssociatedIcon($gameExeFile)
             $gameIcon.ToBitmap().save($gameIconPath)
     
