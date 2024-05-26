@@ -11,7 +11,7 @@ try {
     Import-Module ".\modules\HelperFunctions.psm1"
     Import-Module ".\modules\UIFunctions.psm1"
     Import-Module ".\modules\QueryFunctions.psm1"
-    Import-Module ".\modules\UIFunctionsForConfiguration.psm1"
+    Import-Module ".\modules\SettingsFunctions.psm1"
     Import-Module ".\modules\StorageFunctions.psm1"
     
     #------------------------------------------
@@ -120,26 +120,26 @@ try {
         Log "Stopped tracker"
     }
 
-    function  ExecuteConfigureAction() {
+    function  ExecuteSettingsFunction() {
         Param(
-            [scriptblock]$ConfigureFunctionToCall,
+            [scriptblock]$SettingsFunctionToCall,
             [string[]]$EntityList = $null
         )
 
         $databaseFileHashBefore = CalculateFileHash '.\GamingGaiden.db'; Log "Database hash before: $databaseFileHashBefore"
 
         if ($null -eq $EntityList) {
-            $ConfigureFunctionToCall.Invoke()
+            $SettingsFunctionToCall.Invoke()
         } 
         else {
-            $ConfigureFunctionToCall.Invoke((, $EntityList))
+            $SettingsFunctionToCall.Invoke((, $EntityList))
         }
         
         $databaseFileHashAfter = CalculateFileHash '.\GamingGaiden.db'; Log "Database hash after: $databaseFileHashAfter"
     
         if ($databaseFileHashAfter -ne $databaseFileHashBefore) {
             BackupDatabase
-            Log "Rebooting tracker job to apply new configuration"
+            Log "Rebooting tracker job to apply new settings"
             StopTrackerJob
             StartTrackerJob
         }
@@ -318,7 +318,7 @@ try {
     $addGameMenuItem.Add_Click({ 
         Log "Starting game registration"
 
-        ExecuteConfigureAction -ConfigureFunctionToCall $function:RenderAddGameForm
+        ExecuteSettingsFunction -SettingsFunctionToCall $function:RenderAddGameForm
 
         # Cleanup temp Files
         Remove-Item -Force "$env:TEMP\GG-*.png"
@@ -327,7 +327,7 @@ try {
     $addPlatformMenuItem.Add_Click({ 
         Log "Starting emulated platform registration"
 
-        ExecuteConfigureAction -ConfigureFunctionToCall $function:RenderAddPlatformForm 
+        ExecuteSettingsFunction -SettingsFunctionToCall $function:RenderAddPlatformForm 
     })
 
     $editGameMenuItem.Add_Click({ 
@@ -340,7 +340,7 @@ try {
             return
         }
 
-        ExecuteConfigureAction -ConfigureFunctionToCall $function:RenderEditGameForm -EntityList $gamesList
+        ExecuteSettingsFunction -SettingsFunctionToCall $function:RenderEditGameForm -EntityList $gamesList
 
         # Cleanup temp Files
         Remove-Item -Force "$env:TEMP\GG-*.png"
@@ -356,7 +356,7 @@ try {
             return
         }
         
-        ExecuteConfigureAction -ConfigureFunctionToCall $function:RenderEditPlatformForm -EntityList $platformsList
+        ExecuteSettingsFunction -SettingsFunctionToCall $function:RenderEditPlatformForm -EntityList $platformsList
     })
 
     #------------------------------------------
