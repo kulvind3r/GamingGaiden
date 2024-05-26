@@ -73,13 +73,17 @@
                         $('table').DataTable().page.len(9).draw();
                     }
                 });
+
+                $('#games-table-container').show();
             }
         );
     </script>
 </head>
 
 <body>
-    _GAMESTABLE_
+    <div id="games-table-container" style="display:none">
+        _GAMESTABLE_
+    </div>
     <div id="button-container">
         <button class="custom-button" id="Toggle-Pagination">Show All</button>
     </div>

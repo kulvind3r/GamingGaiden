@@ -84,7 +84,7 @@ function RenderGameList() {
 	
     $report = (Get-Content $workingDirectory\ui\templates\AllGames.html.template) -replace "_GAMESTABLE_", $table
     $report = $report -replace "Last_Played_On", "Last Played On"
-    $report = $report -replace "Session_Count", "Session Count"
+    $report = $report -replace "Session_Count", "Sessions"
     $report = $report -replace "Completed", "Status"
     $report = $report -replace "_MAXPLAYTIME_", $maxPlayTime
     $report = $report -replace "_TOTALGAMECOUNT_", $games.Count
