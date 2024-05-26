@@ -108,8 +108,8 @@ td:nth-child(7) {
 .playtimegradient:not(th) {
     background-image: linear-gradient(rgba(55, 162, 235, 0.5), rgba(55, 162, 235, 0.5));
     background-repeat: no-repeat;
-    background-position-x: 6px;
-    background-position-y: 7px;
+    background-position-x: 8px;
+    background-position-y: 6px;
 }
 
 /* Other elements */
