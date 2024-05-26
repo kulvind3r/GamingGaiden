@@ -9,10 +9,11 @@ try {
     Import-Module ".\modules\PSSQLite"
     Import-Module ".\modules\ThreadJob"
     Import-Module ".\modules\HelperFunctions.psm1"
-    Import-Module ".\modules\UIFunctions.psm1"
     Import-Module ".\modules\QueryFunctions.psm1"
     Import-Module ".\modules\SettingsFunctions.psm1"
+    Import-Module ".\modules\SetupDatabase.psm1"
     Import-Module ".\modules\StorageFunctions.psm1"
+    Import-Module ".\modules\UIFunctions.psm1"
     
     #------------------------------------------
     # Check if Gaming Gaiden is already Running 
@@ -38,7 +39,7 @@ try {
     #------------------------------------------
     # Setup Database
     Log "Executing database setup"
-    Start-Process -FilePath "powershell" -ArgumentList "-File", "`".\SetupDatabase.ps1`"" -WindowStyle Hidden -Wait
+    SetupDatabase
     Log "Database setup complete"
 
     #------------------------------------------
@@ -64,11 +65,11 @@ try {
     #------------------------------------------
     # Tracker Job Scripts
     $TrackerJobInitializationScript = {
-        Import-Module ".\modules\ProcessFunctions.psm1";
+        Import-Module ".\modules\PSSQLite";
         Import-Module ".\modules\HelperFunctions.psm1";
+        Import-Module ".\modules\ProcessFunctions.psm1";
         Import-Module ".\modules\QueryFunctions.psm1";
         Import-Module ".\modules\StorageFunctions.psm1";
-        Import-Module ".\modules\PSSQLite";
         Import-Module ".\modules\UserInput.psm1";
     }
 
