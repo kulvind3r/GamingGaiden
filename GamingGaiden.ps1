@@ -376,6 +376,9 @@ try {
     Log "Running one time garbage collection before app context launch"
     [System.GC]::Collect()
 
+    Log "Informing user of successful application launch."
+    $AppNotifyIcon.ShowBalloonTip(3000, "Gaming Gaiden", "Running in system tray.`r`nUse tray icon menu for all operations.", [System.Windows.Forms.ToolTipIcon]::Info)
+
     Log "Starting app context"
     $appContext = New-Object System.Windows.Forms.ApplicationContext
     [void][System.Windows.Forms.Application]::Run($appContext)
