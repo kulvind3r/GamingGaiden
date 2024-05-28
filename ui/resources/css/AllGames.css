@@ -58,7 +58,7 @@ td:first-child img {
 /* Define specific styles for the Name column */
 td:nth-child(2) {
     font-weight: bold;
-    width: 40%;
+    width: 35%;
     text-transform: uppercase;
 }
 
@@ -79,10 +79,6 @@ td:nth-child(6) img {
     display: block;
 }
 
-/* Define specific styles for the Play date column */
-td:nth-child(7) {
-    width: 10%;
-}
 
 /* Override default data table css styles */
 #DataTables_Table_0_filter {
