@@ -99,8 +99,15 @@ function MonitorGame($DetectedExe) {
         $entityFound = DoesEntityExists "games" "exe_name" $DetectedExe
     }
     
+    if ($null -ne $entityFound) {
+        $gameName = $entityFound.name
+    }
+    else {
+        $gameName = $romBasedName
+    }
+    
     # Create Temp file to signal parent process to update notification icon color to show game is running
-    Write-Output "$romBasedName" > "$env:TEMP\GG-TrackingGame.txt"
+    Write-Output "$gameName" > "$env:TEMP\GG-TrackingGame.txt"
     $sessionTimeDetails = TimeTrackerLoop $DetectedExe
     $currentPlayTime = $sessionTimeDetails[0]
     $currentIdleTime = $sessionTimeDetails[1]
@@ -109,7 +116,6 @@ function MonitorGame($DetectedExe) {
 
     if ($null -ne $entityFound) {
         Log "Game Already Exists. Updating PlayTime and Last Played Date"
-        $gameName = $entityFound.name
         $recordedGamePlayTime = GetPlayTime $gameName
         $recordedGameIdleTime = GetIdleTime $gameName
         $updatedPlayTime = $recordedGamePlayTime + $currentPlayTime
@@ -120,8 +126,8 @@ function MonitorGame($DetectedExe) {
     else {
         Log "Detected emulated game is new and doesn't exist already. Adding to database."
         
-        SaveGame -GameName $romBasedName -GameExeName $DetectedExe -GameIconPath "./icons/default.png" `
-        -GamePlayTime $currentPlayTime -GameIdleTime $currentIdleTime -GameLastPlayDate $updatedLastPlayDate -GameCompleteStatus 'FALSE' -GamePlatform $emulatedGameDetails.Platform -GameSessionCount 1 -GameRomBasedName $romBasedName
+        SaveGame -GameName $gameName -GameExeName $DetectedExe -GameIconPath "./icons/default.png" `
+        -GamePlayTime $currentPlayTime -GameIdleTime $currentIdleTime -GameLastPlayDate $updatedLastPlayDate -GameCompleteStatus 'FALSE' -GamePlatform $emulatedGameDetails.Platform -GameSessionCount 1 -GameRomBasedName $gameName
     }
 
     RecordPlaytimOnDate($currentPlayTime)
