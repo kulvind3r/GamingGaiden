@@ -100,7 +100,7 @@ function MonitorGame($DetectedExe) {
     }
     
     # Create Temp file to signal parent process to update notification icon color to show game is running
-    Write-Output "$gameName" > "$env:TEMP\GG-TrackingGame.txt"
+    Write-Output "$romBasedName" > "$env:TEMP\GG-TrackingGame.txt"
     $sessionTimeDetails = TimeTrackerLoop $DetectedExe
     $currentPlayTime = $sessionTimeDetails[0]
     $currentIdleTime = $sessionTimeDetails[1]
