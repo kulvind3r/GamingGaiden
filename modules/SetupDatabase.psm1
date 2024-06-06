@@ -27,31 +27,24 @@ function SetupDatabase() {
 
         Invoke-SqliteQuery -Query $createDailyPlaytimeTableQuery -SQLiteConnection $dbConnection
 
-        # Migration 1
-        $checkIdleTimeColumnInGamesTableQuery = "SELECT count(*) AS count FROM pragma_table_info('games') WHERE name='idle_time'"
-        $checkResult = (Invoke-SqliteQuery -Query $checkIdleTimeColumnInGamesTableQuery -SQLiteConnection $dbConnection).count
+        $gamesTableSchema = Invoke-SqliteQuery -query "PRAGMA table_info('games')" -SQLiteConnection $dbConnection
 
-        if ($checkResult -lt 1) {
+        # Migration 1
+        if (-Not $gamesTableSchema.name.Contains("idle_time")){
             $addIdleTimeColumnInGamesTableQuery = "ALTER TABLE games ADD COLUMN idle_time INTEGER DEFAULT 0"
             Invoke-SqliteQuery -Query $addIdleTimeColumnInGamesTableQuery -SQLiteConnection $dbConnection
         }
         # End Migration 1
 
         # Migration 2
-        $checkSessionCountColumnInGamesTableQuery = "SELECT count(*) AS count FROM pragma_table_info('games') WHERE name='session_count'"
-        $checkResult = (Invoke-SqliteQuery -Query $checkSessionCountColumnInGamesTableQuery -SQLiteConnection $dbConnection).count
-        
-        if ($checkResult -lt 1) {
+        if (-Not $gamesTableSchema.name.Contains("session_count")) {
             $addSessionCountColumnInGamesTableQuery = "ALTER TABLE games ADD COLUMN session_count INTEGER DEFAULT 0"
             Invoke-SqliteQuery -Query $addSessionCountColumnInGamesTableQuery -SQLiteConnection $dbConnection
         }
         # End Migration 2
 
-        # Migration 3
-        $checkRomBasedNameColumnInGamesTableQuery = "SELECT count(*) AS count FROM pragma_table_info('games') WHERE name='rom_based_name'"
-        $checkResult = (Invoke-SqliteQuery -Query $checkRomBasedNameColumnInGamesTableQuery -SQLiteConnection $dbConnection).count
-        
-        if ($checkResult -lt 1) {
+        # Migration 3   
+        if (-Not $gamesTableSchema.name.Contains("rom_based_name")) {
             $addRomBasedNameColumnInGamesTableQuery = "ALTER TABLE games ADD COLUMN rom_based_name TEXT"
             $updateRomBasedNameColumnValues = "UPDATE games SET rom_based_name = name WHERE exe_name IN (SELECT DISTINCT exe_name FROM emulated_platforms)"
 
