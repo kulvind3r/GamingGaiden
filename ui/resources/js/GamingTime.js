@@ -4,6 +4,7 @@ let firstYear; let firstMonth
 let finalYear; let finalMonth
 let chart;
 let summaryPeriod = "monthly"
+let periodLabel = "Day of Month"
 let yearTotalTime;
 let monthTotalTime;
 
@@ -108,7 +109,7 @@ function updateChart(selectedYear, selectedMonth, yearlySummaryEnabled = false) 
                         display: true,
                         padding: 15,
                         color: '#000',
-                        text: "Day of Month",
+                        text: periodLabel,
                         font: {
                             size: 18,
                             family: 'monospace'
@@ -227,6 +228,9 @@ function toggleSummaryPeriod() {
         document.getElementById('next-button').addEventListener('click', () => switchToNextYear());
 
         summaryPeriod = "yearly"
+        periodLabel = "Month of Year"
+        selectedYear = finalYear
+        selectedMonth = finalMonth
         document.getElementById('period-button').innerText = "Monthly Summary"
 
         updateChart(selectedYear, selectedMonth, true);
@@ -237,6 +241,9 @@ function toggleSummaryPeriod() {
         document.getElementById('next-button').addEventListener('click', () => switchToNextMonth());
 
         summaryPeriod = "monthly"
+        periodLabel = "Day of Month"
+        selectedYear = finalYear
+        selectedMonth = finalMonth
         document.getElementById('period-button').innerText = "Yearly Summary"
 
         updateChart(selectedYear, selectedMonth);
