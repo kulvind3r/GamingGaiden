@@ -42,13 +42,13 @@ A simple windows system tray application written in powershell to track your gam
     - Detailed logging to identify bugs and errors.
 
 ## Feature Screenshots
-<img src="./readme-files/GamesList.png" width="320" height="180"> <img src="./readme-files/LifeTimeSummary.png" width="320" height="180">  
+<img src="./readme-files/GamesList.png" width="323" height="180"> <img src="./readme-files/LifeTimeSummary.png" width="323" height="180">  
 
-<img src="./readme-files/TimeSpentGamingMonthly.png" width="320" height="180"> <img src="./readme-files/TimeSpentGamingYearly.png" width="320" height="180"> 
+<img src="./readme-files/TimeSpentGamingMonthly.png" width="323" height="180"> <img src="./readme-files/TimeSpentGamingYearly.png" width="323" height="180"> 
 
-<img src="./readme-files/MostPlayedGames.png" width="320" height="180"> <img src="./readme-files/IdleTime.png" width="320" height="180">
+<img src="./readme-files/MostPlayedGames.png" width="323" height="180"> <img src="./readme-files/IdleTime.png" width="323" height="180">
 
-<img src="./readme-files/QuickView.png" width="190" height="190"> <img src="./readme-files/GamesPlayedPerPlatform.png" width="180" height="190"> <img src="./readme-files/PCVsEmulationTime.png" width="180" height="190"> 
+<img src="./readme-files/QuickView.png" width="240" height="210"> <img src="./readme-files/GamesPlayedPerPlatform.png" width="200" height="210"> <img src="./readme-files/PCVsEmulationTime.png" width="200" height="210"> 
 
 <img src="./readme-files/HWiNFOSensor.png" width="450" height="190">
 
