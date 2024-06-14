@@ -1,6 +1,14 @@
 @echo off
 setlocal enabledelayedexpansion
 
+REM Exit if installing to C: drive
+set "DRIVE=%CD:~0,2%"
+if /i "%DRIVE%"=="C:" (
+    echo Cannot install to OS i.e. C: drive. Please choose a different location. Press any key to exit...
+    pause >nul
+    exit /b 0
+)
+
 set "InstallDirectory=%CD%"
 set "DesktopPath=%USERPROFILE%\Desktop"
 set "StartupPath=%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup"
