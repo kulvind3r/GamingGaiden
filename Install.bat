@@ -1,6 +1,14 @@
 @echo off
 setlocal enabledelayedexpansion
 
+REM Check if the script is on C:
+if "%CD:~0,2%"=="C:" (
+    echo GamingGaiden cannot be installed on the C: drive. Press any key to exit...
+	pause >nul
+    exit /b 1
+)
+
+
 set "InstallDirectory=%CD%"
 set "DesktopPath=%USERPROFILE%\Desktop"
 set "StartupPath=%APPDATA%\Microsoft\Windows\Start Menu\Programs\Startup"
