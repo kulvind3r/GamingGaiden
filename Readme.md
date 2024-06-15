@@ -71,7 +71,6 @@ Biggest feature though are the stastics that it generates from your data. The la
 It adds value to your gaming hobby by gathering data quietly in background and then making it super easy for you to draw conclusions and bring changes.
 
 ## How to install
-***DO NOT USE ANY FOLDER ON OS DRIVE i.e. "C:/" OR ANY OTHER FOLDER THAT NEEDS ADMIN ACCESS.***
 1. Download ***GamingGaiden.zip*** from the [latest release](https://github.com/kulvind3r/GamingGaiden/releases/latest).
 2. Extract "GamingGaiden" folder and copy it to a location where you would like to run it from.
 3. Run `Install.bat`.
