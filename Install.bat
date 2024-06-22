@@ -16,11 +16,11 @@ set "IconPath=%InstallDirectory%\icons\running.ico"
 
 echo Creating Shortcuts
 
-REM Create desktop shortcut using powershell
-powershell.exe -NoProfile -Command "$WshShell = New-Object -ComObject WScript.Shell; $Shortcut = $WshShell.CreateShortcut('%DesktopPath%\Gaming Gaiden.lnk'); $Shortcut.TargetPath = 'powershell.exe'; $Shortcut.Arguments = '-NoLogo -ExecutionPolicy bypass -File \"%InstallDirectory%\GamingGaiden.ps1\"'; $Shortcut.IconLocation = '%IconPath%'; $Shortcut.WorkingDirectory = '%InstallDirectory%'; $Shortcut.WindowStyle = 7; $Shortcut.Save()"
+REM Create shortcut using powershell
+powershell.exe -NoProfile -Command "$WshShell = New-Object -ComObject WScript.Shell; $Shortcut = $WshShell.CreateShortcut('%InstallDirectory%\Gaming Gaiden.lnk'); $Shortcut.TargetPath = 'powershell.exe'; $Shortcut.Arguments = '-NoLogo -ExecutionPolicy bypass -File \"%InstallDirectory%\GamingGaiden.ps1\"'; $Shortcut.IconLocation = '%IconPath%'; $Shortcut.WorkingDirectory = '%InstallDirectory%'; $Shortcut.WindowStyle = 7; $Shortcut.Save()"
 
-REM Copy shortcut to install directory as well
-copy "%DesktopPath%\Gaming Gaiden.lnk" "%InstallDirectory%"
+REM Copy shortcut to desktop directory as well
+copy "%InstallDirectory%\Gaming Gaiden.lnk" "%DesktopPath%"
 
 REM Unblock all gaming gaiden files as they are downloaded from internet and blocked by default
 echo Unblocking all Gaming Gaiden files
@@ -30,10 +30,10 @@ set /p AutoStartChoice="Would you like Gaming Gaiden to auto start at boot? Yes/
 
 REM Copy shortcut to startup directory if user answers y/yes
 if /i "%AutoStartChoice%"=="Yes" (
-    copy "%DesktopPath%\Gaming Gaiden.lnk" "%startupPath%"
+    copy "%InstallDirectory%\Gaming Gaiden.lnk" "%startupPath%"
     echo Auto start successfully setup.
 ) else if /i "%AutoStartChoice%"=="Y" (
-    copy "%DesktopPath%\Gaming Gaiden.lnk" "%startupPath%"
+    copy "%InstallDirectory%\Gaming Gaiden.lnk" "%startupPath%"
     echo Auto start successfully setup.
 ) else (
     echo Auto start setup cancelled by user.
