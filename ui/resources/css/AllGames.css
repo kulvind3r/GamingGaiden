@@ -121,7 +121,7 @@ td:nth-child(6) img {
     position: absolute;
     margin-top: 5px;
     left: 50%;
-    transform: translateX(-45%);
+    transform: translateX(-50%);
     font-weight: bold;
     font-size: 20px;
     text-transform: uppercase;
