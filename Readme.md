@@ -72,7 +72,7 @@ It adds value to your gaming hobby by gathering data quietly in background and t
 
 ## How to install
 1. Download ***GamingGaiden.zip*** from the [latest release](https://github.com/kulvind3r/GamingGaiden/releases/latest).
-2. Extract "GamingGaiden" folder and copy it to a location where you would like to run it from.
+2. Extract "GamingGaiden" folder and copy it to any directory on a drive other than 'C:\'.
 3. Run `Install.bat`.
 4. Use the created shortcuts for launching the application. If you answered 'y | yes' for setting up autostart, application will also start at boot. 
 

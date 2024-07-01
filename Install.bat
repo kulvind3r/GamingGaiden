@@ -1,10 +1,12 @@
 @echo off
 setlocal enabledelayedexpansion
 
-REM Exit if installing to C: drive
+REM Exit if installing to C:\ drive
 set "DRIVE=%CD:~0,2%"
 if /i "%DRIVE%"=="C:" (
-    echo Cannot install to OS i.e. C: drive. Please choose a different location. Press any key to exit...
+    echo Gaming Gaiden doesn't support installing to C:\ drive due to permission issues on many windows pcs.
+    echo Please install to a different drive on your machine e.g. D:\ or E:\ etc. 
+    echo Press any key to exit...
     pause >nul
     exit /b 0
 )
