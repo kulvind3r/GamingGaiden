@@ -142,6 +142,12 @@ function RenderEditGameForm($GamesList) {
             Log "Removed '$gameName' from Database."
 
             $gamesList = (RunDBQuery "SELECT name FROM games").name
+            if ($gamesList.Length -eq 0)
+            {
+                ShowMessage "No more games in Database. Closing Edit Form." "OK" "Asterisk"
+                $editGameForm.Close()
+                return
+            }
             $listBox.Items.Clear(); $listBox.Items.AddRange($gamesList);
             $listBox.SelectedIndex = 0
         }
@@ -311,6 +317,12 @@ function RenderEditPlatformForm($PlatformsList) {
             Log "Removed '$platformName' from Database."
 
             $platformsList = (RunDBQuery "SELECT name FROM emulated_platforms").name
+            if ($platformsList.Length -eq 0)
+            {
+                ShowMessage "No more platforms in Database. Closing Edit Form." "OK" "Asterisk"
+                $editPlatformForm.Close()
+                return
+            }
             $listBox.Items.Clear(); $listBox.Items.AddRange($platformsList);
             $listBox.SelectedIndex = 0
         }
