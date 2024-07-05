@@ -12,6 +12,7 @@ set "IconPath=%InstallDirectory%\icons\running.ico"
 REM Install to C:\ProgramData\GamingGaiden
 echo Copying Files
 xcopy /s/e/q/y "%CD%" "%InstallDirectory%"
+del "%InstallDirectory%\Install.bat"
 
 REM Create shortcut using powershell and copy to desktop and start menu
 echo.
@@ -39,9 +40,14 @@ if /i "%AutoStartChoice%"=="Yes" (
 )
 
 echo.
-echo Installation successful at %InstallDirectory%. 
-echo Your game records and automatic db backups will also be stored in %InstallDirectory%.
-echo Make sure you take backup to another drive / external storage if you ever reinstall Windows.
-echo You can delete the downloaded files if you wish. Press any key to Exit.
+echo Installation successful at %InstallDirectory%. Run application using shortcuts on desktop / start menu.
+echo.
+echo Your data is in 'GamingGaiden.db' file and backups are in 'backups\' folder under %InstallDirectory%.
+echo.
+echo Backup both to external storage regularly. Otherwise you risk loosing all your data if you reinstall Windows.
+echo.
+echo You can access %InstallDirectory% by clicking "Settings => Open Install Directory" in app menu.
+echo.
+echo You can now delete the downloaded files if you wish. Press any key to Exit.
 pause >nul
 exit /b 0
