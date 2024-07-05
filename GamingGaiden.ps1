@@ -175,6 +175,7 @@ try {
     $menuItemSeparator4 = New-Object Windows.Forms.ToolStripSeparator
     $menuItemSeparator5 = New-Object Windows.Forms.ToolStripSeparator
     $menuItemSeparator6 = New-Object Windows.Forms.ToolStripSeparator
+    $menuItemSeparator7 = New-Object Windows.Forms.ToolStripSeparator
 
     $IconRunning = [System.Drawing.Icon]::new(".\icons\running.ico")
     $IconTracking = [System.Drawing.Icon]::new(".\icons\tracking.ico")
@@ -198,11 +199,14 @@ try {
     $addPlatformMenuItem = CreateMenuItem "Add Emulator"
     $editGameMenuItem = CreateMenuItem "Edit Game"
     $editPlatformMenuItem = CreateMenuItem "Edit Emulator"
+    $openInstallDirectoryMenuItem = CreateMenuItem "Open Install Directory"
     $settingsSubMenuItem.DropDownItems.Add($addGameMenuItem)
     $settingsSubMenuItem.DropDownItems.Add($editGameMenuItem)
     $settingsSubMenuItem.DropDownItems.Add($menuItemSeparator1)
     $settingsSubMenuItem.DropDownItems.Add($addPlatformMenuItem)
     $settingsSubMenuItem.DropDownItems.Add($editPlatformMenuItem)
+    $settingsSubMenuItem.DropDownItems.Add($menuItemSeparator7)
+    $settingsSubMenuItem.DropDownItems.Add($openInstallDirectoryMenuItem)
 
     $statsSubMenuItem = CreateMenuItem "Statistics"
     $gamingTimeMenuItem = CreateMenuItem "Time Spent Gaming"
@@ -358,6 +362,11 @@ try {
         }
         
         ExecuteSettingsFunction -SettingsFunctionToCall $function:RenderEditPlatformForm -EntityList $platformsList
+    })
+
+    $openInstallDirectoryMenuItem.Add_Click({ 
+        Log "Opening Install Directory"
+        Invoke-Item .
     })
 
     #------------------------------------------

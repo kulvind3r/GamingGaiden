@@ -70,20 +70,16 @@ Biggest feature though are the stastics that it generates from your data. The la
 
 It adds value to your gaming hobby by gathering data quietly in background and then making it super easy for you to draw conclusions and bring changes.
 
-## How to install
+## How to install / upgrade
 1. Download ***GamingGaiden.zip*** from the [latest release](https://github.com/kulvind3r/GamingGaiden/releases/latest).
-2. Extract "GamingGaiden" folder and copy it to any directory on a drive other than 'C:\'.
-3. Run `Install.bat`.
-4. Use the created shortcuts for launching the application. If you answered 'y | yes' for setting up autostart, application will also start at boot. 
+2. Extract ***GamingGaiden*** folder and Run `Install.bat`.
+3. Use the shortcuts on desktop / start menu for launching the application. If you answered 'y | yes' for setting up autostart, application will also start at boot. 
 
-## How to upgrade from exisitng installation
-***MAKE A BACKUP OF YOUR GamingGaide.db DATABASE AND THE backups FOLDER IN A SEPARATE LOCATION BEFORE PROCEEDING. YOU HAVE BEEN WARNED.***
-1. Download ***GamingGaiden.zip*** from the [latest release](https://github.com/kulvind3r/GamingGaiden/releases/latest).
-2. Shut down the app if it is running.
-3. Keep your database (i.e. ***GamingGaiden.db***) and the ***backups*** folder but delete all the other files from existing installation directory.
-4. Copy all the files inside the "GamingGaiden" folder in the zip to the existing installation directory.
-5. Run `Install.bat`.
-6. Start the app again.
+## Protecting your Data
+Make sure you regularly copy `GamingGaiden.db` and your `backups` folder to a safe location like Cloud or external storage. 
+Otherwise you risk loosing your data, if your Windows installation gets corrupt or you reinstall / upgrade your Windows OS.
+
+You can find the above files by clicking ***Settings => Open Install Directory*** option in app menu.
 
 ## DISCLAIMER
 All shortcuts will include the parameter `-ExecutionPolicy bypass` so that powershell scripts can be run. Windows by default doesn't allow powershell scripts to be executed.
