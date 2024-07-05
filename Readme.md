@@ -79,9 +79,11 @@ It adds value to your gaming hobby by gathering data quietly in background and t
 ## How to upgrade from exisitng installation
 ***MAKE A BACKUP OF YOUR GamingGaide.db DATABASE AND THE backups FOLDER IN A SEPARATE LOCATION BEFORE PROCEEDING. YOU HAVE BEEN WARNED.***
 1. Download ***GamingGaiden.zip*** from the [latest release](https://github.com/kulvind3r/GamingGaiden/releases/latest).
-2. Keep your database (i.e. ***GamingGaiden.db***) and the ***backups*** folder but delete all the other files from existing installation directory.
-3. Copy all the files inside the "GamingGaiden" folder in the zip to the existing installation directory.
-3. Run `Install.bat`.
+2. Shut down the app if it is running.
+3. Keep your database (i.e. ***GamingGaiden.db***) and the ***backups*** folder but delete all the other files from existing installation directory.
+4. Copy all the files inside the "GamingGaiden" folder in the zip to the existing installation directory.
+5. Run `Install.bat`.
+6. Start the app again.
 
 ## DISCLAIMER
 All shortcuts will include the parameter `-ExecutionPolicy bypass` so that powershell scripts can be run. Windows by default doesn't allow powershell scripts to be executed.
