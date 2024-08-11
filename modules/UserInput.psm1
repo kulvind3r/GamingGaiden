@@ -1,4 +1,4 @@
-Add-Type @'
+﻿Add-Type @'
 using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;

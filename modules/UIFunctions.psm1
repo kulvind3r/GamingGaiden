@@ -1,4 +1,4 @@
-class Game {
+﻿class Game {
     [ValidateNotNullOrEmpty()][string]$Icon
     [ValidateNotNullOrEmpty()][string]$Name
     [ValidateNotNullOrEmpty()][string]$Platform

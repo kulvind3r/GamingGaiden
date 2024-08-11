@@ -1,4 +1,4 @@
-function SaveGame() {
+﻿function SaveGame() {
     param(
         [string]$GameName,
         [string]$GameExeName,

@@ -1,4 +1,4 @@
-function FilterListBox {
+﻿function FilterListBox {
     param(
         [string]$filterText,
         [System.Windows.Forms.ListBox]$listBox,

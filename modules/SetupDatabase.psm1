@@ -1,4 +1,4 @@
-function SetupDatabase() {
+﻿function SetupDatabase() {
     try {
         $dbConnection = New-SQLiteConnection -DataSource ".\GamingGaiden.db"
     

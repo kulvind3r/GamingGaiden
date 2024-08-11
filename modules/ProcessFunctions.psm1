@@ -1,4 +1,4 @@
-function DetectGame() {
+﻿function DetectGame() {
     Log "Starting game detection"
 
     $getGameExesQuery = "SELECT exe_name FROM games ORDER BY last_play_date DESC"

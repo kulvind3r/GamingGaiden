@@ -1,4 +1,4 @@
-[System.Reflection.Assembly]::LoadWithPartialName('System.Web') | out-null
+﻿[System.Reflection.Assembly]::LoadWithPartialName('System.Web') | out-null
 
 mkdir -f .\build\GamingGaiden
 

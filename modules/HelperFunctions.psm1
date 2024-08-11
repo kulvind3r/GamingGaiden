@@ -1,4 +1,4 @@
-function Log($MSG) {
+﻿function Log($MSG) {
     $timestamp = Get-date -f s
     $mutex = New-Object System.Threading.Mutex($false, "LogFileLock")
 
