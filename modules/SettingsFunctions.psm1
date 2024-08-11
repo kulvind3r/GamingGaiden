@@ -340,7 +340,7 @@ function RenderEditPlatformForm($PlatformsList) {
         }
 
         $platformRomExtensions = $textRomExt.Text
-        if (-Not ($platformRomExtensions -match '^([a-z]{3},)*([a-z]{3}){1}$')) {
+        if (-Not ($platformRomExtensions -match '^([a-zA-Z0-9!@#$%^&_\-~]+,)*([a-zA-Z0-9!@#$%^&_\-~]+)$')) {
             ShowMessage "Error in rom extensions. Please submit extensions as a ',' separated list without the leading '.' or spaces.`r`n`r`ne.g. zip,iso,chd OR zip,iso OR zip" "OK" "Error"
             $listBox.SetSelected($currentlySelectedIndex, $true)
             return
@@ -574,7 +574,7 @@ function RenderAddPlatformForm() {
         }
 
         $platformRomExtensions = $textRomExt.Text
-        if (-Not ($platformRomExtensions -match '^([a-z]{3},)*([a-z]{3}){1}$'))	{
+        if (-Not ($platformRomExtensions -match '^([a-zA-Z0-9!@#$%^&_\-~]+,)*([a-zA-Z0-9!@#$%^&_\-~]+)$'))	{
             ShowMessage "Error in rom extensions. Please submit extensions as a ',' separated list without the leading '.'`r`ne.g. zip,iso,chd OR zip,iso OR zip" "OK" "Error"
             return
         }
