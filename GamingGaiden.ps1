@@ -382,9 +382,6 @@ try {
     $asyncWindow = Add-Type -MemberDefinition $windowCode -name Win32ShowWindowAsync -namespace Win32Functions -PassThru
     $null = $asyncWindow::ShowWindowAsync((Get-Process -PID $pid).MainWindowHandle, 0)
 
-    Log "Running one time garbage collection before app context launch"
-    [System.GC]::Collect()
-
     Log "Informing user of successful application launch."
     $AppNotifyIcon.ShowBalloonTip(3000, "Gaming Gaiden", "Running in system tray.`r`nUse tray icon menu for all operations.", [System.Windows.Forms.ToolTipIcon]::Info)
 

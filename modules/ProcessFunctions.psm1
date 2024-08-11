@@ -13,16 +13,12 @@ function DetectGame() {
     $exesToDetect = $($gameExeList; $emulatorExeList) | Select-Object -Unique
 
     do {
-        $allProcesses = ((Get-Process).ProcessName | Select-Object -Unique)
         foreach ( $exeName in $exesToDetect ) {
-            if ( $allProcesses -contains $exeName ) {
+            if ([System.Diagnostics.Process]::GetProcessesByName($exeName)) {
                 Log "Found $exeName running. Exiting detection"
                 return $exeName
             }
         }
-        Clear-Variable allProcesses; Remove-Variable allProcesses
-        # Mandatory Garbage collect in loop because powershell is dogshit in recovering memory from infinite loops
-        [System.GC]::GetTotalMemory($true) | out-null
         Start-Sleep -s 5
     }
     while ($true)
