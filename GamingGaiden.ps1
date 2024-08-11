@@ -16,20 +16,22 @@ try {
     Import-Module ".\modules\UIFunctions.psm1"
     
     #------------------------------------------
-    # Check if Gaming Gaiden is already Running 
-    $psScriptsRunning = get-wmiobject win32_process | Where-Object { $_.processname -eq 'powershell.exe' } | select-object commandline, ProcessId
-
-    foreach ($psCmdLine in $psScriptsRunning) {
-        [Int32]$otherPID = $psCmdLine.ProcessId
-        [String]$otherCmdLine = $psCmdLine.commandline
-    
-        if (($otherCmdLine -like "*GamingGaiden.ps1*") -And ($otherPID -ne $PID) ) {
-            ShowMessage "Gaming Gaiden is already running as PID [$otherPID]. Not Starting another Instance." "Ok" "Error"
-            Log "Error: Gaming Gaiden already running as PID [$otherPID]. Not Starting another Instance."
-            exit 1;
-        }
+    # Exit if Gaming Gaiden is being started from non standard location
+    $currentDirectory = (Get-Location).path
+    if ($currentDirectory -ne "C:\ProgramData\GamingGaiden") {
+        ShowMessage "Launched from non standard location. Please install and use the created shortcuts to start app." "Ok" "Error"
+        exit 1;
     }
 
+    #------------------------------------------
+    # Exit if Gaming Gaiden is already Running 
+    $results = [System.Diagnostics.Process]::GetProcessesByName("GamingGaiden")
+    if ($results.Length -gt 1) {
+        ShowMessage "Gaming Gaiden is already running. Not Starting another Instance." "Ok" "Error"
+        Log "Error: Gaming Gaiden already running. Not Starting another Instance."
+        exit 1;
+    }
+    
     #------------------------------------------
     # Reset Log At Application Boot
     Remove-Item ".\GamingGaiden.log" -ErrorAction silentlycontinue
@@ -249,12 +251,12 @@ try {
 
     $StartTrackerMenuItem.Add_Click({ 
         StartTrackerJob;
-        $AppNotifyIcon.ShowBalloonTip(3000, "Gaming Gaiden", "Tracker Started.", [System.Windows.Forms.ToolTipIcon]::Info)
+        $AppNotifyIcon.ShowBalloonTip(3000, "Tracker Started","Watching for game launches.", [System.Windows.Forms.ToolTipIcon]::Info)
     })
 
     $StopTrackerMenuItem.Add_Click({ 
         StopTrackerJob
-        $AppNotifyIcon.ShowBalloonTip(3000, "Gaming Gaiden", "Tracker Stopped.", [System.Windows.Forms.ToolTipIcon]::Info)
+        $AppNotifyIcon.ShowBalloonTip(3000, "Tracker Stopped","Game launch detection disabled.", [System.Windows.Forms.ToolTipIcon]::Info)
     })
 
     $helpMenuItem.Add_Click({
@@ -383,7 +385,7 @@ try {
     $null = $asyncWindow::ShowWindowAsync((Get-Process -PID $pid).MainWindowHandle, 0)
 
     Log "Informing user of successful application launch."
-    $AppNotifyIcon.ShowBalloonTip(3000, "Gaming Gaiden", "Running in system tray.`r`nUse tray icon menu for all operations.", [System.Windows.Forms.ToolTipIcon]::Info)
+    $AppNotifyIcon.ShowBalloonTip(3000, "App Launched", "Use tray icon menu for all operations.", [System.Windows.Forms.ToolTipIcon]::Info)
 
     Log "Starting app context"
     $appContext = New-Object System.Windows.Forms.ApplicationContext

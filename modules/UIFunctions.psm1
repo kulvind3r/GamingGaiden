@@ -234,12 +234,12 @@ function RenderPCvsEmulation() {
 }
 
 function RenderAboutDialog() {
-    $aboutForm = CreateForm "About" 350 280 ".\icons\running.ico"
+    $aboutForm = CreateForm "About" 340 270 ".\icons\running.ico"
 
     $pictureBox = CreatePictureBox "./icons/banner.png" 6 20 322 60
     $aboutForm.Controls.Add($pictureBox)
 
-    $textCopyRight = [char]::ConvertFromUtf32(0x000000A9) + " 2023 Kulvinder Singh"
+    $textCopyRight = [char]::ConvertFromUtf32(0x000000A9) + " 2024 Kulvinder Singh"
     $labelCopyRight = CreateLabel $textCopyRight 107 100
     $aboutForm.Controls.Add($labelCopyRight)
 
@@ -276,7 +276,7 @@ function RenderQuickView() {
         return
     }
 
-    $quickViewForm = CreateForm "Currently Playing / Recently Finished Games" 400 388 ".\icons\running.ico"
+    $quickViewForm = CreateForm "Currently Playing / Recently Finished Games" 390 378 ".\icons\running.ico"
     $quickViewForm.MaximizeBox = $false; $quickViewForm.MinimizeBox = $false;
     $quickViewForm.StartPosition = [System.Windows.Forms.FormStartPosition]::Manual
 

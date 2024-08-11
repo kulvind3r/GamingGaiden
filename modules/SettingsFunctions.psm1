@@ -17,7 +17,7 @@
 
 function RenderEditGameForm($GamesList) {
 
-    $editGameForm = CreateForm "Gaming Gaiden: Edit Game" 880 265 ".\icons\running.ico"
+    $editGameForm = CreateForm "Gaming Gaiden: Edit Game" 870 255 ".\icons\running.ico"
 
     $imagePath = "./icons/default.png"
 	
@@ -205,7 +205,7 @@ function RenderEditGameForm($GamesList) {
 
 function RenderEditPlatformForm($PlatformsList) {
 
-    $editPlatformForm =	CreateForm "Gaming Gaiden: Edit Platform" 655  330 ".\icons\running.ico"
+    $editPlatformForm =	CreateForm "Gaming Gaiden: Edit Platform" 645  320 ".\icons\running.ico"
 
     # Hidden fields to save non user editable values
     $textOriginalPlatformName = CreateTextBox "" 654 329 1 1; $textOriginalPlatformName.hide(); $editPlatformForm.Controls.Add($textOriginalPlatformName)
@@ -255,7 +255,7 @@ function RenderEditPlatformForm($PlatformsList) {
             $labelCores.show()
             $textCore.show()
 
-            $editPlatformForm.Size = New-Object System.Drawing.Size(655, 330)
+            $editPlatformForm.Size = New-Object System.Drawing.Size(645, 320)
             $listBox.Height = 212
             $buttonOK.Location = New-Object System.Drawing.Point(85, 254)
             $buttonCancel.Location = New-Object System.Drawing.Point(210, 254)
@@ -265,7 +265,7 @@ function RenderEditPlatformForm($PlatformsList) {
             $labelCores.hide()
             $textCore.Text = ""; $textCore.hide()
 
-            $editPlatformForm.Size = New-Object System.Drawing.Size(655, 277)
+            $editPlatformForm.Size = New-Object System.Drawing.Size(645, 267)
             $listBox.Height = 166
             $buttonOK.Location = New-Object System.Drawing.Point(85, 201)
             $buttonCancel.Location = New-Object System.Drawing.Point(210, 201)
@@ -369,7 +369,7 @@ function RenderEditPlatformForm($PlatformsList) {
 }
 
 function RenderAddGameForm() {
-    $addGameForm =	CreateForm "Gaming Gaiden: Add Game" 580 265 ".\icons\running.ico"
+    $addGameForm =	CreateForm "Gaming Gaiden: Add Game" 570 255 ".\icons\running.ico"
 
     $labelName = Createlabel "Name:" 170 20; $addGameForm.Controls.Add($labelName)
     $textName = CreateTextBox "" 245 20 300 20;	$addGameForm.Controls.Add($textName)
@@ -481,7 +481,7 @@ function RenderAddGameForm() {
 }
 
 function RenderAddPlatformForm() {
-    $addPlatformForm =	CreateForm "Gaming Gaiden: Add Emulator" 405 275 ".\icons\running.ico"
+    $addPlatformForm =	CreateForm "Gaming Gaiden: Add Emulator" 395 265 ".\icons\running.ico"
 
     $labelName = Createlabel "Platorm:" 10 20; $addPlatformForm.Controls.Add($labelName)
     $textName = CreateTextBox "" 85 20 200 20; $addPlatformForm.Controls.Add($textName)
@@ -523,7 +523,7 @@ function RenderAddPlatformForm() {
 
             $emulatorExeList = $textExe.Text
             if ($emulatorExeList.ToLower() -like "*retroarch*") {
-                $addPlatformForm.Size = New-Object System.Drawing.Size(405, 325)
+                $addPlatformForm.Size = New-Object System.Drawing.Size(395, 315)
                 $buttonOK.Location = New-Object System.Drawing.Point(85, 250)
                 $buttonCancel.Location = New-Object System.Drawing.Point(210, 250)
 

@@ -9,6 +9,14 @@ set "StartupPath=%APPDATA%\Microsoft\Windows\Start Menu\Programs\StartUp"
 set "StartMenuPath=%APPDATA%\Microsoft\Windows\Start Menu\Programs"
 set "IconPath=%InstallDirectory%\icons\running.ico"
 
+REM Quit GamingGaiden if Already running
+echo Closing Gaming Gaiden before installation
+taskkill /f /im GamingGaiden.exe
+
+REM Cleanup Install directory before installation
+echo Cleaning install directory
+powershell.exe -NoProfile -Command "Get-ChildItem '%InstallDirectory%' -Exclude backups,GamingGaiden.db | Remove-Item -recurse -force"
+
 REM Install to C:\ProgramData\GamingGaiden
 echo Copying Files
 xcopy /s/e/q/y "%CD%" "%InstallDirectory%"
@@ -17,7 +25,7 @@ del "%InstallDirectory%\Install.bat"
 REM Create shortcut using powershell and copy to desktop and start menu
 echo.
 echo Creating Shortcuts
-powershell.exe -NoProfile -Command "$WshShell = New-Object -ComObject WScript.Shell; $Shortcut = $WshShell.CreateShortcut('%InstallDirectory%\Gaming Gaiden.lnk'); $Shortcut.TargetPath = 'powershell.exe'; $Shortcut.Arguments = '-NoLogo -ExecutionPolicy bypass -File \"%InstallDirectory%\GamingGaiden.ps1\"'; $Shortcut.IconLocation = '%IconPath%'; $Shortcut.WorkingDirectory = '%InstallDirectory%'; $Shortcut.WindowStyle = 7; $Shortcut.Save()"
+powershell.exe -NoProfile -Command "$WshShell = New-Object -ComObject WScript.Shell; $Shortcut = $WshShell.CreateShortcut('%InstallDirectory%\Gaming Gaiden.lnk'); $Shortcut.TargetPath = '%InstallDirectory%\GamingGaiden.exe'; $Shortcut.WorkingDirectory = '%InstallDirectory%'; $Shortcut.WindowStyle = 7; $Shortcut.Save()"
 copy "%InstallDirectory%\Gaming Gaiden.lnk" "%DesktopPath%"
 copy "%InstallDirectory%\Gaming Gaiden.lnk" "%StartMenuPath%"
 
