@@ -87,7 +87,7 @@ Powershell Module [ps12exe](https://github.com/steve02081504/ps12exe) written by
 
 Program's such as ps12exe are often abused by bad actors to write malicious applications and very soon a lot of antivirus companies start flagging any exe created by such programs as a virus. This can happen to ps12exe as well and it is possible that any executable created using ps12exe also starts being flagged as a virus in future.
 
-Every release of Gaming Gaiden is personally used by me and Virus Total Scan links will be attached in all releases after v2024.7.5. All earlier releases will remain without native exe and purely powershell driven.
+Every release of Gaming Gaiden is personally used by me and Virus Total Scan links will be attached in all releases starting with v2024.8.11. All earlier releases will remain without native exe and purely powershell driven.
 
 Once Again, in face of false positives, you will have to decide for yourself if you want to use Gaming Gaiden or not. Code of Gaming Gaiden and of ps12exe is open and available for scrutiny. 
 
