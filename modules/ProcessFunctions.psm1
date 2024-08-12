@@ -11,17 +11,29 @@
     $emulatorExeList = ($rawEmulatorExes -join ',') -split ','
 
     $exesToDetect = $($gameExeList; $emulatorExeList) | Select-Object -Unique
+    
+    # Process game exes in batches of 25, with 5s sleep between each batch to reduce CPU load.
+    # Avoid using foreach in infinite loop to prevent object creation explosion due to list splicing.
+    $startIndex = 0; $batchSize = 25
+    while($true) {
+        
+        $endIndex = [Math]::Min($startIndex + $batchSize, $exesToDetect.length)
 
-    do {
-        foreach ( $exeName in $exesToDetect ) {
-            if ([System.Diagnostics.Process]::GetProcessesByName($exeName)) {
-                Log "Found $exeName running. Exiting detection"
-                return $exeName
+        for($i=$startIndex; $i -lt $endIndex; $i++) {
+            if ([System.Diagnostics.Process]::GetProcessesByName($exesToDetect[$i])) {
+                Log "Found $exesToDetect[$i] running. Exiting detection"
+                return $exesToDetect[$i]
             }
         }
+
+        if ($startIndex + $batchSize -lt $exesToDetect.length) {
+            $startIndex = $startIndex + $batchSize
+        } else {
+            $startIndex = 0
+        }
+
         Start-Sleep -s 5
     }
-    while ($true)
 }
 
 function TimeTrackerLoop($DetectedExe) {
