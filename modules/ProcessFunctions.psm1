@@ -1,38 +1,66 @@
 ﻿function DetectGame() {
     Log "Starting game detection"
 
+    # Fetch games in order of most recent to least recent
     $getGameExesQuery = "SELECT exe_name FROM games ORDER BY last_play_date DESC"
     $getEmulatorExesQuery = "SELECT exe_name FROM emulated_platforms"
 
     $gameExeList = (RunDBQuery $getGameExesQuery).exe_name
-    
     $rawEmulatorExes = (RunDBQuery $getEmulatorExesQuery).exe_name
-    # Flatten the rows with multiple exes into a single list
+
+    if($null -eq $gameExeList -and $null -eq $rawEmulatorExes) {
+        Log "No games/emulators in datbase. Exiting tracker."
+        exit 1
+    }
+
+    # Flatten the rows with multiple emulator exes into a single list
     $emulatorExeList = ($rawEmulatorExes -join ',') -split ','
 
-    $exesToDetect = $($gameExeList; $emulatorExeList) | Select-Object -Unique
+    $exeList = $($gameExeList; $emulatorExeList) | Select-Object -Unique
     
-    # Process game exes in batches of 25, with 5s sleep between each batch to reduce CPU load.
-    # Avoid using foreach in infinite loop to prevent object creation explosion due to list splicing.
-    $startIndex = 0; $batchSize = 25
-    while($true) {
-        
-        $endIndex = [Math]::Min($startIndex + $batchSize, $exesToDetect.length)
-
-        for($i=$startIndex; $i -lt $endIndex; $i++) {
-            if ([System.Diagnostics.Process]::GetProcessesByName($exesToDetect[$i])) {
-                Log "Found $exesToDetect[$i] running. Exiting detection"
-                return $exesToDetect[$i]
+    # Process games in batches of 25. 5 sec wait between every batch.
+    # Avoid creting objects in infinite loops to avoid memory wastage due to object explosion
+    if($exeList.length -le 25) {
+        # If exeList is of size 25 or less. process whole list in every batch
+        while($true) {
+            foreach ($exe in $exeList) {
+                if ([System.Diagnostics.Process]::GetProcessesByName($exe)) {
+                    Log "Found $exe running. Exiting detection"
+                    return $exe
+                }
             }
+            Start-Sleep -s 5
         }
-
-        if ($startIndex + $batchSize -lt $exesToDetect.length) {
-            $startIndex = $startIndex + $batchSize
-        } else {
-            $startIndex = 0
+    }
+    else {
+        # If exeList is longer than 25.
+        $startIndex = 10; $batchSize = 15
+        while($true) {
+            # Process most recent 10 games in every batch.
+            for($i=0; $i -lt 10; $i++) {
+                if ([System.Diagnostics.Process]::GetProcessesByName($exeList[$i])) {
+                    Log "Found $exeList[$i] running. Exiting detection"
+                    return $exeList[$i]
+                }
+            }
+            # Rest of the games in incrementing way. 15 in each batch.
+            $endIndex = [Math]::Min($startIndex + $batchSize, $exeList.length)
+    
+            for($i=$startIndex; $i -lt $endIndex; $i++) {
+                if ([System.Diagnostics.Process]::GetProcessesByName($exeList[$i])) {
+                    Log "Found $exeList[$i] running. Exiting detection"
+                    return $exeList[$i]
+                }
+            }
+    
+            if ($startIndex + $batchSize -lt $exeList.length) {
+                $startIndex = $startIndex + $batchSize
+            } else {
+                $startIndex = 10
+            }
+    
+            Start-Sleep -s 5
         }
-
-        Start-Sleep -s 5
     }
 }
 
