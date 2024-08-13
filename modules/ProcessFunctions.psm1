@@ -13,15 +13,18 @@
         exit 1
     }
 
-    # Flatten the rows with multiple emulator exes into a single list
+    # Flatten the returned result rows containing multiple emulator exes into list with one exe per item
     $emulatorExeList = ($rawEmulatorExes -join ',') -split ','
 
     $exeList = $($gameExeList; $emulatorExeList) | Select-Object -Unique
     
-    # Process games in batches of 25. 5 sec wait between every batch.
-    # Avoid creting objects in infinite loops to avoid memory wastage due to object explosion
-    if($exeList.length -le 25) {
-        # If exeList is of size 25 or less. process whole list in every batch
+    # PERFORMANCE OPTIMIZATION: CPU & MEMORY
+    # Process games in batches of 35 with most recent 10 games processed every batch. 5 sec wait b/w every batch. 
+    # Processes 300 games in 60 sec. Most recent 10 games guaranteed to be detected in 5 sec, accounting for 99% of UX in typical usage.
+    # Uses less than 2% cpu on a 2019 Ryzen 3550H in low power mode (1.7 GHz Clk with boost disabled), Windows 10 21H2.
+    # No new objects are created inside infinite loops to prevent objects explosion, keeps Memory usage ~ 50 MB or less.
+    if($exeList.length -le 35) {
+        # If exeList is of size 35 or less. process whole list in every batch
         while($true) {
             foreach ($exe in $exeList) {
                 if ([System.Diagnostics.Process]::GetProcessesByName($exe)) {
@@ -33,8 +36,8 @@
         }
     }
     else {
-        # If exeList is longer than 25.
-        $startIndex = 10; $batchSize = 15
+        # If exeList is longer than 35.
+        $startIndex = 10; $batchSize = 25
         while($true) {
             # Process most recent 10 games in every batch.
             for($i=0; $i -lt 10; $i++) {
@@ -43,7 +46,7 @@
                     return $exeList[$i]
                 }
             }
-            # Rest of the games in incrementing way. 15 in each batch.
+            # Rest of the games in incrementing way. 25 in each batch.
             $endIndex = [Math]::Min($startIndex + $batchSize, $exeList.length)
     
             for($i=$startIndex; $i -lt $endIndex; $i++) {
