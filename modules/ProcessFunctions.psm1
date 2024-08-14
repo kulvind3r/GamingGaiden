@@ -42,7 +42,7 @@
             # Process most recent 10 games in every batch.
             for($i=0; $i -lt 10; $i++) {
                 if ([System.Diagnostics.Process]::GetProcessesByName($exeList[$i])) {
-                    Log "Found $exeList[$i] running. Exiting detection"
+                    Log "Found $($exeList[$i]) running. Exiting detection"
                     return $exeList[$i]
                 }
             }
