@@ -16,7 +16,7 @@
     # Flatten the returned result rows containing multiple emulator exes into list with one exe per item
     $emulatorExeList = ($rawEmulatorExes -join ',') -split ','
 
-    $exeList = $($gameExeList; $emulatorExeList) | Select-Object -Unique
+    $exeList = [string[]] (($gameExeList + $emulatorExeList) | Select-Object -Unique)
     
     # PERFORMANCE OPTIMIZATION: CPU & MEMORY
     # Process games in batches of 35 with most recent 10 games processed every batch. 5 sec wait b/w every batch. 
