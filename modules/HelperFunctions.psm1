@@ -1,9 +1,8 @@
 ﻿function Log($MSG) {
-    $timestamp = Get-date -f s
     $mutex = New-Object System.Threading.Mutex($false, "LogFileLock")
 
     if ($mutex.WaitOne(500)) {
-        Write-Output "$timestamp : $MSG" >> ".\GamingGaiden.log"
+        Write-Output "$(Get-date -f s) : $MSG" >> ".\GamingGaiden.log"
         [void]$mutex.ReleaseMutex()
     }
 }
