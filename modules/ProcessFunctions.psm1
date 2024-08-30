@@ -72,9 +72,9 @@ function TimeTrackerLoop($DetectedExe) {
     $playTimeForCurrentSession = 0
     $idleSessionsCount = 0
     $idleSessions = New-Object int[] 100;
-    $exeStartTime = (Get-Process $DetectedExe).StartTime | Sort-Object | Select-Object -First 1
+    $exeStartTime = ([System.Diagnostics.Process]::GetProcessesByName($DetectedExe)).StartTime | Sort-Object | Select-Object -First 1
 
-    while (Get-Process $DetectedExe) {
+    while ([System.Diagnostics.Process]::GetProcessesByName($DetectedExe)) {
         $playTimeForCurrentSession = [int16] (New-TimeSpan -Start $exeStartTime).TotalMinutes
         $idleTime = [int16] ([PInvoke.Win32.UserInput]::IdleTime).Minutes
 
