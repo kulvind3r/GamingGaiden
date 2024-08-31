@@ -21,13 +21,14 @@
     # PERFORMANCE OPTIMIZATION: CPU & MEMORY
     # Process games in batches of 35 with most recent 10 games processed every batch. 5 sec wait b/w every batch. 
     # Processes 300 games in 60 sec. Most recent 10 games guaranteed to be detected in 5 sec, accounting for 99% of UX in typical usage.
-    # Uses less than 2% cpu on a 2019 Ryzen 3550H in low power mode (1.7 GHz Clk with boost disabled), Windows 10 21H2.
+    # Uses ~ 3% cpu in active blips of less than 1s, every 5s. 
+    # Benchmarked on a 2019 Ryzen 3550H in low power mode (1.7 GHz Clk with boost disabled), Windows 10 21H2.
     # No new objects are created inside infinite loops to prevent objects explosion, keeps Memory usage ~ 50 MB or less.
     if($exeList.length -le 35) {
         # If exeList is of size 35 or less. process whole list in every batch
         while($true) {
             foreach ($exe in $exeList) {
-                if ([System.Diagnostics.Process]::GetProcessesByName($exe)) {
+                if ($null = [System.Diagnostics.Process]::GetProcessesByName($exe)) {
                     Log "Found $exe running. Exiting detection"
                     return $exe
                 }
@@ -41,7 +42,7 @@
         while($true) {
             # Process most recent 10 games in every batch.
             for($i=0; $i -lt 10; $i++) {
-                if ([System.Diagnostics.Process]::GetProcessesByName($exeList[$i])) {
+                if ($null = [System.Diagnostics.Process]::GetProcessesByName($exeList[$i])) {
                     Log "Found $($exeList[$i]) running. Exiting detection"
                     return $exeList[$i]
                 }
@@ -50,7 +51,7 @@
             $endIndex = [Math]::Min($startIndex + $batchSize, $exeList.length)
     
             for($i=$startIndex; $i -lt $endIndex; $i++) {
-                if ([System.Diagnostics.Process]::GetProcessesByName($exeList[$i])) {
+                if ($null = [System.Diagnostics.Process]::GetProcessesByName($exeList[$i])) {
                     Log "Found $exeList[$i] running. Exiting detection"
                     return $exeList[$i]
                 }
@@ -72,15 +73,15 @@ function TimeTrackerLoop($DetectedExe) {
     $playTimeForCurrentSession = 0
     $idleSessionsCount = 0
     $idleSessions = New-Object int[] 100;
-    $exeStartTime = ([System.Diagnostics.Process]::GetProcessesByName($DetectedExe)).StartTime | Sort-Object | Select-Object -First 1
+    $exeStartTime = ($null = [System.Diagnostics.Process]::GetProcessesByName($DetectedExe)).StartTime | Sort-Object | Select-Object -First 1
 
-    while ([System.Diagnostics.Process]::GetProcessesByName($DetectedExe)) {
+    while ($null = [System.Diagnostics.Process]::GetProcessesByName($DetectedExe)) {
         $playTimeForCurrentSession = [int16] (New-TimeSpan -Start $exeStartTime).TotalMinutes
         $idleTime = [int16] ([PInvoke.Win32.UserInput]::IdleTime).Minutes
 
         if ($idleTime -ge 10) {
             # Entered idle Session
-            while ( $idleTime -ge 5) {
+            while ($idleTime -ge 5) {
                 # Track idle Time for current Idle Session
                 $idleSessions[$idleSessionsCount] = $idleTime
                 $idleTime = [int16] ([PInvoke.Win32.UserInput]::IdleTime).Minutes
