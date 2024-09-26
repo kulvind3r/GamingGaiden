@@ -24,11 +24,11 @@
     #    $var = $GameRomBasedName.Trim()
     #    if ($GameRomBasedName -eq "") {
     #       $var = [System.DBNull]::Value
-    #    } 
+    #    }
     #    RunDBQuery $addGameQuery @{ ..., GameRomBasedName = $var }
     #
-    # On using the above code, [System.DBNull]::Value gets casted to string for some reason and gets inserted in DB as blank string instead of a true NULL. 
-    
+    # On using the above code, [System.DBNull]::Value gets casted to string for some reason and gets inserted in DB as blank string instead of a true NULL.
+
     if ($GameRomBasedName -eq "") {
         RunDBQuery $addGameQuery @{
             GameName           = $GameName.Trim()
@@ -99,7 +99,7 @@ function UpdateGameOnSession() {
     Log "Updating $GameName play time to $GamePlayTime min and idle time to $GameIdleTime min in database"
     Log "Updating session count from $currentSessionCount to $newSessionCount in database"
 
-    RunDBQuery $updateGamePlayTimeQuery @{ 
+    RunDBQuery $updateGamePlayTimeQuery @{
         UpdatedPlayTime     = $GamePlayTime
         UpdatedIdleTime     = $GameIdleTime
         UpdatedLastPlayDate = $GameLastPlayDate
@@ -124,7 +124,7 @@ function UpdateGameOnEdit() {
 
     if ( $OriginalGameName -eq $GameName) {
         $updateGameQuery = "UPDATE games SET exe_name = @GameExeName, icon = @gameIconBytes, play_time = @GamePlayTime, completed = @GameCompleteStatus, platform = @GamePlatform WHERE name LIKE '{0}'" -f $gameNamePattern
-        
+
         Log "Editing $GameName in database"
         RunDBQuery $updateGameQuery @{
             GameExeName        = $GameExeName.Trim()
@@ -160,7 +160,7 @@ function UpdateGameOnEdit() {
         RemoveGame($OriginalGameName)
     }
 }
- 
+
 function  UpdatePlatformOnEdit() {
     param(
         [string]$OriginalPlatformName,
@@ -217,7 +217,7 @@ function RecordPlaytimOnDate($PlayTime) {
     $existingPlayTimeQuery = "SELECT play_time FROM daily_playtime WHERE play_date like DATE('now')"
 
     $existingPlayTime = (RunDBQuery $existingPlayTimeQuery).play_time
-    
+
     $recordPlayTimeQuery = ""
     if ($null -eq $existingPlayTime) {
         $recordPlayTimeQuery = "INSERT INTO daily_playtime(play_date, play_time) VALUES (DATE('now'), {0})" -f $PlayTime

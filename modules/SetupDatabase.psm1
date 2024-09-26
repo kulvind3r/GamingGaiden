@@ -1,7 +1,7 @@
 ﻿function SetupDatabase() {
     try {
         $dbConnection = New-SQLiteConnection -DataSource ".\GamingGaiden.db"
-    
+
         $createGamesTableQuery = "CREATE TABLE IF NOT EXISTS games (
                             name TEXT PRIMARY KEY NOT NULL,
                             exe_name TEXT,
@@ -12,7 +12,7 @@
                             platform TEXT)"
 
         Invoke-SqliteQuery -Query $createGamesTableQuery -SQLiteConnection $dbConnection
-    
+
         $createPlatformsTableQuery = "CREATE TABLE IF NOT EXISTS emulated_platforms (
                             name TEXT PRIMARY KEY NOT NULL,
                             exe_name TEXT,
@@ -20,7 +20,7 @@
                             rom_extensions TEXT)"
 
         Invoke-SqliteQuery -Query $createPlatformsTableQuery -SQLiteConnection $dbConnection
-    
+
         $createDailyPlaytimeTableQuery = "CREATE TABLE IF NOT EXISTS daily_playtime (
                             play_date TEXT PRIMARY KEY NOT NULL,
                             play_time INTEGER)"
@@ -43,7 +43,7 @@
         }
         # End Migration 2
 
-        # Migration 3   
+        # Migration 3
         if (-Not $gamesTableSchema.name.Contains("rom_based_name")) {
             $addRomBasedNameColumnInGamesTableQuery = "ALTER TABLE games ADD COLUMN rom_based_name TEXT"
             $updateRomBasedNameColumnValues = "UPDATE games SET rom_based_name = name WHERE exe_name IN (SELECT DISTINCT exe_name FROM emulated_platforms)"

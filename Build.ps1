@@ -11,7 +11,7 @@ pandoc.exe --ascii .\Manual.md -o .\ui\Manual.html
 $ManualHTML = Get-Content .\ui\Manual.html
 $ManualTemplate = Get-Content .\ui\templates\Manual.html.template
 
-$FinalHTML = $ManualTemplate -replace "_MARKDOWN_HTML_", $ManualHTML 
+$FinalHTML = $ManualTemplate -replace "_MARKDOWN_HTML_", $ManualHTML
 
 [System.Web.HttpUtility]::HtmlDecode($FinalHTML) | Out-File -encoding UTF8 .\ui\Manual.html
 

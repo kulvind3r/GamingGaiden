@@ -25,7 +25,7 @@ function ResizeImage($ImagePath, $GameName) {
     $WIA = New-Object -com wia.imagefile
     $WIA.LoadFile($ImagePath)
     $WIP = New-Object -ComObject wia.imageprocess
-    $scale = $WIP.FilterInfos.Item("Scale").FilterId                    
+    $scale = $WIP.FilterInfos.Item("Scale").FilterId
     $WIP.Filters.Add($scale)
     $WIP.Filters[1].Properties("MaximumWidth") = 140
     $WIP.Filters[1].Properties("MaximumHeight") = 140
@@ -34,7 +34,7 @@ function ResizeImage($ImagePath, $GameName) {
     $scaledImage = $WIP.Apply($WIA)
     $scaledImagePath = $null
     if ($ImagePath -like '*.png') {
-        $scaledImagePath = "$env:TEMP\GG-{0}-$imageFileName.png" -f $(Get-Random)    
+        $scaledImagePath = "$env:TEMP\GG-{0}-$imageFileName.png" -f $(Get-Random)
     } else {
         $scaledImagePath = "$env:TEMP\GG-{0}-$imageFileName.jpg" -f $(Get-Random)
     }
@@ -46,12 +46,12 @@ function ResizeImage($ImagePath, $GameName) {
 function CreateMenuItem($Text) {
     $menuItem = New-Object System.Windows.Forms.ToolStripmenuItem
     $menuItem.Text = "$Text"
-    
+
     return $menuItem
 }
 
 function OpenFileDialog($Title, $Filters, $DirectoryPath = [Environment]::GetFolderPath('Desktop')) {
-    $fileBrowser = New-Object System.Windows.Forms.OpenFileDialog -Property @{ 
+    $fileBrowser = New-Object System.Windows.Forms.OpenFileDialog -Property @{
         InitialDirectory = $DirectoryPath
         Filter           = $Filters
         Title            = $Title
@@ -66,7 +66,7 @@ function ShowMessage($Msg, $Buttons, $Type) {
 function CalculateFileHash ($FilePath) {
     $fileName = (Get-Item $FilePath).Name
     Copy-Item $FilePath "$env:TEMP\$fileName"
-    
+
     $fileHash = Get-FileHash "$env:TEMP\$fileName"
     Remove-Item "$env:TEMP\$fileName"
 
@@ -75,11 +75,11 @@ function CalculateFileHash ($FilePath) {
 
 function BackupDatabase {
     Log "Backing up database"
-    
+
     $workingDirectory = (Get-Location).Path
     mkdir -f $workingDirectory\backups
     $timestamp = Get-Date -f "dd-MM-yyyy-HH.mm.ss"
-    
+
     Copy-Item ".\GamingGaiden.db" "$env:TEMP\"
     Compress-Archive "$env:TEMP\GamingGaiden.db" ".\backups\GamingGaiden-$timestamp.zip"
     Remove-Item "$env:TEMP\GamingGaiden.db"
@@ -124,7 +124,7 @@ function CreateTextBox($Text, $DrawX, $DrawY, $SizeX, $SizeY) {
     $textBox.Text = $Text
     $textBox.Location = New-Object Drawing.Point($DrawX, $DrawY)
     $textBox.Size = New-Object System.Drawing.Size($SizeX, $SizeY)
-    
+
     return $textBox
 }
 

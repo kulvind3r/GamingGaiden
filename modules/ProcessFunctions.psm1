@@ -17,11 +17,11 @@
     $emulatorExeList = ($rawEmulatorExes -join ',') -split ','
 
     $exeList = [string[]] (($gameExeList + $emulatorExeList) | Select-Object -Unique)
-    
+
     # PERFORMANCE OPTIMIZATION: CPU & MEMORY
-    # Process games in batches of 35 with most recent 10 games processed every batch. 5 sec wait b/w every batch. 
+    # Process games in batches of 35 with most recent 10 games processed every batch. 5 sec wait b/w every batch.
     # Processes 300 games in 60 sec. Most recent 10 games guaranteed to be detected in 5 sec, accounting for 99% of UX in typical usage.
-    # Uses ~ 3% cpu in active blips of less than 1s, every 5s. 
+    # Uses ~ 3% cpu in active blips of less than 1s, every 5s.
     # Benchmarked on a 2019 Ryzen 3550H in low power mode (1.7 GHz Clk with boost disabled), Windows 10 21H2.
     # No new objects are created inside infinite loops to prevent objects explosion, keeps Memory usage ~ 50 MB or less.
     if($exeList.length -le 35) {
@@ -49,20 +49,20 @@
             }
             # Rest of the games in incrementing way. 25 in each batch.
             $endIndex = [Math]::Min($startIndex + $batchSize, $exeList.length)
-    
+
             for($i=$startIndex; $i -lt $endIndex; $i++) {
                 if ($null = [System.Diagnostics.Process]::GetProcessesByName($exeList[$i])) {
                     Log "Found $exeList[$i] running. Exiting detection"
                     return $exeList[$i]
                 }
             }
-    
+
             if ($startIndex + $batchSize -lt $exeList.length) {
                 $startIndex = $startIndex + $batchSize
             } else {
                 $startIndex = 10
             }
-    
+
             Start-Sleep -s 5
         }
     }
@@ -111,7 +111,7 @@ function TimeTrackerLoop($DetectedExe) {
 
 function MonitorGame($DetectedExe) {
     Log "Starting monitoring for $DetectedExe"
-    
+
     $databaseFileHashBefore = CalculateFileHash '.\GamingGaiden.db'
     Log "Database hash before: $databaseFileHashBefore"
 
@@ -127,7 +127,7 @@ function MonitorGame($DetectedExe) {
         if ($emulatedGameDetails -eq $false) {
             Log "Error: Problem in fetching emulated game details. See earlier logs for more info"
             Log "Error: Cannot resume detection until $DetectedExe exits. No playtime will be recorded."
-            
+
             TimeTrackerLoop $DetectedExe
             return
         }
@@ -138,14 +138,14 @@ function MonitorGame($DetectedExe) {
     else {
         $entityFound = DoesEntityExists "games" "exe_name" $DetectedExe
     }
-    
+
     if ($null -ne $entityFound) {
         $gameName = $entityFound.name
     }
     else {
         $gameName = $romBasedName
     }
-    
+
     # Create Temp file to signal parent process to update notification icon color to show game is running
     Write-Output "$gameName" > "$env:TEMP\GG-TrackingGame.txt"
     $sessionTimeDetails = TimeTrackerLoop $DetectedExe
@@ -160,12 +160,12 @@ function MonitorGame($DetectedExe) {
         $recordedGameIdleTime = GetIdleTime $gameName
         $updatedPlayTime = $recordedGamePlayTime + $currentPlayTime
         $updatedIdleTime = $recordedGameIdleTime + $currentIdleTime
-        
+
         UpdateGameOnSession -GameName $gameName -GamePlayTime $updatedPlayTime -GameIdleTime $updatedIdleTime -GameLastPlayDate $updatedLastPlayDate
     }
     else {
         Log "Detected emulated game is new and doesn't exist already. Adding to database."
-        
+
         SaveGame -GameName $gameName -GameExeName $DetectedExe -GameIconPath "./icons/default.png" `
         -GamePlayTime $currentPlayTime -GameIdleTime $currentIdleTime -GameLastPlayDate $updatedLastPlayDate -GameCompleteStatus 'FALSE' -GamePlatform $emulatedGameDetails.Platform -GameSessionCount 1 -GameRomBasedName $gameName
     }

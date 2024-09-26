@@ -20,9 +20,9 @@
 
 function RenderGameList() {
     Log "Rendering all games list."
-	
+
     $workingDirectory = (Get-Location).Path
-	
+
     $getAllGamesQuery = "SELECT name, icon, platform, play_time, session_count, completed, last_play_date FROM games"
     $gameRecords = RunDBQuery $getAllGamesQuery
     if ($gameRecords.Length -eq 0) {
@@ -33,7 +33,7 @@ function RenderGameList() {
 
     $getMaxPlayTime = "SELECT max(play_time) as 'max_play_time' FROM games"
     $maxPlayTime = (RunDBQuery $getMaxPlayTime).max_play_time
-	
+
     $games = [System.Collections.Generic.List[Game]]::new()
     $iconUri= $null
     $totalPlayTime = $null
@@ -45,10 +45,10 @@ function RenderGameList() {
         # Check if image is pre loaded for ui. Render if not found.
         if ( (Test-Path "$workingDirectory\ui\resources\images\$imageFileName.jpg") ) {
             $iconUri = "<img src=`".\resources\images\$imageFileName.jpg`">"
-        } 
+        }
         elseif ( (Test-Path "$workingDirectory\ui\resources\images\$imageFileName.png") ) {
             $iconUri = "<img src=`".\resources\images\$imageFileName.png`">"
-        } 
+        }
         else {
             $iconByteStream = [System.IO.MemoryStream]::new($gameRecord.icon)
             $iconBitmap = [System.Drawing.Bitmap]::FromStream($iconByteStream)
@@ -56,7 +56,7 @@ function RenderGameList() {
             if ($iconBitmap.PixelFormat -eq "Format32bppArgb") {
                 $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.png", [System.Drawing.Imaging.ImageFormat]::Png)
                 $iconUri = "<img src=`".\resources\images\$imageFileName.png`">"
-            } 
+            }
             else {
                 $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.jpg", [System.Drawing.Imaging.ImageFormat]::Jpeg)
                 $iconUri = "<img src=`".\resources\images\$imageFileName.jpg`">"
@@ -64,12 +64,12 @@ function RenderGameList() {
 
             $iconBitmap.Dispose()
         }
-        
+
         $statusUri = "<div>Finished</div><img src=`".\resources\images\finished.png`">"
         if ($gameRecord.completed -eq 'FALSE') {
             $statusUri = "<div>Playing</div><img src=`".\resources\images\playing.png`">"
         }
-		
+
         $currentGame = [Game]::new($iconUri, $name, $gameRecord.platform, $gameRecord.play_time, $gameRecord.session_count, $statusUri, $gameRecord.last_play_date)
 
         # Assign to null to avoid appending output to pipeline, improves performance and resource consumption
@@ -77,11 +77,11 @@ function RenderGameList() {
 
         $totalPlayTime += $gameRecord.play_time
     }
-	
+
     $totalPlayTimeString = PlayTimeMinsToString $totalPlayTime
 
     $table = $games | ConvertTo-Html -Fragment
-	
+
     $report = (Get-Content $workingDirectory\ui\templates\AllGames.html.template) -replace "_GAMESTABLE_", $table
     $report = $report -replace "Last_Played_On", "Last Played On"
     $report = $report -replace "Session_Count", "Sessions"
@@ -89,7 +89,7 @@ function RenderGameList() {
     $report = $report -replace "_MAXPLAYTIME_", $maxPlayTime
     $report = $report -replace "_TOTALGAMECOUNT_", $games.Count
     $report = $report -replace "_TOTALPLAYTIME_", $totalPlayTimeString
-	
+
     [System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $workingDirectory\ui\AllGames.html
 }
 
@@ -107,7 +107,7 @@ function RenderGamingTime() {
     }
 
     $table = $dailyPlayTimeData | ConvertTo-Html -Fragment
-	
+
     $report = (Get-Content $workingDirectory\ui\templates\GamingTime.html.template) -replace "_DAILYPLAYTIMETABLE_", $table
 
     [System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $workingDirectory\ui\GamingTime.html
@@ -127,7 +127,7 @@ function RenderMostPlayed() {
     }
 
     $table = $gamesPlayTimeData | ConvertTo-Html -Fragment
-	
+
     $report = (Get-Content $workingDirectory\ui\templates\MostPlayed.html.template) -replace "_GAMESPLAYTIMETABLE_", $table
 
     [System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $workingDirectory\ui\MostPlayed.html
@@ -161,7 +161,7 @@ function RenderSummary() {
     $summaryStatement = "From <b>$startDate to $endDate</b> you played <b>$($gamesSummaryData.total_games) games</b> in <b>$($gamesSummaryData.total_sessions) sessions</b>. Total <b>play time is $totalPlayTime</b> with <b>$totalIdleTime spent idling</b>."
 
     $table = $gamesPlayTimeVsSessionData | ConvertTo-Html -Fragment
-	
+
     $report = (Get-Content $workingDirectory\ui\templates\Summary.html.template) -replace "_SUMMARYTABLE_", $table
     $report = $report -replace "_SUMMARYSTATEMENT_", $summaryStatement
 
@@ -186,7 +186,7 @@ function RenderIdleTime() {
     $totalIdleTimeString = PlayTimeMinsToString $totalIdleTime
 
     $table = $gamesIdleTimeData | ConvertTo-Html -Fragment
-	
+
     $report = (Get-Content $workingDirectory\ui\templates\IdleTime.html.template) -replace "_GAMESIDLETIMETABLE_", $table
     $report = $report -replace "_TOTALIDLETIME_", $totalIdleTimeString
 
@@ -207,7 +207,7 @@ function RenderGamesPerPlatform() {
     }
 
     $table = $getGamesPerPlatformData | ConvertTo-Html -Fragment
-	
+
     $report = (Get-Content $workingDirectory\ui\templates\GamesPerPlatform.html.template) -replace "_GAMESPERPLATFORMTABLE_", $table
 
     [System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $workingDirectory\ui\GamesPerPlatform.html
@@ -227,7 +227,7 @@ function RenderPCvsEmulation() {
     }
 
     $table = $pcVsEmulationTime | ConvertTo-Html -Fragment
-	
+
     $report = (Get-Content $workingDirectory\ui\templates\PCvsEmulation.html.template) -replace "_PCVSEMULATIONTABLE_", $table
 
     [System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $workingDirectory\ui\PCvsEmulation.html
