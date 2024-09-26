@@ -1,7 +1,15 @@
+<div align="center">
+
+[![GitHub Downloads (latest)](https://img.shields.io/github/downloads/kulvind3r/gaminggaiden/latest/total?label=Downloads%20-%20Latest)](https://github.com/kulvind3r/GamingGaiden/releases/latest)
+![GitHub Downloads (all)](https://img.shields.io/github/downloads/kulvind3r/gaminggaiden/total?label=Downloads%20-%20Total&color=dark-green)
+[![GitHub stars](https://img.shields.io/github/stars/kulvind3r/gaminggaiden)](https://github.com/kulvind3r/gaminggaiden/stargazers)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/c4a01f22c3864d8c80b8c6891a6feb5f)](https://app.codacy.com/gh/kulvind3r/GamingGaiden/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+[![GitHub commit activity](https://img.shields.io/github/commit-activity/m/kulvind3r/gaminggaiden?label=Commit%20Activity&color=brown)](https://github.com/kulvind3r/gaminggaiden/graphs/commit-activity)
+[![GitHub issues](https://img.shields.io/github/issues/kulvind3r/gaminggaiden?label=Issues&color=blue)](https://github.com/kulvind3r/gaminggaiden/issues)
 
 ![Gaming Gaiden](./readme-files/GamingGaidenBanner.png)
 
-
+</div>
 
 ### 外伝 (Gaiden)
 
@@ -11,91 +19,43 @@ noun (common)
 
 A Tale; Side Story;
 
-A simple windows system tray application written in powershell to track your gaming time and review how you have spent your hours at leisure. 
+A small powershell tray application for windows os to track gaming time. Helps you record your gaming story over the years.
+
+![demo_multiview](https://github.com/user-attachments/assets/b07520a0-f9c6-4e68-9356-ff5cc0b4cfbc)
 
 ## Features
 - #### Time Tracking and Emulator Support
-    - Tracks runtime for any PC or emulated game.
-    - Automatically track all new emulated games by just registering the emulator only once.
-    - Retroarch supported. Track different retroarch cores as distinct emulated platforms.
-    - Supports tracking for multiple emulators for single console. e.g. Ryjinx and Yuzu for Switch.
-    - Idle time tracking based on absence of user input from KB/M or Gamepads. Removes idle time from play time for accurate playtime measurements.
-    - Tracks number of sessions per game.
-    - Works best with command line based emulation frontends like EmulationStation, LaunchBox and other standalone emulators. 
-    - Pause or resume tracking anytime without exiting the app.
-    - HWiNFO64 Sensor. Track game time recording status in RTSS / HWiNFO overlays.
+    - Track play time for PC or emulated games.
+    - Auto tracks new roms after registering any emulator just once.
+    - Supports Retroarch cores.
+    - Detects and removes idle time from gaming sessions.
+    - Out of box HWiNFO64 integration with session time and tracking status metrics.
 - #### UI and Statistics
-    - Fast HTML based UI rendered using your default browser. Take screenshots/print pdfs to share with friends from your browser.
-    - Quick view, 5 most recent in progress / finished games with total playtime and last played dates.
-    - Detailed Games list UI with search and sorting. Editable game icons. Relative play time comparison bar for each game.
-    - Quick google image search button for finding game icons / box art.
-    - Games can be marked finished / in progress for backlog records.
-    - Lifetime gaming summary graph showing playtime vs session count of each game. Total play time, idle time, in progress and finished games.
-    - Daily, Monthly and Yearly play time statstics with highlighted weekends.
-    - Shows most played games and number of games played per platform.
-    - PC vs Emulation time.
+    - Fast browser based UI with search and sorting. Quick view popup for recent games.
+    - Multiple in depth statistics on gaming. Lifetime summary, monthly/yearly time analysis, most played games, games per emulator etc.
+    - Integrated google image search for game icons / box art.
+    - Mark games as Finished / Playing to track backlog completion.
 - #### Quality of Life Features
-    - Extremely lightweight. ~7 MB install size. Single process with very low resource usage.
-    - Completely offline and portable. No internet required. All data stored locally.
-    - Automated data backup on every gaming session. Keeps 5 latest backups.
-    - Detailed how to use manual. Just click Help from menu.
-    - Detailed logging to identify bugs and errors.
+    - Small size (~7 MB). High performance (Sub 5 sec game detecton). Extremely light on cpu & ram.
+    - Completely offline and portable, all data stored in local database.
+    - Automated data backup after each gaming session.
 
-## Feature Screenshots
-<img src="./readme-files/GamesList.png" width="323" height="180"> <img src="./readme-files/LifeTimeSummary.png" width="323" height="180">  
-
-<img src="./readme-files/TimeSpentGamingMonthly.png" width="323" height="180"> <img src="./readme-files/TimeSpentGamingYearly.png" width="323" height="180"> 
-
-<img src="./readme-files/MostPlayedGames.png" width="323" height="180"> <img src="./readme-files/IdleTime.png" width="323" height="180">
-
-<img src="./readme-files/QuickView.png" width="240" height="210"> <img src="./readme-files/GamesPlayedPerPlatform.png" width="200" height="210"> <img src="./readme-files/PCVsEmulationTime.png" width="200" height="210"> 
-
-<img src="./readme-files/HWiNFOSensor.png" width="450" height="190">
-
-## Feature Demos
-- [Tracking PC Games](https://youtu.be/QHVJvWrDWC4)
-- [Tracking Emulated Games](https://youtu.be/ltRJVeOxr1s)
-- [Tracking Retroarch Games](https://youtu.be/RvE6_fYAiRM)
-- [Gaming Stastics & Other Features](https://youtu.be/gIqdKGoQDGM)
-- [HWiNFO Sensor](https://youtu.be/pFe80EzFog8)
-
-## Vs Steam, Playnite etc.
-For purely tracking play time, Gaming Gaiden has much more features than the above launchers. Ease of use with Emulators is much higher. You don't need to add each emulated game individually. It has HWiNFO integration and consumes very less resources.
-
-Biggest feature though are the stastics that it generates from your data. The launchers do time tracking at best as a side feature. Gaming Gaiden is designed to give you insights to your hobby. It's stastics feature will answer questions like 
-- *Are you really gaming for same hours as you used to? Is your beloved hobby still alive?*
-- *Are you playing too much, is gaming affecting your life?*
-- *Did you play enough games / enough hours since you bought that new PC to justify it's cost?*
-- *You setup such complex emulation setup, how many emulated games you actually played?*
-
-It adds value to your gaming hobby by gathering data quietly in background and then making it super easy for you to draw conclusions and bring changes.
-
-## How to install / upgrade
+## How to install / upgrade / use
 1. Download ***GamingGaiden.zip*** from the [latest release](https://github.com/kulvind3r/GamingGaiden/releases/latest).
-2. Extract ***GamingGaiden*** folder and Run `Install.bat`.
-3. Use the shortcuts on desktop / start menu for launching the application. If you answered 'y | yes' for setting up autostart, application will also start at boot. 
+2. Extract ***GamingGaiden*** folder and Run `Install.bat`. Choose Yes/No for autostart at Boot.
+3. Use the shortcut on desktop / start menu for launching the application.
+4. Regularly backup your `GamingGaiden.db` and `backups` folder to avoid data loss. Click ***Settings => Open Install Directory*** option in app menu to find them.
 
-## "Unknown Publisher"
-Windows smart screen may give a warning that application is from ***Unknown Publisher***. 
-
-This is due to application not being signed with a public CA approved certificate. These certifactes cost hundreds of dollars annually to purchase. Naturally I can't spend that much for something built for casual and personal use. 
-
-You need to decide for yourself if you want to use Gaming Gaiden or not.
+## Unknown Publisher
+Windows smart screen may give a warning that application is from ***Unknown Publisher*** due to lack of signature by a public CA approved certificate.
+These certifactes cost hundreds of dollars per year. Can't afford them.
 
 ## Antivirus False Positives
 Powershell Module [ps12exe](https://github.com/steve02081504/ps12exe) written by [Steve Green](https://github.com/steve02081504) is used to convert the primary script of Gaming Gaiden into native exe.
 
-Program's such as ps12exe are often abused by bad actors to write malicious applications and very soon a lot of antivirus companies start flagging any exe created by such programs as a virus. This can happen to ps12exe as well and it is possible that any executable created using ps12exe also starts being flagged as a virus in future.
+Some antivirus solutions give false positives for such autogenerated executables. Check the ***Virus Total Scan Link*** for each release and make your own decision. 
 
-Every release of Gaming Gaiden is personally used by me and Virus Total Scan links will be attached in all releases starting with v2024.8.11. All earlier releases will remain without native exe and purely powershell driven.
-
-Once Again, in face of false positives, you will have to decide for yourself if you want to use Gaming Gaiden or not. Code of Gaming Gaiden and of ps12exe is open and available for scrutiny. 
-
-## Protecting your Data
-Make sure you regularly copy `GamingGaiden.db` and your `backups` folder to a safe location like Cloud or external storage. 
-Otherwise you risk loosing your data, if your Windows installation gets corrupt or you reinstall / upgrade your Windows OS.
-
-You can find the above files by clicking ***Settings => Open Install Directory*** option in app menu.
+Open Source softwares do not come with any warranty and expect you to be responsible for your own actions.
 
 ## Attributions
 Made with love using 
@@ -109,8 +69,3 @@ Made with love using
 - Game Cartridge Icon from [FreePik on Flaticon](https://www.flaticon.com/free-icons/game-cartridge)
 - Cute [Ninja Vector by Catalyststuff on Freepik](https://www.freepik.com/free-vector/cute-ninja-gaming-cartoon-vector-icon-illustration-people-technology-icon-concept-isolated-flat_42903434.htm)
 - [Ninja Garden Font](https://www.fontspace.com/ninja-garden-font-f32923) by [Iconian Fonts](https://www.fontspace.com/iconian-fonts)
-
-## Raising Bugs
-Read the included manual and installation steps mentioned above carefully before raising issues. Check carefully if you didn't follow anything as instructed. You might be able to solve your issue without needing help.
-
-As a solo dev, I will try my best to provide support/fixes for any genuine bugs in existing features based on time availability. No new feature requests please.
