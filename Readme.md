@@ -2,8 +2,9 @@
 
 [![GitHub Downloads (latest)](https://img.shields.io/github/downloads/kulvind3r/gaminggaiden/latest/total?label=Downloads%20-%20Latest)](https://github.com/kulvind3r/GamingGaiden/releases/latest)
 ![GitHub Downloads (all)](https://img.shields.io/github/downloads/kulvind3r/gaminggaiden/total?label=Downloads%20-%20Total&color=dark-green)
+[![CodeQL](https://github.com/kulvind3r/GamingGaiden/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/kulvind3r/GamingGaiden/actions/workflows/github-code-scanning/codeql)
 [![GitHub stars](https://img.shields.io/github/stars/kulvind3r/gaminggaiden)](https://github.com/kulvind3r/gaminggaiden/stargazers)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/c4a01f22c3864d8c80b8c6891a6feb5f)](https://app.codacy.com/gh/kulvind3r/GamingGaiden/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+[![Codacy Quality](https://app.codacy.com/project/badge/Grade/c4a01f22c3864d8c80b8c6891a6feb5f)](https://app.codacy.com/gh/kulvind3r/GamingGaiden/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 [![GitHub commit activity](https://img.shields.io/github/commit-activity/m/kulvind3r/gaminggaiden?label=Commit%20Activity&color=brown)](https://github.com/kulvind3r/gaminggaiden/graphs/commit-activity)
 [![GitHub issues](https://img.shields.io/github/issues/kulvind3r/gaminggaiden?label=Issues&color=blue)](https://github.com/kulvind3r/gaminggaiden/issues)
 
@@ -39,6 +40,8 @@ A small powershell tray application for windows os to track gaming time. Helps y
     - Small size (~7 MB). High performance (Sub 5 sec game detecton). Extremely light on cpu & ram.
     - Completely offline and portable, all data stored in local database.
     - Automated data backup after each gaming session.
+
+### [Video Demo](https://github.com/user-attachments/assets/cf4cdc10-1c6a-4b63-92d5-3eddd675d1ae)
 
 ## How to install / upgrade / use
 1. Download ***GamingGaiden.zip*** from the [latest release](https://github.com/kulvind3r/GamingGaiden/releases/latest).
