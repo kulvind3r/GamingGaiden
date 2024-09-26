@@ -14,7 +14,7 @@ try {
     Import-Module ".\modules\SetupDatabase.psm1"
     Import-Module ".\modules\StorageFunctions.psm1"
     Import-Module ".\modules\UIFunctions.psm1"
-    
+
     #------------------------------------------
     # Exit if Gaming Gaiden is being started from non standard location
     $currentDirectory = (Get-Location).path
@@ -24,19 +24,21 @@ try {
     }
 
     #------------------------------------------
-    # Exit if Gaming Gaiden is already Running 
+    # Exit if Gaming Gaiden is already Running
     $results = [System.Diagnostics.Process]::GetProcessesByName("GamingGaiden")
     if ($results.Length -gt 1) {
         ShowMessage "Gaming Gaiden is already running. Not Starting another Instance." "Ok" "Error"
         Log "Error: Gaming Gaiden already running. Not Starting another Instance."
         exit 1;
     }
-    
+
     #------------------------------------------
-    # Reset Log At Application Boot
-    Remove-Item ".\GamingGaiden.log" -ErrorAction silentlycontinue
-    $timestamp = Get-date -f s
-    Write-Output "$timestamp : Cleared log at application boot" >> ".\GamingGaiden.log"
+    # Clear log at application boot if log size has grown above 5 MB
+    if ((Test-Path .\GamingGaiden.log) -And ((Get-Item .\GamingGaiden.log).Length / 1MB -gt 5)) {
+        Remove-Item ".\GamingGaiden.log" -ErrorAction silentlycontinue
+        $timestamp = Get-date -f s
+        Log "Log grew more than 5 MB. Clearing."
+    }
 
     #------------------------------------------
     # Setup Database
@@ -63,7 +65,7 @@ try {
     else {
         Log "HWiNFO not detected. Or Gaming Gaiden is already Integrated. Skipping Auto Integration"
     }
-    
+
     #------------------------------------------
     # Tracker Job Scripts
     $TrackerJobInitializationScript = {
@@ -133,13 +135,13 @@ try {
 
         if ($null -eq $EntityList) {
             $SettingsFunctionToCall.Invoke()
-        } 
+        }
         else {
             $SettingsFunctionToCall.Invoke((, $EntityList))
         }
-        
+
         $databaseFileHashAfter = CalculateFileHash '.\GamingGaiden.db'; Log "Database hash after: $databaseFileHashAfter"
-    
+
         if ($databaseFileHashAfter -ne $databaseFileHashBefore) {
             BackupDatabase
             Log "Rebooting tracker job to apply new settings"
@@ -159,7 +161,7 @@ try {
             if ($AppNotifyIcon.Text -ne "Gaming Gaiden") {
                 ResetIconAndSensors
                 $AppNotifyIcon.Icon = $IconRunning
-            } 
+            }
         }
     }
 
@@ -195,7 +197,7 @@ try {
     $StopTrackerMenuItem = CreateMenuItem "Stop Tracker"
     $helpMenuItem = CreateMenuItem "Help / FAQs"
     $aboutMenuItem = CreateMenuItem "About"
-    
+
     $settingsSubMenuItem = CreateMenuItem "Settings"
     $addGameMenuItem = CreateMenuItem "Add Game"
     $addPlatformMenuItem = CreateMenuItem "Add Emulator"
@@ -249,12 +251,12 @@ try {
         }
     })
 
-    $StartTrackerMenuItem.Add_Click({ 
+    $StartTrackerMenuItem.Add_Click({
         StartTrackerJob;
         $AppNotifyIcon.ShowBalloonTip(3000, "Tracker Started","Watching for game launches.", [System.Windows.Forms.ToolTipIcon]::Info)
     })
 
-    $StopTrackerMenuItem.Add_Click({ 
+    $StopTrackerMenuItem.Add_Click({
         StopTrackerJob
         $AppNotifyIcon.ShowBalloonTip(3000, "Tracker Stopped","Game launch detection disabled.", [System.Windows.Forms.ToolTipIcon]::Info)
     })
@@ -268,12 +270,12 @@ try {
         RenderAboutDialog
     })
 
-    $exitMenuItem.Add_Click({ 
-        $AppNotifyIcon.Visible = $false; 
+    $exitMenuItem.Add_Click({
+        $AppNotifyIcon.Visible = $false;
         Stop-Job -Name "TrackerJob";
         $Timer.Stop()
         $Timer.Dispose()
-        [System.Windows.Forms.Application]::Exit(); 
+        [System.Windows.Forms.Application]::Exit();
     })
 
     #------------------------------------------
@@ -322,7 +324,7 @@ try {
 
     #------------------------------------------
     # Settings Sub Menu Actions
-    $addGameMenuItem.Add_Click({ 
+    $addGameMenuItem.Add_Click({
         Log "Starting game registration"
 
         ExecuteSettingsFunction -SettingsFunctionToCall $function:RenderAddGameForm
@@ -331,13 +333,13 @@ try {
         Remove-Item -Force "$env:TEMP\GG-*.png"
     })
 
-    $addPlatformMenuItem.Add_Click({ 
+    $addPlatformMenuItem.Add_Click({
         Log "Starting emulated platform registration"
 
-        ExecuteSettingsFunction -SettingsFunctionToCall $function:RenderAddPlatformForm 
+        ExecuteSettingsFunction -SettingsFunctionToCall $function:RenderAddPlatformForm
     })
 
-    $editGameMenuItem.Add_Click({ 
+    $editGameMenuItem.Add_Click({
         Log "Starting game editing"
 
         $gamesList = (RunDBQuery "SELECT name FROM games").name
@@ -353,20 +355,20 @@ try {
         Remove-Item -Force "$env:TEMP\GG-*.png"
     })
 
-    $editPlatformMenuItem.Add_Click({ 
+    $editPlatformMenuItem.Add_Click({
         Log "Starting platform editing"
 
-        $platformsList = (RunDBQuery "SELECT name FROM emulated_platforms").name 
+        $platformsList = (RunDBQuery "SELECT name FROM emulated_platforms").name
         if ($platformsList.Length -eq 0) {
             ShowMessage "No Platforms found in database. Please add few emulators first." "OK" "Error"
             Log "Error: Platform list empty. Returning"
             return
         }
-        
+
         ExecuteSettingsFunction -SettingsFunctionToCall $function:RenderEditPlatformForm -EntityList $platformsList
     })
 
-    $openInstallDirectoryMenuItem.Add_Click({ 
+    $openInstallDirectoryMenuItem.Add_Click({
         Log "Opening Install Directory"
         Invoke-Item .
     })
