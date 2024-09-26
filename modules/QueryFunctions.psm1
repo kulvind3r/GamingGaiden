@@ -1,4 +1,4 @@
-﻿function IsExeEmulator($DetectedExe) {	
+﻿function IsExeEmulator($DetectedExe) {
     Log "Is $DetectedExe is an Emulator?"
 
     $pattern = SQLEscapedMatchPattern $DetectedExe.Trim()
@@ -72,7 +72,7 @@ function findEmulatedGame($DetectedEmulatorExe, $EmulatorCommandLine) {
 
         if ($romName -ne "") {
             $romName = $romName -replace ".$romExtension", ""
-            break 
+            break
         }
     }
 
@@ -118,7 +118,7 @@ function findEmulatedGamePlatform($DetectedEmulatorExe, $Core) {
         $corePattern = SQLEscapedMatchPattern $Core.Trim()
         $getPlatformQuery = "SELECT name FROM emulated_platforms WHERE exe_name LIKE '%{0}%' AND core LIKE '{1}'" -f $exePattern, $corePattern
     }
-    
+
     $emulatedGamePlatform = (RunDBQuery $getPlatformQuery).name
 
     Log "Detected platform : $emulatedGamePlatform"
@@ -128,7 +128,7 @@ function findEmulatedGamePlatform($DetectedEmulatorExe, $Core) {
 function findEmulatedGameDetails($DetectedEmulatorExe) {
     Log "Finding emulated game details for $DetectedEmulatorExe"
 
-    $emulatorCommandLine = Get-WmiObject Win32_Process -Filter "name = '$DetectedEmulatorExe.exe'" | Select-Object -ExpandProperty CommandLine
+    $emulatorCommandLine = Get-CimInstance -ClassName Win32_Process -Filter "name = '$DetectedEmulatorExe.exe'" | Select-Object -ExpandProperty CommandLine
 
     $emulatedGameRomBasedName = findEmulatedGame $DetectedEmulatorExe $emulatorCommandLine
     if ($emulatedGameRomBasedName.Length -eq 0) {
@@ -146,7 +146,7 @@ function findEmulatedGameDetails($DetectedEmulatorExe) {
             return $false
         }
     }
-    
+
     $emulatedGamePlatform = findEmulatedGamePlatform $DetectedEmulatorExe $coreName
 
     if ($emulatedGamePlatform -is [system.array]) {
@@ -179,5 +179,5 @@ function GetPlatformDetails($Platform) {
     $platformDetails = RunDBQuery $getplatformDetailsQuery
 
     Log ("Found details: name: {0}, exe_name: {1}, core: {2}" -f $platformDetails.name, $platformDetails.exe_name, $platformDetails.core)
-    return $platformDetails 
+    return $platformDetails
 }
