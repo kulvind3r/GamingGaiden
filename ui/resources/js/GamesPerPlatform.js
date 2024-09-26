@@ -1,5 +1,6 @@
+/*global ChartDataLabels, Chart*/
+/*from chart.js*/
 let gamingData = [];
-let chart;
 
 $('table')[0].setAttribute('id', 'data-table');
 
@@ -7,7 +8,7 @@ function updateChart() {
 
     const ctx = document.getElementById('games-per-platform-chart').getContext('2d');
 
-    chart = new Chart(ctx, {
+    new Chart(ctx, {
         type: 'doughnut',
         plugins: [ChartDataLabels],
         data: {
@@ -27,7 +28,7 @@ function updateChart() {
                     yAlign: 'top',
                     caretPadding: 7,
                     callbacks: {
-                        label: function (context) {
+                        label: function () {
                             return ''
                         }
                     }

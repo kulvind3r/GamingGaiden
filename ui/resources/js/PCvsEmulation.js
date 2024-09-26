@@ -1,13 +1,15 @@
+/*global ChartDataLabels, Chart*/
+/*from chart.js*/
+
 let gamingData = [];
-let chart;
 
 $('table')[0].setAttribute('id', 'data-table');
 
-function updateChart(gameCount) {
+function updateChart() {
 
     const ctx = document.getElementById('pc-vs-emulation-chart').getContext('2d');
 
-    chart = new Chart(ctx, {
+    new Chart(ctx, {
         type: 'pie',
         plugins: [ChartDataLabels],
         data: {
@@ -26,7 +28,7 @@ function updateChart(gameCount) {
                     yAlign: 'top',
                     caretPadding: 7,
                     callbacks: {
-                        label: function (context) {
+                        label: function () {
                             return ''
                         }
                     }

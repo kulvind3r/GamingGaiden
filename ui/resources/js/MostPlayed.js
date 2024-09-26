@@ -1,3 +1,6 @@
+/*global ChartDataLabels, Chart*/
+/*from chart.js*/
+
 let gamingData = [];
 let chart;
 let gameCount = 10;
@@ -13,7 +16,7 @@ function updateChart(gameCount) {
         gameCount = gamingData.length
     }
 
-    for (i = 0; i < gameCount; i++) {
+    for (let i = 0; i < gameCount; i++) {
         labels.push(gamingData[i].name)
         data.push({ "game": gamingData[i].name, "time": (gamingData[i].time / 60).toFixed(1) });
     }
@@ -110,7 +113,7 @@ function loadDataFromTable() {
     // Remove header row data
     gamingData.shift()
 
-    selectBox = document.getElementById('game-count');
+    var selectBox = document.getElementById('game-count');
     const maxOptions = Math.min(50, gamingData.length);
 
     // Loop to generate options

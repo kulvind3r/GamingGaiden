@@ -1,5 +1,7 @@
+/*global ChartDataLabels, Chart*/
+/*from chart.js*/
+
 let gamingData = [];
-let chart;
 let finishedCount = 0;
 let inProgressCount = 0;
 
@@ -80,7 +82,7 @@ function updateChart() {
 
     const ctx = document.getElementById('session-vs-playtime-chart').getContext('2d');
 
-    chart = new Chart(ctx, {
+    new Chart(ctx, {
         type: 'scatter',
         data: {
             labels: gamingData.map(row => row.name),

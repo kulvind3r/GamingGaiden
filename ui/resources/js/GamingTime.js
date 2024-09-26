@@ -1,3 +1,6 @@
+/*global ChartDataLabels, Chart*/
+/*from chart.js*/
+
 let gamingData = [];
 let selectedYear; let selectedMonth;
 let firstYear; let firstMonth
@@ -12,7 +15,7 @@ $('table')[0].setAttribute('id', 'data-table');
 
 function updatePeriodDisplayWithMonth(selectedYear, selectedMonth) {
     selectedMonth = selectedMonth + 1
-    selectedDate = new Date(`${selectedYear}-${selectedMonth}-1`)
+    let selectedDate = new Date(`${selectedYear}-${selectedMonth}-1`)
     let monthString = selectedDate.toLocaleDateString("en-US", { year: 'numeric', month: 'long' })
     document.getElementById('time-period-display').innerText = monthString + " : " + parseInt(monthTotalTime) + " Hrs";
     updateWarnMessage("")
@@ -118,7 +121,7 @@ function updateChart(selectedYear, selectedMonth, yearlySummaryEnabled = false) 
                     ticks: {
                         color: (tickObj) => {
                             const date = new Date(selectedYear, selectedMonth, tickObj['tick']['label'])
-                            day = date.getDay()
+                            let day = date.getDay()
                             if (day === 0 || day === 6) {
                                 return 'red';
                             }

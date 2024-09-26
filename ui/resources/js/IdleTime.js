@@ -1,3 +1,6 @@
+/*global ChartDataLabels, Chart*/
+/*from chart.js*/
+
 let gamingData = [];
 let chart;
 
@@ -8,7 +11,7 @@ function updateChart() {
     let labels = [];
     let data = [];
 
-    for (i = 0; i < gamingData.length; i++) {
+    for (let i = 0; i < gamingData.length; i++) {
         labels.push(gamingData[i].name)
         data.push({ "game": gamingData[i].name, "time": (gamingData[i].time / 60).toFixed(1) });
     }
