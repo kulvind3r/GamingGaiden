@@ -1,5 +1,5 @@
-/*global Chart*/
-/*from chart.js*/
+/*global Chart, chartTitleConfig*/
+/*from chart.js, common.js*/
 
 let gamingData = [];
 let finishedCount = 0;

@@ -1,5 +1,5 @@
-/*global ChartDataLabels, Chart*/
-/*from chart.js*/
+/*global ChartDataLabels, Chart, chartTooltipConfig, chartLegendConfig, chartDataLabelFontConfig*/
+/*from chart.js, common.js*/
 let gamingData = [];
 
 $('table')[0].setAttribute('id', 'data-table');
