@@ -38,8 +38,8 @@
     <script src="./resources/js/GameVsTime.js"></script>
     <script>
         $('table')[0].setAttribute('id', 'data-table');
-        let gamingData = buildGamingData("name", "time")
-        updateChart(gamingData.length, "Idle Time (Hours)")
+        let gamingData = buildGamingData("name", "time");
+        updateChart(gamingData.length, "Idle Time (Hours)");
     </script>
 </body>
 
