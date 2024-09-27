@@ -1,5 +1,3 @@
-/*global chartTitleConfig, chartTooltipConfig, chartLegendConfig, chartDataLabelFontConfig*/
-
 var chartTooltipConfig = {
         displayColors: false,
         yAlign: 'top',
@@ -43,3 +41,7 @@ function chartTitleConfig(title, padding = 0, color="#000") {
         }
     }
 }
+
+// Dummy usage of variables to suppress not used false positive in codacy
+// without ignoring the entire file.
+chartTooltipConfig; chartDataLabelFontConfig; chartLegendConfig; chartTitleConfig("dummy");
