@@ -1,13 +1,9 @@
-/*global ChartDataLabels, Chart, chartTitleConfig, buildGamingData*/
+/*global ChartDataLabels, Chart, chartTitleConfig */
 /*from chart.js, common.js*/
 
-let gamingData = [];
 let chart;
-let gameCount = 10;
 
-$('table')[0].setAttribute('id', 'data-table');
-
-function updateChart(gameCount) {
+function updateChart(gameCount, labelText, stepSize = 1) {
 
     let labels = [];
     let data = [];
@@ -28,7 +24,7 @@ function updateChart(gameCount) {
         chart.destroy();
     }
 
-    const ctx = document.getElementById('most-played-chart').getContext('2d');
+    const ctx = document.getElementById('game-vs-time-chart').getContext('2d');
 
     chart = new Chart(ctx, {
         type: 'bar',
@@ -36,7 +32,7 @@ function updateChart(gameCount) {
         data: {
             labels: labels,
             datasets: [{
-                label: 'Playtime (Hours)',
+                label: labelText,
                 data: data.map(row => row.time),
                 borderWidth: 2
             }]
@@ -62,9 +58,9 @@ function updateChart(gameCount) {
                 },
                 x: {
                     ticks: {
-                        stepSize: 10
+                        stepSize: stepSize
                     },
-                    title: chartTitleConfig("Playtime (Hours)", 15)
+                    title: chartTitleConfig(labelText, 15)
                 }
             },
             elements: {
@@ -93,31 +89,3 @@ function updateChart(gameCount) {
         }
     });
 }
-
-function loadDataFromTable() {
-    gamingData = buildGamingData("name", "time")
-
-    var selectBox = document.getElementById('game-count');
-    const maxOptions = Math.min(50, gamingData.length);
-
-    // Loop to generate options
-    for (let i = 10; i <= maxOptions; i += 10) {
-        const option = document.createElement('option');
-        option.value = i;
-        option.text = i;
-        selectBox.add(option);
-    }
-
-    if (gamingData.length < 50) {
-        const showAllOption = document.createElement('option');
-        showAllOption.value = gamingData.length;
-        showAllOption.text = gamingData.length;
-        selectBox.add(showAllOption);
-    }
-
-    updateChart(gameCount);
-}
-
-document.getElementById('game-count').addEventListener('change', () => { updateChart(document.getElementById('game-count').value); });
-
-loadDataFromTable();

@@ -28,7 +28,7 @@
 <body>
     <h1>Your Most Played Games</h1>
     <div id="chart-container">
-        <canvas id="most-played-chart"></canvas>
+        <canvas id="game-vs-time-chart"></canvas>
     </div>
     <div id="navigation-bar">
         <div>Top</div>
@@ -39,7 +39,38 @@
         _GAMESPLAYTIMETABLE_
     </div>
     <script src="./resources/js/common.js"></script>
-    <script src="./resources/js/MostPlayed.js"></script>
+    <script src="./resources/js/GameVsTime.js"></script>
+    <script>
+        $('table')[0].setAttribute('id', 'data-table');
+        var gamingData = buildGamingData("name", "time");
+
+        var selectBox = document.getElementById('game-count');
+        const maxOptions = Math.min(50, gamingData.length);
+
+        /* Create options for select box */
+        for (let i = 10; i <= maxOptions; i += 10) {
+            const option = document.createElement('option');
+            option.value = i;
+            option.text = i;
+            selectBox.add(option);
+        }
+        if (gamingData.length < 50) {
+            const showAllOption = document.createElement('option');
+            showAllOption.value = gamingData.length;
+            showAllOption.text = gamingData.length;
+            selectBox.add(showAllOption);
+        }
+        /* End */
+
+        document.getElementById('game-count').addEventListener('change', () => {
+            updateChart(
+                document.getElementById('game-count').value,
+                "Playtime (Hours)",
+                10);
+        });
+
+        updateChart(10, "Playtime (Hours)", 10);
+    </script>
 </body>
 
 </html>
