@@ -56,16 +56,7 @@ function updateChart() {
                     ticks: {
                         stepSize: 1
                     },
-                    title: {
-                        display: true,
-                        padding: 15,
-                        color: '#000',
-                        text: "Idle Time (Hours)",
-                        font: {
-                            size: 18,
-                            family: 'monospace'
-                        }
-                    }
+                    title: chartTitleConfig("Idle Time (Hours)", 15)
                 }
             },
             elements: {

@@ -33,6 +33,7 @@
     <div>
         _PCVSEMULATIONTABLE_
     </div>
+    <script src="./resources/js/common.js"></script>
     <script src="./resources/js/PCvsEmulation.js"></script>
 </body>
 

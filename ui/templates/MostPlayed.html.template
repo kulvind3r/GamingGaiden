@@ -38,6 +38,7 @@
     <div>
         _GAMESPLAYTIMETABLE_
     </div>
+    <script src="./resources/js/common.js"></script>
     <script src="./resources/js/MostPlayed.js"></script>
 </body>
 

@@ -64,16 +64,7 @@ function updateChart(gameCount) {
                     ticks: {
                         stepSize: 10
                     },
-                    title: {
-                        display: true,
-                        padding: 15,
-                        color: '#000',
-                        text: "Playtime (Hours)",
-                        font: {
-                            size: 18,
-                            family: 'monospace'
-                        }
-                    }
+                    title: chartTitleConfig("Playtime (Hours)", 15)
                 }
             },
             elements: {

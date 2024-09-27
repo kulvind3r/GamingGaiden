@@ -96,28 +96,10 @@ function updateChart(selectedYear, selectedMonth, yearlySummaryEnabled = false) 
                 y: {
                     beginAtZero: true,
                     max: ylimit,
-                    title: {
-                        display: true,
-                        padding: 15,
-                        color: '#000',
-                        text: "PlayTime (Hours)",
-                        font: {
-                            size: 18,
-                            family: 'monospace'
-                        }
-                    }
+                    title: chartTitleConfig("PlayTime (Hours)", 15)
                 },
                 x: {
-                    title: {
-                        display: true,
-                        padding: 15,
-                        color: '#000',
-                        text: periodLabel,
-                        font: {
-                            size: 18,
-                            family: 'monospace'
-                        }
-                    },
+                    title: chartTitleConfig(periodLabel, 15),
                     ticks: {
                         color: (tickObj) => {
                             const date = new Date(selectedYear, selectedMonth, tickObj['tick']['label'])

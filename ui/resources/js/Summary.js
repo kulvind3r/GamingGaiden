@@ -103,14 +103,7 @@ function updateChart() {
             scales: {
                 y: {
                     type: 'log2',
-                    title: {
-                        display: true,
-                        text: "PlayTime (Hours)",
-                        font: {
-                            size: 18,
-                            family: 'monospace'
-                        }
-                    }
+                    title: chartTitleConfig("PlayTime (Hours)")
                 },
                 // Alignment Hack: Add an identical y scale on right side, to center the graph on page.
                 // Then hide the right side scale by setting ticks and title color identical to background.
@@ -120,28 +113,13 @@ function updateChart() {
                     grid: {
                         display: false
                     },
-                    title: {
-                        display: true,
-                        text: "PlayTime (Hours)",
-                        font: {
-                            size: 18,
-                            family: 'monospace',
-                        },
-                        color: 'white'
-                    },
+                    title: chartTitleConfig("PlayTime (Hours)", 0, 'white'),
                     ticks: {
                         color: 'white'
                     }
                 },
                 x: {
-                    title: {
-                        display: true,
-                        text: "Game Sessions",
-                        font: {
-                            size: 18,
-                            family: 'monospace'
-                        }
-                    },
+                    title:  chartTitleConfig("Game Sessions", 15),
                     ticks: {
                         stepSize: 10
                     }

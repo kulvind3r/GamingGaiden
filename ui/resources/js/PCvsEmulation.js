@@ -23,39 +23,14 @@ function updateChart() {
             responsive: true,
             maintainAspectRatio: true,
             plugins: {
-                tooltip: {
-                    displayColors: false,
-                    yAlign: 'top',
-                    caretPadding: 7,
-                    callbacks: {
-                        label: function () {
-                            return ''
-                        }
-                    }
-                },
-                legend: {
-                    onClick: null,
-                    position: 'bottom',
-                    labels: {
-                        boxWidth: 20,
-                        padding: 40,
-                        font: {
-                            size: 18,
-                            weight: 'bold',
-                            family: 'monospace'
-                        }
-                    }
-                },
+                tooltip: chartTooltipConfig,
+                legend: chartLegendConfig,
                 datalabels: {
                     formatter: function (value) {
                         return value + ' Hrs';
                     },
                     color: '#000000',
-                    font: {
-                        size: 18,
-                        weight: 'bold',
-                        family: 'monospace'
-                    }
+                    font: chartDataLabelFontConfig
                 }
             }
         }
