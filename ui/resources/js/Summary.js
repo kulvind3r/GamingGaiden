@@ -90,13 +90,11 @@ function updateChart() {
                 data: gamingData.map(row => ({ x: row.sessions, y: row.playtime, completed: row.completed })),
                 borderWidth: 2,
                 pointBackgroundColor: function (context) {
-                    var index = context.dataIndex;
-                    var value = context.dataset.data[index].completed;
+                    var value = context.raw.completed;
                     return value == 'FALSE' ? '#ffb1bf' : '#9ad0f5'
                 },
                 pointBorderColor: function (context) {
-                    var index = context.dataIndex;
-                    var value = context.dataset.data[index].completed;
+                    var value = context.raw.completed;
                     return value == 'FALSE' ? '#ff6481' : '#36a2eb'
                 }
             }]
