@@ -1,3 +1,5 @@
+/*global chartTitleConfig, chartTooltipConfig, chartLegendConfig, chartDataLabelFontConfig*/
+
 var chartTooltipConfig = {
         displayColors: false,
         yAlign: 'top',
