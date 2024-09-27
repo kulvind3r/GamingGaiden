@@ -42,6 +42,22 @@ function chartTitleConfig(title, padding = 0, color="#000") {
     }
 }
 
+function buildGamingData(key1, key2) {
+    const table = document.getElementById('data-table');
+    const rows = table.querySelectorAll('tbody tr');
+
+    gamingData = Array.from(rows).map(row => {
+        const value1 = row.cells[0].textContent;
+        const value2 = parseFloat(row.cells[1].textContent);
+        return { [key1]: value1, [key2]: value2 };
+    });
+
+    // Remove header row data
+    gamingData.shift()
+
+    return gamingData
+}
+
 // Dummy usage of variables to suppress not used false positive in codacy
 // without ignoring the entire file.
-chartTooltipConfig; chartDataLabelFontConfig; chartLegendConfig; chartTitleConfig("dummy");
+chartTooltipConfig; chartDataLabelFontConfig; chartLegendConfig; chartTitleConfig; buildGamingData;

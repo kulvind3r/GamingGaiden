@@ -1,4 +1,4 @@
-/*global ChartDataLabels, Chart, chartTitleConfig*/
+/*global ChartDataLabels, Chart, chartTitleConfig, buildGamingData*/
 /*from chart.js, common.js*/
 
 let gamingData = [];
@@ -95,17 +95,7 @@ function updateChart(gameCount) {
 }
 
 function loadDataFromTable() {
-    const table = document.getElementById('data-table');
-    const rows = table.querySelectorAll('tbody tr');
-
-    gamingData = Array.from(rows).map(row => {
-        const name = row.cells[0].textContent;
-        const time = parseFloat(row.cells[1].textContent);
-        return { name, time };
-    });
-
-    // Remove header row data
-    gamingData.shift()
+    gamingData = buildGamingData("name", "time")
 
     var selectBox = document.getElementById('game-count');
     const maxOptions = Math.min(50, gamingData.length);

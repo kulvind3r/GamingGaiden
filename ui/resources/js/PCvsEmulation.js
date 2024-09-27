@@ -1,4 +1,4 @@
-/*global ChartDataLabels, Chart, chartTooltipConfig, chartLegendConfig, chartDataLabelFontConfig*/
+/*global ChartDataLabels, Chart, chartTooltipConfig, chartLegendConfig, chartDataLabelFontConfig, buildGamingData*/
 /*from chart.js, common.js*/
 
 let gamingData = [];
@@ -15,7 +15,7 @@ function updateChart() {
         data: {
             labels: gamingData.map(row => row.platform),
             datasets: [{
-                data: gamingData.map(row => row.play_time),
+                data: gamingData.map(row => (row.play_time / 60).toFixed(1)),
                 borderWidth: 2
             }]
         },
@@ -38,17 +38,7 @@ function updateChart() {
 }
 
 function loadDataFromTable() {
-    const table = document.getElementById('data-table');
-    const rows = table.querySelectorAll('tbody tr');
-
-    gamingData = Array.from(rows).map(row => {
-        const platform = row.cells[0].textContent;
-        const play_time = (parseInt(row.cells[1].textContent) / 60).toFixed(1);
-        return { platform, play_time };
-    });
-
-    // Remove header row data
-    gamingData.shift()
+    gamingData = buildGamingData("platform", "play_time")
     updateChart();
 }
 

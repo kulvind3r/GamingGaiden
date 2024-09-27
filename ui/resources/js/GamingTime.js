@@ -1,4 +1,4 @@
-/*global ChartDataLabels, Chart, chartTitleConfig*/
+/*global ChartDataLabels, Chart, chartTitleConfig, buildGamingData*/
 /*from chart.js, common.js*/
 
 let gamingData = [];
@@ -237,17 +237,7 @@ function toggleSummaryPeriod() {
 }
 
 function loadDataFromTable() {
-    const table = document.getElementById('data-table');
-    const rows = table.querySelectorAll('tbody tr');
-
-    gamingData = Array.from(rows).map(row => {
-        const date = row.cells[0].textContent;
-        const time = parseFloat(row.cells[1].textContent);
-        return { date, time };
-    });
-
-    // Remove header row data
-    gamingData.shift()
+    gamingData = buildGamingData("date", "time")
 
     // Initialize the chart with the first year in the table
     const firstDate = new Date(gamingData[0].date);
