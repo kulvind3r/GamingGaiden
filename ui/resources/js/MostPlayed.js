@@ -16,9 +16,12 @@ function updateChart(gameCount) {
         gameCount = gamingData.length
     }
 
-    for (let i = 0; i < gameCount; i++) {
-        labels.push(gamingData[i].name)
-        data.push({ "game": gamingData[i].name, "time": (gamingData[i].time / 60).toFixed(1) });
+    let i = 0
+    for (const game of gamingData) {
+        if (i == gameCount) break;
+        labels.push(game.name)
+        data.push({ "game": game.name, "time": (game.time / 60).toFixed(1) });
+        i++
     }
 
     if (chart) {

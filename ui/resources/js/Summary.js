@@ -1,4 +1,4 @@
-/*global ChartDataLabels, Chart*/
+/*global Chart*/
 /*from chart.js*/
 
 let gamingData = [];
@@ -158,7 +158,7 @@ function updateChart() {
                     displayColors: false,
                     callbacks: {
                         label: function (context) {
-                            label = context.parsed.y + ' hrs over ' + context.parsed.x + ' sessions'
+                            let label = context.parsed.y + ' hrs over ' + context.parsed.x + ' sessions'
                             return label
                         }
                     }
