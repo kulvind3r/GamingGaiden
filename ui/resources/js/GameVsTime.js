@@ -1,5 +1,5 @@
-/*global ChartDataLabels, Chart, chartTitleConfig */
-/*from chart.js, common.js*/
+/*global ChartDataLabels, Chart, chartTitleConfig, gamingData*/
+/*from chart.js, common.js and html templates*/
 
 let chart;
 
@@ -89,3 +89,7 @@ function updateChart(gameCount, labelText, stepSize = 1) {
         }
     });
 }
+
+// Dummy usage of variables to suppress not used false positive in codacy
+// without ignoring the entire file.
+updateChart;
