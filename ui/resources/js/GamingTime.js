@@ -242,6 +242,15 @@ function switchToPrevYear() {
   updatePeriodDisplayWithYear(selectedYear);
 }
 
+function bindButtonsToMonths() {
+  document
+    .getElementById("prev-button")
+    .addEventListener("click", () => switchToPrevMonth());
+  document
+    .getElementById("next-button")
+    .addEventListener("click", () => switchToNextMonth());
+}
+
 function toggleSummaryPeriod() {
   document
     .getElementById("prev-button")
@@ -267,12 +276,7 @@ function toggleSummaryPeriod() {
     updateChart(selectedYear, selectedMonth, true);
     updatePeriodDisplayWithYear(selectedYear);
   } else {
-    document
-      .getElementById("prev-button")
-      .addEventListener("click", () => switchToPrevMonth());
-    document
-      .getElementById("next-button")
-      .addEventListener("click", () => switchToNextMonth());
+    bindButtonsToMonths();
 
     summaryPeriod = "monthly";
     periodLabel = "Day of Month";
@@ -303,12 +307,7 @@ function loadDataFromTable() {
   updatePeriodDisplayWithMonth(selectedYear, selectedMonth);
 }
 
-document
-  .getElementById("prev-button")
-  .addEventListener("click", () => switchToPrevMonth());
-document
-  .getElementById("next-button")
-  .addEventListener("click", () => switchToNextMonth());
+bindButtonsToMonths();
 
 document
   .getElementById("period-button")
