@@ -32,7 +32,11 @@ html.dark table.dataTable tr.dt-hasChild td.dt-control:before {
   color: rgba(255, 255, 255, 0.5);
 }
 
-table.dataTable thead > tr > th.sorting, table.dataTable thead > tr > th.sorting_asc, table.dataTable thead > tr > th.sorting_desc, table.dataTable thead > tr > th.sorting_asc_disabled, table.dataTable thead > tr > th.sorting_desc_disabled,
+table.dataTable thead > tr > th.sorting,
+table.dataTable thead > tr > th.sorting_asc,
+table.dataTable thead > tr > th.sorting_desc,
+table.dataTable thead > tr > th.sorting_asc_disabled,
+table.dataTable thead > tr > th.sorting_desc_disabled,
 table.dataTable thead > tr > td.sorting,
 table.dataTable thead > tr > td.sorting_asc,
 table.dataTable thead > tr > td.sorting_desc,
@@ -42,7 +46,16 @@ table.dataTable thead > tr > td.sorting_desc_disabled {
   position: relative;
   padding-right: 26px;
 }
-table.dataTable thead > tr > th.sorting:before, table.dataTable thead > tr > th.sorting:after, table.dataTable thead > tr > th.sorting_asc:before, table.dataTable thead > tr > th.sorting_asc:after, table.dataTable thead > tr > th.sorting_desc:before, table.dataTable thead > tr > th.sorting_desc:after, table.dataTable thead > tr > th.sorting_asc_disabled:before, table.dataTable thead > tr > th.sorting_asc_disabled:after, table.dataTable thead > tr > th.sorting_desc_disabled:before, table.dataTable thead > tr > th.sorting_desc_disabled:after,
+table.dataTable thead > tr > th.sorting:before,
+table.dataTable thead > tr > th.sorting:after,
+table.dataTable thead > tr > th.sorting_asc:before,
+table.dataTable thead > tr > th.sorting_asc:after,
+table.dataTable thead > tr > th.sorting_desc:before,
+table.dataTable thead > tr > th.sorting_desc:after,
+table.dataTable thead > tr > th.sorting_asc_disabled:before,
+table.dataTable thead > tr > th.sorting_asc_disabled:after,
+table.dataTable thead > tr > th.sorting_desc_disabled:before,
+table.dataTable thead > tr > th.sorting_desc_disabled:after,
 table.dataTable thead > tr > td.sorting:before,
 table.dataTable thead > tr > td.sorting:after,
 table.dataTable thead > tr > td.sorting_asc:before,
@@ -60,7 +73,11 @@ table.dataTable thead > tr > td.sorting_desc_disabled:after {
   line-height: 9px;
   font-size: 0.8em;
 }
-table.dataTable thead > tr > th.sorting:before, table.dataTable thead > tr > th.sorting_asc:before, table.dataTable thead > tr > th.sorting_desc:before, table.dataTable thead > tr > th.sorting_asc_disabled:before, table.dataTable thead > tr > th.sorting_desc_disabled:before,
+table.dataTable thead > tr > th.sorting:before,
+table.dataTable thead > tr > th.sorting_asc:before,
+table.dataTable thead > tr > th.sorting_desc:before,
+table.dataTable thead > tr > th.sorting_asc_disabled:before,
+table.dataTable thead > tr > th.sorting_desc_disabled:before,
 table.dataTable thead > tr > td.sorting:before,
 table.dataTable thead > tr > td.sorting_asc:before,
 table.dataTable thead > tr > td.sorting_desc:before,
@@ -70,7 +87,11 @@ table.dataTable thead > tr > td.sorting_desc_disabled:before {
   content: "▲";
   content: "▲"/"";
 }
-table.dataTable thead > tr > th.sorting:after, table.dataTable thead > tr > th.sorting_asc:after, table.dataTable thead > tr > th.sorting_desc:after, table.dataTable thead > tr > th.sorting_asc_disabled:after, table.dataTable thead > tr > th.sorting_desc_disabled:after,
+table.dataTable thead > tr > th.sorting:after,
+table.dataTable thead > tr > th.sorting_asc:after,
+table.dataTable thead > tr > th.sorting_desc:after,
+table.dataTable thead > tr > th.sorting_asc_disabled:after,
+table.dataTable thead > tr > th.sorting_desc_disabled:after,
 table.dataTable thead > tr > td.sorting:after,
 table.dataTable thead > tr > td.sorting_asc:after,
 table.dataTable thead > tr > td.sorting_desc:after,
@@ -80,12 +101,14 @@ table.dataTable thead > tr > td.sorting_desc_disabled:after {
   content: "▼";
   content: "▼"/"";
 }
-table.dataTable thead > tr > th.sorting_asc:before, table.dataTable thead > tr > th.sorting_desc:after,
+table.dataTable thead > tr > th.sorting_asc:before,
+table.dataTable thead > tr > th.sorting_desc:after,
 table.dataTable thead > tr > td.sorting_asc:before,
 table.dataTable thead > tr > td.sorting_desc:after {
   opacity: 0.6;
 }
-table.dataTable thead > tr > th.sorting_desc_disabled:after, table.dataTable thead > tr > th.sorting_asc_disabled:before,
+table.dataTable thead > tr > th.sorting_desc_disabled:after,
+table.dataTable thead > tr > th.sorting_asc_disabled:before,
 table.dataTable thead > tr > td.sorting_desc_disabled:after,
 table.dataTable thead > tr > td.sorting_asc_disabled:before {
   display: none;
@@ -95,7 +118,8 @@ table.dataTable thead > tr > td:active {
   outline: none;
 }
 
-div.dataTables_scrollBody > table.dataTable > thead > tr > th:before, div.dataTables_scrollBody > table.dataTable > thead > tr > th:after,
+div.dataTables_scrollBody > table.dataTable > thead > tr > th:before,
+div.dataTables_scrollBody > table.dataTable > thead > tr > th:after,
 div.dataTables_scrollBody > table.dataTable > thead > tr > td:before,
 div.dataTables_scrollBody > table.dataTable > thead > tr > td:after {
   display: none;
@@ -168,7 +192,8 @@ div.dataTables_processing > div:last-child > div:nth-child(4) {
     transform: translate(24px, 0);
   }
 }
-table.dataTable.nowrap th, table.dataTable.nowrap td {
+table.dataTable.nowrap th,
+table.dataTable.nowrap td {
   white-space: nowrap;
 }
 table.dataTable th.dt-left,
@@ -301,16 +326,19 @@ table.dataTable tbody td {
   padding: 8px 10px;
 }
 table.dataTable.row-border > tbody > tr > th,
-table.dataTable.row-border > tbody > tr > td, table.dataTable.display > tbody > tr > th,
+table.dataTable.row-border > tbody > tr > td,
+table.dataTable.display > tbody > tr > th,
 table.dataTable.display > tbody > tr > td {
   border-top: 1px solid rgba(0, 0, 0, 0.15);
 }
 table.dataTable.row-border > tbody > tr:first-child > th,
-table.dataTable.row-border > tbody > tr:first-child > td, table.dataTable.display > tbody > tr:first-child > th,
+table.dataTable.row-border > tbody > tr:first-child > td,
+table.dataTable.display > tbody > tr:first-child > th,
 table.dataTable.display > tbody > tr:first-child > td {
   border-top: none;
 }
-table.dataTable.row-border > tbody > tr.selected + tr.selected > td, table.dataTable.display > tbody > tr.selected + tr.selected > td {
+table.dataTable.row-border > tbody > tr.selected + tr.selected > td,
+table.dataTable.display > tbody > tr.selected + tr.selected > td {
   border-top-color: #0262ef;
 }
 table.dataTable.cell-border > tbody > tr > th,
@@ -326,25 +354,30 @@ table.dataTable.cell-border > tbody > tr:first-child > th,
 table.dataTable.cell-border > tbody > tr:first-child > td {
   border-top: none;
 }
-table.dataTable.stripe > tbody > tr.odd > *, table.dataTable.display > tbody > tr.odd > * {
+table.dataTable.stripe > tbody > tr.odd > *,
+table.dataTable.display > tbody > tr.odd > * {
   box-shadow: inset 0 0 0 9999px rgba(0, 0, 0, 0.023);
   box-shadow: inset 0 0 0 9999px rgba(var(--dt-row-stripe), 0.023);
 }
-table.dataTable.stripe > tbody > tr.odd.selected > *, table.dataTable.display > tbody > tr.odd.selected > * {
+table.dataTable.stripe > tbody > tr.odd.selected > *,
+table.dataTable.display > tbody > tr.odd.selected > * {
   box-shadow: inset 0 0 0 9999px rgba(13, 110, 253, 0.923);
   box-shadow: inset 0 0 0 9999px rgba(var(--dt-row-selected), 0.923);
 }
-table.dataTable.hover > tbody > tr:hover > *, table.dataTable.display > tbody > tr:hover > * {
+table.dataTable.hover > tbody > tr:hover > *,
+table.dataTable.display > tbody > tr:hover > * {
   box-shadow: inset 0 0 0 9999px rgba(0, 0, 0, 0.035);
   box-shadow: inset 0 0 0 9999px rgba(var(--dt-row-hover), 0.035);
 }
-table.dataTable.hover > tbody > tr.selected:hover > *, table.dataTable.display > tbody > tr.selected:hover > * {
+table.dataTable.hover > tbody > tr.selected:hover > *,
+table.dataTable.display > tbody > tr.selected:hover > * {
   box-shadow: inset 0 0 0 9999px #0d6efd !important;
   box-shadow: inset 0 0 0 9999px rgba(var(--dt-row-selected), 1) !important;
 }
 table.dataTable.order-column > tbody tr > .sorting_1,
 table.dataTable.order-column > tbody tr > .sorting_2,
-table.dataTable.order-column > tbody tr > .sorting_3, table.dataTable.display > tbody tr > .sorting_1,
+table.dataTable.order-column > tbody tr > .sorting_3,
+table.dataTable.display > tbody tr > .sorting_1,
 table.dataTable.display > tbody tr > .sorting_2,
 table.dataTable.display > tbody tr > .sorting_3 {
   box-shadow: inset 0 0 0 9999px rgba(0, 0, 0, 0.019);
@@ -352,81 +385,100 @@ table.dataTable.display > tbody tr > .sorting_3 {
 }
 table.dataTable.order-column > tbody tr.selected > .sorting_1,
 table.dataTable.order-column > tbody tr.selected > .sorting_2,
-table.dataTable.order-column > tbody tr.selected > .sorting_3, table.dataTable.display > tbody tr.selected > .sorting_1,
+table.dataTable.order-column > tbody tr.selected > .sorting_3,
+table.dataTable.display > tbody tr.selected > .sorting_1,
 table.dataTable.display > tbody tr.selected > .sorting_2,
 table.dataTable.display > tbody tr.selected > .sorting_3 {
   box-shadow: inset 0 0 0 9999px rgba(13, 110, 253, 0.919);
   box-shadow: inset 0 0 0 9999px rgba(var(--dt-row-selected), 0.919);
 }
-table.dataTable.display > tbody > tr.odd > .sorting_1, table.dataTable.order-column.stripe > tbody > tr.odd > .sorting_1 {
+table.dataTable.display > tbody > tr.odd > .sorting_1,
+table.dataTable.order-column.stripe > tbody > tr.odd > .sorting_1 {
   box-shadow: inset 0 0 0 9999px rgba(0, 0, 0, 0.054);
   box-shadow: inset 0 0 0 9999px rgba(var(--dt-column-ordering), 0.054);
 }
-table.dataTable.display > tbody > tr.odd > .sorting_2, table.dataTable.order-column.stripe > tbody > tr.odd > .sorting_2 {
+table.dataTable.display > tbody > tr.odd > .sorting_2,
+table.dataTable.order-column.stripe > tbody > tr.odd > .sorting_2 {
   box-shadow: inset 0 0 0 9999px rgba(0, 0, 0, 0.047);
   box-shadow: inset 0 0 0 9999px rgba(var(--dt-column-ordering), 0.047);
 }
-table.dataTable.display > tbody > tr.odd > .sorting_3, table.dataTable.order-column.stripe > tbody > tr.odd > .sorting_3 {
+table.dataTable.display > tbody > tr.odd > .sorting_3,
+table.dataTable.order-column.stripe > tbody > tr.odd > .sorting_3 {
   box-shadow: inset 0 0 0 9999px rgba(0, 0, 0, 0.039);
   box-shadow: inset 0 0 0 9999px rgba(var(--dt-column-ordering), 0.039);
 }
-table.dataTable.display > tbody > tr.odd.selected > .sorting_1, table.dataTable.order-column.stripe > tbody > tr.odd.selected > .sorting_1 {
+table.dataTable.display > tbody > tr.odd.selected > .sorting_1,
+table.dataTable.order-column.stripe > tbody > tr.odd.selected > .sorting_1 {
   box-shadow: inset 0 0 0 9999px rgba(13, 110, 253, 0.954);
   box-shadow: inset 0 0 0 9999px rgba(var(--dt-row-selected), 0.954);
 }
-table.dataTable.display > tbody > tr.odd.selected > .sorting_2, table.dataTable.order-column.stripe > tbody > tr.odd.selected > .sorting_2 {
+table.dataTable.display > tbody > tr.odd.selected > .sorting_2,
+table.dataTable.order-column.stripe > tbody > tr.odd.selected > .sorting_2 {
   box-shadow: inset 0 0 0 9999px rgba(13, 110, 253, 0.947);
   box-shadow: inset 0 0 0 9999px rgba(var(--dt-row-selected), 0.947);
 }
-table.dataTable.display > tbody > tr.odd.selected > .sorting_3, table.dataTable.order-column.stripe > tbody > tr.odd.selected > .sorting_3 {
+table.dataTable.display > tbody > tr.odd.selected > .sorting_3,
+table.dataTable.order-column.stripe > tbody > tr.odd.selected > .sorting_3 {
   box-shadow: inset 0 0 0 9999px rgba(13, 110, 253, 0.939);
   box-shadow: inset 0 0 0 9999px rgba(var(--dt-row-selected), 0.939);
 }
-table.dataTable.display > tbody > tr.even > .sorting_1, table.dataTable.order-column.stripe > tbody > tr.even > .sorting_1 {
+table.dataTable.display > tbody > tr.even > .sorting_1,
+table.dataTable.order-column.stripe > tbody > tr.even > .sorting_1 {
   box-shadow: inset 0 0 0 9999px rgba(0, 0, 0, 0.019);
   box-shadow: inset 0 0 0 9999px rgba(var(--dt-row-selected), 0.019);
 }
-table.dataTable.display > tbody > tr.even > .sorting_2, table.dataTable.order-column.stripe > tbody > tr.even > .sorting_2 {
+table.dataTable.display > tbody > tr.even > .sorting_2,
+table.dataTable.order-column.stripe > tbody > tr.even > .sorting_2 {
   box-shadow: inset 0 0 0 9999px rgba(0, 0, 0, 0.011);
   box-shadow: inset 0 0 0 9999px rgba(var(--dt-row-selected), 0.011);
 }
-table.dataTable.display > tbody > tr.even > .sorting_3, table.dataTable.order-column.stripe > tbody > tr.even > .sorting_3 {
+table.dataTable.display > tbody > tr.even > .sorting_3,
+table.dataTable.order-column.stripe > tbody > tr.even > .sorting_3 {
   box-shadow: inset 0 0 0 9999px rgba(0, 0, 0, 0.003);
   box-shadow: inset 0 0 0 9999px rgba(var(--dt-row-selected), 0.003);
 }
-table.dataTable.display > tbody > tr.even.selected > .sorting_1, table.dataTable.order-column.stripe > tbody > tr.even.selected > .sorting_1 {
+table.dataTable.display > tbody > tr.even.selected > .sorting_1,
+table.dataTable.order-column.stripe > tbody > tr.even.selected > .sorting_1 {
   box-shadow: inset 0 0 0 9999px rgba(13, 110, 253, 0.919);
   box-shadow: inset 0 0 0 9999px rgba(var(--dt-row-selected), 0.919);
 }
-table.dataTable.display > tbody > tr.even.selected > .sorting_2, table.dataTable.order-column.stripe > tbody > tr.even.selected > .sorting_2 {
+table.dataTable.display > tbody > tr.even.selected > .sorting_2,
+table.dataTable.order-column.stripe > tbody > tr.even.selected > .sorting_2 {
   box-shadow: inset 0 0 0 9999px rgba(13, 110, 253, 0.911);
   box-shadow: inset 0 0 0 9999px rgba(var(--dt-row-selected), 0.911);
 }
-table.dataTable.display > tbody > tr.even.selected > .sorting_3, table.dataTable.order-column.stripe > tbody > tr.even.selected > .sorting_3 {
+table.dataTable.display > tbody > tr.even.selected > .sorting_3,
+table.dataTable.order-column.stripe > tbody > tr.even.selected > .sorting_3 {
   box-shadow: inset 0 0 0 9999px rgba(13, 110, 253, 0.903);
   box-shadow: inset 0 0 0 9999px rgba(var(--dt-row-selected), 0.903);
 }
-table.dataTable.display tbody tr:hover > .sorting_1, table.dataTable.order-column.hover tbody tr:hover > .sorting_1 {
+table.dataTable.display tbody tr:hover > .sorting_1,
+table.dataTable.order-column.hover tbody tr:hover > .sorting_1 {
   box-shadow: inset 0 0 0 9999px rgba(0, 0, 0, 0.082);
   box-shadow: inset 0 0 0 9999px rgba(var(--dt-row-hover), 0.082);
 }
-table.dataTable.display tbody tr:hover > .sorting_2, table.dataTable.order-column.hover tbody tr:hover > .sorting_2 {
+table.dataTable.display tbody tr:hover > .sorting_2,
+table.dataTable.order-column.hover tbody tr:hover > .sorting_2 {
   box-shadow: inset 0 0 0 9999px rgba(0, 0, 0, 0.074);
   box-shadow: inset 0 0 0 9999px rgba(var(--dt-row-hover), 0.074);
 }
-table.dataTable.display tbody tr:hover > .sorting_3, table.dataTable.order-column.hover tbody tr:hover > .sorting_3 {
+table.dataTable.display tbody tr:hover > .sorting_3,
+table.dataTable.order-column.hover tbody tr:hover > .sorting_3 {
   box-shadow: inset 0 0 0 9999px rgba(0, 0, 0, 0.062);
   box-shadow: inset 0 0 0 9999px rgba(var(--dt-row-hover), 0.062);
 }
-table.dataTable.display tbody tr:hover.selected > .sorting_1, table.dataTable.order-column.hover tbody tr:hover.selected > .sorting_1 {
+table.dataTable.display tbody tr:hover.selected > .sorting_1,
+table.dataTable.order-column.hover tbody tr:hover.selected > .sorting_1 {
   box-shadow: inset 0 0 0 9999px rgba(13, 110, 253, 0.982);
   box-shadow: inset 0 0 0 9999px rgba(var(--dt-row-selected), 0.982);
 }
-table.dataTable.display tbody tr:hover.selected > .sorting_2, table.dataTable.order-column.hover tbody tr:hover.selected > .sorting_2 {
+table.dataTable.display tbody tr:hover.selected > .sorting_2,
+table.dataTable.order-column.hover tbody tr:hover.selected > .sorting_2 {
   box-shadow: inset 0 0 0 9999px rgba(13, 110, 253, 0.974);
   box-shadow: inset 0 0 0 9999px rgba(var(--dt-row-selected), 0.974);
 }
-table.dataTable.display tbody tr:hover.selected > .sorting_3, table.dataTable.order-column.hover tbody tr:hover.selected > .sorting_3 {
+table.dataTable.display tbody tr:hover.selected > .sorting_3,
+table.dataTable.order-column.hover tbody tr:hover.selected > .sorting_3 {
   box-shadow: inset 0 0 0 9999px rgba(13, 110, 253, 0.962);
   box-shadow: inset 0 0 0 9999px rgba(var(--dt-row-selected), 0.962);
 }
@@ -501,18 +553,47 @@ table.dataTable td {
   border-radius: 2px;
   background: transparent;
 }
-.dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+.dataTables_wrapper .dataTables_paginate .paginate_button.current,
+.dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
   color: inherit !important;
   border: 1px solid rgba(0, 0, 0, 0.3);
   background-color: rgba(0, 0, 0, 0.05);
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, rgba(230, 230, 230, 0.05)), color-stop(100%, rgba(0, 0, 0, 0.05))); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top, rgba(230, 230, 230, 0.05) 0%, rgba(0, 0, 0, 0.05) 100%); /* Chrome10+,Safari5.1+ */
-  background: -moz-linear-gradient(top, rgba(230, 230, 230, 0.05) 0%, rgba(0, 0, 0, 0.05) 100%); /* FF3.6+ */
-  background: -ms-linear-gradient(top, rgba(230, 230, 230, 0.05) 0%, rgba(0, 0, 0, 0.05) 100%); /* IE10+ */
-  background: -o-linear-gradient(top, rgba(230, 230, 230, 0.05) 0%, rgba(0, 0, 0, 0.05) 100%); /* Opera 11.10+ */
-  background: linear-gradient(to bottom, rgba(230, 230, 230, 0.05) 0%, rgba(0, 0, 0, 0.05) 100%); /* W3C */
+  background: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    color-stop(0%, rgba(230, 230, 230, 0.05)),
+    color-stop(100%, rgba(0, 0, 0, 0.05))
+  ); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(
+    top,
+    rgba(230, 230, 230, 0.05) 0%,
+    rgba(0, 0, 0, 0.05) 100%
+  ); /* Chrome10+,Safari5.1+ */
+  background: -moz-linear-gradient(
+    top,
+    rgba(230, 230, 230, 0.05) 0%,
+    rgba(0, 0, 0, 0.05) 100%
+  ); /* FF3.6+ */
+  background: -ms-linear-gradient(
+    top,
+    rgba(230, 230, 230, 0.05) 0%,
+    rgba(0, 0, 0, 0.05) 100%
+  ); /* IE10+ */
+  background: -o-linear-gradient(
+    top,
+    rgba(230, 230, 230, 0.05) 0%,
+    rgba(0, 0, 0, 0.05) 100%
+  ); /* Opera 11.10+ */
+  background: linear-gradient(
+    to bottom,
+    rgba(230, 230, 230, 0.05) 0%,
+    rgba(0, 0, 0, 0.05) 100%
+  ); /* W3C */
 }
-.dataTables_wrapper .dataTables_paginate .paginate_button.disabled, .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover, .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:active {
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover,
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled:active {
   cursor: default;
   color: #666 !important;
   border: 1px solid transparent;
@@ -523,8 +604,18 @@ table.dataTable td {
   color: white !important;
   border: 1px solid #111;
   background-color: #111;
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #585858), color-stop(100%, #111)); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top, #585858 0%, #111 100%); /* Chrome10+,Safari5.1+ */
+  background: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    color-stop(0%, #585858),
+    color-stop(100%, #111)
+  ); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(
+    top,
+    #585858 0%,
+    #111 100%
+  ); /* Chrome10+,Safari5.1+ */
   background: -moz-linear-gradient(top, #585858 0%, #111 100%); /* FF3.6+ */
   background: -ms-linear-gradient(top, #585858 0%, #111 100%); /* IE10+ */
   background: -o-linear-gradient(top, #585858 0%, #111 100%); /* Opera 11.10+ */
@@ -533,11 +624,25 @@ table.dataTable td {
 .dataTables_wrapper .dataTables_paginate .paginate_button:active {
   outline: none;
   background-color: #0c0c0c;
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #2b2b2b), color-stop(100%, #0c0c0c)); /* Chrome,Safari4+ */
-  background: -webkit-linear-gradient(top, #2b2b2b 0%, #0c0c0c 100%); /* Chrome10+,Safari5.1+ */
+  background: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    color-stop(0%, #2b2b2b),
+    color-stop(100%, #0c0c0c)
+  ); /* Chrome,Safari4+ */
+  background: -webkit-linear-gradient(
+    top,
+    #2b2b2b 0%,
+    #0c0c0c 100%
+  ); /* Chrome10+,Safari5.1+ */
   background: -moz-linear-gradient(top, #2b2b2b 0%, #0c0c0c 100%); /* FF3.6+ */
   background: -ms-linear-gradient(top, #2b2b2b 0%, #0c0c0c 100%); /* IE10+ */
-  background: -o-linear-gradient(top, #2b2b2b 0%, #0c0c0c 100%); /* Opera 11.10+ */
+  background: -o-linear-gradient(
+    top,
+    #2b2b2b 0%,
+    #0c0c0c 100%
+  ); /* Opera 11.10+ */
   background: linear-gradient(to bottom, #2b2b2b 0%, #0c0c0c 100%); /* W3C */
   box-shadow: inset 0 0 3px #111;
 }
@@ -557,12 +662,68 @@ table.dataTable td {
 .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody {
   -webkit-overflow-scrolling: touch;
 }
-.dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody > table > thead > tr > th, .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody > table > thead > tr > td, .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody > table > tbody > tr > th, .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody > table > tbody > tr > td {
+.dataTables_wrapper
+  .dataTables_scroll
+  div.dataTables_scrollBody
+  > table
+  > thead
+  > tr
+  > th,
+.dataTables_wrapper
+  .dataTables_scroll
+  div.dataTables_scrollBody
+  > table
+  > thead
+  > tr
+  > td,
+.dataTables_wrapper
+  .dataTables_scroll
+  div.dataTables_scrollBody
+  > table
+  > tbody
+  > tr
+  > th,
+.dataTables_wrapper
+  .dataTables_scroll
+  div.dataTables_scrollBody
+  > table
+  > tbody
+  > tr
+  > td {
   vertical-align: middle;
 }
-.dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody > table > thead > tr > th > div.dataTables_sizing,
-.dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody > table > thead > tr > td > div.dataTables_sizing, .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody > table > tbody > tr > th > div.dataTables_sizing,
-.dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody > table > tbody > tr > td > div.dataTables_sizing {
+.dataTables_wrapper
+  .dataTables_scroll
+  div.dataTables_scrollBody
+  > table
+  > thead
+  > tr
+  > th
+  > div.dataTables_sizing,
+.dataTables_wrapper
+  .dataTables_scroll
+  div.dataTables_scrollBody
+  > table
+  > thead
+  > tr
+  > td
+  > div.dataTables_sizing,
+.dataTables_wrapper
+  .dataTables_scroll
+  div.dataTables_scrollBody
+  > table
+  > tbody
+  > tr
+  > th
+  > div.dataTables_sizing,
+.dataTables_wrapper
+  .dataTables_scroll
+  div.dataTables_scrollBody
+  > table
+  > tbody
+  > tr
+  > td
+  > div.dataTables_sizing {
   height: 0;
   overflow: hidden;
   margin: 0 !important;
@@ -621,11 +782,13 @@ html.dark table.dataTable > tfoot > tr > td {
   border-top: 1px solid rgb(89, 91, 94);
 }
 html.dark table.dataTable.row-border > tbody > tr > th,
-html.dark table.dataTable.row-border > tbody > tr > td, html.dark table.dataTable.display > tbody > tr > th,
+html.dark table.dataTable.row-border > tbody > tr > td,
+html.dark table.dataTable.display > tbody > tr > th,
 html.dark table.dataTable.display > tbody > tr > td {
   border-top: 1px solid rgb(64, 67, 70);
 }
-html.dark table.dataTable.row-border > tbody > tr.selected + tr.selected > td, html.dark table.dataTable.display > tbody > tr.selected + tr.selected > td {
+html.dark table.dataTable.row-border > tbody > tr.selected + tr.selected > td,
+html.dark table.dataTable.display > tbody > tr.selected + tr.selected > td {
   border-top-color: #0257d5;
 }
 html.dark table.dataTable.cell-border > tbody > tr > th,
@@ -642,11 +805,23 @@ html.dark .dataTables_wrapper .dataTables_length select {
   border: 1px solid rgba(255, 255, 255, 0.2);
   background-color: var(--dt-html-background);
 }
-html.dark .dataTables_wrapper .dataTables_paginate .paginate_button.current, html.dark .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+html.dark .dataTables_wrapper .dataTables_paginate .paginate_button.current,
+html.dark
+  .dataTables_wrapper
+  .dataTables_paginate
+  .paginate_button.current:hover {
   border: 1px solid rgb(89, 91, 94);
   background: rgba(255, 255, 255, 0.15);
 }
-html.dark .dataTables_wrapper .dataTables_paginate .paginate_button.disabled, html.dark .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover, html.dark .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:active {
+html.dark .dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
+html.dark
+  .dataTables_wrapper
+  .dataTables_paginate
+  .paginate_button.disabled:hover,
+html.dark
+  .dataTables_wrapper
+  .dataTables_paginate
+  .paginate_button.disabled:active {
   color: #666 !important;
 }
 html.dark .dataTables_wrapper .dataTables_paginate .paginate_button:hover {

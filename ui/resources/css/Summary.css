@@ -1,53 +1,53 @@
 body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    font-family: monospace;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  font-family: monospace;
 }
 
 #chart-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    max-width: 1600px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1600px;
 }
 
 #legend {
-    display: flex;
-    margin-top: 15px;
-    margin-bottom: 10px;
-    width: 450px;
-    justify-content: space-around;
-    align-items: center;
-    font-size: 18px;
+  display: flex;
+  margin-top: 15px;
+  margin-bottom: 10px;
+  width: 450px;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 18px;
 }
 
 #summary {
-    font-size: 18px;
+  font-size: 18px;
 }
 
 #finished-icon {
-    background: #36a2eb;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    margin-left: 20px;
+  background: #36a2eb;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-left: 20px;
 }
 
 #progress-icon {
-    background: #ff6481;
-    width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    margin: auto;
+  background: #ff6481;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin: auto;
 }
 
 #progress-count {
-    margin-right: 20px
+  margin-right: 20px;
 }
 
 #finished-count {
-    margin: auto
+  margin: auto;
 }

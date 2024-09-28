@@ -35,7 +35,7 @@ function RenderGameList() {
     $maxPlayTime = (RunDBQuery $getMaxPlayTime).max_play_time
 
     $games = [System.Collections.Generic.List[Game]]::new()
-    $iconUri= $null
+    $iconUri = $null
     $totalPlayTime = $null
 
     foreach ($gameRecord in $gameRecords) {

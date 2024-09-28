@@ -36,8 +36,8 @@ function RenderEditGameForm($GamesList) {
     $textSearch = CreateTextBox "" 645 20 200 20; $editGameForm.Controls.Add($textSearch)
 
     $textSearch.Add_TextChanged({
-        FilterListBox -filterText $textSearch.Text -listBox $listBox -originalItems $GamesList
-    })
+            FilterListBox -filterText $textSearch.Text -listBox $listBox -originalItems $GamesList
+        })
 
     $labelName = Createlabel "Name:" 170 20; $editGameForm.Controls.Add($labelName)
     $textName = CreateTextBox "" 245 20 300 20;	$editGameForm.Controls.Add($textName)
@@ -62,136 +62,136 @@ function RenderEditGameForm($GamesList) {
     $editGameForm.Controls.Add($pictureBox)
 
     $listBox.Add_SelectedIndexChanged({
-        $selectedGame = GetGameDetails $listBox.SelectedItem
+            $selectedGame = GetGameDetails $listBox.SelectedItem
 
-        $textName.Text = $selectedGame.name
-        $textOriginalGameName.Text = $selectedGame.name
-        $textExe.Text = ($selectedGame.exe_name + ".exe")
-        $textPlatform.Text = $selectedGame.platform
-        $checkboxCompleted.Checked = ($selectedGame.completed -eq 'TRUE')
+            $textName.Text = $selectedGame.name
+            $textOriginalGameName.Text = $selectedGame.name
+            $textExe.Text = ($selectedGame.exe_name + ".exe")
+            $textPlatform.Text = $selectedGame.platform
+            $checkboxCompleted.Checked = ($selectedGame.completed -eq 'TRUE')
 
-        $textPlayTime.Text = PlayTimeMinsToString $selectedGame.play_time
+            $textPlayTime.Text = PlayTimeMinsToString $selectedGame.play_time
 
-        $iconFileName = ToBase64 $selectedGame.name
+            $iconFileName = ToBase64 $selectedGame.name
 
-        $iconByteStream = [System.IO.MemoryStream]::new($selectedGame.icon)
-        $iconBitmap = [System.Drawing.Bitmap]::FromStream($iconByteStream)
+            $iconByteStream = [System.IO.MemoryStream]::new($selectedGame.icon)
+            $iconBitmap = [System.Drawing.Bitmap]::FromStream($iconByteStream)
 
-        if ($iconBitmap.PixelFormat -eq "Format32bppArgb") {
-            $imagePath = "$env:TEMP\GG-{0}-$iconFileName.png" -f $(Get-Random)
-            $iconBitmap.Save($imagePath, [System.Drawing.Imaging.ImageFormat]::Png)
-        } else {
-            $imagePath = "$env:TEMP\GG-{0}-$iconFileName.jpg" -f $(Get-Random)
-            $iconBitmap.Save($imagePath, [System.Drawing.Imaging.ImageFormat]::Jpeg)
-        }
+            if ($iconBitmap.PixelFormat -eq "Format32bppArgb") {
+                $imagePath = "$env:TEMP\GG-{0}-$iconFileName.png" -f $(Get-Random)
+                $iconBitmap.Save($imagePath, [System.Drawing.Imaging.ImageFormat]::Png)
+            }
+            else {
+                $imagePath = "$env:TEMP\GG-{0}-$iconFileName.jpg" -f $(Get-Random)
+                $iconBitmap.Save($imagePath, [System.Drawing.Imaging.ImageFormat]::Jpeg)
+            }
 
-        $imagePath = ResizeImage -ImagePath $imagePath -GameName $selectedGame.name
-        $iconBitmap.Dispose()
+            $imagePath = ResizeImage -ImagePath $imagePath -GameName $selectedGame.name
+            $iconBitmap.Dispose()
 
-        $pictureBoxImagePath.Text = $imagePath
-        $pictureBox.Image = [System.Drawing.Image]::FromFile($imagePath)
+            $pictureBoxImagePath.Text = $imagePath
+            $pictureBox.Image = [System.Drawing.Image]::FromFile($imagePath)
 
-    })
+        })
     $editGameForm.Controls.Add($listBox)
 
     $buttonSearchIcon = CreateButton "Search" 20 185
     $buttonSearchIcon.Size = New-Object System.Drawing.Size(60, 23)
     $buttonSearchIcon.Add_Click({
-        $gameName = $textName.Text
-        if ($gameName -eq "") {
-            ShowMessage "Please enter a name first." "OK" "Error"
-            return
-        }
-        $gameNameEncoded = $gameName -replace " ", "+"
-        Start-Process "https://www.google.com/search?as_q=$gameNameEncoded+Game&imgar=s&udm=2"
-    })
+            $gameName = $textName.Text
+            if ($gameName -eq "") {
+                ShowMessage "Please enter a name first." "OK" "Error"
+                return
+            }
+            $gameNameEncoded = $gameName -replace " ", "+"
+            Start-Process "https://www.google.com/search?as_q=$gameNameEncoded+Game&imgar=s&udm=2"
+        })
     $editGameForm.Controls.Add($buttonSearchIcon)
 
     $buttonUpdateIcon = CreateButton "Update" 90 185
     $buttonUpdateIcon.Size = New-Object System.Drawing.Size(60, 23)
     $buttonUpdateIcon.Add_Click({
-        $downloadsDirectoryPath = (New-Object -ComObject Shell.Application).Namespace('shell:Downloads').Self.Path
-        $openFileDialog = OpenFileDialog "Select Game Icon File" 'Image (*.png, *.jpg, *.jpeg)|*.png;*.jpg;*.jpeg' $downloadsDirectoryPath
-        $result = $openFileDialog.ShowDialog()
-        if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
-            $imagePath = ResizeImage $openFileDialog.FileName $textName.name
-            $pictureBoxImagePath.Text = $imagePath
-            $pictureBox.Image = [System.Drawing.Image]::FromFile($imagePath)
-        }
-    })
+            $downloadsDirectoryPath = (New-Object -ComObject Shell.Application).Namespace('shell:Downloads').Self.Path
+            $openFileDialog = OpenFileDialog "Select Game Icon File" 'Image (*.png, *.jpg, *.jpeg)|*.png;*.jpg;*.jpeg' $downloadsDirectoryPath
+            $result = $openFileDialog.ShowDialog()
+            if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
+                $imagePath = ResizeImage $openFileDialog.FileName $textName.name
+                $pictureBoxImagePath.Text = $imagePath
+                $pictureBox.Image = [System.Drawing.Image]::FromFile($imagePath)
+            }
+        })
     $editGameForm.Controls.Add($buttonUpdateIcon)
 
     $buttonUpdateExe = CreateButton "Edit Exe" 470 60
     $buttonUpdateExe.Add_Click({
-        $openFileDialog = OpenFileDialog "Select Executable" 'Executable (*.exe)|*.exe'
-        $result = $openFileDialog.ShowDialog()
-        if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
-            $textExe.Text = (Get-Item $openFileDialog.FileName).Name
-        }
-    })
+            $openFileDialog = OpenFileDialog "Select Executable" 'Executable (*.exe)|*.exe'
+            $result = $openFileDialog.ShowDialog()
+            if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
+                $textExe.Text = (Get-Item $openFileDialog.FileName).Name
+            }
+        })
     $editGameForm.Controls.Add($buttonUpdateExe)
 
     $buttonRemove = CreateButton "Delete" 470 100
     $buttonRemove.Add_Click({
-        $gameName = $textName.Text
+            $gameName = $textName.Text
 
-        $userInput = [microsoft.visualbasic.interaction]::MsgBox("All Data about '$gameName' will be lost.`r`nAre you sure?", "YesNo,Question", "Confirm Game Removal").ToString()
-        if ($userInput.ToLower() -eq 'yes')	{
-            RemoveGame $gameName
-            ShowMessage "Removed '$gameName' from Database." "OK" "Asterisk"
-            Log "Removed '$gameName' from Database."
+            $userInput = [microsoft.visualbasic.interaction]::MsgBox("All Data about '$gameName' will be lost.`r`nAre you sure?", "YesNo,Question", "Confirm Game Removal").ToString()
+            if ($userInput.ToLower() -eq 'yes')	{
+                RemoveGame $gameName
+                ShowMessage "Removed '$gameName' from Database." "OK" "Asterisk"
+                Log "Removed '$gameName' from Database."
 
-            $gamesList = (RunDBQuery "SELECT name FROM games").name
-            if ($gamesList.Length -eq 0)
-            {
-                ShowMessage "No more games in Database. Closing Edit Form." "OK" "Asterisk"
-                $editGameForm.Close()
-                return
+                $gamesList = (RunDBQuery "SELECT name FROM games").name
+                if ($gamesList.Length -eq 0) {
+                    ShowMessage "No more games in Database. Closing Edit Form." "OK" "Asterisk"
+                    $editGameForm.Close()
+                    return
+                }
+                $listBox.Items.Clear(); $listBox.Items.AddRange($gamesList);
+                $listBox.SelectedIndex = 0
             }
-            $listBox.Items.Clear(); $listBox.Items.AddRange($gamesList);
-            $listBox.SelectedIndex = 0
-        }
-    })
+        })
     $editGameForm.Controls.Add($buttonRemove)
 
     $buttonOK = CreateButton "OK" 245 185
     $buttonOK.Add_Click({
-        $currentlySelectedIndex = $listBox.SelectedIndex
+            $currentlySelectedIndex = $listBox.SelectedIndex
 
-        if ($textName.Text -eq "" -Or $textPlatform.Text -eq "" -Or $textPlayTime.Text -eq "")	{
-            ShowMessage "Name, Platform, Playtime fields cannot be empty. Try Again." "OK" "Error"
-            $listBox.SetSelected($currentlySelectedIndex, $true)
-            return
-        }
+            if ($textName.Text -eq "" -Or $textPlatform.Text -eq "" -Or $textPlayTime.Text -eq "")	{
+                ShowMessage "Name, Platform, Playtime fields cannot be empty. Try Again." "OK" "Error"
+                $listBox.SetSelected($currentlySelectedIndex, $true)
+                return
+            }
 
-        $gameName = $textName.Text
+            $gameName = $textName.Text
 
-        $playTime = $textPlayTime.Text
-        if ( -Not ($playTime -match '^[0-9]{0,5} Hr [0-5]{0,1}[0-9]{1} Min$') ) {
-            ShowMessage "Incorrect Playtime Format. Enter exactly 'x Hr y Min'." "OK" "Error"
-            $listBox.SetSelected($currentlySelectedIndex, $true)
-            return
-        }
-        $playTimeInMin = ([int]$playTime.Split(" ")[0] * 60) + [int]$playTime.Split(" ")[2]
+            $playTime = $textPlayTime.Text
+            if ( -Not ($playTime -match '^[0-9]{0,5} Hr [0-5]{0,1}[0-9]{1} Min$') ) {
+                ShowMessage "Incorrect Playtime Format. Enter exactly 'x Hr y Min'." "OK" "Error"
+                $listBox.SetSelected($currentlySelectedIndex, $true)
+                return
+            }
+            $playTimeInMin = ([int]$playTime.Split(" ")[0] * 60) + [int]$playTime.Split(" ")[2]
 
-        $gameExeName = $textExe.Text -replace ".exe"
+            $gameExeName = $textExe.Text -replace ".exe"
 
-        $gameCompleteStatus = if ($checkboxCompleted.Checked) { "TRUE" } else { "FALSE" }
+            $gameCompleteStatus = if ($checkboxCompleted.Checked) { "TRUE" } else { "FALSE" }
 
-        UpdateGameOnEdit -OriginalGameName $textOriginalGameName.Text -GameName $gameName -GameExeName $gameExeName -GameIconPath $pictureBoxImagePath.Text -GamePlayTime $playTimeInMin -GameCompleteStatus $gameCompleteStatus -GamePlatform $textPlatform.Text
+            UpdateGameOnEdit -OriginalGameName $textOriginalGameName.Text -GameName $gameName -GameExeName $gameExeName -GameIconPath $pictureBoxImagePath.Text -GamePlayTime $playTimeInMin -GameCompleteStatus $gameCompleteStatus -GamePlatform $textPlatform.Text
 
-        ShowMessage "Updated '$gameName' in Database." "OK" "Asterisk"
+            ShowMessage "Updated '$gameName' in Database." "OK" "Asterisk"
 
-        # Pre Load image in ui\resources\images folder for rendering 'All Games' list faster
-        $imageFileName = ToBase64 $gameName
-        $gameIconPath = $pictureBoxImagePath.Text
-        $imageFileExtension = $gameIconPath.Split(".")[-1]
-        Copy-Item -Path $gameIconPath -Destination ".\ui\resources\images\$imageFileName.$imageFileExtension"
+            # Pre Load image in ui\resources\images folder for rendering 'All Games' list faster
+            $imageFileName = ToBase64 $gameName
+            $gameIconPath = $pictureBoxImagePath.Text
+            $imageFileExtension = $gameIconPath.Split(".")[-1]
+            Copy-Item -Path $gameIconPath -Destination ".\ui\resources\images\$imageFileName.$imageFileExtension"
 
-        $gamesList = (RunDBQuery "SELECT name FROM games").name
-        $listBox.Items.Clear(); $listBox.Items.AddRange($gamesList);
-        $listBox.SelectedIndex = $listBox.FindString($gameName)
-    })
+            $gamesList = (RunDBQuery "SELECT name FROM games").name
+            $listBox.Items.Clear(); $listBox.Items.AddRange($gamesList);
+            $listBox.SelectedIndex = $listBox.FindString($gameName)
+        })
     $editGameForm.Controls.Add($buttonOK)
 
     $buttonCancel = CreateButton "Cancel" 370 185; $buttonCancel.Add_Click({ $editGameForm.Close() }); $editGameForm.Controls.Add($buttonCancel)
@@ -221,8 +221,8 @@ function RenderEditPlatformForm($PlatformsList) {
     $textSearch = CreateTextBox "" 465 20 160 20; $editPlatformForm.Controls.Add($textSearch)
 
     $textSearch.Add_TextChanged({
-        FilterListBox -filterText $textSearch.Text -listBox $listBox -originalItems $PlatformsList
-    })
+            FilterListBox -filterText $textSearch.Text -listBox $listBox -originalItems $PlatformsList
+        })
 
     $labelName = Createlabel "Platorm:" 10 20; $editPlatformForm.Controls.Add($labelName)
     $textName = CreateTextBox "" 75 20 200 20; $editPlatformForm.Controls.Add($textName)
@@ -237,126 +237,125 @@ function RenderEditPlatformForm($PlatformsList) {
     $textCore = CreateTextBox "" 75 206 200 20;	$textCore.ReadOnly = $true;	$editPlatformForm.Controls.Add($textCore)
 
     $listBox.Add_SelectedIndexChanged({
-        $selectedPlatform = GetPlatformDetails $listBox.SelectedItem
+            $selectedPlatform = GetPlatformDetails $listBox.SelectedItem
 
-        $textName.Text = $selectedPlatform.name
-        $textOriginalPlatformName.Text = $selectedPlatform.name
-        $textRomExt.Text = $selectedPlatform.rom_extensions
+            $textName.Text = $selectedPlatform.name
+            $textOriginalPlatformName.Text = $selectedPlatform.name
+            $textRomExt.Text = $selectedPlatform.rom_extensions
 
-        $exeList = ($selectedPlatform.exe_name -replace "," , ".exe,") + ".exe"
-        $textExe.Text = $exeList
+            $exeList = ($selectedPlatform.exe_name -replace "," , ".exe,") + ".exe"
+            $textExe.Text = $exeList
 
-        $hasCore = -Not ($selectedPlatform.core -eq "")
+            $hasCore = -Not ($selectedPlatform.core -eq "")
 
-        if ($hasCore) {
-            $textCore.Text = $selectedPlatform.core
+            if ($hasCore) {
+                $textCore.Text = $selectedPlatform.core
 
-            $buttonUpdateCore.show()
-            $labelCores.show()
-            $textCore.show()
+                $buttonUpdateCore.show()
+                $labelCores.show()
+                $textCore.show()
 
-            $editPlatformForm.Size = New-Object System.Drawing.Size(645, 320)
-            $listBox.Height = 212
-            $buttonOK.Location = New-Object System.Drawing.Point(85, 254)
-            $buttonCancel.Location = New-Object System.Drawing.Point(210, 254)
-        }
-        else {
-            $buttonUpdateCore.hide()
-            $labelCores.hide()
-            $textCore.Text = ""; $textCore.hide()
+                $editPlatformForm.Size = New-Object System.Drawing.Size(645, 320)
+                $listBox.Height = 212
+                $buttonOK.Location = New-Object System.Drawing.Point(85, 254)
+                $buttonCancel.Location = New-Object System.Drawing.Point(210, 254)
+            }
+            else {
+                $buttonUpdateCore.hide()
+                $labelCores.hide()
+                $textCore.Text = ""; $textCore.hide()
 
-            $editPlatformForm.Size = New-Object System.Drawing.Size(645, 267)
-            $listBox.Height = 166
-            $buttonOK.Location = New-Object System.Drawing.Point(85, 201)
-            $buttonCancel.Location = New-Object System.Drawing.Point(210, 201)
-        }
-    })
+                $editPlatformForm.Size = New-Object System.Drawing.Size(645, 267)
+                $listBox.Height = 166
+                $buttonOK.Location = New-Object System.Drawing.Point(85, 201)
+                $buttonCancel.Location = New-Object System.Drawing.Point(210, 201)
+            }
+        })
     $editPlatformForm.Controls.Add($listBox)
 
     $buttonUpdateCore = CreateButton "Edit Core" 300 204
     $buttonUpdateCore.Add_Click({
-        $openFileDialog = OpenFileDialog "Select Retroarch Core" 'DLL (*.dll)|*.dll'
-        $result = $openFileDialog.ShowDialog()
-        if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
-            $textCore.Text = (Get-Item $openFileDialog.FileName).Name
-        }
-    })
+            $openFileDialog = OpenFileDialog "Select Retroarch Core" 'DLL (*.dll)|*.dll'
+            $result = $openFileDialog.ShowDialog()
+            if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
+                $textCore.Text = (Get-Item $openFileDialog.FileName).Name
+            }
+        })
     $editPlatformForm.Controls.Add($buttonUpdateCore)
 
     $buttonUpdateExe = CreateButton "Add Exe" 300 65
     $buttonUpdateExe.Add_Click({
-        $openFileDialog = OpenFileDialog "Select Executable" 'Executable (*.exe)|*.exe'
-        $result = $openFileDialog.ShowDialog()
-        if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
-            $existingExes = $textExe.Text
-            $selectedExe = (Get-Item $openFileDialog.FileName).Name
-            if ($existingExes -eq "") {
-                $textExe.Text = $selectedExe
+            $openFileDialog = OpenFileDialog "Select Executable" 'Executable (*.exe)|*.exe'
+            $result = $openFileDialog.ShowDialog()
+            if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
+                $existingExes = $textExe.Text
+                $selectedExe = (Get-Item $openFileDialog.FileName).Name
+                if ($existingExes -eq "") {
+                    $textExe.Text = $selectedExe
+                }
+                else {
+                    $textExe.Text = ("$existingExes,$selectedExe" -split ',' | Select-Object -Unique ) -join ','
+                }
             }
-            else {
-                $textExe.Text = ("$existingExes,$selectedExe" -split ',' | Select-Object -Unique ) -join ','
-            }
-        }
-    })
+        })
     $editPlatformForm.Controls.Add($buttonUpdateExe)
 
     $buttonClearExe = CreateButton "Clear List" 300 95
     $buttonClearExe.Add_Click({
-        $textExe.Text = ""
-    })
+            $textExe.Text = ""
+        })
     $editPlatformForm.Controls.Add($buttonClearExe)
 
     $buttonRemove = CreateButton "Delete" 300 18
     $buttonRemove.Add_Click({
-        $platformName = $textName.Text
+            $platformName = $textName.Text
 
-        $userInput = [microsoft.visualbasic.interaction]::MsgBox("All Data about '$platformName' will be lost.`r`nAre you sure?", "YesNo,Question", "Confirm Platform Removal").ToString()
-        if ($userInput.ToLower() -eq 'yes')	{
-            RemovePlatform $platformName
-            ShowMessage "Removed '$platformName' from Database." "OK" "Asterisk"
-            Log "Removed '$platformName' from Database."
+            $userInput = [microsoft.visualbasic.interaction]::MsgBox("All Data about '$platformName' will be lost.`r`nAre you sure?", "YesNo,Question", "Confirm Platform Removal").ToString()
+            if ($userInput.ToLower() -eq 'yes')	{
+                RemovePlatform $platformName
+                ShowMessage "Removed '$platformName' from Database." "OK" "Asterisk"
+                Log "Removed '$platformName' from Database."
 
-            $platformsList = (RunDBQuery "SELECT name FROM emulated_platforms").name
-            if ($platformsList.Length -eq 0)
-            {
-                ShowMessage "No more platforms in Database. Closing Edit Form." "OK" "Asterisk"
-                $editPlatformForm.Close()
-                return
+                $platformsList = (RunDBQuery "SELECT name FROM emulated_platforms").name
+                if ($platformsList.Length -eq 0) {
+                    ShowMessage "No more platforms in Database. Closing Edit Form." "OK" "Asterisk"
+                    $editPlatformForm.Close()
+                    return
+                }
+                $listBox.Items.Clear(); $listBox.Items.AddRange($platformsList);
+                $listBox.SelectedIndex = 0
             }
-            $listBox.Items.Clear(); $listBox.Items.AddRange($platformsList);
-            $listBox.SelectedIndex = 0
-        }
-    })
+        })
     $editPlatformForm.Controls.Add($buttonRemove)
 
     $buttonOK = CreateButton "OK" 85 254
     $buttonOK.Add_Click({
-        $currentlySelectedIndex = $listBox.SelectedIndex
+            $currentlySelectedIndex = $listBox.SelectedIndex
 
-        if ($textRomExt.Text -eq "" -Or $textExe.Text -eq "" -Or $textName.Text -eq "") {
-            ShowMessage "Platform Name, Exe List or Rom Extensions field cannot be empty.`r`nTry again." "OK" "Error"
-            $listBox.SetSelected($currentlySelectedIndex, $true)
-            return
-        }
+            if ($textRomExt.Text -eq "" -Or $textExe.Text -eq "" -Or $textName.Text -eq "") {
+                ShowMessage "Platform Name, Exe List or Rom Extensions field cannot be empty.`r`nTry again." "OK" "Error"
+                $listBox.SetSelected($currentlySelectedIndex, $true)
+                return
+            }
 
-        $platformRomExtensions = $textRomExt.Text
-        if (-Not ($platformRomExtensions -match '^([a-zA-Z0-9!@#$%^&_\-~]+,)*([a-zA-Z0-9!@#$%^&_\-~]+)$')) {
-            ShowMessage "Error in rom extensions. Please submit extensions as a ',' separated list without the leading '.' or spaces.`r`n`r`ne.g. zip,iso,chd OR zip,iso OR zip" "OK" "Error"
-            $listBox.SetSelected($currentlySelectedIndex, $true)
-            return
-        }
+            $platformRomExtensions = $textRomExt.Text
+            if (-Not ($platformRomExtensions -match '^([a-zA-Z0-9!@#$%^&_\-~]+,)*([a-zA-Z0-9!@#$%^&_\-~]+)$')) {
+                ShowMessage "Error in rom extensions. Please submit extensions as a ',' separated list without the leading '.' or spaces.`r`n`r`ne.g. zip,iso,chd OR zip,iso OR zip" "OK" "Error"
+                $listBox.SetSelected($currentlySelectedIndex, $true)
+                return
+            }
 
-        $platformName = $textName.Text
-        $emulatorExeList = $textExe.Text -replace ".exe"
+            $platformName = $textName.Text
+            $emulatorExeList = $textExe.Text -replace ".exe"
 
-        UpdatePlatformOnEdit -OriginalPlatformName $textOriginalPlatformName.Text -PlatformName $platformName -EmulatorExeList $emulatorExeList -EmulatorCore $textCore.Text -PlatformRomExtensions $platformRomExtensions
+            UpdatePlatformOnEdit -OriginalPlatformName $textOriginalPlatformName.Text -PlatformName $platformName -EmulatorExeList $emulatorExeList -EmulatorCore $textCore.Text -PlatformRomExtensions $platformRomExtensions
 
-        ShowMessage "Updated '$platformName' in Database." "OK" "Asterisk"
+            ShowMessage "Updated '$platformName' in Database." "OK" "Asterisk"
 
-        $platformsList = (RunDBQuery "SELECT name FROM emulated_platforms").name
-        $listBox.Items.Clear(); $listBox.Items.AddRange($platformsList);
-        $listBox.SelectedIndex = $listBox.FindString($platformName)
-    })
+            $platformsList = (RunDBQuery "SELECT name FROM emulated_platforms").name
+            $listBox.Items.Clear(); $listBox.Items.AddRange($platformsList);
+            $listBox.SelectedIndex = $listBox.FindString($platformName)
+        })
     $editPlatformForm.Controls.Add($buttonOK)
 
     $buttonCancel = CreateButton "Cancel" 210 254;	$buttonCancel.Add_Click({ $editPlatformForm.Close() });	$editPlatformForm.Controls.Add($buttonCancel)
@@ -386,14 +385,14 @@ function RenderAddGameForm() {
     $buttonSearchIcon = CreateButton "Search" 20 185
     $buttonSearchIcon.Size = New-Object System.Drawing.Size(60, 23)
     $buttonSearchIcon.Add_Click({
-        $gameName = $textName.Text
-        if ($gameName -eq "") {
-            ShowMessage "Please enter a name first." "OK" "Error"
-            return
-        }
-        $gameNameEncoded = $gameName -replace " ", "+"
-        Start-Process "https://www.google.com/search?as_q=$gameNameEncoded+Game&imgar=s&udm=2"
-    })
+            $gameName = $textName.Text
+            if ($gameName -eq "") {
+                ShowMessage "Please enter a name first." "OK" "Error"
+                return
+            }
+            $gameNameEncoded = $gameName -replace " ", "+"
+            Start-Process "https://www.google.com/search?as_q=$gameNameEncoded+Game&imgar=s&udm=2"
+        })
     $addGameForm.Controls.Add($buttonSearchIcon)
 
     $imagePath = "./icons/default.png"
@@ -407,71 +406,71 @@ function RenderAddGameForm() {
     $buttonUpdateIcon = CreateButton "Update" 90 185
     $buttonUpdateIcon.Size = New-Object System.Drawing.Size(60, 23)
     $buttonUpdateIcon.Add_Click({
-        $downloadsDirectoryPath = (New-Object -ComObject Shell.Application).Namespace('shell:Downloads').Self.Path
-        $openFileDialog = OpenFileDialog "Select Game Icon File" 'Image (*.png, *.jpg, *.jpeg)|*.png;*.jpg;*.jpeg' $downloadsDirectoryPath
-        $result = $openFileDialog.ShowDialog()
-        if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
-            $imagePath = ResizeImage $openFileDialog.FileName "GG-NEW_GAME"
-            $pictureBoxImagePath.Text = $imagePath
-            $pictureBox.Image = [System.Drawing.Image]::FromFile($imagePath)
-        }
-    })
+            $downloadsDirectoryPath = (New-Object -ComObject Shell.Application).Namespace('shell:Downloads').Self.Path
+            $openFileDialog = OpenFileDialog "Select Game Icon File" 'Image (*.png, *.jpg, *.jpeg)|*.png;*.jpg;*.jpeg' $downloadsDirectoryPath
+            $result = $openFileDialog.ShowDialog()
+            if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
+                $imagePath = ResizeImage $openFileDialog.FileName "GG-NEW_GAME"
+                $pictureBoxImagePath.Text = $imagePath
+                $pictureBox.Image = [System.Drawing.Image]::FromFile($imagePath)
+            }
+        })
     $addGameForm.Controls.Add($buttonUpdateIcon)
 
     $buttonUpdateExe = CreateButton "Add Exe" 470 60
     $buttonUpdateExe.Add_Click({
-        $openFileDialog = OpenFileDialog "Select Executable" 'Executable (*.exe)|*.exe'
-        $result = $openFileDialog.ShowDialog()
+            $openFileDialog = OpenFileDialog "Select Executable" 'Executable (*.exe)|*.exe'
+            $result = $openFileDialog.ShowDialog()
 
-        if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
-            $textExe.Text = $openFileDialog.FileName
-            $gameExeFile = Get-Item $textExe.Text
-            $gameExeName = $gameExeFile.BaseName
+            if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
+                $textExe.Text = $openFileDialog.FileName
+                $gameExeFile = Get-Item $textExe.Text
+                $gameExeName = $gameExeFile.BaseName
 
-            if ($textName.Text -eq "") { $textName.Text = $gameExeName }
+                if ($textName.Text -eq "") { $textName.Text = $gameExeName }
 
-            $entityFound = DoesEntityExists "games" "exe_name" $gameExeName
-            if ($null -ne $entityFound) {
-                ShowMessage "Another Game with Executable $gameExeName.exe already exists`r`nSee Games List." "OK" "Asterisk"
-                $textExe.Text = ""
-                return
+                $entityFound = DoesEntityExists "games" "exe_name" $gameExeName
+                if ($null -ne $entityFound) {
+                    ShowMessage "Another Game with Executable $gameExeName.exe already exists`r`nSee Games List." "OK" "Asterisk"
+                    $textExe.Text = ""
+                    return
+                }
+
+                $gameIconPath = "$env:TEMP\GG-{0}.jpg" -f $(Get-Random)
+                $gameIcon = [System.Drawing.Icon]::ExtractAssociatedIcon($gameExeFile)
+                $gameIcon.ToBitmap().save($gameIconPath)
+
+                $pictureBoxImagePath.Text = $gameIconPath
+                $pictureBox.Image = [System.Drawing.Image]::FromFile($gameIconPath)
+
             }
-
-            $gameIconPath = "$env:TEMP\GG-{0}.jpg" -f $(Get-Random)
-            $gameIcon = [System.Drawing.Icon]::ExtractAssociatedIcon($gameExeFile)
-            $gameIcon.ToBitmap().save($gameIconPath)
-
-            $pictureBoxImagePath.Text = $gameIconPath
-            $pictureBox.Image = [System.Drawing.Image]::FromFile($gameIconPath)
-
-        }
-    })
+        })
     $addGameForm.Controls.Add($buttonUpdateExe)
 
     $buttonOK = CreateButton "OK" 245 185
     $buttonOK.Add_Click({
-        if ($textExe.Text -eq "" -Or $textName.Text -eq "" ) {
-            ShowMessage "Name, Exe fields cannot be empty. Try Again." "OK" "Error"
-            return
-        }
-        $gameName = $textName.Text
-        $gameExeFile = Get-Item $textExe.Text
-        $gameExeName = $gameExeFile.BaseName
-        $gameIconPath = $pictureBoxImagePath.Text
-        $gameLastPlayDate = (Get-Date -UFormat %s).Split('.').Get(0)
+            if ($textExe.Text -eq "" -Or $textName.Text -eq "" ) {
+                ShowMessage "Name, Exe fields cannot be empty. Try Again." "OK" "Error"
+                return
+            }
+            $gameName = $textName.Text
+            $gameExeFile = Get-Item $textExe.Text
+            $gameExeName = $gameExeFile.BaseName
+            $gameIconPath = $pictureBoxImagePath.Text
+            $gameLastPlayDate = (Get-Date -UFormat %s).Split('.').Get(0)
 
-        SaveGame -GameName $gameName -GameExeName $gameExeName -GameIconPath $gameIconPath `
-        -GamePlayTime 0 -GameIdleTime 0 -GameLastPlayDate $gameLastPlayDate -GameCompleteStatus 'FALSE' -GamePlatform 'PC' -GameSessionCount 0
+            SaveGame -GameName $gameName -GameExeName $gameExeName -GameIconPath $gameIconPath `
+                -GamePlayTime 0 -GameIdleTime 0 -GameLastPlayDate $gameLastPlayDate -GameCompleteStatus 'FALSE' -GamePlatform 'PC' -GameSessionCount 0
 
-        # Pre Load image in ui\resources\images folder for rendering 'All Games' list faster
-        $imageFileName = ToBase64 $gameName
-        $imageFileExtension = $gameIconPath.Split(".")[-1]
-        Copy-Item -Path $gameIconPath -Destination ".\ui\resources\images\$imageFileName.$imageFileExtension"
+            # Pre Load image in ui\resources\images folder for rendering 'All Games' list faster
+            $imageFileName = ToBase64 $gameName
+            $imageFileExtension = $gameIconPath.Split(".")[-1]
+            Copy-Item -Path $gameIconPath -Destination ".\ui\resources\images\$imageFileName.$imageFileExtension"
 
-        ShowMessage "Registered '$gameName' in Database." "OK" "Asterisk"
+            ShowMessage "Registered '$gameName' in Database." "OK" "Asterisk"
 
-        $addGameForm.Close()
-    })
+            $addGameForm.Close()
+        })
     $addGameForm.Controls.Add($buttonOK)
 
     $buttonCancel = CreateButton "Cancel" 370 185; $buttonCancel.Add_Click({ $addGameForm.Close() }); $addGameForm.Controls.Add($buttonCancel)
@@ -497,94 +496,94 @@ function RenderAddPlatformForm() {
 
     $buttonAddCore = CreateButton "Add Core" 300 204; $buttonAddCore.hide()
     $buttonAddCore.Add_Click({
-        $openFileDialog = OpenFileDialog "Select Retroarch Core" 'DLL (*.dll)|*.dll'
-        $result = $openFileDialog.ShowDialog()
-        if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
-            $textCore.Text = (Get-Item $openFileDialog.FileName).Name
-        }
-    })
+            $openFileDialog = OpenFileDialog "Select Retroarch Core" 'DLL (*.dll)|*.dll'
+            $result = $openFileDialog.ShowDialog()
+            if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
+                $textCore.Text = (Get-Item $openFileDialog.FileName).Name
+            }
+        })
     $addPlatformForm.Controls.Add($buttonAddCore)
 
     $buttonAddExe = CreateButton "Add Exe" 300 65
     $buttonAddExe.Add_Click({
-        $openFileDialog = OpenFileDialog "Select Executable" 'Executable (*.exe)|*.exe'
-        $result = $openFileDialog.ShowDialog()
+            $openFileDialog = OpenFileDialog "Select Executable" 'Executable (*.exe)|*.exe'
+            $result = $openFileDialog.ShowDialog()
 
-        if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
-            $existingExes = $textExe.Text
+            if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
+                $existingExes = $textExe.Text
 
-            $selectedExe = (Get-Item $openFileDialog.FileName).Name
-            if ($existingExes -eq "") {
-                $textExe.Text = $selectedExe
+                $selectedExe = (Get-Item $openFileDialog.FileName).Name
+                if ($existingExes -eq "") {
+                    $textExe.Text = $selectedExe
+                }
+                else {
+                    $textExe.Text = ("$existingExes,$selectedExe" -split ',' | Select-Object -Unique ) -join ','
+                }
+
+                $emulatorExeList = $textExe.Text
+                if ($emulatorExeList.ToLower() -like "*retroarch*") {
+                    $addPlatformForm.Size = New-Object System.Drawing.Size(395, 315)
+                    $buttonOK.Location = New-Object System.Drawing.Point(85, 250)
+                    $buttonCancel.Location = New-Object System.Drawing.Point(210, 250)
+
+                    $labelCores.show()
+                    $textCore.show()
+                    $buttonAddCore.show()
+
+                    ShowMessage "Retroarch detected. Please Select Core for Platform." "OK" "Asterisk"
+                }
             }
-            else {
-                $textExe.Text = ("$existingExes,$selectedExe" -split ',' | Select-Object -Unique ) -join ','
-            }
-
-            $emulatorExeList = $textExe.Text
-            if ($emulatorExeList.ToLower() -like "*retroarch*") {
-                $addPlatformForm.Size = New-Object System.Drawing.Size(395, 315)
-                $buttonOK.Location = New-Object System.Drawing.Point(85, 250)
-                $buttonCancel.Location = New-Object System.Drawing.Point(210, 250)
-
-                $labelCores.show()
-                $textCore.show()
-                $buttonAddCore.show()
-
-                ShowMessage "Retroarch detected. Please Select Core for Platform." "OK" "Asterisk"
-            }
-        }
-    })
+        })
     $addPlatformForm.Controls.Add($buttonAddExe)
 
     $buttonClearExe = CreateButton "Clear List" 300 95
     $buttonClearExe.Add_Click({
-        $textExe.Text = ""
-    })
+            $textExe.Text = ""
+        })
     $addPlatformForm.Controls.Add($buttonClearExe)
 
     $buttonOK = CreateButton "OK" 85 200
     $buttonOK.Add_Click({
-        if ($textExe.Text -eq "" -Or $textName.Text -eq "" -Or $textRomExt.Text -eq "")	{
-            ShowMessage "Platform, Exe and Extensions fields cannot be empty.`r`nTry again." "OK" "Error"
-            return
-        }
-
-        $emulatorExeList = $textExe.Text -replace ".exe"
-        if ($emulatorExeList.ToLower() -like "*retroarch*") {
-            if ($textCore.Text -eq "") {
-                ShowMessage "Retroarch detected.`r`nYou must select Core for platform. Try again." "OK" "Error"
+            if ($textExe.Text -eq "" -Or $textName.Text -eq "" -Or $textRomExt.Text -eq "")	{
+                ShowMessage "Platform, Exe and Extensions fields cannot be empty.`r`nTry again." "OK" "Error"
                 return
             }
-        }
 
-        $platformName = $textName.Text
-        $platformFound = DoesEntityExists "emulated_platforms" "name"  $platformName
-        if ($null -ne $platformFound) {
-            ShowMessage "Platform $platformName already exists.`r`nUse Edit Emulator setting to check existing platforms." "OK" "Error"
-            return
-        }
+            $emulatorExeList = $textExe.Text -replace ".exe"
+            if ($emulatorExeList.ToLower() -like "*retroarch*") {
+                if ($textCore.Text -eq "") {
+                    ShowMessage "Retroarch detected.`r`nYou must select Core for platform. Try again." "OK" "Error"
+                    return
+                }
+            }
 
-        $emulatorCore = $textCore.Text
+            $platformName = $textName.Text
+            $platformFound = DoesEntityExists "emulated_platforms" "name"  $platformName
+            if ($null -ne $platformFound) {
+                ShowMessage "Platform $platformName already exists.`r`nUse Edit Emulator setting to check existing platforms." "OK" "Error"
+                return
+            }
 
-        $exeCoreComboFound = CheckExeCoreCombo $emulatorExeList $emulatorCore
-        if ($null -ne $exeCoreComboFound) {
-            ShowMessage "Executables in the list '$emulatorExeList' is already registered with core '$emulatorCore'.`r`nCannot register another platform with same Exe and Core Combination.`r`nUse Edit Platform setting to check existing platforms." "OK" "Error"
-            return
-        }
+            $emulatorCore = $textCore.Text
 
-        $platformRomExtensions = $textRomExt.Text
-        if (-Not ($platformRomExtensions -match '^([a-zA-Z0-9!@#$%^&_\-~]+,)*([a-zA-Z0-9!@#$%^&_\-~]+)$'))	{
-            ShowMessage "Error in rom extensions. Please submit extensions as a ',' separated list without the leading '.'`r`ne.g. zip,iso,chd OR zip,iso OR zip" "OK" "Error"
-            return
-        }
+            $exeCoreComboFound = CheckExeCoreCombo $emulatorExeList $emulatorCore
+            if ($null -ne $exeCoreComboFound) {
+                ShowMessage "Executables in the list '$emulatorExeList' is already registered with core '$emulatorCore'.`r`nCannot register another platform with same Exe and Core Combination.`r`nUse Edit Platform setting to check existing platforms." "OK" "Error"
+                return
+            }
 
-        SavePlatform -PlatformName $platformName -EmulatorExeList $emulatorExeList -CoreName $emulatorCore -RomExtensions $platformRomExtensions
+            $platformRomExtensions = $textRomExt.Text
+            if (-Not ($platformRomExtensions -match '^([a-zA-Z0-9!@#$%^&_\-~]+,)*([a-zA-Z0-9!@#$%^&_\-~]+)$'))	{
+                ShowMessage "Error in rom extensions. Please submit extensions as a ',' separated list without the leading '.'`r`ne.g. zip,iso,chd OR zip,iso OR zip" "OK" "Error"
+                return
+            }
 
-        ShowMessage "Registered '$platformName' in Database." "OK" "Asterisk"
+            SavePlatform -PlatformName $platformName -EmulatorExeList $emulatorExeList -CoreName $emulatorCore -RomExtensions $platformRomExtensions
 
-        $addPlatformForm.Close()
-    })
+            ShowMessage "Registered '$platformName' in Database." "OK" "Asterisk"
+
+            $addPlatformForm.Close()
+        })
     $addPlatformForm.Controls.Add($buttonOK)
 
     $buttonCancel = CreateButton "Cancel" 210 200; $buttonCancel.Add_Click({ $addPlatformForm.Close() }); $addPlatformForm.Controls.Add($buttonCancel)

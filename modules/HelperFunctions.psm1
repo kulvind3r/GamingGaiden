@@ -35,7 +35,8 @@ function ResizeImage($ImagePath, $GameName) {
     $scaledImagePath = $null
     if ($ImagePath -like '*.png') {
         $scaledImagePath = "$env:TEMP\GG-{0}-$imageFileName.png" -f $(Get-Random)
-    } else {
+    }
+    else {
         $scaledImagePath = "$env:TEMP\GG-{0}-$imageFileName.jpg" -f $(Get-Random)
     }
 

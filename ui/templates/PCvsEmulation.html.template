@@ -1,40 +1,38 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-
-<head>
+  <head>
     <title>Gaming Gaiden</title>
-    <link rel="icon" type="image/x-icon" href="./resources/images/favicon.ico">
-    <link rel="stylesheet" href="./resources/css/PCvsEmulation.css">
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="./resources/images/favicon.ico"
+    />
+    <link rel="stylesheet" href="./resources/css/PCvsEmulation.css" />
     <script src="./resources/js/jquery-3.7.1.min.js"></script>
     <script src="./resources/js/chart.js"></script>
     <script src="./resources/js/chartjs-plugin-datalabels-2.0.0.js"></script>
     <script>
-        $(document).ready(
-            function () {
-                $('table').each(
-                    function () {
-                        var tHead = $(this).find('tr:first').html();
-                        $(this).find('colgroup').remove();
-                        $(this).find('tr:first').remove();
-                        $(this).find('tbody').before('<thead>' + tHead + '</thead>');
-                    }
-                );
-                $('table')[0].style.display = 'none';
-            }
-        );
+      $(document).ready(function () {
+        $("table").each(function () {
+          var tHead = $(this).find("tr:first").html();
+          $(this).find("colgroup").remove();
+          $(this).find("tr:first").remove();
+          $(this)
+            .find("tbody")
+            .before("<thead>" + tHead + "</thead>");
+        });
+        $("table")[0].style.display = "none";
+      });
     </script>
-</head>
+  </head>
 
-<body>
+  <body>
     <h1>PC Vs Emulation PlayTime</h1>
     <div id="chart-container">
-        <canvas id="pc-vs-emulation-chart"></canvas>
+      <canvas id="pc-vs-emulation-chart"></canvas>
     </div>
-    <div>
-        _PCVSEMULATIONTABLE_
-    </div>
+    <div>_PCVSEMULATIONTABLE_</div>
     <script src="./resources/js/common.js"></script>
     <script src="./resources/js/PCvsEmulation.js"></script>
-</body>
-
+  </body>
 </html>

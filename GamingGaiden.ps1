@@ -233,145 +233,145 @@ try {
     #------------------------------------------
     # Setup Tray Icon Actions
     $AppNotifyIcon.Add_Click({
-        if ($_.Button -eq [Windows.Forms.MouseButtons]::Left) {
-            RenderQuickView
-        }
+            if ($_.Button -eq [Windows.Forms.MouseButtons]::Left) {
+                RenderQuickView
+            }
 
-        if ($_.Button -eq [Windows.Forms.MouseButtons]::Right) {
-            $AppNotifyIcon.ShowContextMenu
-        }
-    })
+            if ($_.Button -eq [Windows.Forms.MouseButtons]::Right) {
+                $AppNotifyIcon.ShowContextMenu
+            }
+        })
 
     #------------------------------------------
     # Setup Tray Icon Context Menu Actions
     $allGamesMenuItem.Add_Click({
-        $gamesCheckResult = RenderGameList
-        if ($gamesCheckResult -ne $false) {
-            Invoke-Item ".\ui\AllGames.html"
-        }
-    })
+            $gamesCheckResult = RenderGameList
+            if ($gamesCheckResult -ne $false) {
+                Invoke-Item ".\ui\AllGames.html"
+            }
+        })
 
     $StartTrackerMenuItem.Add_Click({
-        StartTrackerJob;
-        $AppNotifyIcon.ShowBalloonTip(3000, "Tracker Started","Watching for game launches.", [System.Windows.Forms.ToolTipIcon]::Info)
-    })
+            StartTrackerJob;
+            $AppNotifyIcon.ShowBalloonTip(3000, "Tracker Started", "Watching for game launches.", [System.Windows.Forms.ToolTipIcon]::Info)
+        })
 
     $StopTrackerMenuItem.Add_Click({
-        StopTrackerJob
-        $AppNotifyIcon.ShowBalloonTip(3000, "Tracker Stopped","Game launch detection disabled.", [System.Windows.Forms.ToolTipIcon]::Info)
-    })
+            StopTrackerJob
+            $AppNotifyIcon.ShowBalloonTip(3000, "Tracker Stopped", "Game launch detection disabled.", [System.Windows.Forms.ToolTipIcon]::Info)
+        })
 
     $helpMenuItem.Add_Click({
-        Log "Showing help"
-        Invoke-Item ".\ui\Manual.html"
-    })
+            Log "Showing help"
+            Invoke-Item ".\ui\Manual.html"
+        })
 
     $aboutMenuItem.Add_Click({
-        RenderAboutDialog
-    })
+            RenderAboutDialog
+        })
 
     $exitMenuItem.Add_Click({
-        $AppNotifyIcon.Visible = $false;
-        Stop-Job -Name "TrackerJob";
-        $Timer.Stop()
-        $Timer.Dispose()
-        [System.Windows.Forms.Application]::Exit();
-    })
+            $AppNotifyIcon.Visible = $false;
+            Stop-Job -Name "TrackerJob";
+            $Timer.Stop()
+            $Timer.Dispose()
+            [System.Windows.Forms.Application]::Exit();
+        })
 
     #------------------------------------------
     # Statistics Sub Menu Actions
     $summaryItem.Add_Click({
-        $sessionVsPlaytimeCheckResult = RenderSummary
-        if ($sessionVsPlaytimeCheckResult -ne $false) {
-            Invoke-Item ".\ui\Summary.html"
-        }
-    })
+            $sessionVsPlaytimeCheckResult = RenderSummary
+            if ($sessionVsPlaytimeCheckResult -ne $false) {
+                Invoke-Item ".\ui\Summary.html"
+            }
+        })
 
     $gamingTimeMenuItem.Add_Click({
-        $gameTimeCheckResult = RenderGamingTime
-        if ($gameTimeCheckResult -ne $false) {
-            Invoke-Item ".\ui\GamingTime.html"
-        }
-    })
+            $gameTimeCheckResult = RenderGamingTime
+            if ($gameTimeCheckResult -ne $false) {
+                Invoke-Item ".\ui\GamingTime.html"
+            }
+        })
 
     $gamesPerPlatformMenuItem.Add_Click({
-        $gamesPerPlatformCheckResult = RenderGamesPerPlatform
-        if ($gamesPerPlatformCheckResult -ne $false) {
-            Invoke-Item ".\ui\GamesPerPlatform.html"
-        }
-    })
+            $gamesPerPlatformCheckResult = RenderGamesPerPlatform
+            if ($gamesPerPlatformCheckResult -ne $false) {
+                Invoke-Item ".\ui\GamesPerPlatform.html"
+            }
+        })
 
     $mostPlayedMenuItem.Add_Click({
-        $mostPlayedCheckResult = RenderMostPlayed
-        if ($mostPlayedCheckResult -ne $false) {
-            Invoke-Item ".\ui\MostPlayed.html"
-        }
-    })
+            $mostPlayedCheckResult = RenderMostPlayed
+            if ($mostPlayedCheckResult -ne $false) {
+                Invoke-Item ".\ui\MostPlayed.html"
+            }
+        })
 
     $idleTimeMenuItem.Add_Click({
-        $idleTimeCheckResult = RenderIdleTime
-        if ($idleTimeCheckResult -ne $false) {
-            Invoke-Item ".\ui\IdleTime.html"
-        }
-    })
+            $idleTimeCheckResult = RenderIdleTime
+            if ($idleTimeCheckResult -ne $false) {
+                Invoke-Item ".\ui\IdleTime.html"
+            }
+        })
 
     $pcVsEmulationMenuItem.Add_Click({
-        $pcVsEmulationCheckResult = RenderPCvsEmulation
-        if ($pcVsEmulationCheckResult -ne $false) {
-            Invoke-Item ".\ui\PCvsEmulation.html"
-        }
-    })
+            $pcVsEmulationCheckResult = RenderPCvsEmulation
+            if ($pcVsEmulationCheckResult -ne $false) {
+                Invoke-Item ".\ui\PCvsEmulation.html"
+            }
+        })
 
     #------------------------------------------
     # Settings Sub Menu Actions
     $addGameMenuItem.Add_Click({
-        Log "Starting game registration"
+            Log "Starting game registration"
 
-        ExecuteSettingsFunction -SettingsFunctionToCall $function:RenderAddGameForm
+            ExecuteSettingsFunction -SettingsFunctionToCall $function:RenderAddGameForm
 
-        # Cleanup temp Files
-        Remove-Item -Force "$env:TEMP\GG-*.png"
-    })
+            # Cleanup temp Files
+            Remove-Item -Force "$env:TEMP\GG-*.png"
+        })
 
     $addPlatformMenuItem.Add_Click({
-        Log "Starting emulated platform registration"
+            Log "Starting emulated platform registration"
 
-        ExecuteSettingsFunction -SettingsFunctionToCall $function:RenderAddPlatformForm
-    })
+            ExecuteSettingsFunction -SettingsFunctionToCall $function:RenderAddPlatformForm
+        })
 
     $editGameMenuItem.Add_Click({
-        Log "Starting game editing"
+            Log "Starting game editing"
 
-        $gamesList = (RunDBQuery "SELECT name FROM games").name
-        if ($gamesList.Length -eq 0) {
-            ShowMessage "No Games found in database. Please add few games first." "OK" "Error"
-            Log "Error: Games list empty. Returning"
-            return
-        }
+            $gamesList = (RunDBQuery "SELECT name FROM games").name
+            if ($gamesList.Length -eq 0) {
+                ShowMessage "No Games found in database. Please add few games first." "OK" "Error"
+                Log "Error: Games list empty. Returning"
+                return
+            }
 
-        ExecuteSettingsFunction -SettingsFunctionToCall $function:RenderEditGameForm -EntityList $gamesList
+            ExecuteSettingsFunction -SettingsFunctionToCall $function:RenderEditGameForm -EntityList $gamesList
 
-        # Cleanup temp Files
-        Remove-Item -Force "$env:TEMP\GG-*.png"
-    })
+            # Cleanup temp Files
+            Remove-Item -Force "$env:TEMP\GG-*.png"
+        })
 
     $editPlatformMenuItem.Add_Click({
-        Log "Starting platform editing"
+            Log "Starting platform editing"
 
-        $platformsList = (RunDBQuery "SELECT name FROM emulated_platforms").name
-        if ($platformsList.Length -eq 0) {
-            ShowMessage "No Platforms found in database. Please add few emulators first." "OK" "Error"
-            Log "Error: Platform list empty. Returning"
-            return
-        }
+            $platformsList = (RunDBQuery "SELECT name FROM emulated_platforms").name
+            if ($platformsList.Length -eq 0) {
+                ShowMessage "No Platforms found in database. Please add few emulators first." "OK" "Error"
+                Log "Error: Platform list empty. Returning"
+                return
+            }
 
-        ExecuteSettingsFunction -SettingsFunctionToCall $function:RenderEditPlatformForm -EntityList $platformsList
-    })
+            ExecuteSettingsFunction -SettingsFunctionToCall $function:RenderEditPlatformForm -EntityList $platformsList
+        })
 
     $openInstallDirectoryMenuItem.Add_Click({
-        Log "Opening Install Directory"
-        Invoke-Item .
-    })
+            Log "Opening Install Directory"
+            Invoke-Item .
+        })
 
     #------------------------------------------
     # Launch Application

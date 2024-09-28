@@ -151,10 +151,11 @@ function UpdateGameOnEdit() {
             $romBasedName = (RunDBQuery $getRomBasedNameQuery).rom_based_name
 
             SaveGame -GameName $GameName -GameExeName $GameExeName -GameIconPath $GameIconPath `
-            -GamePlayTime $GamePlayTime -GameIdleTime $gameIdleTime -GameLastPlayDate $gameLastPlayDate -GameCompleteStatus $GameCompleteStatus -GamePlatform $GamePlatform -GameSessionCount $gameSessionCount -GameRomBasedName $romBasedName
-        } else {
+                -GamePlayTime $GamePlayTime -GameIdleTime $gameIdleTime -GameLastPlayDate $gameLastPlayDate -GameCompleteStatus $GameCompleteStatus -GamePlatform $GamePlatform -GameSessionCount $gameSessionCount -GameRomBasedName $romBasedName
+        }
+        else {
             SaveGame -GameName $GameName -GameExeName $GameExeName -GameIconPath $GameIconPath `
-            -GamePlayTime $GamePlayTime -GameIdleTime $gameIdleTime -GameLastPlayDate $gameLastPlayDate -GameCompleteStatus $GameCompleteStatus -GamePlatform $GamePlatform -GameSessionCount $gameSessionCount
+                -GamePlayTime $GamePlayTime -GameIdleTime $gameIdleTime -GameLastPlayDate $gameLastPlayDate -GameCompleteStatus $GameCompleteStatus -GamePlatform $GamePlatform -GameSessionCount $gameSessionCount
         }
 
         RemoveGame($OriginalGameName)

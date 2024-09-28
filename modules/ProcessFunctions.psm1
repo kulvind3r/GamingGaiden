@@ -8,7 +8,7 @@
     $gameExeList = (RunDBQuery $getGameExesQuery).exe_name
     $rawEmulatorExes = (RunDBQuery $getEmulatorExesQuery).exe_name
 
-    if($null -eq $gameExeList -and $null -eq $rawEmulatorExes) {
+    if ($null -eq $gameExeList -and $null -eq $rawEmulatorExes) {
         Log "No games/emulators in datbase. Exiting tracker."
         exit 1
     }
@@ -24,9 +24,9 @@
     # Uses ~ 3% cpu in active blips of less than 1s, every 5s.
     # Benchmarked on a 2019 Ryzen 3550H in low power mode (1.7 GHz Clk with boost disabled), Windows 10 21H2.
     # No new objects are created inside infinite loops to prevent objects explosion, keeps Memory usage ~ 50 MB or less.
-    if($exeList.length -le 35) {
+    if ($exeList.length -le 35) {
         # If exeList is of size 35 or less. process whole list in every batch
-        while($true) {
+        while ($true) {
             foreach ($exe in $exeList) {
                 if ($null = [System.Diagnostics.Process]::GetProcessesByName($exe)) {
                     Log "Found $exe running. Exiting detection"
@@ -39,9 +39,9 @@
     else {
         # If exeList is longer than 35.
         $startIndex = 10; $batchSize = 25
-        while($true) {
+        while ($true) {
             # Process most recent 10 games in every batch.
-            for($i=0; $i -lt 10; $i++) {
+            for ($i = 0; $i -lt 10; $i++) {
                 if ($null = [System.Diagnostics.Process]::GetProcessesByName($exeList[$i])) {
                     Log "Found $($exeList[$i]) running. Exiting detection"
                     return $exeList[$i]
@@ -50,7 +50,7 @@
             # Rest of the games in incrementing way. 25 in each batch.
             $endIndex = [Math]::Min($startIndex + $batchSize, $exeList.length)
 
-            for($i=$startIndex; $i -lt $endIndex; $i++) {
+            for ($i = $startIndex; $i -lt $endIndex; $i++) {
                 if ($null = [System.Diagnostics.Process]::GetProcessesByName($exeList[$i])) {
                     Log "Found $exeList[$i] running. Exiting detection"
                     return $exeList[$i]
@@ -59,7 +59,8 @@
 
             if ($startIndex + $batchSize -lt $exeList.length) {
                 $startIndex = $startIndex + $batchSize
-            } else {
+            }
+            else {
                 $startIndex = 10
             }
 
@@ -167,7 +168,7 @@ function MonitorGame($DetectedExe) {
         Log "Detected emulated game is new and doesn't exist already. Adding to database."
 
         SaveGame -GameName $gameName -GameExeName $DetectedExe -GameIconPath "./icons/default.png" `
-        -GamePlayTime $currentPlayTime -GameIdleTime $currentIdleTime -GameLastPlayDate $updatedLastPlayDate -GameCompleteStatus 'FALSE' -GamePlatform $emulatedGameDetails.Platform -GameSessionCount 1 -GameRomBasedName $gameName
+            -GamePlayTime $currentPlayTime -GameIdleTime $currentIdleTime -GameLastPlayDate $updatedLastPlayDate -GameCompleteStatus 'FALSE' -GamePlatform $emulatedGameDetails.Platform -GameSessionCount 1 -GameRomBasedName $gameName
     }
 
     RecordPlaytimOnDate($currentPlayTime)

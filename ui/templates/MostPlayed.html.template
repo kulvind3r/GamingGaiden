@@ -1,76 +1,75 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-
-<head>
+  <head>
     <title>Gaming Gaiden</title>
-    <link rel="icon" type="image/x-icon" href="./resources/images/favicon.ico">
-    <link rel="stylesheet" href="./resources/css/MostPlayed.css">
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="./resources/images/favicon.ico"
+    />
+    <link rel="stylesheet" href="./resources/css/MostPlayed.css" />
     <script src="./resources/js/jquery-3.7.1.min.js"></script>
     <script src="./resources/js/chart.js"></script>
     <script src="./resources/js/chartjs-plugin-datalabels-2.0.0.js"></script>
     <script>
-        $(document).ready(
-            function () {
-                $('table').each(
-                    function () {
-                        var tHead = $(this).find('tr:first').html();
-                        $(this).find('colgroup').remove();
-                        $(this).find('tr:first').remove();
-                        $(this).find('tbody').before('<thead>' + tHead + '</thead>');
-                    }
-                );
-                $('table')[0].style.display = 'none';
-            }
-        );
+      $(document).ready(function () {
+        $("table").each(function () {
+          var tHead = $(this).find("tr:first").html();
+          $(this).find("colgroup").remove();
+          $(this).find("tr:first").remove();
+          $(this)
+            .find("tbody")
+            .before("<thead>" + tHead + "</thead>");
+        });
+        $("table")[0].style.display = "none";
+      });
     </script>
-</head>
+  </head>
 
-<body>
+  <body>
     <h1>Your Most Played Games</h1>
     <div id="chart-container">
-        <canvas id="game-vs-time-chart"></canvas>
+      <canvas id="game-vs-time-chart"></canvas>
     </div>
     <div id="navigation-bar">
-        <div>Top</div>
-        <select id="game-count"></select>
-        <div>Games</div>
+      <div>Top</div>
+      <select id="game-count"></select>
+      <div>Games</div>
     </div>
-    <div>
-        _GAMESPLAYTIMETABLE_
-    </div>
+    <div>_GAMESPLAYTIMETABLE_</div>
     <script src="./resources/js/common.js"></script>
     <script src="./resources/js/GameVsTime.js"></script>
     <script>
-        $('table')[0].setAttribute('id', 'data-table');
-        var gamingData = buildGamingData("name", "time");
+      $("table")[0].setAttribute("id", "data-table");
+      var gamingData = buildGamingData("name", "time");
 
-        var selectBox = document.getElementById('game-count');
-        const maxOptions = Math.min(50, gamingData.length);
+      var selectBox = document.getElementById("game-count");
+      const maxOptions = Math.min(50, gamingData.length);
 
-        /* Create options for select box */
-        for (let i = 10; i <= maxOptions; i += 10) {
-            const option = document.createElement('option');
-            option.value = i;
-            option.text = i;
-            selectBox.add(option);
-        }
-        if (gamingData.length < 50) {
-            const showAllOption = document.createElement('option');
-            showAllOption.value = gamingData.length;
-            showAllOption.text = gamingData.length;
-            selectBox.add(showAllOption);
-        }
-        /* End */
+      /* Create options for select box */
+      for (let i = 10; i <= maxOptions; i += 10) {
+        const option = document.createElement("option");
+        option.value = i;
+        option.text = i;
+        selectBox.add(option);
+      }
+      if (gamingData.length < 50) {
+        const showAllOption = document.createElement("option");
+        showAllOption.value = gamingData.length;
+        showAllOption.text = gamingData.length;
+        selectBox.add(showAllOption);
+      }
+      /* End */
 
-        document.getElementById('game-count').addEventListener('change', () => {
-            updateChart(
-                document.getElementById('game-count').value,
-                "Playtime (Hours)",
-                10);
-        });
+      document.getElementById("game-count").addEventListener("change", () => {
+        updateChart(
+          document.getElementById("game-count").value,
+          "Playtime (Hours)",
+          10
+        );
+      });
 
-        updateChart(10, "Playtime (Hours)", 10);
+      updateChart(10, "Playtime (Hours)", 10);
     </script>
-</body>
-
+  </body>
 </html>

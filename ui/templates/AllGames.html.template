@@ -1,92 +1,109 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
-
-<head>
+  <head>
     <title>Gaming Gaiden</title>
-    <link rel="icon" type="image/x-icon" href="./resources/images/favicon.ico">
-    <link rel="stylesheet" href="./resources/css/AllGames.css">
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="./resources/images/favicon.ico"
+    />
+    <link rel="stylesheet" href="./resources/css/AllGames.css" />
     <link rel="stylesheet" href="./resources/css/jquery.dataTables.css" />
     <script src="./resources/js/jquery-3.7.1.min.js"></script>
     <script src="./resources/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript">
-        $(document).ready(
-            function () {
-                $('table').each(
-                    function () {
-                        var tHead = $(this).find('tr:first').html();
-                        $(this).find('colgroup').remove();
-                        $(this).find('tr:first').remove();
-                        $(this).find('tbody').before('<thead>' + tHead + '</thead>');
-                    }
-                );
+      $(document).ready(function () {
+        $("table").each(function () {
+          var tHead = $(this).find("tr:first").html();
+          $(this).find("colgroup").remove();
+          $(this).find("tr:first").remove();
+          $(this)
+            .find("tbody")
+            .before("<thead>" + tHead + "</thead>");
+        });
 
-                $('table').DataTable({
-                    columnDefs: [
-                        {
-                            "targets": 3,
-                            className: 'playtimegradient',
-                            render: function (data, type, row, meta) {
-                                if (type === "display" || type === 'filter') {
-                                    var hours = parseInt(parseInt(data) / 60);
-                                    var minutes = parseInt(data) % 60;
-                                    return hours + " Hr " + minutes + " Min";
-                                }
-                                return data;
-                            },
-                            createdCell: function (td, cellData, rowData, row, col) {
-                                var maxPlayTime = _MAXPLAYTIME_;
-                                var percentage = ((parseInt(cellData) / maxPlayTime) * 95).toFixed(2);
-                                $(td).css('background-size', percentage + '% 85%');
-                            }
-                        },
-                        {
-                            "targets": 6,
-                            render: function (data, type, row, meta) {
-                                if (type === "display" || type === 'filter') {
-                                    var utcSeconds = parseInt(data);
-                                    var date = new Date(0);
-                                    date.setUTCSeconds(utcSeconds);
-                                    return date.toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' });
-                                }
-                                return data;
-                            }
-                        }
-                    ],
-                    order: [[5, 'desc'], [6, 'desc']],
-                    "ordering": true,
-                    "paging": "numbers",
-                    "pageLength": 9,
-                    "lengthChange": false,
-                    "searching": true
-                });
+        $("table").DataTable({
+          columnDefs: [
+            {
+              targets: 3,
+              className: "playtimegradient",
+              render: function (data, type, row, meta) {
+                if (type === "display" || type === "filter") {
+                  var hours = parseInt(parseInt(data) / 60);
+                  var minutes = parseInt(data) % 60;
+                  return hours + " Hr " + minutes + " Min";
+                }
+                return data;
+              },
+              createdCell: function (td, cellData, rowData, row, col) {
+                var maxPlayTime = _MAXPLAYTIME_;
+                var percentage = (
+                  (parseInt(cellData) / maxPlayTime) *
+                  95
+                ).toFixed(2);
+                $(td).css("background-size", percentage + "% 85%");
+              },
+            },
+            {
+              targets: 6,
+              render: function (data, type, row, meta) {
+                if (type === "display" || type === "filter") {
+                  var utcSeconds = parseInt(data);
+                  var date = new Date(0);
+                  date.setUTCSeconds(utcSeconds);
+                  return date.toLocaleDateString(undefined, {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                  });
+                }
+                return data;
+              },
+            },
+          ],
+          order: [
+            [5, "desc"],
+            [6, "desc"],
+          ],
+          ordering: true,
+          paging: "numbers",
+          pageLength: 9,
+          lengthChange: false,
+          searching: true,
+        });
 
-                $('#DataTables_Table_0_wrapper')[0].insertAdjacentHTML("afterbegin", '<div id="AllGames">All Games\n_TOTALGAMECOUNT_</div>');
-                $('#DataTables_Table_0_wrapper')[0].insertAdjacentHTML("afterbegin", '<div id="TotalPlaytime">Total Playtime\n_TOTALPLAYTIME_</div>');
-
-                document.getElementById('Toggle-Pagination').addEventListener('click', () => {
-                    if ($('table').DataTable().page.len() == 9) {
-                        document.getElementById('Toggle-Pagination').innerText = "Paginate";
-                        $('table').DataTable().page.len(-1).draw();
-                    }
-                    else {
-                        document.getElementById('Toggle-Pagination').innerText = "Show All";
-                        $('table').DataTable().page.len(9).draw();
-                    }
-                });
-
-                $('#games-table-container').show();
-            }
+        $("#DataTables_Table_0_wrapper")[0].insertAdjacentHTML(
+          "afterbegin",
+          '<div id="AllGames">All Games\n_TOTALGAMECOUNT_</div>'
         );
+        $("#DataTables_Table_0_wrapper")[0].insertAdjacentHTML(
+          "afterbegin",
+          '<div id="TotalPlaytime">Total Playtime\n_TOTALPLAYTIME_</div>'
+        );
+
+        document
+          .getElementById("Toggle-Pagination")
+          .addEventListener("click", () => {
+            if ($("table").DataTable().page.len() == 9) {
+              document.getElementById("Toggle-Pagination").innerText =
+                "Paginate";
+              $("table").DataTable().page.len(-1).draw();
+            } else {
+              document.getElementById("Toggle-Pagination").innerText =
+                "Show All";
+              $("table").DataTable().page.len(9).draw();
+            }
+          });
+
+        $("#games-table-container").show();
+      });
     </script>
-</head>
+  </head>
 
-<body>
-    <div id="games-table-container" style="display:none">
-        _GAMESTABLE_
-    </div>
+  <body>
+    <div id="games-table-container" style="display: none">_GAMESTABLE_</div>
     <div id="button-container">
-        <button class="custom-button" id="Toggle-Pagination">Show All</button>
+      <button class="custom-button" id="Toggle-Pagination">Show All</button>
     </div>
-</body>
-
+  </body>
 </html>
