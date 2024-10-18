@@ -118,6 +118,7 @@ function RenderEditGameForm($GamesList) {
                 $imagePath = ResizeImage $openFileDialog.FileName $textName.name
                 $pictureBoxImagePath.Text = $imagePath
                 $pictureBox.Image = [System.Drawing.Image]::FromFile($imagePath)
+                $openFileDialog.Dispose()
             }
         })
     $editGameForm.Controls.Add($buttonUpdateIcon)
@@ -128,6 +129,7 @@ function RenderEditGameForm($GamesList) {
             $result = $openFileDialog.ShowDialog()
             if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
                 $textExe.Text = (Get-Item $openFileDialog.FileName).Name
+                $openFileDialog.Dispose()
             }
         })
     $editGameForm.Controls.Add($buttonUpdateExe)
@@ -194,12 +196,19 @@ function RenderEditGameForm($GamesList) {
         })
     $editGameForm.Controls.Add($buttonOK)
 
-    $buttonCancel = CreateButton "Cancel" 370 185; $buttonCancel.Add_Click({ $editGameForm.Close() }); $editGameForm.Controls.Add($buttonCancel)
+    $buttonCancel = CreateButton "Cancel" 370 185; $buttonCancel.Add_Click({ 
+            $textSearch.Remove_TextChanged({})
+            $listBox.Remove_SelectedIndexChanged({})
+            $editGameForm.Dispose() 
+        }); 
+    $editGameForm.Controls.Add($buttonCancel)
 
     #Select the first game to populate the form before rendering for first time
     $listBox.SelectedIndex = 0
 
     $editGameForm.ShowDialog()
+    $textSearch.Remove_TextChanged({})
+    $listBox.Remove_SelectedIndexChanged({})
     $editGameForm.Dispose()
 }
 
@@ -279,6 +288,7 @@ function RenderEditPlatformForm($PlatformsList) {
             $result = $openFileDialog.ShowDialog()
             if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
                 $textCore.Text = (Get-Item $openFileDialog.FileName).Name
+                $openFileDialog.Dispose()
             }
         })
     $editPlatformForm.Controls.Add($buttonUpdateCore)
@@ -296,6 +306,7 @@ function RenderEditPlatformForm($PlatformsList) {
                 else {
                     $textExe.Text = ("$existingExes,$selectedExe" -split ',' | Select-Object -Unique ) -join ','
                 }
+                $openFileDialog.Dispose()
             }
         })
     $editPlatformForm.Controls.Add($buttonUpdateExe)
@@ -358,12 +369,19 @@ function RenderEditPlatformForm($PlatformsList) {
         })
     $editPlatformForm.Controls.Add($buttonOK)
 
-    $buttonCancel = CreateButton "Cancel" 210 254;	$buttonCancel.Add_Click({ $editPlatformForm.Close() });	$editPlatformForm.Controls.Add($buttonCancel)
+    $buttonCancel = CreateButton "Cancel" 210 254;	$buttonCancel.Add_Click({ 
+            $textSearch.Remove_TextChanged({})
+            $listBox.Remove_SelectedIndexChanged({})
+            $editPlatformForm.Dispose() 
+        });	
+    $editPlatformForm.Controls.Add($buttonCancel)
 
     #Select the first platform to populate the form before rendering for first time
     $listBox.SelectedIndex = 0
 
     $editPlatformForm.ShowDialog()
+    $textSearch.Remove_TextChanged({})
+    $listBox.Remove_SelectedIndexChanged({})
     $editPlatformForm.Dispose()
 }
 
@@ -413,6 +431,7 @@ function RenderAddGameForm() {
                 $imagePath = ResizeImage $openFileDialog.FileName "GG-NEW_GAME"
                 $pictureBoxImagePath.Text = $imagePath
                 $pictureBox.Image = [System.Drawing.Image]::FromFile($imagePath)
+                $openFileDialog.Dispose()
             }
         })
     $addGameForm.Controls.Add($buttonUpdateIcon)
@@ -443,6 +462,7 @@ function RenderAddGameForm() {
                 $pictureBoxImagePath.Text = $gameIconPath
                 $pictureBox.Image = [System.Drawing.Image]::FromFile($gameIconPath)
 
+                $openFileDialog.Dispose()
             }
         })
     $addGameForm.Controls.Add($buttonUpdateExe)
@@ -473,7 +493,7 @@ function RenderAddGameForm() {
         })
     $addGameForm.Controls.Add($buttonOK)
 
-    $buttonCancel = CreateButton "Cancel" 370 185; $buttonCancel.Add_Click({ $addGameForm.Close() }); $addGameForm.Controls.Add($buttonCancel)
+    $buttonCancel = CreateButton "Cancel" 370 185; $buttonCancel.Add_Click({ $addGameForm.Dispose() }); $addGameForm.Controls.Add($buttonCancel)
 
     $addGameForm.ShowDialog()
     $addGameForm.Dispose()
@@ -500,6 +520,7 @@ function RenderAddPlatformForm() {
             $result = $openFileDialog.ShowDialog()
             if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
                 $textCore.Text = (Get-Item $openFileDialog.FileName).Name
+                $openFileDialog.Dispose()
             }
         })
     $addPlatformForm.Controls.Add($buttonAddCore)
@@ -532,6 +553,8 @@ function RenderAddPlatformForm() {
 
                     ShowMessage "Retroarch detected. Please Select Core for Platform." "OK" "Asterisk"
                 }
+
+                $openFileDialog.Dispose()
             }
         })
     $addPlatformForm.Controls.Add($buttonAddExe)
@@ -586,7 +609,7 @@ function RenderAddPlatformForm() {
         })
     $addPlatformForm.Controls.Add($buttonOK)
 
-    $buttonCancel = CreateButton "Cancel" 210 200; $buttonCancel.Add_Click({ $addPlatformForm.Close() }); $addPlatformForm.Controls.Add($buttonCancel)
+    $buttonCancel = CreateButton "Cancel" 210 200; $buttonCancel.Add_Click({ $addPlatformForm.Dispose() }); $addPlatformForm.Controls.Add($buttonCancel)
 
     $addPlatformForm.ShowDialog()
     $addPlatformForm.Dispose()
