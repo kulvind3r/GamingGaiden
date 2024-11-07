@@ -27,7 +27,7 @@ try {
     # Exit if Gaming Gaiden is already Running
     $results = [System.Diagnostics.Process]::GetProcessesByName("GamingGaiden")
     if ($results.Length -gt 1) {
-        ShowMessage "Gaming Gaiden is already running. Not Starting another Instance." "Ok" "Error"
+        ShowMessage "Gaming Gaiden is already running. Check system tray.`r`nNot Starting another Instance." "Ok" "Error"
         Log "Error: Gaming Gaiden already running. Not Starting another Instance."
         exit 1;
     }
