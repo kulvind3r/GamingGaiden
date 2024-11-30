@@ -178,10 +178,13 @@ function loadDataFromTable() {
   gamingData.shift();
   finishedCount--;
 
+  let gameProgressMsg = (inProgressCount > 1) ? " Games In Progress" : " Game In Progress";
+  let gameFinishedMsg = (finishedCount > 1) ? " Games Finished" : " Game Finished";
+
   document.getElementById("progress-count").innerText =
-    inProgressCount + " Games In Progress";
+    inProgressCount + gameProgressMsg;
   document.getElementById("finished-count").innerText =
-    finishedCount + " Games Finished";
+    finishedCount + gameFinishedMsg;
   updateChart();
 }
 

@@ -158,7 +158,16 @@ function RenderSummary() {
     $totalPlayTime = PlayTimeMinsToString $gamesSummaryData.total_play_time
     $totalIdleTime = PlayTimeMinsToString $gamesSummaryData.total_idle_time
 
-    $summaryStatement = "From <b>$startDate to $endDate</b> you played <b>$($gamesSummaryData.total_games) games</b> in <b>$($gamesSummaryData.total_sessions) sessions</b>. Total <b>play time is $totalPlayTime</b> with <b>$totalIdleTime spent idling</b>."
+    $gameString = "game"
+    $sessionString = "session"
+    if ($gamesSummaryData.total_games -gt 1) {
+        $gameString = "games"
+    }
+    if ($gamesSummaryData.total_sessions -gt 1) {
+        $sessionString = "sessions"
+    }
+
+    $summaryStatement = "From <b>$startDate to $endDate</b> you played <b>$($gamesSummaryData.total_games) $gameString</b> in <b>$($gamesSummaryData.total_sessions) $sessionString</b>. Total <b>play time is $totalPlayTime</b> with <b>$totalIdleTime spent idling</b>."
 
     $table = $gamesPlayTimeVsSessionData | ConvertTo-Html -Fragment
 
