@@ -147,7 +147,7 @@ function RenderSummary() {
 
     $workingDirectory = (Get-Location).Path
 
-    $getGamesPlayTimeVsSessionDataQuery = "SELECT name, play_time, session_count, completed FROM games"
+    $getGamesPlayTimeVsSessionDataQuery = "SELECT name, play_time, session_count, completed, status FROM games"
     $gamesPlayTimeVsSessionData = RunDBQuery $getGamesPlayTimeVsSessionDataQuery
     if ($gamesPlayTimeVsSessionData.Length -eq 0) {
         ShowMessage "No Games found in DB. Please add some games first." "OK" "Error"

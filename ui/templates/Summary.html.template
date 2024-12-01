@@ -31,9 +31,17 @@
     <div id="summary">_SUMMARYSTATEMENT_</div>
     <div id="legend">
       <div id="progress-icon"></div>
-      <div id="progress-count" style="color: #ff6481"></div>
+      <div id="progress-count" style="color: #1f9afe"></div>
       <div id="finished-icon"></div>
-      <div id="finished-count" style="color: #36a2eb"></div>
+      <div id="finished-count" style="color: #059b27"></div>
+    </div>
+    <div id="sub-legend">
+      <div id="hold-icon"></div>
+      <div id="hold-count" style="color: #d78f34"></div>
+      <div id="forever-icon"></div>
+      <div id="forever-count" style="color: #94979c"></div>
+      <div id="dropped-icon"></div>
+      <div id="dropped-count" style="color: #662f13"></div>
     </div>
     <div id="chart-container">
       <canvas id="session-vs-playtime-chart"></canvas>

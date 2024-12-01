@@ -16,9 +16,17 @@ body {
 
 #legend {
   display: flex;
-  margin-top: 15px;
-  margin-bottom: 10px;
-  width: 450px;
+  margin: 5px;
+  width: 500px;
+  justify-content: space-around;
+  align-items: center;
+  font-size: 18px;
+}
+
+#sub-legend {
+  display: flex;
+  margin: 5px;
+  width: 650px;
   justify-content: space-around;
   align-items: center;
   font-size: 18px;
@@ -26,28 +34,45 @@ body {
 
 #summary {
   font-size: 18px;
+  margin: 5px;
 }
 
 #finished-icon {
-  background: #36a2eb;
+  background: #059b27;
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  margin-left: 20px;
+  margin-right: -20px;
 }
 
 #progress-icon {
-  background: #ff6481;
+  background: #1f9afe;
   width: 20px;
   height: 20px;
   border-radius: 50%;
-  margin: auto;
+  margin-right: -20px;
 }
 
-#progress-count {
-  margin-right: 20px;
+#hold-icon {
+  background: #d78f34;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-right: -20px;
 }
 
-#finished-count {
-  margin: auto;
+#forever-icon {
+  background: #94979c;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-right: -20px;
+}
+
+#dropped-icon {
+  background: #662f13;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-right: -20px;
 }

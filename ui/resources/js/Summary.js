@@ -4,6 +4,9 @@
 let gamingData = [];
 let finishedCount = 0;
 let inProgressCount = 0;
+let holdCount = 0;
+let foreverCount = 0;
+let droppedCount = 0;
 
 $("table")[0].setAttribute("id", "data-table");
 
@@ -93,15 +96,50 @@ function updateChart() {
             x: row.sessions,
             y: row.playtime,
             completed: row.completed,
+            status: row.status
           })),
           borderWidth: 2,
           pointBackgroundColor: function (context) {
-            var value = context.raw.completed;
-            return value == "FALSE" ? "#ffb1bf" : "#9ad0f5";
+            var valueCompleted = context.raw.completed;
+            if(valueCompleted == "FALSE") {
+              return "#a6cbf5"
+            }
+            else {
+              var valueStatus = context.raw.status;
+              if(valueStatus == ""){
+                return "#59eb8a"
+              }
+              if(valueStatus == "hold"){
+                return "#f5c37d"
+              }
+              if(valueStatus == "forever"){
+                return "#d0d3db"
+              }
+              if(valueStatus == "dropped"){
+                return "#deb297"
+              }
+            }
           },
           pointBorderColor: function (context) {
-            var value = context.raw.completed;
-            return value == "FALSE" ? "#ff6481" : "#36a2eb";
+            var valueCompleted = context.raw.completed;
+            if(valueCompleted == "FALSE") {
+              return "#1f9afe"
+            }
+            else {
+              var valueStatus = context.raw.status;
+              if(valueStatus == ""){
+                return "#059b27"
+              }
+              if(valueStatus == "hold"){
+                return "#d78f34"
+              }
+              if(valueStatus == "forever"){
+                return "#94979c"
+              }
+              if(valueStatus == "dropped"){
+                return "#662f13"
+              }
+            }
           },
         },
       ],
@@ -131,6 +169,12 @@ function updateChart() {
             stepSize: 10,
           },
         },
+      },
+      elements: {
+        point: {
+          radius: 3.5,
+          hoverRadius: 4.5
+        }
       },
       responsive: true,
       plugins: {
@@ -168,10 +212,14 @@ function loadDataFromTable() {
     const playtime = (parseFloat(row.cells[1].textContent) / 60).toFixed(1);
     const sessions = parseFloat(row.cells[2].textContent);
     const completed = row.cells[3].textContent;
+    const status = row.cells[4].textContent;
 
     completed == "FALSE" ? inProgressCount++ : finishedCount++;
+    if (status == "hold") { holdCount++ }
+    if (status == "forever") { foreverCount++ }
+    if (status == "dropped") { droppedCount++ }
 
-    return { name, playtime, sessions, completed };
+    return { name, playtime, sessions, completed, status };
   });
 
   // Remove header row data, deduct one extra game added to finished count due to header row
@@ -180,11 +228,20 @@ function loadDataFromTable() {
 
   let gameProgressMsg = (inProgressCount > 1) ? " Games In Progress" : " Game In Progress";
   let gameFinishedMsg = (finishedCount > 1) ? " Games Finished" : " Game Finished";
+  let gameHoldMsg = (holdCount > 1) ? " Games on Hold" : " Game on Hold";
+  let gameForeverMsg = (foreverCount > 1) ? " Forever Games" : " Forever Game";
+  let gameDroppedMsg = (droppedCount > 1) ? " Dropped Games " : " Dropped Game";
 
   document.getElementById("progress-count").innerText =
     inProgressCount + gameProgressMsg;
   document.getElementById("finished-count").innerText =
     finishedCount + gameFinishedMsg;
+  document.getElementById("hold-count").innerText =
+    holdCount + gameHoldMsg;
+  document.getElementById("forever-count").innerText =
+    foreverCount + gameForeverMsg;
+  document.getElementById("dropped-count").innerText =
+    droppedCount + gameDroppedMsg;
   updateChart();
 }
 
