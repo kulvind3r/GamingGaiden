@@ -9,17 +9,36 @@
         [string]$GameCompleteStatus,
         [string]$GamePlatform,
         [string]$GameSessionCount,
+        [string]$GameStatus = "",
         [string]$GameRomBasedName = ""
     )
 
     $gameIconBytes = (Get-Content -Path $GameIconPath -Encoding byte -Raw);
 
-    $addGameQuery = "INSERT INTO games (name, exe_name, icon, play_time, idle_time, last_play_date, completed, platform, session_count, rom_based_name)" +
-    "VALUES (@GameName, @GameExeName, @gameIconBytes, @GamePlayTime, @GameIdleTime, @GameLastPlayDate, @GameCompleteStatus, @GamePlatform, @GameSessionCount, @GameRomBasedName)"
+    $addGameQuery = "INSERT INTO games (name, exe_name, icon, play_time, idle_time, last_play_date, completed, platform, session_count, status, rom_based_name)" +
+    "VALUES (@GameName, @GameExeName, @gameIconBytes, @GamePlayTime, @GameIdleTime, @GameLastPlayDate, @GameCompleteStatus, @GamePlatform, @GameSessionCount, @GameStatus, @GameRomBasedName)"
+
+    $gameNamePattern = SQLEscapedMatchPattern($GameName.Trim())
+    $setGameStatusNull = "UPDATE games SET status = @GameStatus WHERE name LIKE '{0}'" -f $gameNamePattern
+    $setRomBasedNameNull = "UPDATE games SET rom_based_name = @GameRomBasedName WHERE name LIKE '{0}'" -f $gameNamePattern
 
     Log "Adding $GameName in Database"
 
-    # Forced to repeat complete RunDBQuery command twice in if/else because the following code doesn't work.
+    RunDBQuery $addGameQuery @{
+        GameName           = $GameName.Trim()
+        GameExeName        = $GameExeName.Trim()
+        gameIconBytes      = $gameIconBytes
+        GamePlayTime       = $GamePlayTime
+        GameIdleTime       = $GameIdleTime
+        GameLastPlayDate   = $GameLastPlayDate
+        GameCompleteStatus = $GameCompleteStatus
+        GamePlatform       = $GamePlatform.Trim()
+        GameSessionCount   = $GameSessionCount
+        GameStatus         = $GameStatus
+        GameRomBasedName   = $GameRomBasedName.Trim()
+    }
+
+    # Have to set Null Values after the Save for clean code, bcause the following doesn't work
     #
     #    $var = $GameRomBasedName.Trim()
     #    if ($GameRomBasedName -eq "") {
@@ -28,35 +47,19 @@
     #    RunDBQuery $addGameQuery @{ ..., GameRomBasedName = $var }
     #
     # On using the above code, [System.DBNull]::Value gets casted to string for some reason and gets inserted in DB as blank string instead of a true NULL.
-
+    
     if ($GameRomBasedName -eq "") {
-        RunDBQuery $addGameQuery @{
-            GameName           = $GameName.Trim()
-            GameExeName        = $GameExeName.Trim()
-            gameIconBytes      = $gameIconBytes
-            GamePlayTime       = $GamePlayTime
-            GameIdleTime       = $GameIdleTime
-            GameLastPlayDate   = $GameLastPlayDate
-            GameCompleteStatus = $GameCompleteStatus
-            GamePlatform       = $GamePlatform.Trim()
-            GameSessionCount   = $GameSessionCount
-            GameRomBasedName   = [System.DBNull]::Value
+        RunDBQuery $setRomBasedNameNull @{
+            GameRomBasedName = [System.DBNull]::Value
         }
     }
-    else {
-        RunDBQuery $addGameQuery @{
-            GameName           = $GameName.Trim()
-            GameExeName        = $GameExeName.Trim()
-            gameIconBytes      = $gameIconBytes
-            GamePlayTime       = $GamePlayTime
-            GameIdleTime       = $GameIdleTime
-            GameLastPlayDate   = $GameLastPlayDate
-            GameCompleteStatus = $GameCompleteStatus
-            GamePlatform       = $GamePlatform.Trim()
-            GameSessionCount   = $GameSessionCount
-            GameRomBasedName   = $GameRomBasedName.Trim()
+
+    if ($GameStatus -eq "") {
+        RunDBQuery $setGameStatusNull @{
+            GameStatus = [System.DBNull]::Value
         }
     }
+
 }
 
 function SavePlatform() {
@@ -115,7 +118,8 @@ function UpdateGameOnEdit() {
         [string]$GameIconPath,
         [string]$GamePlayTime,
         [string]$GameCompleteStatus,
-        [string]$GamePlatform
+        [string]$GamePlatform,
+        [string]$GameStatus
     )
 
     $gameIconBytes = (Get-Content -Path $GameIconPath -Encoding byte -Raw);
@@ -123,7 +127,7 @@ function UpdateGameOnEdit() {
     $gameNamePattern = SQLEscapedMatchPattern($OriginalGameName.Trim())
 
     if ( $OriginalGameName -eq $GameName) {
-        $updateGameQuery = "UPDATE games SET exe_name = @GameExeName, icon = @gameIconBytes, play_time = @GamePlayTime, completed = @GameCompleteStatus, platform = @GamePlatform WHERE name LIKE '{0}'" -f $gameNamePattern
+        $updateGameQuery = "UPDATE games SET exe_name = @GameExeName, icon = @gameIconBytes, play_time = @GamePlayTime, completed = @GameCompleteStatus, platform = @GamePlatform, status = @GameStatus WHERE name LIKE '{0}'" -f $gameNamePattern
 
         Log "Editing $GameName in database"
         RunDBQuery $updateGameQuery @{
@@ -132,6 +136,7 @@ function UpdateGameOnEdit() {
             GamePlayTime       = $GamePlayTime
             GameCompleteStatus = $GameCompleteStatus
             GamePlatform       = $GamePlatform.Trim()
+            GameStatus         = $GameStatus
         }
     }
     else {
@@ -151,11 +156,11 @@ function UpdateGameOnEdit() {
             $romBasedName = (RunDBQuery $getRomBasedNameQuery).rom_based_name
 
             SaveGame -GameName $GameName -GameExeName $GameExeName -GameIconPath $GameIconPath `
-                -GamePlayTime $GamePlayTime -GameIdleTime $gameIdleTime -GameLastPlayDate $gameLastPlayDate -GameCompleteStatus $GameCompleteStatus -GamePlatform $GamePlatform -GameSessionCount $gameSessionCount -GameRomBasedName $romBasedName
+                -GamePlayTime $GamePlayTime -GameIdleTime $gameIdleTime -GameLastPlayDate $gameLastPlayDate -GameCompleteStatus $GameCompleteStatus -GamePlatform $GamePlatform -GameSessionCount $gameSessionCount -GameStatus $GameStatus -GameRomBasedName $romBasedName 
         }
         else {
             SaveGame -GameName $GameName -GameExeName $GameExeName -GameIconPath $GameIconPath `
-                -GamePlayTime $GamePlayTime -GameIdleTime $gameIdleTime -GameLastPlayDate $gameLastPlayDate -GameCompleteStatus $GameCompleteStatus -GamePlatform $GamePlatform -GameSessionCount $gameSessionCount
+                -GamePlayTime $GamePlayTime -GameIdleTime $gameIdleTime -GameLastPlayDate $gameLastPlayDate -GameCompleteStatus $GameCompleteStatus -GamePlatform $GamePlatform -GameSessionCount $gameSessionCount -GameStatus $GameStatus
         }
 
         RemoveGame($OriginalGameName)

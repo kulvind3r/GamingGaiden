@@ -23,7 +23,7 @@ function RenderGameList() {
 
     $workingDirectory = (Get-Location).Path
 
-    $getAllGamesQuery = "SELECT name, icon, platform, play_time, session_count, completed, last_play_date FROM games"
+    $getAllGamesQuery = "SELECT name, icon, platform, play_time, session_count, completed, last_play_date, status FROM games"
     $gameRecords = RunDBQuery $getAllGamesQuery
     if ($gameRecords.Length -eq 0) {
         ShowMessage "No Games found in DB. Please add some games first." "OK" "Error"
@@ -68,6 +68,15 @@ function RenderGameList() {
         $statusUri = "<div>Finished</div><img src=`".\resources\images\finished.png`">"
         if ($gameRecord.completed -eq 'FALSE') {
             $statusUri = "<div>Playing</div><img src=`".\resources\images\playing.png`">"
+        }
+        if ($gameRecord.status -eq 'dropped') {
+            $statusUri = "<div>Dropped</div><img title=`"Utter Garbage!!`" src=`".\resources\images\dropped.png`">"
+        }
+        if ($gameRecord.status -eq 'hold') {
+            $statusUri = "<div>Pick Later</div><img src=`".\resources\images\hold.png`">"
+        }
+        if ($gameRecord.status -eq 'forever') {
+            $statusUri = "<div>Forever</div><img src=`".\resources\images\forever.png`">"
         }
 
         $currentGame = [Game]::new($iconUri, $name, $gameRecord.platform, $gameRecord.play_time, $gameRecord.session_count, $statusUri, $gameRecord.last_play_date)

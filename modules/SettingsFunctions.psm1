@@ -17,7 +17,7 @@
 
 function RenderEditGameForm($GamesList) {
 
-    $editGameForm = CreateForm "Gaming Gaiden: Edit Game" 870 255 ".\icons\running.ico"
+    $editGameForm = CreateForm "Gaming Gaiden: Edit Game" 870 265 ".\icons\running.ico"
 
     $imagePath = "./icons/default.png"
 
@@ -27,9 +27,9 @@ function RenderEditGameForm($GamesList) {
     # Hidden fields end
 
     $listBox = New-Object System.Windows.Forms.ListBox
-    $listBox.Location = New-Object System.Drawing.Point(585, 60)
+    $listBox.Location = New-Object System.Drawing.Point(585, 55)
     $listBox.Size = New-Object System.Drawing.Size(260, 20)
-    $listBox.Height = 150
+    $listBox.Height = 160
     [void] $listBox.Items.AddRange($GamesList)
 
     $labelSearch = Createlabel "Search:" 585 20; $editGameForm.Controls.Add($labelSearch)
@@ -53,9 +53,69 @@ function RenderEditGameForm($GamesList) {
 
     $checkboxCompleted = New-Object Windows.Forms.CheckBox
     $checkboxCompleted.Text = "Finished"
-    $checkboxCompleted.Top = 140
+    $checkboxCompleted.Top = 135
     $checkboxCompleted.Left = 470
     $editGameForm.Controls.Add($checkboxCompleted)
+
+    $checkboxDropped = New-Object Windows.Forms.CheckBox
+    $checkboxDropped.Text = "Dropped"
+    $checkboxDropped.Top = 155
+    $checkboxDropped.Left = 470
+    $checkboxDropped.Add_CheckedChanged({
+        if($checkboxDropped.Checked)
+        {
+            $checkboxCompleted.Checked = $true
+            $checkboxCompleted.Enabled = $false
+            $checkboxHold.Checked = $false
+            $checkboxForever.Checked = $false
+        }
+        else {
+            if ( -Not $checkboxHold.Checked -And -Not $checkboxForever.Checked ){
+                $checkboxCompleted.Enabled = $true
+            } 
+        }
+    })
+    $editGameForm.Controls.Add($checkboxDropped)
+
+    $checkboxHold = New-Object Windows.Forms.CheckBox
+    $checkboxHold.Text = "Pick Up Later"
+    $checkboxHold.Top = 175
+    $checkboxHold.Left = 470
+    $checkboxHold.Add_CheckedChanged({
+        if($checkboxHold.Checked)
+        {
+            $checkboxCompleted.Checked = $true
+            $checkboxCompleted.Enabled = $false
+            $checkboxDropped.Checked = $false
+            $checkboxForever.Checked = $false
+        }
+        else {
+            if ( -Not $checkboxDropped.Checked -And -Not $checkboxForever.Checked ){
+                $checkboxCompleted.Enabled = $true
+            }
+        }
+    })
+    $editGameForm.Controls.Add($checkboxHold)
+
+    $checkboxForever = New-Object Windows.Forms.CheckBox
+    $checkboxForever.Text = "Forever Game"
+    $checkboxForever.Top = 195
+    $checkboxForever.Left = 470
+    $checkboxForever.Add_CheckedChanged({
+        if($checkboxForever.Checked)
+        {
+            $checkboxCompleted.Checked = $true
+            $checkboxCompleted.Enabled = $false
+            $checkboxHold.Checked = $false
+            $checkboxDropped.Checked = $false
+        }
+        else {
+            if ( -Not $checkboxHold.Checked -And -Not $checkboxDropped.Checked){
+                $checkboxCompleted.Enabled = $true
+            } 
+        }
+    })
+    $editGameForm.Controls.Add($checkboxForever)
 
     $labelPictureBox = Createlabel "Game Icon" 57 165; $editGameForm.Controls.Add($labelPictureBox)
     $pictureBox = CreatePictureBox $imagePath 15 20 140 140
@@ -69,6 +129,8 @@ function RenderEditGameForm($GamesList) {
             $textExe.Text = ($selectedGame.exe_name + ".exe")
             $textPlatform.Text = $selectedGame.platform
             $checkboxCompleted.Checked = ($selectedGame.completed -eq 'TRUE')
+            $checkboxDropped.Checked = ($selectedGame.status -eq 'dropped')
+            $checkboxHold.Checked = ($selectedGame.status -eq 'hold')
 
             $textPlayTime.Text = PlayTimeMinsToString $selectedGame.play_time
 
@@ -95,7 +157,7 @@ function RenderEditGameForm($GamesList) {
         })
     $editGameForm.Controls.Add($listBox)
 
-    $buttonSearchIcon = CreateButton "Search" 20 185
+    $buttonSearchIcon = CreateButton "Search" 20 190
     $buttonSearchIcon.Size = New-Object System.Drawing.Size(60, 23)
     $buttonSearchIcon.Add_Click({
             $gameName = $textName.Text
@@ -108,7 +170,7 @@ function RenderEditGameForm($GamesList) {
         })
     $editGameForm.Controls.Add($buttonSearchIcon)
 
-    $buttonUpdateIcon = CreateButton "Update" 90 185
+    $buttonUpdateIcon = CreateButton "Update" 90 190
     $buttonUpdateIcon.Size = New-Object System.Drawing.Size(60, 23)
     $buttonUpdateIcon.Add_Click({
             $downloadsDirectoryPath = (New-Object -ComObject Shell.Application).Namespace('shell:Downloads').Self.Path
@@ -156,7 +218,7 @@ function RenderEditGameForm($GamesList) {
         })
     $editGameForm.Controls.Add($buttonRemove)
 
-    $buttonOK = CreateButton "OK" 245 185
+    $buttonOK = CreateButton "OK" 245 190
     $buttonOK.Add_Click({
             $currentlySelectedIndex = $listBox.SelectedIndex
 
@@ -180,7 +242,12 @@ function RenderEditGameForm($GamesList) {
 
             $gameCompleteStatus = if ($checkboxCompleted.Checked) { "TRUE" } else { "FALSE" }
 
-            UpdateGameOnEdit -OriginalGameName $textOriginalGameName.Text -GameName $gameName -GameExeName $gameExeName -GameIconPath $pictureBoxImagePath.Text -GamePlayTime $playTimeInMin -GameCompleteStatus $gameCompleteStatus -GamePlatform $textPlatform.Text
+            $gameStatus = ""
+            if ($checkboxDropped.Checked) { $gameStatus = "dropped"; $checkboxCompleted.Checked = $true; $gameCompleteStatus = "TRUE"; }
+            if ($checkboxHold.Checked) { $gameStatus = "hold"; $checkboxCompleted.Checked = $true; $gameCompleteStatus = "TRUE"; }
+            if ($checkboxForever.Checked) { $gameStatus = "forever"; $checkboxCompleted.Checked = $true; $gameCompleteStatus = "TRUE"; }
+
+            UpdateGameOnEdit -OriginalGameName $textOriginalGameName.Text -GameName $gameName -GameExeName $gameExeName -GameIconPath $pictureBoxImagePath.Text -GamePlayTime $playTimeInMin -GameCompleteStatus $gameCompleteStatus -GamePlatform $textPlatform.Text -GameStatus $gameStatus
 
             ShowMessage "Updated '$gameName' in Database." "OK" "Asterisk"
 
@@ -196,7 +263,7 @@ function RenderEditGameForm($GamesList) {
         })
     $editGameForm.Controls.Add($buttonOK)
 
-    $buttonCancel = CreateButton "Cancel" 370 185; $buttonCancel.Add_Click({ 
+    $buttonCancel = CreateButton "Cancel" 370 190; $buttonCancel.Add_Click({ 
             $textSearch.Remove_TextChanged({})
             $listBox.Remove_SelectedIndexChanged({})
             $editGameForm.Dispose() 
