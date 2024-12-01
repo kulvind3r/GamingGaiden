@@ -131,6 +131,11 @@ function RenderEditGameForm($GamesList) {
             $checkboxCompleted.Checked = ($selectedGame.completed -eq 'TRUE')
             $checkboxDropped.Checked = ($selectedGame.status -eq 'dropped')
             $checkboxHold.Checked = ($selectedGame.status -eq 'hold')
+            $checkboxForever.Checked = ($selectedGame.status -eq 'forever')
+
+            if($checkboxForever.Checked -or $checkboxHold.Checked -or $checkboxDropped.Checked){
+                $checkboxCompleted.Enabled = $false
+            }
 
             $textPlayTime.Text = PlayTimeMinsToString $selectedGame.play_time
 
