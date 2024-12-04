@@ -20,17 +20,32 @@ function PlayTimeMinsToString($PlayTime) {
     return ("{0} Hr {1} Min" -f $hours, $minutes)
 }
 
-function ResizeImage($ImagePath, $EntityName) {
-    Log "Entity Name in Resize image: $EntityName"
+function ResizeImage() {
+
+    param(
+        [string]$ImagePath,
+        [string]$EntityName,
+        [bool]$HD = $false
+    )
+
     $imageFileName = ToBase64 $EntityName
     $WIA = New-Object -com wia.imagefile
     $WIA.LoadFile($ImagePath)
     $WIP = New-Object -ComObject wia.imageprocess
     $scale = $WIP.FilterInfos.Item("Scale").FilterId
     $WIP.Filters.Add($scale)
-    $WIP.Filters[1].Properties("MaximumWidth") = 140
-    $WIP.Filters[1].Properties("MaximumHeight") = 140
+
     $WIP.Filters[1].Properties("PreserveAspectRatio") = $true
+
+    if($HD) {
+        if ($WIA.Width -gt 720 -or $WIA.Height -gt 720) {
+            $WIP.Filters[1].Properties("MaximumWidth") = 720
+            $WIP.Filters[1].Properties("MaximumHeight") = 720
+        }
+    } else {
+        $WIP.Filters[1].Properties("MaximumWidth") = 140
+        $WIP.Filters[1].Properties("MaximumHeight") = 140
+    }
 
     $scaledImage = $WIP.Apply($WIA)
     $scaledImagePath = $null
@@ -138,11 +153,23 @@ function CreateButton($Text, $DrawX, $DrawY) {
     return $button
 }
 
-function CreatePictureBox($ImagePath, $DrawX, $DrawY, $SizeX, $SizeY) {
+function CreatePictureBox() {
+    param(
+        [string]$ImagePath,
+        [int]$DrawX,
+        [int]$DrawY,
+        [int]$SizeX,
+        [int]$SizeY,
+        [string]$SizeMode = "center"
+    )
+
     $pictureBox = New-Object Windows.Forms.PictureBox
     $pictureBox.Location = New-Object Drawing.Point($DrawX, $DrawY)
     $pictureBox.Size = New-Object Drawing.Size($SizeX, $SizeY)
     $pictureBox.SizeMode = [System.Windows.Forms.PictureBoxSizeMode]::CenterImage
+    if($SizeMode -eq "zoom") {
+        $pictureBox.SizeMode = [System.Windows.Forms.PictureBoxSizeMode]::Zoom
+    }
     $pictureBox.Image = [System.Drawing.Image]::FromFile($ImagePath)
 
     return $pictureBox

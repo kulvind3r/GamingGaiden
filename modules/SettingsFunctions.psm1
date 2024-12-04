@@ -628,7 +628,7 @@ function RenderGamingPCForm($PCList) {
     })
     $gamingPCForm.Controls.Add($checkboxCurrent)
 
-    $pictureBox = CreatePictureBox $imagePath 10 20 150 160
+    $pictureBox = CreatePictureBox $imagePath 10 20 150 150 "zoom"
     $gamingPCForm.Controls.Add($pictureBox)
 
     $listBox.Add_SelectedIndexChanged({
@@ -662,7 +662,6 @@ function RenderGamingPCForm($PCList) {
             $iconBitmap.Save($imagePath, [System.Drawing.Imaging.ImageFormat]::Jpeg)
         }
 
-        $imagePath = ResizeImage $imagePath $selectedPC.name
         $iconBitmap.Dispose()
 
         $pictureBoxImagePath.Text = $imagePath
@@ -678,7 +677,7 @@ function RenderGamingPCForm($PCList) {
             $openFileDialog = OpenFileDialog "Select PC Image File" 'Image (*.png, *.jpg, *.jpeg)|*.png;*.jpg;*.jpeg' $downloadsDirectoryPath
             $result = $openFileDialog.ShowDialog()
             if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
-                $imagePath = ResizeImage $openFileDialog.FileName $textName.Text
+                $imagePath = ResizeImage $openFileDialog.FileName $textName.Text -HD $true
                 $pictureBoxImagePath.Text = $imagePath
                 $pictureBox.Image = [System.Drawing.Image]::FromFile($imagePath)
                 $openFileDialog.Dispose()
@@ -782,6 +781,13 @@ function RenderGamingPCForm($PCList) {
 
     $buttonReset = CreateButton "Reset" 170 150; $buttonReset.Add_Click({ 
         $textName.Clear(); $textCost.Clear(); $textCurrency.Clear();
+
+        $PCList = (RunDBQuery "SELECT name FROM gaming_pcs").name
+        $listBox.Items.Clear(); 
+        if ($PCList.Length -gt 0){
+            $listBox.Items.AddRange($PCList);
+        }
+
         $textOriginalPCName.Clear();
         $checkboxCurrent.Checked = $false;
         $checkboxNew.Checked = $false;
