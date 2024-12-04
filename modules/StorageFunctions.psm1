@@ -82,6 +82,34 @@ function SavePlatform() {
     }
 }
 
+function SavePC() {
+    param(
+        [string]$PCName,
+        [string]$PCIconPath,
+        [string]$PCCost,
+        [string]$PCCurrency,
+        [string]$PCStartDate,
+        [string]$PCEndDate,
+        [string]$PCCurrentStatus
+    )
+
+    $PCIconBytes = (Get-Content -Path $PCIconPath -Encoding byte -Raw);
+
+    $addPCQuery = "INSERT INTO gaming_pcs (name, icon, cost, currency, start_date, end_date, current)" +
+    "VALUES (@PCName, @PCIconBytes, @PCCost, @PCCurrency, @PCStartDate, @PCEndDate, @PCCurrentStatus)"
+
+    Log "Adding PC $PCName in database"
+    RunDBQuery $addPCQuery @{
+        PCName           = $PCName.Trim()
+        PCIconBytes      = $PCIconBytes
+        PCCost           = $PCCost.Trim()
+        PCCurrency       = $PCCurrency.Trim()
+        PCStartDate      = $PCStartDate
+        PCEndDate        = $PCEndDate
+        PCCurrentStatus  = $PCCurrentStatus
+    }
+}
+
 function UpdateGameOnSession() {
     param(
         [string]$GameName,
@@ -167,6 +195,49 @@ function UpdateGameOnEdit() {
     }
 }
 
+function UpdatePC() {
+    param(
+        [string]$AddNew = $false,
+        [string]$OriginalPCName,
+        [string]$PCName,
+        [string]$PCIconPath,
+        [string]$PCCost,
+        [string]$PCCurrency,
+        [string]$PCStartDate,
+        [string]$PCEndDate,
+        [string]$PCCurrentStatus
+    )
+    
+    $PCNamePattern = SQLEscapedMatchPattern($OriginalPCName.Trim())
+
+    if ($AddNew -eq $true) {
+        SavePC -PCName $PCName -PCIconPath $PCIconPath -PCCost $PCCost -PCCurrency $PCCurrency -PCStartDate $PCStartDate -PCEndDate $PCEndDate -PCCurrentStatus $PCCurrentStatus
+        return
+    }
+
+    if ($OriginalPCName -eq $PCName) {
+
+        $PCIconBytes = (Get-Content -Path $PCIconPath -Encoding byte -Raw);
+        
+        $updatePCQuery = "UPDATE gaming_pcs SET icon = @PCIconBytes, cost = @PCCost, currency = @PCCurrency, start_date = @PCStartDate, end_date = @PCEndDate, current = @PCCurrentStatus WHERE name LIKE '{0}'" -f $PCNamePattern
+
+        Log "Updating PC $PCName in database"
+        RunDBQuery $updatePCQuery @{
+            PCIconBytes      = $PCIconBytes
+            PCCost           = $PCCost
+            PCCurrency       = $PCCurrency
+            PCStartDate      = $PCStartDate
+            PCEndDate        = $PCEndDate
+            PCCurrentStatus  = $PCCurrentStatus
+        }
+    }
+    else {
+        Log "User changed PC's name from $OriginalPCName to $PCName. Need to delete the PC and add it again"
+        RemovePC $OriginalPCName
+        SavePC -PCName $PCName -PCIconPath $PCIconPath -PCCost $PCCost -PCCurrency $PCCurrency -PCStartDate $PCStartDate -PCEndDate $PCEndDate -PCCurrentStatus $PCCurrentStatus
+    }
+}
+
 function  UpdatePlatformOnEdit() {
     param(
         [string]$OriginalPlatformName,
@@ -209,6 +280,14 @@ function RemoveGame($GameName) {
 
     Log "Removing $GameName from database"
     RunDBQuery $removeGameQuery
+}
+
+function RemovePC($PCName) {
+    $PCNamePattern = SQLEscapedMatchPattern($PCName.Trim())
+    $removePCQuery = "DELETE FROM gaming_pcs WHERE name LIKE '{0}'" -f $PCNamePattern
+
+    Log "Removing PC $PCName from database"
+    RunDBQuery $removePCQuery
 }
 
 function RemovePlatform($PlatformName) {

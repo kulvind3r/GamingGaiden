@@ -170,6 +170,18 @@ function GetGameDetails($Game) {
     return $gameDetails
 }
 
+function GetPCDetails($PC) {
+    Log "Finding Details of $PC"
+
+    $pattern = SQLEscapedMatchPattern $PC.Trim()
+    $getPCDetailsQuery = "SELECT * FROM gaming_pcs WHERE name LIKE '{0}'" -f $pattern
+
+    $PCDetails = RunDBQuery $getPCDetailsQuery
+
+    Log ("Found details: name: {0}, cost: {1}, start_date: {2}, end_date: {3}, current: {4}" -f $PCDetails.name, $PCDetails.cost, $PCDetails.start_date, $PCDetails.end_date, $PCDetails.current)
+    return $PCDetails
+}
+
 function GetPlatformDetails($Platform) {
     Log "Finding Details of $Platform"
 

@@ -27,6 +27,17 @@
 
         Invoke-SqliteQuery -Query $createDailyPlaytimeTableQuery -SQLiteConnection $dbConnection
 
+        $createPCTableQuery = "CREATE TABLE IF NOT EXISTS gaming_pcs (
+                            name TEXT PRIMARY KEY NOT NULL,
+                            icon BLOB,
+                            cost TEXT,
+                            currency TEXT,
+                            start_date INTEGER,
+                            end_date INTEGER,
+                            current TEXT)"
+
+        Invoke-SqliteQuery -Query $createPCTableQuery -SQLiteConnection $dbConnection
+
         $gamesTableSchema = Invoke-SqliteQuery -query "PRAGMA table_info('games')" -SQLiteConnection $dbConnection
 
         # Migration 1

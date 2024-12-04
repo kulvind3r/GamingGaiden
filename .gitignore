@@ -8,6 +8,7 @@ ui/resources/images/*
 !ui/resources/images/hold.png
 !ui/resources/images/forever.png
 !ui/resources/images/finished.png
+!ui/resources/images/pc.png
 !ui/resources/images/playing.png
 !ui/resources/images/favicon.ico
 ui/*.html

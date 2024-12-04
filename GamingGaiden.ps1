@@ -203,6 +203,7 @@ try {
     $addPlatformMenuItem = CreateMenuItem "Add Emulator"
     $editGameMenuItem = CreateMenuItem "Edit Game"
     $editPlatformMenuItem = CreateMenuItem "Edit Emulator"
+    $gamingPCMenuItem = CreateMenuItem "Gaming PCs"
     $openInstallDirectoryMenuItem = CreateMenuItem "Open Install Directory"
     $settingsSubMenuItem.DropDownItems.Add($addGameMenuItem)
     $settingsSubMenuItem.DropDownItems.Add($editGameMenuItem)
@@ -210,6 +211,7 @@ try {
     $settingsSubMenuItem.DropDownItems.Add($addPlatformMenuItem)
     $settingsSubMenuItem.DropDownItems.Add($editPlatformMenuItem)
     $settingsSubMenuItem.DropDownItems.Add($menuItemSeparator7)
+    $settingsSubMenuItem.DropDownItems.Add($gamingPCMenuItem)
     $settingsSubMenuItem.DropDownItems.Add($openInstallDirectoryMenuItem)
 
     $statsSubMenuItem = CreateMenuItem "Statistics"
@@ -330,7 +332,7 @@ try {
             ExecuteSettingsFunction -SettingsFunctionToCall $function:RenderAddGameForm
 
             # Cleanup temp Files
-            Remove-Item -Force "$env:TEMP\GG-*.png"
+            Remove-Item -Force "$env:TEMP\GG-*"
         })
 
     $addPlatformMenuItem.Add_Click({
@@ -352,7 +354,7 @@ try {
             ExecuteSettingsFunction -SettingsFunctionToCall $function:RenderEditGameForm -EntityList $gamesList
 
             # Cleanup temp Files
-            Remove-Item -Force "$env:TEMP\GG-*.png"
+            Remove-Item -Force "$env:TEMP\GG-*"
         })
 
     $editPlatformMenuItem.Add_Click({
@@ -367,6 +369,17 @@ try {
 
             ExecuteSettingsFunction -SettingsFunctionToCall $function:RenderEditPlatformForm -EntityList $platformsList
         })
+    
+    $gamingPCMenuItem.Add_Click({
+        Log "Starting Gaming PC registration"
+
+        $PCList = (RunDBQuery "SELECT name FROM gaming_pcs").name
+
+        ExecuteSettingsFunction -SettingsFunctionToCall $function:RenderGamingPCForm -EntityList $PCList
+        
+        # Cleanup temp Files
+        Remove-Item -Force "$env:TEMP\GG-*"
+    })
 
     $openInstallDirectoryMenuItem.Add_Click({
             Log "Opening Install Directory"

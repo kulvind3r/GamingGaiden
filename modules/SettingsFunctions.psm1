@@ -153,7 +153,7 @@ function RenderEditGameForm($GamesList) {
                 $iconBitmap.Save($imagePath, [System.Drawing.Imaging.ImageFormat]::Jpeg)
             }
 
-            $imagePath = ResizeImage -ImagePath $imagePath -GameName $selectedGame.name
+            $imagePath = ResizeImage -ImagePath $imagePath -EntityName $selectedGame.name
             $iconBitmap.Dispose()
 
             $pictureBoxImagePath.Text = $imagePath
@@ -569,6 +569,246 @@ function RenderAddGameForm() {
 
     $addGameForm.ShowDialog()
     $addGameForm.Dispose()
+}
+
+function RenderGamingPCForm($PCList) {
+
+    $gamingPCForm = CreateForm "Gaming Gaiden: Gaming PCs" 665 265 ".\icons\running.ico"
+
+    $imagePath = "./icons/pc.png"
+
+    # Hidden fields to save non user editable values
+    $pictureBoxImagePath = CreateTextBox $imagePath 664 264 1 1; $pictureBoxImagePath.hide(); $gamingPCForm.Controls.Add($pictureBoxImagePath)
+    $checkboxNew = New-Object Windows.Forms.CheckBox; $checkboxNew.Checked = $false; $checkboxNew.hide(); $gamingPCForm.Controls.Add($checkboxNew)
+    $textOriginalPCName = CreateTextBox "" 664 264 1 1; $textOriginalPCName.hide(); $gamingPCForm.Controls.Add($textOriginalPCName)
+    # Hidden fields end
+
+    $labelList = Createlabel "Your PCs" 515 30; $gamingPCForm.Controls.Add($labelList)
+
+    $listBox = New-Object System.Windows.Forms.ListBox
+    $listBox.Location = New-Object System.Drawing.Point(455, 55)
+    $listBox.Size = New-Object System.Drawing.Size(175, 20)
+    $listBox.Height = 150
+    
+    if ($PCList.Length -gt 0) { [void] $listBox.Items.AddRange($PCList) }
+
+    $labelName = Createlabel "Name:" 170 20; $gamingPCForm.Controls.Add($labelName)
+    $textName = CreateTextBox "" 240 20 195 20;	$gamingPCForm.Controls.Add($textName)
+
+    $labelCurrency = Createlabel "Currency:" 170 50; $gamingPCForm.Controls.Add($labelCurrency)
+    $textCurrency = CreateTextBox "" 240 50 45 20;	$gamingPCForm.Controls.Add($textCurrency)
+
+    $labelCost = Createlabel "Cost:" 315 50; $gamingPCForm.Controls.Add($labelCost)
+    $textCost = CreateTextBox "" 355 50 80 20;	$gamingPCForm.Controls.Add($textCost)
+
+    $labelStartDate = Createlabel "Start Date" 190 80; $gamingPCForm.Controls.Add($labelStartDate)
+    $startDatePicker = New-Object Windows.Forms.DateTimePicker
+    $startDatePicker.Location = “170, 100”
+    $startDatePicker.Width = “100”
+    $startDatePicker.MaxDate = [DateTime]::Today
+    $startDatePicker.Format = [windows.forms.datetimepickerFormat]::custom
+    $startDatePicker.CustomFormat = “dd/MM/yyyy”
+    $gamingPCForm.Controls.Add($startDatePicker)
+
+    $labelEndDate = Createlabel "End Date" 360 80; $gamingPCForm.Controls.Add($labelEndDate)
+    $endDatePicker = New-Object Windows.Forms.DateTimePicker
+    $endDatePicker.Location = “335, 100”
+    $endDatePicker.Width = “100”
+    $endDatePicker.MaxDate = [DateTime]::Today
+    $endDatePicker.Format = [windows.forms.datetimepickerFormat]::custom
+    $endDatePicker.CustomFormat = “dd/MM/yyyy”
+    $gamingPCForm.Controls.Add($endDatePicker)
+
+    $labelCurrent = Createlabel "Current PC" 273 122; $gamingPCForm.Controls.Add($labelCurrent)
+    $checkboxCurrent = New-Object Windows.Forms.CheckBox
+    $checkboxCurrent.Top = 100
+    $checkboxCurrent.Left = 295
+    $checkboxCurrent.Add_CheckedChanged({
+        $endDatePicker.Enabled = (-Not $checkboxCurrent.Checked)
+    })
+    $gamingPCForm.Controls.Add($checkboxCurrent)
+
+    $pictureBox = CreatePictureBox $imagePath 10 20 150 160
+    $gamingPCForm.Controls.Add($pictureBox)
+
+    $listBox.Add_SelectedIndexChanged({
+        $selectedPC = GetPCDetails $listBox.SelectedItem
+
+        $textName.Text = $selectedPC.name
+        $textOriginalPCName.Text = $selectedPC.name
+        $textCost.Text = $selectedPC.cost
+        $textCurrency.Text = $selectedPC.currency
+        $checkboxCurrent.Checked = ($selectedPC.current -eq "TRUE")
+        $startDatePicker.Value = (Get-Date "1970-01-01 00:00:00Z").AddSeconds($selectedPC.start_date)
+        if ($selectedPC.current -eq 'TRUE') {
+            $checkboxCurrent.Checked = $true
+            $endDatePicker.Value = [DateTime]::Today
+            $endDatePicker.Enabled = $false
+        } else {
+            $endDatePicker.Value = (Get-Date "1970-01-01 00:00:00Z").AddSeconds($selectedPC.end_date)
+        }
+
+        $iconFileName = ToBase64 $selectedPC.name
+
+        $iconByteStream = [System.IO.MemoryStream]::new($selectedPC.icon)
+        $iconBitmap = [System.Drawing.Bitmap]::FromStream($iconByteStream)
+
+        if ($iconBitmap.PixelFormat -eq "Format32bppArgb") {
+            $imagePath = "$env:TEMP\GG-{0}-$iconFileName.png" -f $(Get-Random)
+            $iconBitmap.Save($imagePath, [System.Drawing.Imaging.ImageFormat]::Png)
+        }
+        else {
+            $imagePath = "$env:TEMP\GG-{0}-$iconFileName.jpg" -f $(Get-Random)
+            $iconBitmap.Save($imagePath, [System.Drawing.Imaging.ImageFormat]::Jpeg)
+        }
+
+        $imagePath = ResizeImage $imagePath $selectedPC.name
+        $iconBitmap.Dispose()
+
+        $pictureBoxImagePath.Text = $imagePath
+        $pictureBox.Image = [System.Drawing.Image]::FromFile($imagePath)
+
+    })
+    $gamingPCForm.Controls.Add($listBox)
+    
+    $buttonUpdateImage = CreateButton "Update Image" 40 190
+    $buttonUpdateImage.Size = New-Object System.Drawing.Size(90, 23)
+    $buttonUpdateImage.Add_Click({
+            $downloadsDirectoryPath = (New-Object -ComObject Shell.Application).Namespace('shell:Downloads').Self.Path
+            $openFileDialog = OpenFileDialog "Select PC Image File" 'Image (*.png, *.jpg, *.jpeg)|*.png;*.jpg;*.jpeg' $downloadsDirectoryPath
+            $result = $openFileDialog.ShowDialog()
+            if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
+                $imagePath = ResizeImage $openFileDialog.FileName $textName.Text
+                $pictureBoxImagePath.Text = $imagePath
+                $pictureBox.Image = [System.Drawing.Image]::FromFile($imagePath)
+                $openFileDialog.Dispose()
+            }
+        })
+    $gamingPCForm.Controls.Add($buttonUpdateImage)
+
+    $buttonRemove = CreateButton "Delete" 360 150
+    $buttonRemove.Add_Click({
+            $PCName = $textName.Text
+
+            $userInput = [microsoft.visualbasic.interaction]::MsgBox("All Data about '$PCName' will be lost.`r`nAre you sure?", "YesNo,Question", "Confirm PC Removal").ToString()
+            if ($userInput.ToLower() -eq 'yes')	{
+                RemovePC $PCName
+                ShowMessage "Removed '$PCName' from Database." "OK" "Asterisk"
+                Log "Removed $PCName from Database."
+                $PCList = (RunDBQuery "SELECT name FROM gaming_pcs").name
+                $listBox.Items.Clear();
+                if ($PCList.Length -gt 0) {
+                    $listBox.Items.AddRange($PCList); 
+                    $listBox.SelectedIndex = 0
+                } else {
+                    $buttonReset.PerformClick()
+                }
+            }
+        })
+    $gamingPCForm.Controls.Add($buttonRemove)
+
+    $buttonUpdate = CreateButton "Update" 265 190
+    $buttonUpdate.Add_Click({
+            $currentlySelectedIndex = $listBox.SelectedIndex
+
+            if ($textName.Text -eq "" -Or $textCost.Text -eq "" -Or $textCurrency.Text -eq "")	{
+                ShowMessage "Name, Cost, Currency fields cannot be empty. Try Again." "OK" "Error"
+                if($listBox.Items.Count -gt 0){
+                    $listBox.SetSelected($currentlySelectedIndex, $true)
+                }
+                return
+            }
+
+            $PCName = $textName.Text
+            if ( $startDatePicker.Value -gt (Get-Date)) {
+                ShowMessage "Start Date Cannot be in Future." "OK" "Error"
+                if($listBox.Items.Count -gt 0){
+                    $listBox.SetSelected($currentlySelectedIndex, $true)
+                }
+                return
+            }
+            $PCStartDate = (Get-Date ($startDatePicker.Value) -UFormat %s).Split('.').Get(0)
+
+            $PCCurrency = $textCurrency.Text
+            if ( -Not ($PCCurrency -match '\D{1,3}') ) {
+                ShowMessage "Currency Symbol cannot be more than 3 characters long'." "OK" "Error"
+                if($listBox.Items.Count -gt 0){
+                    $listBox.SetSelected($currentlySelectedIndex, $true)
+                }
+                return
+            }
+
+            $PCCost = $textCost.Text
+            if ( -Not ($PCCost -match '^[0-9]+') ) {
+                ShowMessage "Cost cannot have non numeric characters'." "OK" "Error"
+                if($listBox.Items.Count -gt 0){
+                    $listBox.SetSelected($currentlySelectedIndex, $true)
+                }
+                return
+            }
+            
+            if ($checkboxCurrent.Checked) { 
+                $PCEndDate = ""
+                $PCCurrentStatus = "TRUE";
+            } else {
+                $PCEndDate = (Get-Date ($endDatePicker.Value) -UFormat %s).Split('.').Get(0)
+                $PCCurrentStatus = "FALSE";
+                if ( $endDatePicker.Value -gt [DateTime]::Today -or $PCStartDate -gt $PCEndDate) {
+                    ShowMessage "End Date Cannot be in Future or before Start Date'." "OK" "Error"
+                    if($listBox.Items.Count -gt 0){
+                        $listBox.SetSelected($currentlySelectedIndex, $true)
+                    }
+                    return
+                }
+            }
+
+            $AddNew = $checkboxNew.Checked
+
+            UpdatePC -AddNew $AddNew -OriginalPCName $textOriginalPCName.Text -PCName $PCName -PCIconPath $pictureBoxImagePath.Text -PCCost $PCCost -PCCurrency $PCCurrency -PCStartDate $PCStartDate -PCEndDate $PCEndDate -PCCurrentStatus $PCCurrentStatus
+
+            if ($AddNew) {
+                ShowMessage "Added '$PCName' in Database." "OK" "Asterisk"
+            } else {
+                ShowMessage "Updated '$PCName' in Database." "OK" "Asterisk"
+            }
+
+            $PCList = (RunDBQuery "SELECT name FROM gaming_pcs").name
+            $listBox.Items.Clear(); $listBox.Items.AddRange($PCList);
+            $listBox.SelectedIndex = $listBox.FindString($PCName)
+            
+            $checkboxNew.Checked = $false
+        })
+    $gamingPCForm.Controls.Add($buttonUpdate)
+
+    $buttonReset = CreateButton "Reset" 170 150; $buttonReset.Add_Click({ 
+        $textName.Clear(); $textCost.Clear(); $textCurrency.Clear();
+        $textOriginalPCName.Clear();
+        $checkboxCurrent.Checked = $false;
+        $checkboxNew.Checked = $false;
+        $pictureBoxImagePath.Text = "./icons/pc.png"
+        $pictureBox.Image = [System.Drawing.Image]::FromFile($pictureBoxImagePath.Text)
+        $startDatePicker.Value = [DateTime]::Today
+        $endDatePicker.Value = [DateTime]::Today
+    }); 
+    $gamingPCForm.Controls.Add($buttonReset)
+
+    $buttonAddNew = CreateButton "Add New" 170 190; $buttonAddNew.Add_Click({ 
+        $checkboxNew.Checked = $true
+        $buttonUpdate.PerformClick()
+    }); 
+    $gamingPCForm.Controls.Add($buttonAddNew)
+
+    $buttonCancel = CreateButton "Cancel" 360 190; $buttonCancel.Add_Click({ 
+        $listBox.Remove_SelectedIndexChanged({})
+        $gamingPCForm.Dispose() 
+        # Cleanup temp Files
+        Remove-Item -Force "$env:TEMP\GG-*"
+    }); 
+    $gamingPCForm.Controls.Add($buttonCancel)
+
+    $gamingPCForm.ShowDialog()
+    $listBox.Remove_SelectedIndexChanged({})
+    $gamingPCForm.Dispose()
 }
 
 function RenderAddPlatformForm() {

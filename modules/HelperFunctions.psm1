@@ -20,8 +20,9 @@ function PlayTimeMinsToString($PlayTime) {
     return ("{0} Hr {1} Min" -f $hours, $minutes)
 }
 
-function ResizeImage($ImagePath, $GameName) {
-    $imageFileName = ToBase64 $GameName
+function ResizeImage($ImagePath, $EntityName) {
+    Log "Entity Name in Resize image: $EntityName"
+    $imageFileName = ToBase64 $EntityName
     $WIA = New-Object -com wia.imagefile
     $WIA.LoadFile($ImagePath)
     $WIP = New-Object -ComObject wia.imageprocess
