@@ -145,17 +145,18 @@ function RenderEditGameForm($GamesList) {
             $iconBitmap = [System.Drawing.Bitmap]::FromStream($iconByteStream)
 
             if ($iconBitmap.PixelFormat -eq "Format32bppArgb") {
-                $imagePath = "$env:TEMP\GG-{0}-$iconFileName.png" -f $(Get-Random)
+                $imagePath = "$env:TEMP\GmGdn-{0}-$iconFileName.png" -f $(Get-Random)
                 $iconBitmap.Save($imagePath, [System.Drawing.Imaging.ImageFormat]::Png)
             }
             else {
-                $imagePath = "$env:TEMP\GG-{0}-$iconFileName.jpg" -f $(Get-Random)
+                $imagePath = "$env:TEMP\GmGdn-{0}-$iconFileName.jpg" -f $(Get-Random)
                 $iconBitmap.Save($imagePath, [System.Drawing.Imaging.ImageFormat]::Jpeg)
             }
 
             $iconBitmap.Dispose()
 
             $pictureBoxImagePath.Text = $imagePath
+            $pictureBox.Image.Dispose()
             $pictureBox.Image = [System.Drawing.Image]::FromFile($imagePath)
 
         })
@@ -183,6 +184,7 @@ function RenderEditGameForm($GamesList) {
             if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
                 $imagePath = ResizeImage $openFileDialog.FileName $textName.name
                 $pictureBoxImagePath.Text = $imagePath
+                $pictureBox.Image.Dispose()
                 $pictureBox.Image = [System.Drawing.Image]::FromFile($imagePath)
                 $openFileDialog.Dispose()
             }
@@ -267,10 +269,12 @@ function RenderEditGameForm($GamesList) {
         })
     $editGameForm.Controls.Add($buttonOK)
 
-    $buttonCancel = CreateButton "Cancel" 370 190; $buttonCancel.Add_Click({ 
+    $buttonCancel = CreateButton "Cancel" 370 190; 
+    $buttonCancel.Add_Click({ 
             $textSearch.Remove_TextChanged({})
             $listBox.Remove_SelectedIndexChanged({})
-            $editGameForm.Dispose() 
+            $pictureBox.Image.Dispose(); $pictureBox.Dispose();
+            $editGameForm.Dispose()
         }); 
     $editGameForm.Controls.Add($buttonCancel)
 
@@ -280,6 +284,7 @@ function RenderEditGameForm($GamesList) {
     $editGameForm.ShowDialog()
     $textSearch.Remove_TextChanged({})
     $listBox.Remove_SelectedIndexChanged({})
+    $pictureBox.Image.Dispose(); $pictureBox.Dispose();
     $editGameForm.Dispose()
 }
 
@@ -501,6 +506,7 @@ function RenderAddGameForm() {
             if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
                 $imagePath = ResizeImage $openFileDialog.FileName "GG-NEW_GAME"
                 $pictureBoxImagePath.Text = $imagePath
+                $pictureBox.Image.Dispose()
                 $pictureBox.Image = [System.Drawing.Image]::FromFile($imagePath)
                 $openFileDialog.Dispose()
             }
@@ -526,11 +532,12 @@ function RenderAddGameForm() {
                     return
                 }
 
-                $gameIconPath = "$env:TEMP\GG-{0}.jpg" -f $(Get-Random)
+                $gameIconPath = "$env:TEMP\GmGdn-{0}.jpg" -f $(Get-Random)
                 $gameIcon = [System.Drawing.Icon]::ExtractAssociatedIcon($gameExeFile)
                 $gameIcon.ToBitmap().save($gameIconPath)
 
                 $pictureBoxImagePath.Text = $gameIconPath
+                $pictureBox.Image.Dispose()
                 $pictureBox.Image = [System.Drawing.Image]::FromFile($gameIconPath)
 
                 $openFileDialog.Dispose()
@@ -553,20 +560,24 @@ function RenderAddGameForm() {
             SaveGame -GameName $gameName -GameExeName $gameExeName -GameIconPath $gameIconPath `
                 -GamePlayTime 0 -GameIdleTime 0 -GameLastPlayDate $gameLastPlayDate -GameCompleteStatus 'FALSE' -GamePlatform 'PC' -GameSessionCount 0
 
+            ShowMessage "Registered '$gameName' in Database." "OK" "Asterisk"
+
             # Pre Load image in ui\resources\images folder for rendering 'All Games' list faster
             $imageFileName = ToBase64 $gameName
             $imageFileExtension = $gameIconPath.Split(".")[-1]
             Copy-Item -Path $gameIconPath -Destination ".\ui\resources\images\$imageFileName.$imageFileExtension"
-
-            ShowMessage "Registered '$gameName' in Database." "OK" "Asterisk"
-
-            $addGameForm.Close()
         })
     $addGameForm.Controls.Add($buttonOK)
 
-    $buttonCancel = CreateButton "Cancel" 370 185; $buttonCancel.Add_Click({ $addGameForm.Dispose() }); $addGameForm.Controls.Add($buttonCancel)
+    $buttonCancel = CreateButton "Cancel" 370 185; 
+    $buttonCancel.Add_Click({ 
+        $pictureBox.Image.Dispose(); $pictureBox.Dispose();
+        $addGameForm.Dispose()
+    }); 
+    $addGameForm.Controls.Add($buttonCancel)
 
     $addGameForm.ShowDialog()
+    $pictureBox.Image.Dispose(); $pictureBox.Dispose();
     $addGameForm.Dispose()
 }
 
@@ -653,17 +664,18 @@ function RenderGamingPCForm($PCList) {
         $iconBitmap = [System.Drawing.Bitmap]::FromStream($iconByteStream)
 
         if ($iconBitmap.PixelFormat -eq "Format32bppArgb") {
-            $imagePath = "$env:TEMP\GG-{0}-$iconFileName.png" -f $(Get-Random)
+            $imagePath = "$env:TEMP\GmGdn-{0}-$iconFileName.png" -f $(Get-Random)
             $iconBitmap.Save($imagePath, [System.Drawing.Imaging.ImageFormat]::Png)
         }
         else {
-            $imagePath = "$env:TEMP\GG-{0}-$iconFileName.jpg" -f $(Get-Random)
+            $imagePath = "$env:TEMP\GmGdn-{0}-$iconFileName.jpg" -f $(Get-Random)
             $iconBitmap.Save($imagePath, [System.Drawing.Imaging.ImageFormat]::Jpeg)
         }
 
         $iconBitmap.Dispose()
 
         $pictureBoxImagePath.Text = $imagePath
+        $pictureBox.Image.Dispose()
         $pictureBox.Image = [System.Drawing.Image]::FromFile($imagePath)
 
     })
@@ -678,6 +690,7 @@ function RenderGamingPCForm($PCList) {
             if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
                 $imagePath = ResizeImage $openFileDialog.FileName $textName.Text -HD $true
                 $pictureBoxImagePath.Text = $imagePath
+                $pictureBox.Image.Dispose()
                 $pictureBox.Image = [System.Drawing.Image]::FromFile($imagePath)
                 $openFileDialog.Dispose()
             }
@@ -791,6 +804,7 @@ function RenderGamingPCForm($PCList) {
         $checkboxCurrent.Checked = $false;
         $checkboxNew.Checked = $false;
         $pictureBoxImagePath.Text = "./icons/pc.png"
+        $pictureBox.Image.Dispose()
         $pictureBox.Image = [System.Drawing.Image]::FromFile($pictureBoxImagePath.Text)
         $startDatePicker.Value = [DateTime]::Today
         $endDatePicker.Value = [DateTime]::Today
@@ -805,12 +819,14 @@ function RenderGamingPCForm($PCList) {
 
     $buttonCancel = CreateButton "Cancel" 360 190; $buttonCancel.Add_Click({ 
         $listBox.Remove_SelectedIndexChanged({})
+        $pictureBox.Image.Dispose(); $pictureBox.Dispose();
         $gamingPCForm.Dispose()
     }); 
     $gamingPCForm.Controls.Add($buttonCancel)
 
     $gamingPCForm.ShowDialog()
     $listBox.Remove_SelectedIndexChanged({})
+    $pictureBox.Image.Dispose(); $pictureBox.Dispose();
     $gamingPCForm.Dispose()
 }
 

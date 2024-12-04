@@ -50,10 +50,10 @@ function ResizeImage() {
     $scaledImage = $WIP.Apply($WIA)
     $scaledImagePath = $null
     if ($ImagePath -like '*.png') {
-        $scaledImagePath = "$env:TEMP\GG-{0}-$imageFileName.png" -f $(Get-Random)
+        $scaledImagePath = "$env:TEMP\GmGdn-{0}-$imageFileName.png" -f $(Get-Random)
     }
     else {
-        $scaledImagePath = "$env:TEMP\GG-{0}-$imageFileName.jpg" -f $(Get-Random)
+        $scaledImagePath = "$env:TEMP\GmGdn-{0}-$imageFileName.jpg" -f $(Get-Random)
     }
 
     $scaledImage.SaveFile($scaledImagePath)
