@@ -17,13 +17,13 @@
 
 function RenderEditGameForm($GamesList) {
 
-    $editGameForm = CreateForm "Gaming Gaiden: Edit Game" 870 265 ".\icons\running.ico"
+    $editGameForm = CreateForm "Gaming Gaiden: Edit Game" 875 265 ".\icons\running.ico"
 
     $imagePath = "./icons/default.png"
 
     # Hidden fields to save non user editable values
-    $pictureBoxImagePath = CreateTextBox $imagePath 879 264 1 1; $pictureBoxImagePath.hide(); $editGameForm.Controls.Add($pictureBoxImagePath)
-    $textOriginalGameName = CreateTextBox "" 879 264 1 1; $textOriginalGameName.hide(); $editGameForm.Controls.Add($textOriginalGameName)
+    $pictureBoxImagePath = CreateTextBox $imagePath 874 264 1 1; $pictureBoxImagePath.hide(); $editGameForm.Controls.Add($pictureBoxImagePath)
+    $textOriginalGameName = CreateTextBox "" 874 264 1 1; $textOriginalGameName.hide(); $editGameForm.Controls.Add($textOriginalGameName)
     # Hidden fields end
 
     $listBox = New-Object System.Windows.Forms.ListBox
@@ -153,7 +153,6 @@ function RenderEditGameForm($GamesList) {
                 $iconBitmap.Save($imagePath, [System.Drawing.Imaging.ImageFormat]::Jpeg)
             }
 
-            $imagePath = ResizeImage -ImagePath $imagePath -EntityName $selectedGame.name
             $iconBitmap.Dispose()
 
             $pictureBoxImagePath.Text = $imagePath
