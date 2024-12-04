@@ -805,9 +805,7 @@ function RenderGamingPCForm($PCList) {
 
     $buttonCancel = CreateButton "Cancel" 360 190; $buttonCancel.Add_Click({ 
         $listBox.Remove_SelectedIndexChanged({})
-        $gamingPCForm.Dispose() 
-        # Cleanup temp Files
-        Remove-Item -Force "$env:TEMP\GG-*"
+        $gamingPCForm.Dispose()
     }); 
     $gamingPCForm.Controls.Add($buttonCancel)
 

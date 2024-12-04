@@ -371,15 +371,15 @@ try {
         })
     
     $gamingPCMenuItem.Add_Click({
-        Log "Starting Gaming PC registration"
+            Log "Starting Gaming PC registration"
 
-        $PCList = (RunDBQuery "SELECT name FROM gaming_pcs").name
+            $PCList = (RunDBQuery "SELECT name FROM gaming_pcs").name
 
-        ExecuteSettingsFunction -SettingsFunctionToCall $function:RenderGamingPCForm -EntityList $PCList
-        
-        # Cleanup temp Files
-        Remove-Item -Force "$env:TEMP\GG-*"
-    })
+            ExecuteSettingsFunction -SettingsFunctionToCall $function:RenderGamingPCForm -EntityList $PCList
+            
+            # Cleanup temp Files
+            Remove-Item -Force "$env:TEMP\GG-*"
+        })
 
     $openInstallDirectoryMenuItem.Add_Click({
             Log "Opening Install Directory"
