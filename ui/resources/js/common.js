@@ -42,8 +42,12 @@ function chartTitleConfig(title, padding = 0, color = "#000") {
   };
 }
 
-function buildGamingData(key1, key2) {
-  const table = document.getElementById("data-table");
+function buildGamingData(key1, key2, tableId = "data-table", querySelectorTag=null) {
+
+  let table = document.getElementById(tableId);
+  if (querySelectorTag !=null) {
+    table = document.getElementById(tableId).querySelector(querySelectorTag)
+  }
   const rows = table.querySelectorAll("tbody tr");
 
   let gamingData = Array.from(rows).map((row) => {

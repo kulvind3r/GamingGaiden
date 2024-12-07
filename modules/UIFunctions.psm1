@@ -18,6 +18,27 @@
     }
 }
 
+class GamingPC {
+    [ValidateNotNullOrEmpty()][string]$IconUri
+    [ValidateNotNullOrEmpty()][string]$Name
+    [ValidateNotNullOrEmpty()][string]$Current
+    [ValidateNotNullOrEmpty()][string]$Cost
+    [ValidateNotNullOrEmpty()][string]$Currency
+    [ValidateNotNullOrEmpty()][string]$StartDate
+    [ValidateNotNullOrEmpty()][string]$EndDate
+    
+
+    GamingPC($IconUri, $Name, $Current, $Cost, $Currency, $StartDate, $EndDate) {
+        $this.IconUri = $IconUri
+        $this.Name = $Name
+        $this.Current = $Current
+        $this.Cost = $Cost
+        $this.Currency = $Currency
+        $this.StartDate = $StartDate
+        $this.EndDate = $EndDate
+    }
+}
+
 function RenderGameList() {
     Log "Rendering all games list."
 
@@ -147,6 +168,44 @@ function RenderSummary() {
 
     $workingDirectory = (Get-Location).Path
 
+    $getGamingPCsQuery = "SELECT * FROM gaming_pcs"
+    $gamingPCData = RunDBQuery $getGamingPCsQuery
+
+    $TotalAnnualGamingHoursQuery ="SELECT 
+                                    strftime('%Y', play_date) AS Year, 
+                                    SUM(ROUND(play_time/60.0,2)) AS TotalPlaytime 
+                                   FROM daily_playtime GROUP BY strftime('%Y', play_date) ORDER BY Year;"
+
+    $totalAnnualGamingHoursData = RunDBQuery $TotalAnnualGamingHoursQuery
+
+    $gamingPCs = [System.Collections.Generic.List[GamingPC]]::new()
+    $pcIconUri = $null
+
+    foreach ($gamingPCRecord in $gamingPCData) {
+        $name = $gamingPCRecord.name
+        $imageFileName = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($name))
+        
+        $iconByteStream = [System.IO.MemoryStream]::new($gamingPCRecord.icon)
+        $iconBitmap = [System.Drawing.Bitmap]::FromStream($iconByteStream)
+
+        if ($iconBitmap.PixelFormat -eq "Format32bppArgb") {
+            $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.png", [System.Drawing.Imaging.ImageFormat]::Png)
+            $pcIconUri = "<img src=`".\resources\images\$imageFileName.png`">"
+            Log "PCImage PNG: $pcIconUri"
+        }
+        else {
+            $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.jpg", [System.Drawing.Imaging.ImageFormat]::Jpeg)
+            $pcIconUri = "<img src=`".\resources\images\$imageFileName.jpg`">"
+            Log "PCImage JPG: $pcIconUri"
+        }
+
+        $iconBitmap.Dispose()
+
+        $thisPC = [GamingPC]::new($pcIconUri, $name, $gamingPCRecord.current, $gamingPCRecord.cost, $gamingPCRecord.currency, $gamingPCRecord.start_date, $gamingPCRecord.end_date)
+
+        $null = $gamingPCs.add($thisPC)
+    }
+
     $getGamesPlayTimeVsSessionDataQuery = "SELECT name, play_time, session_count, completed, status FROM games"
     $gamesPlayTimeVsSessionData = RunDBQuery $getGamesPlayTimeVsSessionDataQuery
     if ($gamesPlayTimeVsSessionData.Length -eq 0) {
@@ -178,10 +237,14 @@ function RenderSummary() {
 
     $summaryStatement = "From <b>$startDate to $endDate</b> you played <b>$($gamesSummaryData.total_games) $gameString</b> in <b>$($gamesSummaryData.total_sessions) $sessionString</b>. Total <b>play time is $totalPlayTime</b> with <b>$totalIdleTime spent idling</b>."
 
-    $table = $gamesPlayTimeVsSessionData | ConvertTo-Html -Fragment
+    $summaryTable = $gamesPlayTimeVsSessionData | ConvertTo-Html -Fragment
+    $pcTable = $gamingPCs | ConvertTo-Html -Fragment
+    $annualHoursTable = $totalAnnualGamingHoursData | ConvertTo-Html -Fragment
 
-    $report = (Get-Content $workingDirectory\ui\templates\Summary.html.template) -replace "_SUMMARYTABLE_", $table
+    $report = (Get-Content $workingDirectory\ui\templates\Summary.html.template) -replace "_SUMMARYTABLE_", $summaryTable
     $report = $report -replace "_SUMMARYSTATEMENT_", $summaryStatement
+    $report = $report -replace "_ANNUALGAMINGHOURSTABLE_", $annualHoursTable
+    $report = $report -replace "_PCTABLE_", $pcTable
 
     [System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $workingDirectory\ui\Summary.html
 }

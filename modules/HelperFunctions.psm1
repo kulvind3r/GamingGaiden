@@ -41,6 +41,9 @@ function ResizeImage() {
         if ($WIA.Width -gt 720 -or $WIA.Height -gt 720) {
             $WIP.Filters[1].Properties("MaximumWidth") = 720
             $WIP.Filters[1].Properties("MaximumHeight") = 720
+        } else {
+            $WIP.Filters[1].Properties("MaximumWidth") = $WIA.Width
+            $WIP.Filters[1].Properties("MaximumHeight") = $WIA.Height
         }
     } else {
         $WIP.Filters[1].Properties("MaximumWidth") = 140

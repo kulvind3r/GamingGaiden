@@ -2,13 +2,13 @@
 /*from chart.js, common.js*/
 
 let gamingData = [];
+let pcData = [];
+let annualHoursData = buildGamingData("Year", "TotalPlayTime", "annual-gaming-hours-table", "table");
 let finishedCount = 0;
 let inProgressCount = 0;
 let holdCount = 0;
 let foreverCount = 0;
 let droppedCount = 0;
-
-$("table")[0].setAttribute("id", "data-table");
 
 // Create custom log axis in base 2
 class Log2Axis extends Chart.Scale {
@@ -81,7 +81,7 @@ Log2Axis.defaults = {};
 
 Chart.register(Log2Axis);
 
-function updateChart() {
+function updateSummayChart() {
   const ctx = document
     .getElementById("session-vs-playtime-chart")
     .getContext("2d");
@@ -150,19 +150,6 @@ function updateChart() {
           type: "log2",
           title: chartTitleConfig("PlayTime (Hours)"),
         },
-        // Alignment Hack: Add an identical y scale on right side, to center the graph on page.
-        // Then hide the right side scale by setting ticks and title color identical to background.
-        yRight: {
-          type: "log2",
-          position: "right",
-          grid: {
-            display: false,
-          },
-          title: chartTitleConfig("PlayTime (Hours)", 0, "white"),
-          ticks: {
-            color: "white",
-          },
-        },
         x: {
           title: chartTitleConfig("Game Sessions", 15),
           ticks: {
@@ -176,7 +163,6 @@ function updateChart() {
           hoverRadius: 4.5
         }
       },
-      responsive: true,
       plugins: {
         tooltip: {
           enabled: true,
@@ -198,16 +184,17 @@ function updateChart() {
           display: false,
         },
       },
-      maintainAspectRatio: true,
+      responsive: true,
+      maintainAspectRatio: false
     },
   });
 }
 
-function loadDataFromTable() {
-  const table = document.getElementById("data-table");
-  const rows = table.querySelectorAll("tbody tr");
+function loadSummaryDataFromTable() {
+  const summaryTable = document.getElementById("summary-table").querySelector("table")
+  const summaryRows = summaryTable.querySelectorAll("tbody tr");
 
-  gamingData = Array.from(rows).map((row) => {
+  gamingData = Array.from(summaryRows).map((row) => {
     const name = row.cells[0].textContent;
     const playtime = (parseFloat(row.cells[1].textContent) / 60).toFixed(1);
     const sessions = parseFloat(row.cells[2].textContent);
@@ -242,7 +229,112 @@ function loadDataFromTable() {
     foreverCount + gameForeverMsg;
   document.getElementById("dropped-count").innerText =
     droppedCount + gameDroppedMsg;
-  updateChart();
 }
 
-loadDataFromTable();
+function loadPCDataFromTable() {
+  const pcTable = document.getElementById("pc-table").querySelector("table")
+  const pcRows = pcTable.querySelectorAll("tbody tr");
+
+  pcData = Array.from(pcRows).map((row) => {
+    const iconUri = row.cells[0].innerHTML;
+    const name = row.cells[1].textContent;
+    const current = row.cells[2].textContent;
+    const cost = row.cells[3].textContent;
+    const currency = row.cells[4].textContent;
+
+    var utcSeconds = parseInt(row.cells[5].textContent);
+    var s_date = new Date(0);
+    s_date.setUTCSeconds(utcSeconds);
+    const start_date = s_date.toLocaleDateString(undefined, {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+    
+    let end_date=""
+    if(current != "TRUE"){
+      var utcSeconds = parseInt(row.cells[6].textContent);
+      let e_date = new Date(0);
+      e_date.setUTCSeconds(utcSeconds);
+      end_date = e_date.toLocaleDateString(undefined, {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+    } else {
+      end_date = ""
+    }
+  
+    return { iconUri, name, current, cost, currency, start_date, end_date };
+  });
+
+   // Remove header row data
+   pcData.shift();
+}
+
+function updatePCStatsSection() {
+  document.getElementById("pc-icon").innerHTML = pcData[0].iconUri
+  document.getElementById("pc-name").innerText = pcData[0].name
+  document.getElementById("pc-cost").innerText = "Cost: " + pcData[0].currency + " " + pcData[0].cost
+  document.getElementById("pc-start-date").innerText = "Purchased: " + pcData[0].start_date
+
+  if (pcData[0].current == "TRUE") {
+    document.getElementById("pc-end-date").innerText = "Current PC"
+  } else {
+    document.getElementById("pc-end-date").innerText = "Last Used: " + pcData[0].end_date
+  }
+}
+
+function updateAnnualHoursChart() {
+  const ctx = document.getElementById("year-vs-playtime-chart").getContext("2d");
+
+  new Chart(ctx, {
+    type: "pie",
+    plugins: [ChartDataLabels],
+    data: {
+      labels: annualHoursData.map((row) => row.Year),
+      datasets: [
+        {
+          data: annualHoursData.map((row) => row.TotalPlayTime),
+          borderWidth: 2,
+        },
+      ],
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        title: {
+          text: "Annual Hours Played",
+          display: true,
+          position: "bottom",
+          color: "#000000",
+          font: {
+            size: 18,
+            family: "monospace",
+            weight: "normal"
+          }
+        },
+        tooltip: {enabled: false},
+        legend: {display: false},
+        datalabels: {
+          formatter: function (value, context) {
+            return context.chart.data.labels[context.dataIndex]+'\n'+Math.floor(value)+" Hrs";
+          },
+          textAlign: 'center',
+          color: "#000000",
+          font: {
+            size: 14,
+            family: "monospace",
+          }
+        },
+      },
+    },
+  });
+}
+
+loadSummaryDataFromTable();
+updateSummayChart();
+loadPCDataFromTable();
+updatePCStatsSection();
+updateAnnualHoursChart();
