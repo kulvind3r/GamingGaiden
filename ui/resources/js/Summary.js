@@ -357,14 +357,14 @@ document.getElementById("next-button").addEventListener("click", () => {
   if (currentPCIndex == pcData.length) {
     currentPCIndex = 0 // Loop back to first element
   }
-  updatePCStatsSection(pcData[currentPCIndex])
+  updatePCStatsSection(pcData.at(currentPCIndex))
 });
 
 loadSummaryDataFromTable();
 updateSummayChart();
 loadPCDataFromTable();
 if (pcData.length > 0){
-  updatePCStatsSection(pcData[currentPCIndex]);
+  updatePCStatsSection(pcData.at(currentPCIndex));
 } else {
   $("#pc-icon").html(DOMPurify.sanitize('<img src=".\\resources\\images\\pc.png"></img>'))
   document.getElementById("pc-icon").querySelector("img").style.border = 'none'
