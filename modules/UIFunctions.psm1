@@ -26,9 +26,11 @@ class GamingPC {
     [ValidateNotNullOrEmpty()][string]$Currency
     [ValidateNotNullOrEmpty()][string]$StartDate
     [ValidateNotNullOrEmpty()][string]$EndDate
+    [ValidateNotNullOrEmpty()][string]$Age
+    [ValidateNotNullOrEmpty()][string]$TotalHours
     
 
-    GamingPC($IconUri, $Name, $Current, $Cost, $Currency, $StartDate, $EndDate) {
+    GamingPC($IconUri, $Name, $Current, $Cost, $Currency, $StartDate, $EndDate, $Age, $TotalHours) {
         $this.IconUri = $IconUri
         $this.Name = $Name
         $this.Current = $Current
@@ -36,6 +38,8 @@ class GamingPC {
         $this.Currency = $Currency
         $this.StartDate = $StartDate
         $this.EndDate = $EndDate
+        $this.Age = $Age
+        $this.TotalHours = $TotalHours
     }
 }
 
@@ -168,7 +172,19 @@ function RenderSummary() {
 
     $workingDirectory = (Get-Location).Path
 
-    $getGamingPCsQuery = "SELECT * FROM gaming_pcs"
+    $getGamingPCsQuery = "SELECT gp.*,
+                            SUM(dp.play_time) / 60 AS total_hours,
+                            CAST((julianday(COALESCE(datetime(gp.end_date, 'unixepoch'), datetime('now'))) - julianday(datetime(gp.start_date, 'unixepoch'))) / 365.25 AS INTEGER) AS age_years,
+                            CAST((julianday(COALESCE(datetime(gp.end_date, 'unixepoch'), datetime('now'))) - julianday(datetime(gp.start_date, 'unixepoch'))) % 365.25 / 30.4375 AS INTEGER) AS age_months
+                        FROM 
+                            gaming_pcs gp
+                        JOIN 
+                            daily_playtime dp 
+                        ON 
+                            dp.play_date BETWEEN DATE(datetime(gp.start_date, 'unixepoch')) 
+                                            AND DATE(COALESCE(datetime(gp.end_date, 'unixepoch'), datetime('now')))
+                        GROUP BY 
+                            gp.name;"
     $gamingPCData = RunDBQuery $getGamingPCsQuery
 
     $TotalAnnualGamingHoursQuery ="SELECT 
@@ -201,7 +217,9 @@ function RenderSummary() {
 
         $iconBitmap.Dispose()
 
-        $thisPC = [GamingPC]::new($pcIconUri, $name, $gamingPCRecord.current, $gamingPCRecord.cost, $gamingPCRecord.currency, $gamingPCRecord.start_date, $gamingPCRecord.end_date)
+        $pcAge =  "{0} Years and {1} Months" -f $gamingPCRecord.age_years, $gamingPCRecord.age_months
+
+        $thisPC = [GamingPC]::new($pcIconUri, $name, $gamingPCRecord.current, $gamingPCRecord.cost, $gamingPCRecord.currency, $gamingPCRecord.start_date, $gamingPCRecord.end_date, $pcAge, $gamingPCRecord.total_hours)
 
         $null = $gamingPCs.add($thisPC)
     }

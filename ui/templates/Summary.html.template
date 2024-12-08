@@ -32,41 +32,39 @@
     <div id="top-row">
       <div id="summary-chart-legend">
         <div id="legend">
-          <div id="progress-icon"></div>
+          <div id="progress-icon" class="legend-icon"></div>
           <div id="progress-count" style="color: #1f9afe"></div>
-          <div id="finished-icon"></div>
+          <div id="finished-icon" class="legend-icon"></div>
           <div id="finished-count" style="color: #059b27"></div>
         </div>
         <div id="sub-legend">
-          <div id="hold-icon"></div>
+          <div id="hold-icon" class="legend-icon"></div>
           <div id="hold-count" style="color: #d78f34"></div>
-          <div id="forever-icon"></div>
+          <div id="forever-icon" class="legend-icon"></div>
           <div id="forever-count" style="color: #94979c"></div>
-          <div id="dropped-icon"></div>
+          <div id="dropped-icon" class="legend-icon"></div>
           <div id="dropped-count" style="color: #662f13"></div>
         </div>
       </div>
-      <div id="pc-navigation-bar">
-        <button class="custom-button" id="prev-button">&#11164;</button>
-        <p id="pc-name"></p>
-        <button class="custom-button" id="next-button">&#11166;</button>
+      <div id="pc-title-column">
+        <div id="pc-section-title">Your Gaming PCs</div>
+        <div id="pc-navigation-bar">
+          <button class="custom-button" id="prev-button">&#11164;</button>
+          <div id="pc-name"></div>
+          <button class="custom-button" id="next-button">&#11166;</button>
+        </div>
       </div>
     </div>
     <div id="main-row">
       <div id="summary-chart-container">
         <canvas id="session-vs-playtime-chart"></canvas>
       </div>
-      <div id="stats-coulmn">
+      <div id="stats-container">
         <div id="pc-stats-section">
           <div id="pc-icon"></div>
           <div id="pc-stats">  
+            <p id="pc-status"></p>
             <p id="pc-cost"></p>
-            <p id="pc-start-date"></p>
-            <p id="pc-end-date"></p>
-            <p id="pc-age"></p>
-            <p id="pc-value-per-hour"></p>
-            <p id="pc-value-per-game"></p>
-            <p id="pc-games-finished"></p>
           </div>
         </div>
         <div id="annual-time-chart-container">

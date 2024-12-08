@@ -4,6 +4,7 @@
 let gamingData = [];
 let pcData = [];
 let annualHoursData = buildGamingData("Year", "TotalPlayTime", "annual-gaming-hours-table", "table");
+let currentPCIndex = 0;
 let finishedCount = 0;
 let inProgressCount = 0;
 let holdCount = 0;
@@ -247,8 +248,7 @@ function loadPCDataFromTable() {
     s_date.setUTCSeconds(utcSeconds);
     const start_date = s_date.toLocaleDateString(undefined, {
       year: "numeric",
-      month: "long",
-      day: "numeric",
+      month: "long"
     });
     
     let end_date=""
@@ -258,31 +258,41 @@ function loadPCDataFromTable() {
       e_date.setUTCSeconds(utcSeconds);
       end_date = e_date.toLocaleDateString(undefined, {
         year: "numeric",
-        month: "long",
-        day: "numeric",
+        month: "long"
       });
     } else {
       end_date = ""
     }
+
+    const age = row.cells[7].textContent;
+    const totalHours = row.cells[8].textContent;
   
-    return { iconUri, name, current, cost, currency, start_date, end_date };
+    return { iconUri, name, current, cost, currency, start_date, end_date, age, totalHours };
   });
 
    // Remove header row data
    pcData.shift();
 }
 
-function updatePCStatsSection() {
-  document.getElementById("pc-icon").innerHTML = pcData[0].iconUri
-  document.getElementById("pc-name").innerText = pcData[0].name
-  document.getElementById("pc-cost").innerText = "Cost: " + pcData[0].currency + " " + pcData[0].cost
-  document.getElementById("pc-start-date").innerText = "Purchased: " + pcData[0].start_date
-
-  if (pcData[0].current == "TRUE") {
-    document.getElementById("pc-end-date").innerText = "Current PC"
+function updatePCStatsSection(pcData) {
+  let valuePerHour =  Math.floor((parseInt(pcData.cost) / parseInt(pcData.totalHours)))
+  let ageInMonths = parseInt(pcData.age.split(" ")[0]) * 12 + parseInt(pcData.age.split(" ")[3])
+  let valuePerMonth = Math.floor((parseInt(pcData.cost) / ageInMonths))
+  let helpingVerb = ""
+  
+  document.getElementById("pc-icon").innerHTML = pcData.iconUri
+  
+  
+  document.getElementById("pc-name").innerText = pcData.name
+  
+  if (pcData.current == "TRUE") {
+    helpingVerb = "has"
+    document.getElementById("pc-status").innerHTML = "In use since <b>" + pcData.start_date + "</b>" + " the PC "+ helpingVerb +" lasted you <b>" + pcData.age + "</b>"
   } else {
-    document.getElementById("pc-end-date").innerText = "Last Used: " + pcData[0].end_date
+    document.getElementById("pc-status").innerHTML = "From <b>" + pcData.start_date + " to " + pcData.end_date + "</b>" + " the PC "+ helpingVerb +" lasted you <b>" + pcData.age + "</b>"
   }
+
+  document.getElementById("pc-cost").innerHTML = "You purchased it for <b>" + pcData.currency + pcData.cost + "</b> and after <b>" + pcData.totalHours + " hours</b> of gaming on it, it "+ helpingVerb +" costed you <b>" + pcData.currency + valuePerHour + "/Hour</b> or <b>" + pcData.currency + valuePerMonth + "/Month</b> " + "of gaming usage.<br><br>Did you beat Geforce Now price?"
 }
 
 function updateAnnualHoursChart() {
@@ -333,8 +343,32 @@ function updateAnnualHoursChart() {
   });
 }
 
+document.getElementById("prev-button").addEventListener("click", () => {
+  currentPCIndex = currentPCIndex - 1
+  if (currentPCIndex < 0) {
+    currentPCIndex = pcData.length - 1 // Loop back to last element
+  }
+  updatePCStatsSection(pcData[currentPCIndex]);
+});
+
+document.getElementById("next-button").addEventListener("click", () => {
+  currentPCIndex = currentPCIndex + 1
+  if (currentPCIndex == pcData.length) {
+    currentPCIndex = 0 // Loop back to first element
+  }
+  updatePCStatsSection(pcData[currentPCIndex])
+});
+
 loadSummaryDataFromTable();
 updateSummayChart();
 loadPCDataFromTable();
-updatePCStatsSection();
+if (pcData.length > 0){
+  updatePCStatsSection(pcData[currentPCIndex]);
+} else {
+  document.getElementById("pc-icon").innerHTML = '<img src=".\\resources\\images\\pc.png"></img>'
+  document.getElementById("pc-icon").querySelector("img").style.border = 'none'
+  document.getElementById("pc-navigation-bar").style.display = 'none'
+  document.getElementById("pc-status").innerHTML = "Add Gaming PCs to see more stats"
+}
+
 updateAnnualHoursChart();
