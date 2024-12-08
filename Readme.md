@@ -69,6 +69,7 @@ Made with love using
 
 - [PSSQLite](https://www.powershellgallery.com/packages/PSSQLite) by [Warren Frame](https://github.com/RamblingCookieMonster)
 - [ps12exe](https://github.com/steve02081504/ps12exe) by [Steve Green](https://github.com/steve02081504)
+- [DOMPurify](https://github.com/cure53/DOMPurify) by [Cure53](https://github.com/cure53)
 - [DataTables](https://datatables.net/)
 - [Jquery](https://jquery.com/)
 - [ChartJs](https://www.chartjs.org/)
