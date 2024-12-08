@@ -17,7 +17,7 @@
 
 function RenderEditGameForm($GamesList) {
 
-    $editGameForm = CreateForm "Gaming Gaiden: Edit Game" 875 265 ".\icons\running.ico"
+    $editGameForm = CreateForm "Gaming Gaiden: Edit Game" 865 265 ".\icons\running.ico"
 
     $imagePath = "./icons/default.png"
 
@@ -583,7 +583,7 @@ function RenderAddGameForm() {
 
 function RenderGamingPCForm($PCList) {
 
-    $gamingPCForm = CreateForm "Gaming Gaiden: Gaming PCs" 665 265 ".\icons\running.ico"
+    $gamingPCForm = CreateForm "Gaming Gaiden: Gaming PCs" 655 265 ".\icons\running.ico"
 
     $imagePath = "./icons/pc.png"
 
