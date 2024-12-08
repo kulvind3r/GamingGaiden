@@ -280,16 +280,16 @@ function updatePCStatsSection(pcData) {
   let valuePerMonth = Math.floor((parseInt(pcData.cost) / ageInMonths))
   let helpingVerb = ""
   
-  document.getElementById("pc-icon").innerHTML = pcData.iconUri
+  document.getElementById("pc-icon").innerHTML = DOMPurify.sanitize(pcData.iconUri)
   document.getElementById("pc-name").innerText = pcData.name
-  document.getElementById("pc-in-use").innerHTML = "<b>In Use: </b>" + pcData.start_date + " - " +pcData.end_date
+  document.getElementById("pc-in-use").innerHTML = DOMPurify.sanitize("<b>In Use: </b>" + pcData.start_date + " - " +pcData.end_date)
   if (pcData.current == "TRUE") {
-    document.getElementById("pc-in-use").innerHTML = "<b>In Use: </b>" + pcData.start_date + " - Present"
+    document.getElementById("pc-in-use").innerHTML = DOMPurify.sanitize("<b>In Use: </b>" + pcData.start_date + " - Present")
   }
-  document.getElementById("pc-lifespan").innerHTML = "<b>Lifespan: </b>" + pcData.age
-  document.getElementById("pc-price").innerHTML = "<b>Price: </b>" + pcData.currency + pcData.cost
-  document.getElementById("pc-hours").innerHTML = "<b>Hours Logged: </b>" + pcData.totalHours + "<sup> ✞</sup>"
-  document.getElementById("pc-running-cost").innerHTML = "<b>Running Cost: </b>" + pcData.currency + valuePerHour + "/Hour | " + pcData.currency + valuePerMonth + "/Month"
+  document.getElementById("pc-lifespan").innerHTML = DOMPurify.sanitize("<b>Lifespan: </b>" + pcData.age)
+  document.getElementById("pc-price").innerHTML = DOMPurify.sanitize("<b>Price: </b>" + pcData.currency + pcData.cost)
+  document.getElementById("pc-hours").innerHTML = DOMPurify.sanitize("<b>Hours Logged: </b>" + pcData.totalHours + "<sup> ✞</sup>")
+  document.getElementById("pc-running-cost").innerHTML = DOMPurify.sanitize("<b>Running Cost: </b>" + pcData.currency + valuePerHour + "/Hour | " + pcData.currency + valuePerMonth + "/Month")
 }
 
 function updateAnnualHoursChart() {
@@ -362,10 +362,10 @@ loadPCDataFromTable();
 if (pcData.length > 0){
   updatePCStatsSection(pcData[currentPCIndex]);
 } else {
-  document.getElementById("pc-icon").innerHTML = '<img src=".\\resources\\images\\pc.png"></img>'
+  document.getElementById("pc-icon").innerHTML = DOMPurify.sanitize('<img src=".\\resources\\images\\pc.png"></img>')
   document.getElementById("pc-icon").querySelector("img").style.border = 'none'
   document.getElementById("pc-navigation-bar").style.display = 'none'
-  document.getElementById("pc-status").innerHTML = "Add Gaming PCs to see more stats"
+  document.getElementById("pc-status").textContent = "Add Gaming PCs to see more stats"
 }
 
 updateAnnualHoursChart();
