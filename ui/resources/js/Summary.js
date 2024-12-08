@@ -237,7 +237,7 @@ function loadPCDataFromTable() {
   const pcRows = pcTable.querySelectorAll("tbody tr");
 
   pcData = Array.from(pcRows).map((row) => {
-    const iconUri = row.cells[0].innerHTML;
+    const iconUri = DOMPurify.sanitize(row.cells[0].innerHTML);
     const name = row.cells[1].textContent;
     const current = row.cells[2].textContent;
     const cost = row.cells[3].textContent;
@@ -349,7 +349,7 @@ document.getElementById("prev-button").addEventListener("click", () => {
   if (currentPCIndex < 0) {
     currentPCIndex = pcData.length - 1 // Loop back to last element
   }
-  updatePCStatsSection(pcData[currentPCIndex]);
+  updatePCStatsSection(pcData.at(currentPCIndex));
 });
 
 document.getElementById("next-button").addEventListener("click", () => {
