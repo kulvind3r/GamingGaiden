@@ -31,7 +31,7 @@ tr:nth-child(even):hover {
 }
 
 tr:nth-child(even) {
-  background-color: #bccad6 !important;
+  background-color: #cddbe7 !important;
 }
 
 /* Table Cell & Column styles */
@@ -53,6 +53,7 @@ td:first-child img {
   margin-left: auto;
   margin-right: auto;
   display: block;
+  box-shadow: 4px 4px 4px gray;
 }
 
 /* Define specific styles for the Name column */

@@ -476,7 +476,7 @@ function RenderAddGameForm() {
     $labelPlayTime = Createlabel "PlayTime:" 170 140; $addGameForm.Controls.Add($labelPlayTime)
     $textPlayTime = CreateTextBox "0 Hr 0 Min" 245 140 200 20; $textPlayTime.ReadOnly = $true; $addGameForm.Controls.Add($textPlayTime)
 
-    $buttonSearchIcon = CreateButton "Search" 20 185
+    $buttonSearchIcon = CreateButton "Search" 25 185
     $buttonSearchIcon.Size = New-Object System.Drawing.Size(60, 23)
     $buttonSearchIcon.Add_Click({
             $gameName = $textName.Text
@@ -492,12 +492,12 @@ function RenderAddGameForm() {
     $imagePath = "./icons/default.png"
     $pictureBoxImagePath = CreateTextBox $imagePath 579 254 1 1; $pictureBoxImagePath.hide(); $addGameForm.Controls.Add($pictureBoxImagePath)
 
-    $pictureBox = CreatePictureBox $imagePath 15 20 140 140
+    $pictureBox = CreatePictureBox $imagePath 15 20 147 147
     $addGameForm.Controls.Add($pictureBox)
 
-    $labelPictureBox = Createlabel "Game Icon" 57 165; $addGameForm.Controls.Add($labelPictureBox)
+    $labelPictureBox = Createlabel "Game Icon" 62 167; $addGameForm.Controls.Add($labelPictureBox)
 
-    $buttonUpdateIcon = CreateButton "Update" 90 185
+    $buttonUpdateIcon = CreateButton "Update" 95 185
     $buttonUpdateIcon.Size = New-Object System.Drawing.Size(60, 23)
     $buttonUpdateIcon.Add_Click({
             $downloadsDirectoryPath = (New-Object -ComObject Shell.Application).Namespace('shell:Downloads').Self.Path

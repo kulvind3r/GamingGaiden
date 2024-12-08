@@ -333,18 +333,18 @@ function RenderPCvsEmulation() {
 }
 
 function RenderAboutDialog() {
-    $aboutForm = CreateForm "About" 340 270 ".\icons\running.ico"
+    $aboutForm = CreateForm "About" 360 270 ".\icons\running.ico"
 
-    $pictureBox = CreatePictureBox "./icons/banner.png" 6 20 322 60
+    $pictureBox = CreatePictureBox "./icons/banner.png" 0 10 345 70
     $aboutForm.Controls.Add($pictureBox)
 
     $textCopyRight = [char]::ConvertFromUtf32(0x000000A9) + " 2024 Kulvinder Singh"
-    $labelCopyRight = CreateLabel $textCopyRight 107 100
+    $labelCopyRight = CreateLabel $textCopyRight 112 100
     $aboutForm.Controls.Add($labelCopyRight)
 
     $labelHome = New-Object Windows.Forms.LinkLabel
     $labelHome.Text = "Home"
-    $labelHome.Location = New-Object Drawing.Point(154, 130)
+    $labelHome.Location = New-Object Drawing.Point(160, 130)
     $labelHome.AutoSize = $true
     $labelHome.Add_LinkClicked({
             Start-Process "https://github.com/kulvind3r/GamingGaiden"
@@ -353,14 +353,14 @@ function RenderAboutDialog() {
 
     $labelAttributions = New-Object Windows.Forms.LinkLabel
     $labelAttributions.Text = "Open Source And Original Art Attributions"
-    $labelAttributions.Location = New-Object Drawing.Point(63, 160)
+    $labelAttributions.Location = New-Object Drawing.Point(70, 160)
     $labelAttributions.AutoSize = $true
     $labelAttributions.Add_LinkClicked({
             Start-Process "https://github.com/kulvind3r/GamingGaiden#attributions"
         })
     $aboutForm.Controls.Add($labelAttributions)
 
-    $buttonClose = CreateButton "Close" 133 200; $buttonClose.Add_Click({ $aboutForm.Close() }); $aboutForm.Controls.Add($buttonClose)
+    $buttonClose = CreateButton "Close" 140 200; $buttonClose.Add_Click({ $aboutForm.Close() }); $aboutForm.Controls.Add($buttonClose)
 
     $aboutForm.ShowDialog()
     $aboutForm.Dispose()
