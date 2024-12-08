@@ -103,7 +103,7 @@ function updateChart(
         }
       });
       data.push({
-        month: labels[month],
+        month: labels.at(month),
         time: (monthPlayTime / 60).toFixed(1),
       });
       yearTotalTime = yearTotalTime + monthPlayTime / 60;
