@@ -172,6 +172,14 @@ function RenderSummary() {
 
     $workingDirectory = (Get-Location).Path
 
+    $getGamesPlayTimeVsSessionDataQuery = "SELECT name, play_time, session_count, completed, status FROM games"
+    $gamesPlayTimeVsSessionData = RunDBQuery $getGamesPlayTimeVsSessionDataQuery
+    if ($gamesPlayTimeVsSessionData.Length -eq 0) {
+        ShowMessage "No Games found in DB. Please add some games first." "OK" "Error"
+        Log "Error: Games list empty. Returning"
+        return $false
+    }
+
     $getGamingPCsQuery = "SELECT gp.*,
                             SUM(dp.play_time) / 60 AS total_hours,
                             CAST((julianday(COALESCE(datetime(gp.end_date, 'unixepoch'), datetime('now'))) - julianday(datetime(gp.start_date, 'unixepoch'))) / 365.25 AS INTEGER) AS age_years,
@@ -224,14 +232,6 @@ function RenderSummary() {
         $null = $gamingPCs.add($thisPC)
     }
 
-    $getGamesPlayTimeVsSessionDataQuery = "SELECT name, play_time, session_count, completed, status FROM games"
-    $gamesPlayTimeVsSessionData = RunDBQuery $getGamesPlayTimeVsSessionDataQuery
-    if ($gamesPlayTimeVsSessionData.Length -eq 0) {
-        ShowMessage "No Games found in DB. Please add some games first." "OK" "Error"
-        Log "Error: Games list empty. Returning"
-        return $false
-    }
-
     $getGamesSummaryDataQuery = "SELECT COUNT(*) AS total_games, SUM(play_time) AS total_play_time, SUM(session_count) AS total_sessions, SUM(idle_time) AS total_idle_time FROM games"
     $gamesSummaryData = RunDBQuery $getGamesSummaryDataQuery
 
@@ -253,7 +253,7 @@ function RenderSummary() {
         $sessionString = "sessions"
     }
 
-    $summaryStatement = "From <b>$startDate to $endDate</b> you played <b>$($gamesSummaryData.total_games) $gameString</b> in <b>$($gamesSummaryData.total_sessions) $sessionString</b>. Total <b>play time is $totalPlayTime</b> with <b>$totalIdleTime spent idling</b>."
+    $summaryStatement = "From <b>$startDate to $endDate</b> you played <b>$($gamesSummaryData.total_games) $gameString</b> in <b>$($gamesSummaryData.total_sessions) $sessionString</b>. Total <b>games play time is $totalPlayTime</b> with <b>idle time of $totalIdleTime</b>."
 
     $summaryTable = $gamesPlayTimeVsSessionData | ConvertTo-Html -Fragment
     $pcTable = $gamingPCs | ConvertTo-Html -Fragment
@@ -360,9 +360,10 @@ function RenderAboutDialog() {
         })
     $aboutForm.Controls.Add($labelAttributions)
 
-    $buttonClose = CreateButton "Close" 140 200; $buttonClose.Add_Click({ $aboutForm.Close() }); $aboutForm.Controls.Add($buttonClose)
+    $buttonClose = CreateButton "Close" 140 200; $buttonClose.Add_Click({ $pictureBox.Image.Dispose(); $pictureBox.Dispose(); $aboutForm.Dispose() }); $aboutForm.Controls.Add($buttonClose)
 
     $aboutForm.ShowDialog()
+    $pictureBox.Image.Dispose(); $pictureBox.Dispose();
     $aboutForm.Dispose()
 }
 
