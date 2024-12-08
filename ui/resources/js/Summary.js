@@ -70,9 +70,7 @@ class Log2Axis extends Chart.Scale {
     }
 
     return this.getPixelForDecimal(
-      value === this.min
-        ? 0
-        : (Math.log2(value) - this._startValue) / this._valueRange
+      value === this.min ? 0 : (Math.log2(value) - this._startValue) / this._valueRange
     );
   }
 
@@ -195,10 +193,8 @@ function updateSummayChart() {
 }
 
 function loadSummaryDataFromTable() {
-  const summaryTable = document
-    .getElementById("summary-table")
-    .querySelector("table");
-  const summaryRows = summaryTable.querySelectorAll("tbody tr");
+  const summaryTable = $("#summary-table").find("table");
+  const summaryRows = summaryTable.find("tbody tr");
 
   gamingData = Array.from(summaryRows).map((row) => {
     const name = row.cells[0].textContent;
@@ -225,23 +221,17 @@ function loadSummaryDataFromTable() {
   gamingData.shift();
   finishedCount--;
 
-  let gameProgressMsg =
-    inProgressCount > 1 ? " Games In Progress" : " Game In Progress";
-  let gameFinishedMsg =
-    finishedCount > 1 ? " Games Finished" : " Game Finished";
-  let gameHoldMsg = holdCount > 1 ? " Games on Hold" : " Game on Hold";
-  let gameForeverMsg = foreverCount > 1 ? " Forever Games" : " Forever Game";
-  let gameDroppedMsg = droppedCount > 1 ? " Dropped Games " : " Dropped Game";
+  let gameProgressMsg = inProgressCount > 1 ? " Games In Progress" : " Game In Progress";
+  let gameFinishedMsg = finishedCount > 1 ? " Games Finished" : " Game Finished";
+  let gameHoldMsg     = holdCount > 1 ? " Games on Hold" : " Game on Hold";
+  let gameForeverMsg  = foreverCount > 1 ? " Forever Games" : " Forever Game";
+  let gameDroppedMsg  = droppedCount > 1 ? " Dropped Games " : " Dropped Game";
 
-  document.getElementById("progress-count").innerText =
-    inProgressCount + gameProgressMsg;
-  document.getElementById("finished-count").innerText =
-    finishedCount + gameFinishedMsg;
-  document.getElementById("hold-count").innerText = holdCount + gameHoldMsg;
-  document.getElementById("forever-count").innerText =
-    foreverCount + gameForeverMsg;
-  document.getElementById("dropped-count").innerText =
-    droppedCount + gameDroppedMsg;
+  $("#progress-count").innerText  = inProgressCount + gameProgressMsg;
+  $("#finished-count").innerText  = finishedCount + gameFinishedMsg;
+  $("#hold-count").innerText      = holdCount + gameHoldMsg;
+  $("#forever-count").innerText   = foreverCount + gameForeverMsg;
+  $("#dropped-count").innerText   = droppedCount + gameDroppedMsg;
 }
 
 function loadPCDataFromTable() {
@@ -300,9 +290,8 @@ function updatePCStatsSection(pcData) {
   let valuePerHour = Math.floor(
     parseInt(pcData.cost) / parseInt(pcData.totalHours)
   );
-  let ageInMonths =
-    parseInt(pcData.age.split(" ")[0]) * 12 +
-    parseInt(pcData.age.split(" ")[3]);
+  let ageInMonths = parseInt(pcData.age.split(" ")[0]) * 12 +
+                    parseInt(pcData.age.split(" ")[3]);
   let valuePerMonth = Math.floor(parseInt(pcData.cost) / ageInMonths);
 
   document.getElementById("pc-name").innerText = pcData.name;
@@ -311,37 +300,15 @@ function updatePCStatsSection(pcData) {
   // to prevent Codacy from triggering false positives for XSS attack vulnerabilities.
   $("#pc-icon").html(DOMPurify.sanitize(pcData.iconUri));
 
-  $("#pc-in-use").html(
-    DOMPurify.sanitize(
-      "<b>In Use: </b>" + pcData.start_date + " - " + pcData.end_date
-    )
-  );
+  $("#pc-in-use").html(DOMPurify.sanitize("<b>In Use: </b>" + pcData.start_date + " - " + pcData.end_date));
   if (pcData.current == "TRUE") {
-    $("#pc-in-use").html(
-      DOMPurify.sanitize("<b>In Use: </b>" + pcData.start_date + " - Present")
-    );
+    $("#pc-in-use").html(DOMPurify.sanitize("<b>In Use: </b>" + pcData.start_date + " - Present"));
   }
 
   $("#pc-lifespan").html(DOMPurify.sanitize("<b>Lifespan: </b>" + pcData.age));
-  $("#pc-price").html(
-    DOMPurify.sanitize("<b>Price: </b>" + pcData.currency + pcData.cost)
-  );
-  $("#pc-hours").html(
-    DOMPurify.sanitize(
-      "<b>Hours Logged: </b>" + pcData.totalHours + "<sup> ✞</sup>"
-    )
-  );
-  $("#pc-running-cost").html(
-    DOMPurify.sanitize(
-      "<b>Running Cost: </b>" +
-      pcData.currency +
-      valuePerHour +
-      "/Hour | " +
-      pcData.currency +
-      valuePerMonth +
-      "/Month"
-    )
-  );
+  $("#pc-price").html(DOMPurify.sanitize("<b>Price: </b>" + pcData.currency + pcData.cost));
+  $("#pc-hours").html(DOMPurify.sanitize("<b>Hours Logged: </b>" + pcData.totalHours + "<sup> ✞</sup>"));
+  $("#pc-running-cost").html(DOMPurify.sanitize("<b>Running Cost: </b>" + pcData.currency + valuePerHour + "/Hour | " + pcData.currency + valuePerMonth + "/Month"));
 }
 
 function updateAnnualHoursChart() {
@@ -421,13 +388,10 @@ loadPCDataFromTable();
 if (pcData.length > 0) {
   updatePCStatsSection(pcData.at(currentPCIndex));
 } else {
-  $("#pc-icon").html(
-    DOMPurify.sanitize('<img src=".\\resources\\images\\pc.png"></img>')
-  );
+  $("#pc-icon").html(DOMPurify.sanitize('<img src=".\\resources\\images\\pc.png"></img>'));
   document.getElementById("pc-icon").querySelector("img").style.border = "none";
   document.getElementById("pc-navigation-bar").style.display = "none";
-  document.getElementById("pc-status").textContent =
-    "Add Gaming PCs to see more stats";
+  document.getElementById("pc-status").textContent = "Add Gaming PCs to see more stats";
 }
 
 updateAnnualHoursChart();
