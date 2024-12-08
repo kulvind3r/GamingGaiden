@@ -192,7 +192,9 @@ function RenderSummary() {
                             dp.play_date BETWEEN DATE(datetime(gp.start_date, 'unixepoch')) 
                                             AND DATE(COALESCE(datetime(gp.end_date, 'unixepoch'), datetime('now')))
                         GROUP BY 
-                            gp.name;"
+                            gp.name
+                        ORDER BY
+                            gp.current DESC, gp.end_date DESC;"
     $gamingPCData = RunDBQuery $getGamingPCsQuery
 
     $TotalAnnualGamingHoursQuery ="SELECT 
@@ -244,16 +246,7 @@ function RenderSummary() {
     $totalPlayTime = PlayTimeMinsToString $gamesSummaryData.total_play_time
     $totalIdleTime = PlayTimeMinsToString $gamesSummaryData.total_idle_time
 
-    $gameString = "game"
-    $sessionString = "session"
-    if ($gamesSummaryData.total_games -gt 1) {
-        $gameString = "games"
-    }
-    if ($gamesSummaryData.total_sessions -gt 1) {
-        $sessionString = "sessions"
-    }
-
-    $summaryStatement = "From <b>$startDate to $endDate</b> you played <b>$($gamesSummaryData.total_games) $gameString</b> in <b>$($gamesSummaryData.total_sessions) $sessionString</b>. Total <b>games play time is $totalPlayTime</b> with <b>idle time of $totalIdleTime</b>."
+    $summaryStatement = "<b>Duration: </b>$startDate - $endDate. <b>Games: </b>$($gamesSummaryData.total_games). <b>Sessions: </b>$($gamesSummaryData.total_sessions).<br><br><b>Play time: </b>$totalPlayTime. <b>Idle time: </b>$totalIdleTime."
 
     $summaryTable = $gamesPlayTimeVsSessionData | ConvertTo-Html -Fragment
     $pcTable = $gamingPCs | ConvertTo-Html -Fragment

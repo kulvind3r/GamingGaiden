@@ -63,8 +63,11 @@
         <div id="pc-stats-section">
           <div id="pc-icon"></div>
           <div id="pc-stats">  
-            <p id="pc-status"></p>
-            <p id="pc-cost"></p>
+            <p id="pc-in-use"></p>
+            <p id="pc-lifespan"></p>
+            <p id="pc-price"></p>
+            <p id="pc-hours"></p>
+            <p id="pc-running-cost"></p>
             <p id="pc-stat-disclaimer" style="font-size: 11px;">
               &#10014 Includes play time of games you may have deleted. Idle time is excluded.
             </p>

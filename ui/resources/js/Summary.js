@@ -281,18 +281,15 @@ function updatePCStatsSection(pcData) {
   let helpingVerb = ""
   
   document.getElementById("pc-icon").innerHTML = pcData.iconUri
-  
-  
   document.getElementById("pc-name").innerText = pcData.name
-  
+  document.getElementById("pc-in-use").innerHTML = "<b>In Use: </b>" + pcData.start_date + " - " +pcData.end_date
   if (pcData.current == "TRUE") {
-    helpingVerb = "has"
-    document.getElementById("pc-status").innerHTML = "In use since <b>" + pcData.start_date + "</b>" + ", this PC "+ helpingVerb +" lasted you <b>" + pcData.age + "</b>"
-  } else {
-    document.getElementById("pc-status").innerHTML = "From <b>" + pcData.start_date + " to " + pcData.end_date + "</b>" + ", this PC "+ helpingVerb +" lasted you <b>" + pcData.age + "</b>"
+    document.getElementById("pc-in-use").innerHTML = "<b>In Use: </b>" + pcData.start_date + " - Present"
   }
-
-  document.getElementById("pc-cost").innerHTML = "You purchased it for <b>" + pcData.currency + pcData.cost + "</b> and after <b>" + pcData.totalHours + " hours</b><sup>✞</sup> of gaming on it, it "+ helpingVerb +" costed you <b>" + pcData.currency + valuePerHour + "/Hour</b> or <b>" + pcData.currency + valuePerMonth + "/Month</b> " + "for gaming usage.<br><br>Did you beat Geforce Now price?"
+  document.getElementById("pc-lifespan").innerHTML = "<b>Lifespan: </b>" + pcData.age
+  document.getElementById("pc-price").innerHTML = "<b>Price: </b>" + pcData.currency + pcData.cost
+  document.getElementById("pc-hours").innerHTML = "<b>Hours Logged: </b>" + pcData.totalHours + "<sup> ✞</sup>"
+  document.getElementById("pc-running-cost").innerHTML = "<b>Running Cost: </b>" + pcData.currency + valuePerHour + "/Hour | " + pcData.currency + valuePerMonth + "/Month"
 }
 
 function updateAnnualHoursChart() {

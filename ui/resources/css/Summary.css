@@ -182,7 +182,7 @@ body {
 #pc-stats {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: space-evenly;
   height: 90%;
   padding: 10px;
 }
