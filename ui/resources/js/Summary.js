@@ -227,11 +227,11 @@ function loadSummaryDataFromTable() {
   let gameForeverMsg  = foreverCount > 1 ? " Forever Games" : " Forever Game";
   let gameDroppedMsg  = droppedCount > 1 ? " Dropped Games " : " Dropped Game";
 
-  $("#progress-count").innerText  = inProgressCount + gameProgressMsg;
-  $("#finished-count").innerText  = finishedCount + gameFinishedMsg;
-  $("#hold-count").innerText      = holdCount + gameHoldMsg;
-  $("#forever-count").innerText   = foreverCount + gameForeverMsg;
-  $("#dropped-count").innerText   = droppedCount + gameDroppedMsg;
+  $("#progress-count").text(inProgressCount + gameProgressMsg);
+  $("#finished-count").text(finishedCount + gameFinishedMsg);
+  $("#hold-count").text(holdCount + gameHoldMsg);
+  $("#forever-count").text(foreverCount + gameForeverMsg);
+  $("#dropped-count").text(droppedCount + gameDroppedMsg);
 }
 
 function loadPCDataFromTable() {
