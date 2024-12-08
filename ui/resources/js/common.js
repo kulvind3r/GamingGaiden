@@ -42,11 +42,15 @@ function chartTitleConfig(title, padding = 0, color = "#000") {
   };
 }
 
-function buildGamingData(key1, key2, tableId = "data-table", querySelectorTag=null) {
-
+function buildGamingData(
+  key1,
+  key2,
+  tableId = "data-table",
+  querySelectorTag = null
+) {
   let table = document.getElementById(tableId);
-  if (querySelectorTag !=null) {
-    table = document.getElementById(tableId).querySelector(querySelectorTag)
+  if (querySelectorTag != null) {
+    table = document.getElementById(tableId).querySelector(querySelectorTag);
   }
   const rows = table.querySelectorAll("tbody tr");
 

@@ -197,7 +197,7 @@ function RenderSummary() {
                             gp.current DESC, gp.end_date DESC;"
     $gamingPCData = RunDBQuery $getGamingPCsQuery
 
-    $TotalAnnualGamingHoursQuery ="SELECT 
+    $TotalAnnualGamingHoursQuery = "SELECT 
                                     strftime('%Y', play_date) AS Year, 
                                     SUM(ROUND(play_time/60.0,2)) AS TotalPlaytime 
                                    FROM daily_playtime GROUP BY strftime('%Y', play_date) ORDER BY Year;"
@@ -227,7 +227,7 @@ function RenderSummary() {
 
         $iconBitmap.Dispose()
 
-        $pcAge =  "{0} Years and {1} Months" -f $gamingPCRecord.age_years, $gamingPCRecord.age_months
+        $pcAge = "{0} Years and {1} Months" -f $gamingPCRecord.age_years, $gamingPCRecord.age_months
 
         $thisPC = [GamingPC]::new($pcIconUri, $name, $gamingPCRecord.current, $gamingPCRecord.cost, $gamingPCRecord.currency, $gamingPCRecord.start_date, $gamingPCRecord.end_date, $pcAge, $gamingPCRecord.total_hours)
 

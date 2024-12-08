@@ -100,13 +100,13 @@ function SavePC() {
 
     Log "Adding PC $PCName in database"
     RunDBQuery $addPCQuery @{
-        PCName           = $PCName.Trim()
-        PCIconBytes      = $PCIconBytes
-        PCCost           = $PCCost.Trim()
-        PCCurrency       = $PCCurrency.Trim()
-        PCStartDate      = $PCStartDate
-        PCEndDate        = $PCEndDate
-        PCCurrentStatus  = $PCCurrentStatus
+        PCName          = $PCName.Trim()
+        PCIconBytes     = $PCIconBytes
+        PCCost          = $PCCost.Trim()
+        PCCurrency      = $PCCurrency.Trim()
+        PCStartDate     = $PCStartDate
+        PCEndDate       = $PCEndDate
+        PCCurrentStatus = $PCCurrentStatus
     }
 }
 
@@ -223,12 +223,12 @@ function UpdatePC() {
 
         Log "Updating PC $PCName in database"
         RunDBQuery $updatePCQuery @{
-            PCIconBytes      = $PCIconBytes
-            PCCost           = $PCCost
-            PCCurrency       = $PCCurrency
-            PCStartDate      = $PCStartDate
-            PCEndDate        = $PCEndDate
-            PCCurrentStatus  = $PCCurrentStatus
+            PCIconBytes     = $PCIconBytes
+            PCCost          = $PCCost
+            PCCurrency      = $PCCurrency
+            PCStartDate     = $PCStartDate
+            PCEndDate       = $PCEndDate
+            PCCurrentStatus = $PCCurrentStatus
         }
     }
     else {

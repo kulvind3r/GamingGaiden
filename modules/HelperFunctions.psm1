@@ -37,15 +37,17 @@ function ResizeImage() {
 
     $WIP.Filters[1].Properties("PreserveAspectRatio") = $true
 
-    if($HD) {
+    if ($HD) {
         if ($WIA.Width -gt 720 -or $WIA.Height -gt 720) {
             $WIP.Filters[1].Properties("MaximumWidth") = 720
             $WIP.Filters[1].Properties("MaximumHeight") = 720
-        } else {
+        }
+        else {
             $WIP.Filters[1].Properties("MaximumWidth") = $WIA.Width
             $WIP.Filters[1].Properties("MaximumHeight") = $WIA.Height
         }
-    } else {
+    }
+    else {
         $WIP.Filters[1].Properties("MaximumWidth") = 140
         $WIP.Filters[1].Properties("MaximumHeight") = 140
     }
@@ -170,7 +172,7 @@ function CreatePictureBox() {
     $pictureBox.Location = New-Object Drawing.Point($DrawX, $DrawY)
     $pictureBox.Size = New-Object Drawing.Size($SizeX, $SizeY)
     $pictureBox.SizeMode = [System.Windows.Forms.PictureBoxSizeMode]::CenterImage
-    if($SizeMode -eq "zoom") {
+    if ($SizeMode -eq "zoom") {
         $pictureBox.SizeMode = [System.Windows.Forms.PictureBoxSizeMode]::Zoom
     }
     $pictureBox.Image = [System.Drawing.Image]::FromFile($ImagePath)

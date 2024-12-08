@@ -62,19 +62,18 @@ function RenderEditGameForm($GamesList) {
     $checkboxDropped.Top = 155
     $checkboxDropped.Left = 470
     $checkboxDropped.Add_CheckedChanged({
-        if($checkboxDropped.Checked)
-        {
-            $checkboxCompleted.Checked = $true
-            $checkboxCompleted.Enabled = $false
-            $checkboxHold.Checked = $false
-            $checkboxForever.Checked = $false
-        }
-        else {
-            if ( -Not $checkboxHold.Checked -And -Not $checkboxForever.Checked ){
-                $checkboxCompleted.Enabled = $true
-            } 
-        }
-    })
+            if ($checkboxDropped.Checked) {
+                $checkboxCompleted.Checked = $true
+                $checkboxCompleted.Enabled = $false
+                $checkboxHold.Checked = $false
+                $checkboxForever.Checked = $false
+            }
+            else {
+                if ( -Not $checkboxHold.Checked -And -Not $checkboxForever.Checked ) {
+                    $checkboxCompleted.Enabled = $true
+                } 
+            }
+        })
     $editGameForm.Controls.Add($checkboxDropped)
 
     $checkboxHold = New-Object Windows.Forms.CheckBox
@@ -82,19 +81,18 @@ function RenderEditGameForm($GamesList) {
     $checkboxHold.Top = 175
     $checkboxHold.Left = 470
     $checkboxHold.Add_CheckedChanged({
-        if($checkboxHold.Checked)
-        {
-            $checkboxCompleted.Checked = $true
-            $checkboxCompleted.Enabled = $false
-            $checkboxDropped.Checked = $false
-            $checkboxForever.Checked = $false
-        }
-        else {
-            if ( -Not $checkboxDropped.Checked -And -Not $checkboxForever.Checked ){
-                $checkboxCompleted.Enabled = $true
+            if ($checkboxHold.Checked) {
+                $checkboxCompleted.Checked = $true
+                $checkboxCompleted.Enabled = $false
+                $checkboxDropped.Checked = $false
+                $checkboxForever.Checked = $false
             }
-        }
-    })
+            else {
+                if ( -Not $checkboxDropped.Checked -And -Not $checkboxForever.Checked ) {
+                    $checkboxCompleted.Enabled = $true
+                }
+            }
+        })
     $editGameForm.Controls.Add($checkboxHold)
 
     $checkboxForever = New-Object Windows.Forms.CheckBox
@@ -102,19 +100,18 @@ function RenderEditGameForm($GamesList) {
     $checkboxForever.Top = 195
     $checkboxForever.Left = 470
     $checkboxForever.Add_CheckedChanged({
-        if($checkboxForever.Checked)
-        {
-            $checkboxCompleted.Checked = $true
-            $checkboxCompleted.Enabled = $false
-            $checkboxHold.Checked = $false
-            $checkboxDropped.Checked = $false
-        }
-        else {
-            if ( -Not $checkboxHold.Checked -And -Not $checkboxDropped.Checked){
-                $checkboxCompleted.Enabled = $true
-            } 
-        }
-    })
+            if ($checkboxForever.Checked) {
+                $checkboxCompleted.Checked = $true
+                $checkboxCompleted.Enabled = $false
+                $checkboxHold.Checked = $false
+                $checkboxDropped.Checked = $false
+            }
+            else {
+                if ( -Not $checkboxHold.Checked -And -Not $checkboxDropped.Checked) {
+                    $checkboxCompleted.Enabled = $true
+                } 
+            }
+        })
     $editGameForm.Controls.Add($checkboxForever)
 
     $labelPictureBox = Createlabel "Game Icon" 57 165; $editGameForm.Controls.Add($labelPictureBox)
@@ -133,7 +130,7 @@ function RenderEditGameForm($GamesList) {
             $checkboxHold.Checked = ($selectedGame.status -eq 'hold')
             $checkboxForever.Checked = ($selectedGame.status -eq 'forever')
 
-            if($checkboxForever.Checked -or $checkboxHold.Checked -or $checkboxDropped.Checked){
+            if ($checkboxForever.Checked -or $checkboxHold.Checked -or $checkboxDropped.Checked) {
                 $checkboxCompleted.Enabled = $false
             }
 
@@ -571,9 +568,9 @@ function RenderAddGameForm() {
 
     $buttonCancel = CreateButton "Cancel" 370 185; 
     $buttonCancel.Add_Click({ 
-        $pictureBox.Image.Dispose(); $pictureBox.Dispose();
-        $addGameForm.Dispose()
-    }); 
+            $pictureBox.Image.Dispose(); $pictureBox.Dispose();
+            $addGameForm.Dispose()
+        }); 
     $addGameForm.Controls.Add($buttonCancel)
 
     $addGameForm.ShowDialog()
@@ -634,51 +631,52 @@ function RenderGamingPCForm($PCList) {
     $checkboxCurrent.Top = 100
     $checkboxCurrent.Left = 295
     $checkboxCurrent.Add_CheckedChanged({
-        $endDatePicker.Enabled = (-Not $checkboxCurrent.Checked)
-    })
+            $endDatePicker.Enabled = (-Not $checkboxCurrent.Checked)
+        })
     $gamingPCForm.Controls.Add($checkboxCurrent)
 
     $pictureBox = CreatePictureBox $imagePath 10 20 150 150 "zoom"
     $gamingPCForm.Controls.Add($pictureBox)
 
     $listBox.Add_SelectedIndexChanged({
-        $selectedPC = GetPCDetails $listBox.SelectedItem
+            $selectedPC = GetPCDetails $listBox.SelectedItem
 
-        $textName.Text = $selectedPC.name
-        $textOriginalPCName.Text = $selectedPC.name
-        $textCost.Text = $selectedPC.cost
-        $textCurrency.Text = $selectedPC.currency
-        $checkboxCurrent.Checked = ($selectedPC.current -eq "TRUE")
-        $startDatePicker.Value = (Get-Date "1970-01-01 00:00:00Z").AddSeconds($selectedPC.start_date)
-        if ($selectedPC.current -eq 'TRUE') {
-            $checkboxCurrent.Checked = $true
-            $endDatePicker.Value = [DateTime]::Today
-            $endDatePicker.Enabled = $false
-        } else {
-            $endDatePicker.Value = (Get-Date "1970-01-01 00:00:00Z").AddSeconds($selectedPC.end_date)
-        }
+            $textName.Text = $selectedPC.name
+            $textOriginalPCName.Text = $selectedPC.name
+            $textCost.Text = $selectedPC.cost
+            $textCurrency.Text = $selectedPC.currency
+            $checkboxCurrent.Checked = ($selectedPC.current -eq "TRUE")
+            $startDatePicker.Value = (Get-Date "1970-01-01 00:00:00Z").AddSeconds($selectedPC.start_date)
+            if ($selectedPC.current -eq 'TRUE') {
+                $checkboxCurrent.Checked = $true
+                $endDatePicker.Value = [DateTime]::Today
+                $endDatePicker.Enabled = $false
+            }
+            else {
+                $endDatePicker.Value = (Get-Date "1970-01-01 00:00:00Z").AddSeconds($selectedPC.end_date)
+            }
 
-        $iconFileName = ToBase64 $selectedPC.name
+            $iconFileName = ToBase64 $selectedPC.name
 
-        $iconByteStream = [System.IO.MemoryStream]::new($selectedPC.icon)
-        $iconBitmap = [System.Drawing.Bitmap]::FromStream($iconByteStream)
+            $iconByteStream = [System.IO.MemoryStream]::new($selectedPC.icon)
+            $iconBitmap = [System.Drawing.Bitmap]::FromStream($iconByteStream)
 
-        if ($iconBitmap.PixelFormat -eq "Format32bppArgb") {
-            $imagePath = "$env:TEMP\GmGdn-{0}-$iconFileName.png" -f $(Get-Random)
-            $iconBitmap.Save($imagePath, [System.Drawing.Imaging.ImageFormat]::Png)
-        }
-        else {
-            $imagePath = "$env:TEMP\GmGdn-{0}-$iconFileName.jpg" -f $(Get-Random)
-            $iconBitmap.Save($imagePath, [System.Drawing.Imaging.ImageFormat]::Jpeg)
-        }
+            if ($iconBitmap.PixelFormat -eq "Format32bppArgb") {
+                $imagePath = "$env:TEMP\GmGdn-{0}-$iconFileName.png" -f $(Get-Random)
+                $iconBitmap.Save($imagePath, [System.Drawing.Imaging.ImageFormat]::Png)
+            }
+            else {
+                $imagePath = "$env:TEMP\GmGdn-{0}-$iconFileName.jpg" -f $(Get-Random)
+                $iconBitmap.Save($imagePath, [System.Drawing.Imaging.ImageFormat]::Jpeg)
+            }
 
-        $iconBitmap.Dispose()
+            $iconBitmap.Dispose()
 
-        $pictureBoxImagePath.Text = $imagePath
-        $pictureBox.Image.Dispose()
-        $pictureBox.Image = [System.Drawing.Image]::FromFile($imagePath)
+            $pictureBoxImagePath.Text = $imagePath
+            $pictureBox.Image.Dispose()
+            $pictureBox.Image = [System.Drawing.Image]::FromFile($imagePath)
 
-    })
+        })
     $gamingPCForm.Controls.Add($listBox)
     
     $buttonUpdateImage = CreateButton "Update Image" 40 190
@@ -711,7 +709,8 @@ function RenderGamingPCForm($PCList) {
                 if ($PCList.Length -gt 0) {
                     $listBox.Items.AddRange($PCList); 
                     $listBox.SelectedIndex = 0
-                } else {
+                }
+                else {
                     $buttonReset.PerformClick()
                 }
             }
@@ -724,7 +723,7 @@ function RenderGamingPCForm($PCList) {
 
             if ($textName.Text -eq "" -Or $textCost.Text -eq "" -Or $textCurrency.Text -eq "")	{
                 ShowMessage "Name, Cost, Currency fields cannot be empty. Try Again." "OK" "Error"
-                if($listBox.Items.Count -gt 0){
+                if ($listBox.Items.Count -gt 0) {
                     $listBox.SetSelected($currentlySelectedIndex, $true)
                 }
                 return
@@ -733,7 +732,7 @@ function RenderGamingPCForm($PCList) {
             $PCName = $textName.Text
             if ( $startDatePicker.Value -gt (Get-Date)) {
                 ShowMessage "Start Date Cannot be in Future." "OK" "Error"
-                if($listBox.Items.Count -gt 0){
+                if ($listBox.Items.Count -gt 0) {
                     $listBox.SetSelected($currentlySelectedIndex, $true)
                 }
                 return
@@ -743,7 +742,7 @@ function RenderGamingPCForm($PCList) {
             $PCCurrency = $textCurrency.Text
             if ( -Not ($PCCurrency -match '\D{1,3}') ) {
                 ShowMessage "Currency Symbol cannot be more than 3 characters long'." "OK" "Error"
-                if($listBox.Items.Count -gt 0){
+                if ($listBox.Items.Count -gt 0) {
                     $listBox.SetSelected($currentlySelectedIndex, $true)
                 }
                 return
@@ -752,7 +751,7 @@ function RenderGamingPCForm($PCList) {
             $PCCost = $textCost.Text
             if ( -Not ($PCCost -match '^[0-9]+') ) {
                 ShowMessage "Cost cannot have non numeric characters'." "OK" "Error"
-                if($listBox.Items.Count -gt 0){
+                if ($listBox.Items.Count -gt 0) {
                     $listBox.SetSelected($currentlySelectedIndex, $true)
                 }
                 return
@@ -761,12 +760,13 @@ function RenderGamingPCForm($PCList) {
             if ($checkboxCurrent.Checked) { 
                 $PCEndDate = ""
                 $PCCurrentStatus = "TRUE";
-            } else {
+            }
+            else {
                 $PCEndDate = (Get-Date ($endDatePicker.Value) -UFormat %s).Split('.').Get(0)
                 $PCCurrentStatus = "FALSE";
                 if ( $endDatePicker.Value -gt [DateTime]::Today -or $PCStartDate -gt $PCEndDate) {
                     ShowMessage "End Date Cannot be in Future or before Start Date'." "OK" "Error"
-                    if($listBox.Items.Count -gt 0){
+                    if ($listBox.Items.Count -gt 0) {
                         $listBox.SetSelected($currentlySelectedIndex, $true)
                     }
                     return
@@ -779,7 +779,8 @@ function RenderGamingPCForm($PCList) {
 
             if ($AddNew) {
                 ShowMessage "Added '$PCName' in Database." "OK" "Asterisk"
-            } else {
+            }
+            else {
                 ShowMessage "Updated '$PCName' in Database." "OK" "Asterisk"
             }
 
@@ -792,36 +793,36 @@ function RenderGamingPCForm($PCList) {
     $gamingPCForm.Controls.Add($buttonUpdate)
 
     $buttonReset = CreateButton "Reset" 170 150; $buttonReset.Add_Click({ 
-        $textName.Clear(); $textCost.Clear(); $textCurrency.Clear();
+            $textName.Clear(); $textCost.Clear(); $textCurrency.Clear();
 
-        $PCList = (RunDBQuery "SELECT name FROM gaming_pcs").name
-        $listBox.Items.Clear(); 
-        if ($PCList.Length -gt 0){
-            $listBox.Items.AddRange($PCList);
-        }
+            $PCList = (RunDBQuery "SELECT name FROM gaming_pcs").name
+            $listBox.Items.Clear(); 
+            if ($PCList.Length -gt 0) {
+                $listBox.Items.AddRange($PCList);
+            }
 
-        $textOriginalPCName.Clear();
-        $checkboxCurrent.Checked = $false;
-        $checkboxNew.Checked = $false;
-        $pictureBoxImagePath.Text = "./icons/pc.png"
-        $pictureBox.Image.Dispose()
-        $pictureBox.Image = [System.Drawing.Image]::FromFile($pictureBoxImagePath.Text)
-        $startDatePicker.Value = [DateTime]::Today
-        $endDatePicker.Value = [DateTime]::Today
-    }); 
+            $textOriginalPCName.Clear();
+            $checkboxCurrent.Checked = $false;
+            $checkboxNew.Checked = $false;
+            $pictureBoxImagePath.Text = "./icons/pc.png"
+            $pictureBox.Image.Dispose()
+            $pictureBox.Image = [System.Drawing.Image]::FromFile($pictureBoxImagePath.Text)
+            $startDatePicker.Value = [DateTime]::Today
+            $endDatePicker.Value = [DateTime]::Today
+        }); 
     $gamingPCForm.Controls.Add($buttonReset)
 
     $buttonAddNew = CreateButton "Add New" 170 190; $buttonAddNew.Add_Click({ 
-        $checkboxNew.Checked = $true
-        $buttonUpdate.PerformClick()
-    }); 
+            $checkboxNew.Checked = $true
+            $buttonUpdate.PerformClick()
+        }); 
     $gamingPCForm.Controls.Add($buttonAddNew)
 
     $buttonCancel = CreateButton "Cancel" 360 190; $buttonCancel.Add_Click({ 
-        $listBox.Remove_SelectedIndexChanged({})
-        $pictureBox.Image.Dispose(); $pictureBox.Dispose();
-        $gamingPCForm.Dispose()
-    }); 
+            $listBox.Remove_SelectedIndexChanged({})
+            $pictureBox.Image.Dispose(); $pictureBox.Dispose();
+            $gamingPCForm.Dispose()
+        }); 
     $gamingPCForm.Controls.Add($buttonCancel)
 
     $gamingPCForm.ShowDialog()

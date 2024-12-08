@@ -143,7 +143,7 @@ body {
   justify-content: space-around;
 }
 
-#summary-chart-container{
+#summary-chart-container {
   flex: 1 1 60%;
   padding-left: 1%;
   max-width: 100%;
@@ -158,7 +158,7 @@ body {
 
 #pc-icon img {
   width: auto;
-  height : auto;
+  height: auto;
   max-height: 90%;
   max-width: 90%;
   object-fit: contain;

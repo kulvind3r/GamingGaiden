@@ -3,7 +3,12 @@
 
 let gamingData = [];
 let pcData = [];
-let annualHoursData = buildGamingData("Year", "TotalPlayTime", "annual-gaming-hours-table", "table");
+let annualHoursData = buildGamingData(
+  "Year",
+  "TotalPlayTime",
+  "annual-gaming-hours-table",
+  "table"
+);
 let currentPCIndex = 0;
 let finishedCount = 0;
 let inProgressCount = 0;
@@ -97,48 +102,46 @@ function updateSummayChart() {
             x: row.sessions,
             y: row.playtime,
             completed: row.completed,
-            status: row.status
+            status: row.status,
           })),
           borderWidth: 2,
           pointBackgroundColor: function (context) {
             var valueCompleted = context.raw.completed;
-            if(valueCompleted == "FALSE") {
-              return "#a6cbf5"
-            }
-            else {
+            if (valueCompleted == "FALSE") {
+              return "#a6cbf5";
+            } else {
               var valueStatus = context.raw.status;
-              if(valueStatus == ""){
-                return "#59eb8a"
+              if (valueStatus == "") {
+                return "#59eb8a";
               }
-              if(valueStatus == "hold"){
-                return "#f5c37d"
+              if (valueStatus == "hold") {
+                return "#f5c37d";
               }
-              if(valueStatus == "forever"){
-                return "#d0d3db"
+              if (valueStatus == "forever") {
+                return "#d0d3db";
               }
-              if(valueStatus == "dropped"){
-                return "#deb297"
+              if (valueStatus == "dropped") {
+                return "#deb297";
               }
             }
           },
           pointBorderColor: function (context) {
             var valueCompleted = context.raw.completed;
-            if(valueCompleted == "FALSE") {
-              return "#1f9afe"
-            }
-            else {
+            if (valueCompleted == "FALSE") {
+              return "#1f9afe";
+            } else {
               var valueStatus = context.raw.status;
-              if(valueStatus == ""){
-                return "#059b27"
+              if (valueStatus == "") {
+                return "#059b27";
               }
-              if(valueStatus == "hold"){
-                return "#d78f34"
+              if (valueStatus == "hold") {
+                return "#d78f34";
               }
-              if(valueStatus == "forever"){
-                return "#94979c"
+              if (valueStatus == "forever") {
+                return "#94979c";
               }
-              if(valueStatus == "dropped"){
-                return "#662f13"
+              if (valueStatus == "dropped") {
+                return "#662f13";
               }
             }
           },
@@ -161,8 +164,8 @@ function updateSummayChart() {
       elements: {
         point: {
           radius: 3.5,
-          hoverRadius: 4.5
-        }
+          hoverRadius: 4.5,
+        },
       },
       plugins: {
         tooltip: {
@@ -186,13 +189,15 @@ function updateSummayChart() {
         },
       },
       responsive: true,
-      maintainAspectRatio: false
+      maintainAspectRatio: false,
     },
   });
 }
 
 function loadSummaryDataFromTable() {
-  const summaryTable = document.getElementById("summary-table").querySelector("table")
+  const summaryTable = document
+    .getElementById("summary-table")
+    .querySelector("table");
   const summaryRows = summaryTable.querySelectorAll("tbody tr");
 
   gamingData = Array.from(summaryRows).map((row) => {
@@ -203,9 +208,15 @@ function loadSummaryDataFromTable() {
     const status = row.cells[4].textContent;
 
     completed == "FALSE" ? inProgressCount++ : finishedCount++;
-    if (status == "hold") { holdCount++ }
-    if (status == "forever") { foreverCount++ }
-    if (status == "dropped") { droppedCount++ }
+    if (status == "hold") {
+      holdCount++;
+    }
+    if (status == "forever") {
+      foreverCount++;
+    }
+    if (status == "dropped") {
+      droppedCount++;
+    }
 
     return { name, playtime, sessions, completed, status };
   });
@@ -214,18 +225,19 @@ function loadSummaryDataFromTable() {
   gamingData.shift();
   finishedCount--;
 
-  let gameProgressMsg = (inProgressCount > 1) ? " Games In Progress" : " Game In Progress";
-  let gameFinishedMsg = (finishedCount > 1) ? " Games Finished" : " Game Finished";
-  let gameHoldMsg = (holdCount > 1) ? " Games on Hold" : " Game on Hold";
-  let gameForeverMsg = (foreverCount > 1) ? " Forever Games" : " Forever Game";
-  let gameDroppedMsg = (droppedCount > 1) ? " Dropped Games " : " Dropped Game";
+  let gameProgressMsg =
+    inProgressCount > 1 ? " Games In Progress" : " Game In Progress";
+  let gameFinishedMsg =
+    finishedCount > 1 ? " Games Finished" : " Game Finished";
+  let gameHoldMsg = holdCount > 1 ? " Games on Hold" : " Game on Hold";
+  let gameForeverMsg = foreverCount > 1 ? " Forever Games" : " Forever Game";
+  let gameDroppedMsg = droppedCount > 1 ? " Dropped Games " : " Dropped Game";
 
   document.getElementById("progress-count").innerText =
     inProgressCount + gameProgressMsg;
   document.getElementById("finished-count").innerText =
     finishedCount + gameFinishedMsg;
-  document.getElementById("hold-count").innerText =
-    holdCount + gameHoldMsg;
+  document.getElementById("hold-count").innerText = holdCount + gameHoldMsg;
   document.getElementById("forever-count").innerText =
     foreverCount + gameForeverMsg;
   document.getElementById("dropped-count").innerText =
@@ -233,7 +245,7 @@ function loadSummaryDataFromTable() {
 }
 
 function loadPCDataFromTable() {
-  const pcTable = document.getElementById("pc-table").querySelector("table")
+  const pcTable = document.getElementById("pc-table").querySelector("table");
   const pcRows = pcTable.querySelectorAll("tbody tr");
 
   pcData = Array.from(pcRows).map((row) => {
@@ -248,56 +260,94 @@ function loadPCDataFromTable() {
     s_date.setUTCSeconds(utcSecondsStartDate);
     const start_date = s_date.toLocaleDateString(undefined, {
       year: "numeric",
-      month: "long"
+      month: "long",
     });
-    
-    let end_date=""
-    if(current != "TRUE"){
+
+    let end_date = "";
+    if (current != "TRUE") {
       let utcSecondsEndDate = parseInt(row.cells[6].textContent);
       let e_date = new Date(0);
       e_date.setUTCSeconds(utcSecondsEndDate);
       end_date = e_date.toLocaleDateString(undefined, {
         year: "numeric",
-        month: "long"
+        month: "long",
       });
     } else {
-      end_date = ""
+      end_date = "";
     }
 
     const age = row.cells[7].textContent;
     const totalHours = row.cells[8].textContent;
-  
-    return { iconUri, name, current, cost, currency, start_date, end_date, age, totalHours };
+
+    return {
+      iconUri,
+      name,
+      current,
+      cost,
+      currency,
+      start_date,
+      end_date,
+      age,
+      totalHours,
+    };
   });
 
-   // Remove header row data
-   pcData.shift();
+  // Remove header row data
+  pcData.shift();
 }
 
 function updatePCStatsSection(pcData) {
-  let valuePerHour =  Math.floor((parseInt(pcData.cost) / parseInt(pcData.totalHours)))
-  let ageInMonths = parseInt(pcData.age.split(" ")[0]) * 12 + parseInt(pcData.age.split(" ")[3])
-  let valuePerMonth = Math.floor((parseInt(pcData.cost) / ageInMonths))
-  
-  document.getElementById("pc-name").innerText = pcData.name
+  let valuePerHour = Math.floor(
+    parseInt(pcData.cost) / parseInt(pcData.totalHours)
+  );
+  let ageInMonths =
+    parseInt(pcData.age.split(" ")[0]) * 12 +
+    parseInt(pcData.age.split(" ")[3]);
+  let valuePerMonth = Math.floor(parseInt(pcData.cost) / ageInMonths);
+
+  document.getElementById("pc-name").innerText = pcData.name;
 
   // Use DomPurify with Jquery $().html() instead of plain document.getElementByID().innerHTML()
   // to prevent Codacy from triggering false positives for XSS attack vulnerabilities.
-  $("#pc-icon").html(DOMPurify.sanitize(pcData.iconUri))
-  
-  $("#pc-in-use").html(DOMPurify.sanitize("<b>In Use: </b>" + pcData.start_date + " - " +pcData.end_date))
+  $("#pc-icon").html(DOMPurify.sanitize(pcData.iconUri));
+
+  $("#pc-in-use").html(
+    DOMPurify.sanitize(
+      "<b>In Use: </b>" + pcData.start_date + " - " + pcData.end_date
+    )
+  );
   if (pcData.current == "TRUE") {
-    $("#pc-in-use").html(DOMPurify.sanitize("<b>In Use: </b>" + pcData.start_date + " - Present"))
+    $("#pc-in-use").html(
+      DOMPurify.sanitize("<b>In Use: </b>" + pcData.start_date + " - Present")
+    );
   }
 
-  $("#pc-lifespan").html(DOMPurify.sanitize("<b>Lifespan: </b>" + pcData.age))
-  $("#pc-price").html(DOMPurify.sanitize("<b>Price: </b>" + pcData.currency + pcData.cost))
-  $("#pc-hours").html(DOMPurify.sanitize("<b>Hours Logged: </b>" + pcData.totalHours + "<sup> ✞</sup>"))
-  $("#pc-running-cost").html(DOMPurify.sanitize("<b>Running Cost: </b>" + pcData.currency + valuePerHour + "/Hour | " + pcData.currency + valuePerMonth + "/Month"))
+  $("#pc-lifespan").html(DOMPurify.sanitize("<b>Lifespan: </b>" + pcData.age));
+  $("#pc-price").html(
+    DOMPurify.sanitize("<b>Price: </b>" + pcData.currency + pcData.cost)
+  );
+  $("#pc-hours").html(
+    DOMPurify.sanitize(
+      "<b>Hours Logged: </b>" + pcData.totalHours + "<sup> ✞</sup>"
+    )
+  );
+  $("#pc-running-cost").html(
+    DOMPurify.sanitize(
+      "<b>Running Cost: </b>" +
+      pcData.currency +
+      valuePerHour +
+      "/Hour | " +
+      pcData.currency +
+      valuePerMonth +
+      "/Month"
+    )
+  );
 }
 
 function updateAnnualHoursChart() {
-  const ctx = document.getElementById("year-vs-playtime-chart").getContext("2d");
+  const ctx = document
+    .getElementById("year-vs-playtime-chart")
+    .getContext("2d");
 
   new Chart(ctx, {
     type: "pie",
@@ -323,21 +373,26 @@ function updateAnnualHoursChart() {
           font: {
             size: 18,
             family: "monospace",
-            weight: "normal"
-          }
+            weight: "normal",
+          },
         },
-        tooltip: {enabled: false},
-        legend: {display: false},
+        tooltip: { enabled: false },
+        legend: { display: false },
         datalabels: {
           formatter: function (value, context) {
-            return context.chart.data.labels[context.dataIndex]+'\n'+Math.floor(value)+" Hrs";
+            return (
+              context.chart.data.labels[context.dataIndex] +
+              "\n" +
+              Math.floor(value) +
+              " Hrs"
+            );
           },
-          textAlign: 'center',
+          textAlign: "center",
           color: "#000000",
           font: {
             size: 14,
             family: "monospace",
-          }
+          },
         },
       },
     },
@@ -345,31 +400,34 @@ function updateAnnualHoursChart() {
 }
 
 document.getElementById("prev-button").addEventListener("click", () => {
-  currentPCIndex = currentPCIndex - 1
+  currentPCIndex = currentPCIndex - 1;
   if (currentPCIndex < 0) {
-    currentPCIndex = pcData.length - 1 // Loop back to last element
+    currentPCIndex = pcData.length - 1; // Loop back to last element
   }
   updatePCStatsSection(pcData.at(currentPCIndex));
 });
 
 document.getElementById("next-button").addEventListener("click", () => {
-  currentPCIndex = currentPCIndex + 1
+  currentPCIndex = currentPCIndex + 1;
   if (currentPCIndex == pcData.length) {
-    currentPCIndex = 0 // Loop back to first element
+    currentPCIndex = 0; // Loop back to first element
   }
-  updatePCStatsSection(pcData.at(currentPCIndex))
+  updatePCStatsSection(pcData.at(currentPCIndex));
 });
 
 loadSummaryDataFromTable();
 updateSummayChart();
 loadPCDataFromTable();
-if (pcData.length > 0){
+if (pcData.length > 0) {
   updatePCStatsSection(pcData.at(currentPCIndex));
 } else {
-  $("#pc-icon").html(DOMPurify.sanitize('<img src=".\\resources\\images\\pc.png"></img>'))
-  document.getElementById("pc-icon").querySelector("img").style.border = 'none'
-  document.getElementById("pc-navigation-bar").style.display = 'none'
-  document.getElementById("pc-status").textContent = "Add Gaming PCs to see more stats"
+  $("#pc-icon").html(
+    DOMPurify.sanitize('<img src=".\\resources\\images\\pc.png"></img>')
+  );
+  document.getElementById("pc-icon").querySelector("img").style.border = "none";
+  document.getElementById("pc-navigation-bar").style.display = "none";
+  document.getElementById("pc-status").textContent =
+    "Add Gaming PCs to see more stats";
 }
 
 updateAnnualHoursChart();

@@ -41,7 +41,7 @@
         $gamesTableSchema = Invoke-SqliteQuery -query "PRAGMA table_info('games')" -SQLiteConnection $dbConnection
 
         # Migration 1
-        if (-Not $gamesTableSchema.name.Contains("idle_time")){
+        if (-Not $gamesTableSchema.name.Contains("idle_time")) {
             $addIdleTimeColumnInGamesTableQuery = "ALTER TABLE games ADD COLUMN idle_time INTEGER DEFAULT 0"
             Invoke-SqliteQuery -Query $addIdleTimeColumnInGamesTableQuery -SQLiteConnection $dbConnection
         }
