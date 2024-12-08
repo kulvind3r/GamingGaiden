@@ -1,5 +1,5 @@
-/*global Chart, chartTitleConfig, ChartDataLabels, DOMPurify*/
-/*from chart.js, common.js*/
+/*global Chart, buildGamingData, chartTitleConfig, ChartDataLabels, DOMPurify*/
+/*from chart.js, common.js, purify.min.js*/
 
 let gamingData = [];
 let pcData = [];
@@ -243,9 +243,9 @@ function loadPCDataFromTable() {
     const cost = row.cells[3].textContent;
     const currency = row.cells[4].textContent;
 
-    var utcSeconds = parseInt(row.cells[5].textContent);
-    var s_date = new Date(0);
-    s_date.setUTCSeconds(utcSeconds);
+    let utcSecondsStartDate = parseInt(row.cells[5].textContent);
+    let s_date = new Date(0);
+    s_date.setUTCSeconds(utcSecondsStartDate);
     const start_date = s_date.toLocaleDateString(undefined, {
       year: "numeric",
       month: "long"
@@ -253,9 +253,9 @@ function loadPCDataFromTable() {
     
     let end_date=""
     if(current != "TRUE"){
-      var utcSeconds = parseInt(row.cells[6].textContent);
+      let utcSecondsEndDate = parseInt(row.cells[6].textContent);
       let e_date = new Date(0);
-      e_date.setUTCSeconds(utcSeconds);
+      e_date.setUTCSeconds(utcSecondsEndDate);
       end_date = e_date.toLocaleDateString(undefined, {
         year: "numeric",
         month: "long"
@@ -278,7 +278,6 @@ function updatePCStatsSection(pcData) {
   let valuePerHour =  Math.floor((parseInt(pcData.cost) / parseInt(pcData.totalHours)))
   let ageInMonths = parseInt(pcData.age.split(" ")[0]) * 12 + parseInt(pcData.age.split(" ")[3])
   let valuePerMonth = Math.floor((parseInt(pcData.cost) / ageInMonths))
-  let helpingVerb = ""
   
   document.getElementById("pc-name").innerText = pcData.name
 
