@@ -280,7 +280,7 @@ function updatePCStatsSection(pcData) {
   let valuePerMonth = Math.floor((parseInt(pcData.cost) / ageInMonths))
   let helpingVerb = ""
   
-  document.getElementById("pc-icon").innerHTML = DOMPurify.sanitize(pcData.iconUri)
+  $("#pc-icon").append(pcData.iconUri)
   document.getElementById("pc-name").innerText = pcData.name
   document.getElementById("pc-in-use").innerHTML = DOMPurify.sanitize("<b>In Use: </b>" + pcData.start_date + " - " +pcData.end_date)
   if (pcData.current == "TRUE") {
