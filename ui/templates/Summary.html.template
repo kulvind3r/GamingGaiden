@@ -65,6 +65,9 @@
           <div id="pc-stats">  
             <p id="pc-status"></p>
             <p id="pc-cost"></p>
+            <p id="pc-stat-disclaimer" style="font-size: 11px;">
+              &#10014 Inclusive of deleted games play time. Idle time excluded.
+            </p>
           </div>
         </div>
         <div id="annual-time-chart-container">

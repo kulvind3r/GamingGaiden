@@ -287,12 +287,12 @@ function updatePCStatsSection(pcData) {
   
   if (pcData.current == "TRUE") {
     helpingVerb = "has"
-    document.getElementById("pc-status").innerHTML = "In use since <b>" + pcData.start_date + "</b>" + " the PC "+ helpingVerb +" lasted you <b>" + pcData.age + "</b>"
+    document.getElementById("pc-status").innerHTML = "In use since <b>" + pcData.start_date + "</b>" + ", this PC "+ helpingVerb +" lasted you <b>" + pcData.age + "</b>"
   } else {
-    document.getElementById("pc-status").innerHTML = "From <b>" + pcData.start_date + " to " + pcData.end_date + "</b>" + " the PC "+ helpingVerb +" lasted you <b>" + pcData.age + "</b>"
+    document.getElementById("pc-status").innerHTML = "From <b>" + pcData.start_date + " to " + pcData.end_date + "</b>" + ", this PC "+ helpingVerb +" lasted you <b>" + pcData.age + "</b>"
   }
 
-  document.getElementById("pc-cost").innerHTML = "You purchased it for <b>" + pcData.currency + pcData.cost + "</b> and after <b>" + pcData.totalHours + " hours</b> of gaming on it, it "+ helpingVerb +" costed you <b>" + pcData.currency + valuePerHour + "/Hour</b> or <b>" + pcData.currency + valuePerMonth + "/Month</b> " + "of gaming usage.<br><br>Did you beat Geforce Now price?"
+  document.getElementById("pc-cost").innerHTML = "You purchased it for <b>" + pcData.currency + pcData.cost + "</b> and after <b>" + pcData.totalHours + " hours</b><sup>✞</sup> of gaming on it, it "+ helpingVerb +" costed you <b>" + pcData.currency + valuePerHour + "/Hour</b> or <b>" + pcData.currency + valuePerMonth + "/Month</b> " + "for gaming usage.<br><br>Did you beat Geforce Now price?"
 }
 
 function updateAnnualHoursChart() {
