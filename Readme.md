@@ -23,7 +23,7 @@ A Tale; Side Story;
 
 A small powershell tray application for windows os to track gaming time. Helps you record your gaming story over the years.
 
-![demo_multiview](https://github.com/user-attachments/assets/b07520a0-f9c6-4e68-9356-ff5cc0b4cfbc)
+https://github.com/user-attachments/assets/4837b88c-e403-4069-a3f5-3f0147e9328a
 
 ## Features
 - #### Time Tracking and Emulator Support
@@ -41,8 +41,6 @@ A small powershell tray application for windows os to track gaming time. Helps y
     - Small size (~7 MB). High performance (Sub 5 sec game detection). Light on cpu & ram.
     - Completely offline and portable, all data stored in local database.
     - Automated data backup after each gaming session.
-
-### [Video Demo](https://github.com/user-attachments/assets/cf4cdc10-1c6a-4b63-92d5-3eddd675d1ae)
 
 > [!WARNING]  
 > Gaming Gaiden is only available for download on this Github repo. Any copy available elsewhere could be malicious.
