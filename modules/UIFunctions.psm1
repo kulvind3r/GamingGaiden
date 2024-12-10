@@ -326,18 +326,21 @@ function RenderPCvsEmulation() {
 }
 
 function RenderAboutDialog() {
-    $aboutForm = CreateForm "About" 350 270 ".\icons\running.ico"
+    $aboutForm = CreateForm "About" 350 280 ".\icons\running.ico"
 
     $pictureBox = CreatePictureBox "./icons/banner.png" 0 10 345 70
     $aboutForm.Controls.Add($pictureBox)
 
+    $labelVersion = CreateLabel "v2024.12.9" 145 90
+    $aboutForm.Controls.Add($labelVersion)
+
     $textCopyRight = [char]::ConvertFromUtf32(0x000000A9) + " 2024 Kulvinder Singh"
-    $labelCopyRight = CreateLabel $textCopyRight 112 100
+    $labelCopyRight = CreateLabel $textCopyRight 112 110
     $aboutForm.Controls.Add($labelCopyRight)
 
     $labelHome = New-Object Windows.Forms.LinkLabel
     $labelHome.Text = "Home"
-    $labelHome.Location = New-Object Drawing.Point(160, 130)
+    $labelHome.Location = New-Object Drawing.Point(160, 140)
     $labelHome.AutoSize = $true
     $labelHome.Add_LinkClicked({
             Start-Process "https://github.com/kulvind3r/GamingGaiden"
@@ -346,14 +349,14 @@ function RenderAboutDialog() {
 
     $labelAttributions = New-Object Windows.Forms.LinkLabel
     $labelAttributions.Text = "Open Source And Original Art Attributions"
-    $labelAttributions.Location = New-Object Drawing.Point(70, 160)
+    $labelAttributions.Location = New-Object Drawing.Point(70, 165)
     $labelAttributions.AutoSize = $true
     $labelAttributions.Add_LinkClicked({
             Start-Process "https://github.com/kulvind3r/GamingGaiden#attributions"
         })
     $aboutForm.Controls.Add($labelAttributions)
 
-    $buttonClose = CreateButton "Close" 140 200; $buttonClose.Add_Click({ $pictureBox.Image.Dispose(); $pictureBox.Dispose(); $aboutForm.Dispose() }); $aboutForm.Controls.Add($buttonClose)
+    $buttonClose = CreateButton "Close" 140 205; $buttonClose.Add_Click({ $pictureBox.Image.Dispose(); $pictureBox.Dispose(); $aboutForm.Dispose() }); $aboutForm.Controls.Add($buttonClose)
 
     $aboutForm.ShowDialog()
     $pictureBox.Image.Dispose(); $pictureBox.Dispose();
