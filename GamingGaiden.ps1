@@ -71,6 +71,7 @@ try {
     $TrackerJobInitializationScript = {
         Import-Module ".\modules\PSSQLite";
         Import-Module ".\modules\HelperFunctions.psm1";
+        Import-Module ".\modules\UIFunctions.psm1";
         Import-Module ".\modules\ProcessFunctions.psm1";
         Import-Module ".\modules\QueryFunctions.psm1";
         Import-Module ".\modules\StorageFunctions.psm1";
@@ -82,6 +83,7 @@ try {
             while ($true) {
                 $detectedExe = DetectGame
                 MonitorGame $detectedExe
+                UpdateAllStatsInBackground
             }
         }
         catch {

@@ -43,7 +43,21 @@ class GamingPC {
     }
 }
 
+function UpdateAllStatsInBackground() {
+    RenderGameList -InBackground $true
+    RenderSummary -InBackground $true
+    RenderGamingTime -InBackground $true
+    RenderGamesPerPlatform -InBackground $true
+    RenderMostPlayed -InBackground $true
+    RenderIdleTime -InBackground $true
+    RenderPCvsEmulation -InBackground $true
+}
+
 function RenderGameList() {
+    param(
+        [bool]$InBackground = $false
+    )
+
     Log "Rendering all games list."
 
     $workingDirectory = (Get-Location).Path
@@ -51,7 +65,9 @@ function RenderGameList() {
     $getAllGamesQuery = "SELECT name, icon, platform, play_time, session_count, completed, last_play_date, status FROM games"
     $gameRecords = RunDBQuery $getAllGamesQuery
     if ($gameRecords.Length -eq 0) {
-        ShowMessage "No Games found in DB. Please add some games first." "OK" "Error"
+        if(-Not $InBackground) {
+            ShowMessage "No Games found in DB. Please add some games first." "OK" "Error"
+        }
         Log "Error: Games list empty. Returning"
         return $false
     }
@@ -128,6 +144,10 @@ function RenderGameList() {
 }
 
 function RenderGamingTime() {
+    param(
+        [bool]$InBackground = $false
+    )
+
     Log "Rendering time spent gaming"
 
     $workingDirectory = (Get-Location).Path
@@ -135,7 +155,9 @@ function RenderGamingTime() {
     $getDailyPlayTimeDataQuery = "SELECT play_date as date, play_time as time FROM daily_playtime ORDER BY date ASC"
     $dailyPlayTimeData = RunDBQuery $getDailyPlayTimeDataQuery
     if ($dailyPlayTimeData.Length -eq 0) {
-        ShowMessage "No Records of Game Time found in DB. Please play some games first." "OK" "Error"
+        if(-Not $InBackground) {
+            ShowMessage "No Records of Game Time found in DB. Please play some games first." "OK" "Error"
+        }
         Log "Error: Game time records empty. Returning"
         return $false
     }
@@ -148,6 +170,10 @@ function RenderGamingTime() {
 }
 
 function RenderMostPlayed() {
+    param(
+        [bool]$InBackground = $false
+    )
+
     Log "Rendering most played"
 
     $workingDirectory = (Get-Location).Path
@@ -155,7 +181,9 @@ function RenderMostPlayed() {
     $getGamesPlayTimeDataQuery = "SELECT name, play_time as time FROM games Order By play_time DESC"
     $gamesPlayTimeData = RunDBQuery $getGamesPlayTimeDataQuery
     if ($gamesPlayTimeData.Length -eq 0) {
-        ShowMessage "No Games found in DB. Please add some games first." "OK" "Error"
+        if(-Not $InBackground) {
+            ShowMessage "No Games found in DB. Please add some games first." "OK" "Error"
+        }
         Log "Error: Games list empty. Returning"
         return $false
     }
@@ -168,6 +196,10 @@ function RenderMostPlayed() {
 }
 
 function RenderSummary() {
+    param(
+        [bool]$InBackground = $false
+    )
+
     Log "Rendering life time summary"
 
     $workingDirectory = (Get-Location).Path
@@ -175,7 +207,9 @@ function RenderSummary() {
     $getGamesPlayTimeVsSessionDataQuery = "SELECT name, play_time, session_count, completed, status FROM games"
     $gamesPlayTimeVsSessionData = RunDBQuery $getGamesPlayTimeVsSessionDataQuery
     if ($gamesPlayTimeVsSessionData.Length -eq 0) {
-        ShowMessage "No Games found in DB. Please add some games first." "OK" "Error"
+        if(-Not $InBackground) {
+            ShowMessage "No Games found in DB. Please add some games first." "OK" "Error"
+        }
         Log "Error: Games list empty. Returning"
         return $false
     }
@@ -217,12 +251,10 @@ function RenderSummary() {
         if ($iconBitmap.PixelFormat -eq "Format32bppArgb") {
             $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.png", [System.Drawing.Imaging.ImageFormat]::Png)
             $pcIconUri = "<img src=`".\resources\images\$imageFileName.png`">"
-            Log "PCImage PNG: $pcIconUri"
         }
         else {
             $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.jpg", [System.Drawing.Imaging.ImageFormat]::Jpeg)
             $pcIconUri = "<img src=`".\resources\images\$imageFileName.jpg`">"
-            Log "PCImage JPG: $pcIconUri"
         }
 
         $iconBitmap.Dispose()
@@ -261,6 +293,10 @@ function RenderSummary() {
 }
 
 function RenderIdleTime() {
+    param(
+        [bool]$InBackground = $false
+    )
+
     Log "Rendering Idle time"
 
     $workingDirectory = (Get-Location).Path
@@ -268,7 +304,9 @@ function RenderIdleTime() {
     $getGamesIdleTimeDataQuery = "SELECT name, idle_time as time FROM games WHERE idle_time > 0 ORDER BY idle_time DESC"
     $gamesIdleTimeData = RunDBQuery $getGamesIdleTimeDataQuery
     if ($gamesIdleTimeData.Length -eq 0) {
-        ShowMessage "No Idle Games found in DB." "OK" "Error"
+        if(-Not $InBackground) {
+            ShowMessage "No Idle Games found in DB." "OK" "Error"
+        }
         Log "Error: Idle Games list empty. Returning"
         return $false
     }
@@ -286,6 +324,10 @@ function RenderIdleTime() {
 }
 
 function RenderGamesPerPlatform() {
+    param(
+        [bool]$InBackground = $false
+    )
+
     Log "Rendering games per platform"
 
     $workingDirectory = (Get-Location).Path
@@ -293,7 +335,9 @@ function RenderGamesPerPlatform() {
     $getGamesPerPlatformDataQuery = "SELECT  platform, COUNT(name) FROM games GROUP BY platform"
     $getGamesPerPlatformData = RunDBQuery $getGamesPerPlatformDataQuery
     if ($getGamesPerPlatformData.Length -eq 0) {
-        ShowMessage "No Games found in DB. Please add some games first." "OK" "Error"
+        if(-Not $InBackground) {
+            ShowMessage "No Games found in DB. Please add some games first." "OK" "Error"
+        }
         Log "Error: Games list empty. Returning"
         return $false
     }
@@ -306,6 +350,10 @@ function RenderGamesPerPlatform() {
 }
 
 function RenderPCvsEmulation() {
+    param(
+        [bool]$InBackground = $false
+    )
+
     Log "Rendering PC vs Emulation"
 
     $workingDirectory = (Get-Location).Path
@@ -313,7 +361,9 @@ function RenderPCvsEmulation() {
     $getPCvsEmulationTimeQuery = "SELECT  platform, SUM(play_time) as play_time FROM games WHERE platform LIKE 'PC' UNION SELECT 'Emulation', SUM(play_time) as play_time FROM games WHERE platform NOT LIKE 'PC'"
     $pcVsEmulationTime = RunDBQuery $getPCvsEmulationTimeQuery
     if ($pcVsEmulationTime.Length -eq 0) {
-        ShowMessage "No Games found in DB. Please add some games first." "OK" "Error"
+        if(-Not $InBackground) {
+            ShowMessage "No Games found in DB. Please add some games first." "OK" "Error"
+        }
         Log "Error: Games list empty. Returning"
         return $false
     }
@@ -331,7 +381,7 @@ function RenderAboutDialog() {
     $pictureBox = CreatePictureBox "./icons/banner.png" 0 10 345 70
     $aboutForm.Controls.Add($pictureBox)
 
-    $labelVersion = CreateLabel "v2024.12.9" 145 90
+    $labelVersion = CreateLabel "v2024.12.12" 145 90
     $aboutForm.Controls.Add($labelVersion)
 
     $textCopyRight = [char]::ConvertFromUtf32(0x000000A9) + " 2024 Kulvinder Singh"
