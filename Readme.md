@@ -59,6 +59,10 @@ Windows SmartScreen may warn that the application is from an ***Unknown Publishe
 Signing cost for apps is hundreds of dollars per year. Can't afford them.
 
 ## Antivirus False Positives
+> :hearts:
+> Anitvirus false positives are hard to fight.
+> If you have found the app useful and safe. Please leave a star on github to increase trust.
+
 GamingGaiden performs following tasks that are similar to common malware behavior, leading it to be flagged as malware by antivirus software.
 
 - Scanning running programs to detect and track games.
