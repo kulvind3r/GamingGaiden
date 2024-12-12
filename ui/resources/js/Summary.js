@@ -383,8 +383,8 @@ document.getElementById("next-button").addEventListener("click", () => {
 });
 
 loadSummaryDataFromTable();
-updateSummayChart();
 loadPCDataFromTable();
+
 if (pcData.length > 0) {
   updatePCStatsSection(pcData.at(currentPCIndex));
 } else {
@@ -395,3 +395,4 @@ if (pcData.length > 0) {
 }
 
 updateAnnualHoursChart();
+updateSummayChart();

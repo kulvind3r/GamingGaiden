@@ -4,6 +4,7 @@ body {
   align-items: center;
   text-align: center;
   font-family: monospace;
+  background-color: white;
 }
 
 #chart-container {

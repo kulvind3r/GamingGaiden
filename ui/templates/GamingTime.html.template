@@ -21,7 +21,6 @@
             .find("tbody")
             .before("<thead>" + tHead + "</thead>");
         });
-        $("table")[0].style.display = "none";
       });
     </script>
   </head>
@@ -38,7 +37,7 @@
     </div>
     <p id="warn-msg"></p>
     <button class="custom-button" id="period-button">Yearly Summary</button>
-    <div>_DAILYPLAYTIMETABLE_</div>
+    <divs style="display: none">_DAILYPLAYTIMETABLE_</div>
     <script src="./resources/js/common.js"></script>
     <script src="./resources/js/GamingTime.js"></script>
   </body>

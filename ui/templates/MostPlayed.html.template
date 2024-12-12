@@ -21,7 +21,6 @@
             .find("tbody")
             .before("<thead>" + tHead + "</thead>");
         });
-        $("table")[0].style.display = "none";
       });
     </script>
   </head>
@@ -36,7 +35,7 @@
       <select id="game-count"></select>
       <div>Games</div>
     </div>
-    <div>_GAMESPLAYTIMETABLE_</div>
+    <div style="display: none">_GAMESPLAYTIMETABLE_</div>
     <script src="./resources/js/common.js"></script>
     <script src="./resources/js/GameVsTime.js"></script>
     <script>

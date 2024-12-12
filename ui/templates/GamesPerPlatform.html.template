@@ -21,7 +21,6 @@
             .find("tbody")
             .before("<thead>" + tHead + "</thead>");
         });
-        $("table")[0].style.display = "none";
       });
     </script>
   </head>
@@ -31,7 +30,7 @@
     <div id="chart-container">
       <canvas id="games-per-platform-chart"></canvas>
     </div>
-    <div>_GAMESPERPLATFORMTABLE_</div>
+    <div style="display: none">_GAMESPERPLATFORMTABLE_</div>
     <script src="./resources/js/common.js"></script>
     <script src="./resources/js/GamesPerPlatform.js"></script>
   </body>

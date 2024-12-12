@@ -5,6 +5,7 @@ body {
   align-items: center;
   font-family: monospace;
   min-height: 95vh;
+  background-color: white;
 }
 
 #summary {

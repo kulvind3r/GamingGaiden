@@ -21,7 +21,6 @@
             .find("tbody")
             .before("<thead>" + tHead + "</thead>");
         });
-        $("table")[0].style.display = "none";
       });
     </script>
   </head>
@@ -31,7 +30,7 @@
     <div id="chart-container">
       <canvas id="pc-vs-emulation-chart"></canvas>
     </div>
-    <div>_PCVSEMULATIONTABLE_</div>
+    <div style="display: none">_PCVSEMULATIONTABLE_</div>
     <script src="./resources/js/common.js"></script>
     <script src="./resources/js/PCvsEmulation.js"></script>
   </body>

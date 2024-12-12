@@ -21,7 +21,6 @@
             .find("tbody")
             .before("<thead>" + tHead + "</thead>");
         });
-        $("table")[0].style.display = "none";
       });
     </script>
   </head>
@@ -32,7 +31,7 @@
       <canvas id="game-vs-time-chart"></canvas>
     </div>
     <div id="total-label">Total Time Wasted: _TOTALIDLETIME_</div>
-    <div>_GAMESIDLETIMETABLE_</div>
+    <div style="display: none">_GAMESIDLETIMETABLE_</div>
     <script src="./resources/js/common.js"></script>
     <script src="./resources/js/GameVsTime.js"></script>
     <script>

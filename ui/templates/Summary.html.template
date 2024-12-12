@@ -21,7 +21,6 @@
           $(this)
             .find("tbody")
             .before("<thead>" + tHead + "</thead>");
-            $(this).css("display","none");
         });
       });
     </script>
@@ -79,9 +78,9 @@
         </div>
       </div>
     </div>
-    <div id="summary-table">_SUMMARYTABLE_</div>
-    <div id="pc-table">_PCTABLE_</div>
-    <div id="annual-gaming-hours-table">_ANNUALGAMINGHOURSTABLE_</div>
+    <div id="summary-table" style="display: none">_SUMMARYTABLE_</div>
+    <div id="pc-table" style="display: none">_PCTABLE_</div>
+    <div id="annual-gaming-hours-table" style="display: none">_ANNUALGAMINGHOURSTABLE_</div>
     <script src="./resources/js/common.js"></script>
     <script src="./resources/js/Summary.js"></script>
   </body>
