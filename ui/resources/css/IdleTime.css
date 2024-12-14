@@ -5,14 +5,12 @@ body {
   text-align: center;
   font-family: monospace;
   background-color: white;
+  height: 98.5vh;
 }
 
 #chart-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  max-width: 1600px;
+  width: 95%;
+  height: 82%;
 }
 
 #total-label {

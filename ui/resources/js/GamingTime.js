@@ -132,11 +132,25 @@ function updateChart(
       ],
     },
     options: {
+      responsive: true,
+      maintainAspectRatio: false,
       scales: {
         y: {
           beginAtZero: true,
           max: ylimit,
           title: chartTitleConfig("PlayTime (Hours)", 15),
+        },
+        // Alignment Hack: Add an identical y scale on right side, to center the graph on page.
+        // Then hide the right side scale by setting label color identical to background.
+        yRight: {
+          title: chartTitleConfig("PlayTime (Hours)", 15, "#fff"),
+          position: "right",
+          grid: {
+            display: false,
+          },
+          ticks: {
+            color: "white",
+          },
         },
         x: {
           title: chartTitleConfig(periodLabel, 15),
@@ -177,9 +191,7 @@ function updateChart(
             family: "monospace",
           },
         },
-      },
-      responsive: true,
-      maintainAspectRatio: true,
+      }
     },
   });
 }

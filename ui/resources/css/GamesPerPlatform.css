@@ -2,23 +2,20 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  text-align: center;
   font-family: monospace;
   background-color: white;
+  height: 98.5vh;
 }
 
 #chart-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   width: 100%;
-  max-width: 800px;
+  height: 85%;
 }
 
 #navigation-bar {
   display: flex;
-  margin-top: 3.7%;
   width: 100%;
+  margin-top: 1%;
   justify-content: space-evenly;
 }
 

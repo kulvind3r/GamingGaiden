@@ -30,7 +30,7 @@
     <div id="chart-container">
       <canvas id="game-vs-time-chart"></canvas>
     </div>
-    <div id="navigation-bar">
+    <div id="chart-navigation-bar">
       <div>Top</div>
       <select id="game-count"></select>
       <div>Games</div>
@@ -70,7 +70,7 @@
 
       updateChart(10, "Playtime (Hours)", 10);
     </script>
-    <div id="ui-navigation-bar">
+    <div id="navigation-bar">
       <button class="custom-button" id="summary-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/Summary.html';">Life Time Summary</button>
       <button class="custom-button" id="gaming-time-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/GamingTime.html';">Time Spent Gaming</button>
       <button class="custom-button" id="most-played-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/MostPlayed.html';">Most Played</button>

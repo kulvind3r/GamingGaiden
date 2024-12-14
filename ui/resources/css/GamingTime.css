@@ -5,27 +5,20 @@ body {
   text-align: center;
   font-family: monospace;
   background-color: white;
+  height: 98.5vh;
 }
 
 #chart-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  max-width: 1600px;
+  width: 95%;
+  height: 75%;
 }
 
-#gaming-time-chart {
-  width: 100%;
-  margin-right: 65px;
-  max-height: 700px;
-}
-
-#navigation-bar {
+#chart-navigation-bar {
   display: flex;
-  margin-top: 20px;
+  margin-top: 0.5%;
   width: 500px;
   justify-content: space-around;
+  align-items: center;
   font-family: monospace;
   font-size: 18px;
 }
@@ -34,62 +27,17 @@ body {
   color: red;
   font-family: monospace;
   font-size: 14px;
-  margin-top: 0%;
-  margin-bottom: 1%;
+  height: 22px;
 }
 
-.custom-button {
-  align-items: center;
-  appearance: none;
-  background-color: #fcfcfd;
-  border-radius: 4px;
-  border-width: 0;
-  box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,
-    rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #d6d6e7 0 -3px 0 inset;
-  box-sizing: border-box;
-  color: #36395a;
-  cursor: pointer;
-  display: inline-flex;
-  font-family: monospace;
-  height: 38px;
-  justify-content: center;
-  line-height: 1;
-  list-style: none;
-  overflow: hidden;
-  padding-left: 16px;
-  padding-right: 16px;
-  position: relative;
-  text-align: left;
-  text-decoration: none;
-  transition: box-shadow 0.15s, transform 0.15s;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-  white-space: nowrap;
-  will-change: box-shadow, transform;
-  font-size: 18px;
+#period-button {
+  margin-top: 0.%;
 }
 
-.custom-button:focus {
-  box-shadow: #d6d6e7 0 0 0 1.5px inset, rgba(45, 35, 66, 0.4) 0 2px 4px,
-    rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #d6d6e7 0 -3px 0 inset;
-}
-
-.custom-button:hover {
-  box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px,
-    rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #d6d6e7 0 -3px 0 inset;
-  transform: translateY(-2px);
-}
-
-.custom-button:active {
-  box-shadow: #d6d6e7 0 3px 7px inset;
-  transform: translateY(2px);
-}
-
-#ui-navigation-bar {
+#navigation-bar {
   display: flex;
-  margin-top: 1.85%;
   width: 100%;
+  margin-top: 1%;
   justify-content: space-evenly;
 }
 

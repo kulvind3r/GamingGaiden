@@ -38,7 +38,7 @@ function updateChart() {
     },
     options: {
       responsive: true,
-      maintainAspectRatio: true,
+      maintainAspectRatio: false,
       plugins: {
         tooltip: chartTooltipConfig,
         legend: chartLegendConfig,

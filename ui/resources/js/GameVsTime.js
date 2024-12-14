@@ -39,6 +39,8 @@ function updateChart(gameCount, labelText, stepSize = 1) {
       ],
     },
     options: {
+      responsive: true,
+      maintainAspectRatio: false,
       indexAxis: "y",
       scales: {
         y: {
@@ -69,7 +71,6 @@ function updateChart(gameCount, labelText, stepSize = 1) {
           borderWidth: 1,
         },
       },
-      responsive: true,
       plugins: {
         tooltip: {
           enabled: false,
@@ -85,8 +86,7 @@ function updateChart(gameCount, labelText, stepSize = 1) {
             family: "monospace",
           },
         },
-      },
-      maintainAspectRatio: true,
+      }
     },
   });
 }
