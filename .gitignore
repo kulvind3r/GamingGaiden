@@ -10,6 +10,7 @@ ui/resources/images/*
 !ui/resources/images/finished.png
 !ui/resources/images/pc.png
 !ui/resources/images/404.png
+!ui/resources/images/404-tutorial.gif
 !ui/resources/images/playing.png
 !ui/resources/images/favicon.ico
 ui/*.html

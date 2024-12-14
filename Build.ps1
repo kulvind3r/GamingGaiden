@@ -15,7 +15,7 @@ $FinalHTML = $ManualTemplate -replace "_MARKDOWN_HTML_", $ManualHTML
 
 [System.Web.HttpUtility]::HtmlDecode($FinalHTML) | Out-File -encoding UTF8 .\ui\Manual.html
 
-Get-ChildItem .\ui\resources\images\ -Exclude default.png, dropped.png, pc.png, 404.png, forever.png, hold.png, finished.png, playing.png, favicon.ico | Remove-Item
+Get-ChildItem .\ui\resources\images\ -Exclude default.png, dropped.png, pc.png, 404.png, 404-tutorial.gif, forever.png, hold.png, finished.png, playing.png, favicon.ico | Remove-Item
 
 $SourceFiles = ".\Install.bat", ".\modules", ".\icons", ".\ui"
 

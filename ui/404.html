@@ -17,13 +17,13 @@
             align-items: center;
         }
 
-        img {
-            width: 35%;
-            height: 35%;
+        #banner {
+            width: 26%;
+            height: 26%;
         }
 
         p {
-            font-size: 3vh;
+            font-size: 2.5vh;
             text-align: center;
         }
 
@@ -77,7 +77,7 @@
 
         #navigation-bar {
             display: flex;
-            margin-top: 7%;
+            margin-top: 3%;
             justify-content: space-evenly;
             width: 100%;
         }
@@ -87,8 +87,9 @@
         }
     </style>
     <body>
-        <img src="./resources/images/404.png">
+        <img id="banner" src="./resources/images/404.png">
         <p>Please render this page atleast once from<br>app menu before using web ui buttons</p>
+		<img id="tutorial" src="./resources/images/404-tutorial.gif">
         <div id="navigation-bar">
             <button class="custom-button" id="summary-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/Summary.html';">Life Time Summary</button>
             <button class="custom-button" id="gaming-time-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/GamingTime.html';">Time Spent Gaming</button>
