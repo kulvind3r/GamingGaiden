@@ -29,7 +29,7 @@ body {
   justify-content: space-evenly;
 }
 
-#ui-navigation-bar button:first-child {
+#navigation-bar button:first-child {
   margin-left: 16px
 }
 
