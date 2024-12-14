@@ -9,8 +9,10 @@ ui/resources/images/*
 !ui/resources/images/forever.png
 !ui/resources/images/finished.png
 !ui/resources/images/pc.png
+!ui/resources/images/404.png
 !ui/resources/images/playing.png
 !ui/resources/images/favicon.ico
 ui/*.html
+!ui/404.html
 backups/*
 build/*

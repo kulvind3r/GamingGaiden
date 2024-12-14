@@ -1,0 +1,102 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" style="background : #ffffff">
+    <head>
+        <title>Gaming Gaiden</title>
+        <link
+        rel="icon"
+        type="image/x-icon"
+        href="./resources/images/favicon.ico"
+        />
+    </head>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-evenly;
+            font-family: monospace;
+            align-items: center;
+        }
+
+        img {
+            width: 35%;
+            height: 35%;
+        }
+
+        p {
+            font-size: 3vh;
+            text-align: center;
+        }
+
+        .custom-button {
+            align-items: center;
+            appearance: none;
+            background-color: #fcfcfd;
+            border-radius: 4px;
+            border-width: 0;
+            box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,
+                rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #d6d6e7 0 -3px 0 inset;
+            box-sizing: border-box;
+            color: #36395a;
+            cursor: pointer;
+            display: inline-flex;
+            font-family: monospace;
+            height: 38px;
+            justify-content: center;
+            line-height: 1;
+            list-style: none;
+            overflow: hidden;
+            padding-left: 16px;
+            padding-right: 16px;
+            position: relative;
+            text-align: left;
+            text-decoration: none;
+            transition: box-shadow 0.15s, transform 0.15s;
+            user-select: none;
+            -webkit-user-select: none;
+            touch-action: manipulation;
+            white-space: nowrap;
+            will-change: box-shadow, transform;
+            font-size: 18px;
+        }
+
+        .custom-button:focus {
+        box-shadow: #d6d6e7 0 0 0 1.5px inset, rgba(45, 35, 66, 0.4) 0 2px 4px,
+            rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #d6d6e7 0 -3px 0 inset;
+        }
+
+        .custom-button:hover {
+        box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px,
+            rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #d6d6e7 0 -3px 0 inset;
+        transform: translateY(-2px);
+        }
+
+        .custom-button:active {
+        box-shadow: #d6d6e7 0 3px 7px inset;
+        transform: translateY(2px);
+        }
+
+        #navigation-bar {
+            display: flex;
+            margin-top: 7%;
+            justify-content: space-evenly;
+            width: 100%;
+        }
+
+        #navigation-bar button:first-child {
+            margin-left: 16px
+        }
+    </style>
+    <body>
+        <img src="./resources/images/404.png">
+        <p>Please render this page atleast once from<br>app menu before using web ui buttons</p>
+        <div id="navigation-bar">
+            <button class="custom-button" id="summary-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/Summary.html';">Life Time Summary</button>
+            <button class="custom-button" id="gaming-time-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/GamingTime.html';">Time Spent Gaming</button>
+            <button class="custom-button" id="most-played-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/MostPlayed.html';">Most Played</button>
+            <button class="custom-button" id="all-games-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/AllGames.html';">All Games</button>
+            <button class="custom-button" id="idle-time-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/IdleTime.html';">Idle Time</button>
+            <button class="custom-button" id="games-per-platform-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/GamesPerPlatform.html';">Games Per Platform</button>
+            <button class="custom-button" id="pc-vs-emu-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/PCvsEmulation.html';">PC vs Emulation Time</button>
+        </div>
+    </body>
+</html>

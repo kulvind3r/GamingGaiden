@@ -2,6 +2,8 @@ body {
   font-family: monospace;
   font-size: 14px;
   background-color: white;
+  display: flex;
+  flex-direction: column;
 }
 
 table {
@@ -135,6 +137,7 @@ td:nth-child(6) img {
 #button-container {
   display: flex;
   justify-content: center;
+  margin-top: -1.25%;
 }
 
 .custom-button {
@@ -183,4 +186,14 @@ td:nth-child(6) img {
 .custom-button:active {
   box-shadow: #d6d6e7 0 3px 7px inset;
   transform: translateY(2px);
+}
+
+#navigation-bar {
+  display: flex;
+  margin-top: 1.5%;
+  justify-content: space-evenly;
+}
+
+#navigation-bar button:first-child {
+  margin-left: 16px
 }

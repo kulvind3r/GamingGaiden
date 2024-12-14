@@ -140,7 +140,7 @@ body {
 #main-row {
   display: flex;
   width: 100%;
-  flex-grow: 1;
+  max-height: 95%;
   justify-content: space-around;
 }
 
@@ -196,4 +196,15 @@ body {
 
 #annual-time-chart-container {
   height: 49%;
+}
+
+#navigation-bar {
+  display: flex;
+  margin-top: 1.95%;
+  width: 100%;
+  justify-content: space-evenly;
+}
+
+#navigation-bar button:first-child {
+  margin-left: 16px
 }
