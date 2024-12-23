@@ -149,6 +149,8 @@ try {
             Log "Rebooting tracker job to apply new settings"
             StopTrackerJob
             StartTrackerJob
+            Log "Updating UI to reflect changes"
+            UpdateAllStatsInBackground
         }
     }
 
