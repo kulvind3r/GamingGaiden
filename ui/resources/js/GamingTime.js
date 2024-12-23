@@ -16,6 +16,11 @@ let monthTotalTime;
 
 $("table")[0].setAttribute("id", "data-table");
 
+Log2Axis.id = "log2";
+Log2Axis.defaults = {};
+
+Chart.register(Log2Axis);
+
 function updatePeriodDisplayWithMonth(selectedYear, selectedMonth) {
   selectedMonth = selectedMonth + 1;
   let selectedDate = new Date(`${selectedYear}-${selectedMonth}-1`);
@@ -73,7 +78,7 @@ function updateChart(
     }
 
     datasetData = data;
-    ylimit = 8;
+    ylimit = 24;
   } else {
     yearTotalTime = 0;
     labels = [
@@ -110,7 +115,7 @@ function updateChart(
     }
 
     datasetData = data.map((row) => row.time);
-    ylimit = 100;
+    ylimit = 120;
   }
 
   if (chart) {
@@ -137,7 +142,8 @@ function updateChart(
       scales: {
         y: {
           beginAtZero: true,
-          max: ylimit,
+          suggestedMax: ylimit,
+          type: "log2",
           title: chartTitleConfig("PlayTime (Hours)", 15),
         },
         // Alignment Hack: Add an identical y scale on right side, to center the graph on page.

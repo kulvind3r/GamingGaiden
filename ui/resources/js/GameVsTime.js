@@ -3,6 +3,11 @@
 
 let chart;
 
+Log2Axis.id = "log2";
+Log2Axis.defaults = {};
+
+Chart.register(Log2Axis);
+
 function updateChart(gameCount, labelText, stepSize = 1) {
   let labels = [];
   let data = [];
@@ -60,6 +65,7 @@ function updateChart(gameCount, labelText, stepSize = 1) {
           },
         },
         x: {
+          type: "log2",
           ticks: {
             stepSize: stepSize,
           },
