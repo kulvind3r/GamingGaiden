@@ -1,4 +1,4 @@
-/*global ChartDataLabels, Chart, chartTitleConfig, gamingData*/
+/*global ChartDataLabels, Chart, chartTitleConfig, gamingData, Log2Axis*/
 /*from chart.js, common.js and html templates*/
 
 let chart;

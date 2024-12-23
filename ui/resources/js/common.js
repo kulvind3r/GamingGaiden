@@ -1,3 +1,6 @@
+/*global Chart*/
+/*from chart.js*/
+
 var chartTooltipConfig = {
   displayColors: false,
   yAlign: "top",
@@ -137,3 +140,4 @@ chartDataLabelFontConfig;
 chartLegendConfig;
 chartTitleConfig;
 buildGamingData;
+Log2Axis;

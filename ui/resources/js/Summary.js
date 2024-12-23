@@ -1,4 +1,4 @@
-/*global Chart, buildGamingData, chartTitleConfig, ChartDataLabels, DOMPurify*/
+/*global Chart, buildGamingData, chartTitleConfig, ChartDataLabels, DOMPurify, Log2Axis*/
 /*from chart.js, common.js, purify.min.js*/
 
 let gamingData = [];
@@ -86,13 +86,11 @@ function updateSummayChart() {
       scales: {
         y: {
           type: "log2",
-          title: chartTitleConfig("PlayTime (Hours)"),
+          title: chartTitleConfig("PlayTime (Hours)")
         },
         x: {
-          title: chartTitleConfig("Game Sessions", 15),
-          ticks: {
-            stepSize: 10,
-          },
+          type: "log2",
+          title: chartTitleConfig("Game Sessions", 15)
         },
       },
       elements: {

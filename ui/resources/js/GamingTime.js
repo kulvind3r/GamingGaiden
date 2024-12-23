@@ -1,4 +1,4 @@
-/*global ChartDataLabels, Chart, chartTitleConfig, buildGamingData*/
+/*global ChartDataLabels, Chart, chartTitleConfig, buildGamingData, Log2Axis*/
 /*from chart.js, common.js*/
 
 let gamingData = [];
