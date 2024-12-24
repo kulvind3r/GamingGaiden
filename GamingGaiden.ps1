@@ -336,15 +336,15 @@ try {
             Log "Starting game registration"
 
             ExecuteSettingsFunction -SettingsFunctionToCall $function:RenderAddGameForm
+
+            # Cleanup temp Files
+            Remove-Item -Force "$env:TEMP\GmGdn-*"
         })
 
     $addPlatformMenuItem.Add_Click({
             Log "Starting emulated platform registration"
 
             ExecuteSettingsFunction -SettingsFunctionToCall $function:RenderAddPlatformForm
-
-            # Cleanup temp Files
-            Remove-Item -Force "$env:TEMP\GmGdn-*"
         })
 
     $editGameMenuItem.Add_Click({
