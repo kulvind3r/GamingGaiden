@@ -381,7 +381,7 @@ function RenderAboutDialog() {
     $pictureBox = CreatePictureBox "./icons/banner.png" 0 10 345 70
     $aboutForm.Controls.Add($pictureBox)
 
-    $labelVersion = CreateLabel "v2024.12.23" 145 90
+    $labelVersion = CreateLabel "v2024.12.25" 145 90
     $aboutForm.Controls.Add($labelVersion)
 
     $textCopyRight = [char]::ConvertFromUtf32(0x000000A9) + " 2024 Kulvinder Singh"
