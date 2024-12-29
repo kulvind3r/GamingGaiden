@@ -272,6 +272,14 @@ function RenderSummary() {
     $getPlayDateSummaryQuery = "SELECT MIN(play_date) AS min_play_date, MAX(play_date) AS max_play_date FROM daily_playtime"
     $playDateSummary = RunDBQuery $getPlayDateSummaryQuery
 
+    if ($null -eq $playDateSummary.min_play_date -or $null -eq $playDateSummary.max_play_date) {
+        if(-Not $InBackground) {
+            ShowMessage "No play time found in DB. Please play some games first." "OK" "Error"
+        }
+        Log "Error: No playtime found in DB. Returning"
+        return $false
+    }
+
     $startDate = Get-Date -Date $playDateSummary.min_play_date -Format "MMM yyyy"
     $endDate = Get-Date -Date $playDateSummary.max_play_date -Format "MMM yyyy"
 
@@ -358,13 +366,23 @@ function RenderPCvsEmulation() {
 
     $workingDirectory = (Get-Location).Path
 
-    $getPCvsEmulationTimeQuery = "SELECT  platform, SUM(play_time) as play_time FROM games WHERE platform LIKE 'PC' UNION SELECT 'Emulation', SUM(play_time) as play_time FROM games WHERE platform NOT LIKE 'PC'"
+    $getPCvsEmulationTimeQuery = "SELECT  platform, IFNULL(SUM(play_time), 0) as play_time FROM games WHERE platform LIKE 'PC' UNION SELECT 'Emulation', IFNULL(SUM(play_time), 0) as play_time FROM games WHERE platform NOT LIKE 'PC'"
     $pcVsEmulationTime = RunDBQuery $getPCvsEmulationTimeQuery
     if ($pcVsEmulationTime.Length -eq 0) {
         if(-Not $InBackground) {
             ShowMessage "No Games found in DB. Please add some games first." "OK" "Error"
         }
         Log "Error: Games list empty. Returning"
+        return $false
+    }
+
+    $totalPlayTime = $pcVsEmulationTime[0].play_time + $pcVsEmulationTime[1].play_time
+
+    if ($totalPlayTime -eq 0 ) {
+        if(-Not $InBackground) {
+            ShowMessage "No play time found in DB. Please play some games first." "OK" "Error"
+        }
+        Log "Error: No playtime found in DB. Returning"
         return $false
     }
 
@@ -381,7 +399,7 @@ function RenderAboutDialog() {
     $pictureBox = CreatePictureBox "./icons/banner.png" 0 10 345 70
     $aboutForm.Controls.Add($pictureBox)
 
-    $labelVersion = CreateLabel "v2024.12.25" 145 90
+    $labelVersion = CreateLabel "v2024.12.29" 145 90
     $aboutForm.Controls.Add($labelVersion)
 
     $textCopyRight = [char]::ConvertFromUtf32(0x000000A9) + " 2024 Kulvinder Singh"
