@@ -66,9 +66,9 @@
 
         # Migration 4
         if (-Not $gamesTableSchema.name.Contains("status")) {
-            $addRomBasedNameColumnInGamesTableQuery = "ALTER TABLE games ADD COLUMN status TEXT"
+            $addStatusColumnInGamesTableQuery = "ALTER TABLE games ADD COLUMN status TEXT"
 
-            Invoke-SqliteQuery -Query $addRomBasedNameColumnInGamesTableQuery -SQLiteConnection $dbConnection
+            Invoke-SqliteQuery -Query $addStatusColumnInGamesTableQuery -SQLiteConnection $dbConnection
         }
         # End Migration 4
 
