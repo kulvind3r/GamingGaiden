@@ -27,7 +27,7 @@ foreach ($fileName in $fileNames) {
     Copy-Item -Path .\ui\404.html -Destination .\build\GamingGaiden\ui\$fileName -Force
 }
 
-ps12exe -inputFile ".\GamingGaiden.ps1" -outputFile ".\build\GamingGaiden\GamingGaiden.exe" -resourceParams @{iconFile = '.\build\GamingGaiden\icons\running.ico'; title = 'Gaming Gaiden: Gameplay Time Tracker'; product = 'Gaming Gaiden'; copyright = '© 2024 Kulvinder Singh'; version = '2024.12.29' }
+ps12exe -inputFile ".\GamingGaiden.ps1" -outputFile ".\build\GamingGaiden\GamingGaiden.exe" -resourceParams @{iconFile = '.\build\GamingGaiden\icons\running.ico'; title = 'Gaming Gaiden: Gameplay Time Tracker'; product = 'Gaming Gaiden'; copyright = '© 2024 Kulvinder Singh'; version = '2024.12.31' }
 
 Compress-Archive -Force -Path .\build\GamingGaiden -DestinationPath .\build\GamingGaiden.zip
 
