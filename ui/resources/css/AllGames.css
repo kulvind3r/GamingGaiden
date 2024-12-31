@@ -55,7 +55,7 @@ td:first-child img {
   margin-left: auto;
   margin-right: auto;
   display: block;
-  box-shadow: 4px 4px 4px gray;
+  filter: drop-shadow(4px 4px 2px gray);
 }
 
 /* Define specific styles for the Name column */

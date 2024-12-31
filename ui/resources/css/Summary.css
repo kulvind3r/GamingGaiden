@@ -162,7 +162,7 @@ body {
   max-height: 90%;
   max-width: 90%;
   object-fit: contain;
-  box-shadow: 4px 4px 4px gray;
+  filter: drop-shadow(4px 4px 2px gray);
 }
 
 #pc-icon {
