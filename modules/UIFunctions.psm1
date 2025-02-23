@@ -402,7 +402,7 @@ function RenderAboutDialog() {
     $labelVersion = CreateLabel "v2025.01.05" 145 90
     $aboutForm.Controls.Add($labelVersion)
 
-    $textCopyRight = [char]::ConvertFromUtf32(0x000000A9) + " 2024 Kulvinder Singh"
+    $textCopyRight = [char]::ConvertFromUtf32(0x000000A9) + " 2023 Kulvinder Singh"
     $labelCopyRight = CreateLabel $textCopyRight 112 110
     $aboutForm.Controls.Add($labelCopyRight)
 

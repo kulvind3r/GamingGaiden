@@ -1,5 +1,5 @@
 ﻿function IsExeEmulator($DetectedExe) {
-    Log "Is $DetectedExe is an Emulator?"
+    Log "Is $DetectedExe an Emulator?"
 
     $pattern = SQLEscapedMatchPattern $DetectedExe.Trim()
     $findExeQuery = "SELECT COUNT(*) as '' FROM emulated_platforms WHERE exe_name LIKE '%{0}%'" -f $pattern
