@@ -52,7 +52,7 @@
 
             for ($i = $startIndex; $i -lt $endIndex; $i++) {
                 if ($null = [System.Diagnostics.Process]::GetProcessesByName($exeList[$i])) {
-                    Log "Found $exeList[$i] running. Exiting detection"
+                    Log "Found $($exeList[$i]) running. Exiting detection"
                     return $exeList[$i]
                 }
             }
