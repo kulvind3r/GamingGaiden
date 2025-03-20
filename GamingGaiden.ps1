@@ -1,5 +1,11 @@
 ﻿#Requires -Version 5.1
 
+#_pragma iconFile '.\build\GamingGaiden\icons\running.ico'
+#_pragma title 'Gaming Gaiden: Gameplay Time Tracker'
+#_pragma product 'Gaming Gaiden'
+#_pragma copyright '© 2024 Kulvinder Singh'
+#_pragma version '2025.01.05'
+
 [System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms')    | Out-null
 [System.Reflection.Assembly]::LoadWithPartialName('System.Drawing')          | Out-null
 [System.Reflection.Assembly]::LoadWithPartialName('System.Web')          	 | Out-null
@@ -173,7 +179,7 @@ try {
     # Setup Timer To Monitor Tracking Updates from Tracker Job
     $Timer = New-Object Windows.Forms.Timer
     $Timer.Interval = 1000
-    $Timer.Add_Tick({ 
+    $Timer.Add_Tick({
         UpdateAppIconToShowTracking;
     })
 
@@ -375,7 +381,7 @@ try {
 
             ExecuteSettingsFunction -SettingsFunctionToCall $function:RenderEditPlatformForm -EntityList $platformsList
         })
-    
+
     $gamingPCMenuItem.Add_Click({
             Log "Starting Gaming PC registration"
 
