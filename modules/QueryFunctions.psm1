@@ -68,7 +68,7 @@ function findEmulatedGame($DetectedEmulatorExe, $EmulatorCommandLine) {
 
     $romName = $null
     foreach ($romExtension in $romExtensions) {
-        $romName = [System.Text.RegularExpressions.Regex]::Match($EmulatorCommandLine, "[^\\]*\.$romExtension").Value
+        $romName = [System.Text.RegularExpressions.Regex]::Match($EmulatorCommandLine, "[^`"\\]*\.$romExtension").Value
 
         if ($romName -ne "") {
             $romName = $romName -replace ".$romExtension", ""
