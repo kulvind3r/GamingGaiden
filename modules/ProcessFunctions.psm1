@@ -5,13 +5,8 @@
     $getGameExesQuery = "SELECT exe_name FROM games ORDER BY last_play_date DESC"
     $getEmulatorExesQuery = "SELECT exe_name FROM emulated_platforms"
 
-    $gameExeList = (RunDBQuery $getGameExesQuery).exe_name
-    $rawEmulatorExes = (RunDBQuery $getEmulatorExesQuery).exe_name
-
-    if ($null -eq $gameExeList -and $null -eq $rawEmulatorExes) {
-        Log "No games/emulators in datbase. Exiting tracker."
-        exit 1
-    }
+    $gameExeList = @((RunDBQuery $getGameExesQuery).exe_name)
+    $rawEmulatorExes = @((RunDBQuery $getEmulatorExesQuery).exe_name)
 
     # Flatten the returned result rows containing multiple emulator exes into list with one exe per item
     $emulatorExeList = ($rawEmulatorExes -join ',') -split ','
