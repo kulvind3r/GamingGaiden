@@ -11,7 +11,7 @@
                             completed TEXT,
                             platform TEXT)"
 
-        Invoke-SqliteQuery -Query $createGamesTableQuery -SQLiteConnection $dbConnection
+        Invoke-SqliteQuery -Query $createGamesTableQuery -SQLiteConnection $dbConnection | Out-Null
 
         $createPlatformsTableQuery = "CREATE TABLE IF NOT EXISTS emulated_platforms (
                             name TEXT PRIMARY KEY NOT NULL,
@@ -19,13 +19,13 @@
                             core TEXT,
                             rom_extensions TEXT)"
 
-        Invoke-SqliteQuery -Query $createPlatformsTableQuery -SQLiteConnection $dbConnection
+        Invoke-SqliteQuery -Query $createPlatformsTableQuery -SQLiteConnection $dbConnection | Out-Null
 
         $createDailyPlaytimeTableQuery = "CREATE TABLE IF NOT EXISTS daily_playtime (
                             play_date TEXT PRIMARY KEY NOT NULL,
                             play_time INTEGER)"
 
-        Invoke-SqliteQuery -Query $createDailyPlaytimeTableQuery -SQLiteConnection $dbConnection
+        Invoke-SqliteQuery -Query $createDailyPlaytimeTableQuery -SQLiteConnection $dbConnection | Out-Null
 
         $createPCTableQuery = "CREATE TABLE IF NOT EXISTS gaming_pcs (
                             name TEXT PRIMARY KEY NOT NULL,
@@ -36,28 +36,28 @@
                             end_date INTEGER,
                             current TEXT)"
 
-        Invoke-SqliteQuery -Query $createPCTableQuery -SQLiteConnection $dbConnection
+        Invoke-SqliteQuery -Query $createPCTableQuery -SQLiteConnection $dbConnection | Out-Null
 
         $createSessionHistoryTableQuery = "CREATE TABLE IF NOT EXISTS session_history (
                                     game_name TEXT,
                                     session_start_time INTEGER,
                                     session_duration_minutes INTEGER
         )"
-        Invoke-SqliteQuery -Query $createSessionHistoryTableQuery -SQLiteConnection $dbConnection
+        Invoke-SqliteQuery -Query $createSessionHistoryTableQuery -SQLiteConnection $dbConnection | Out-Null
 
         $gamesTableSchema = Invoke-SqliteQuery -query "PRAGMA table_info('games')" -SQLiteConnection $dbConnection
 
         # Migration 1
         if (-Not $gamesTableSchema.name.Contains("idle_time")) {
             $addIdleTimeColumnInGamesTableQuery = "ALTER TABLE games ADD COLUMN idle_time INTEGER DEFAULT 0"
-            Invoke-SqliteQuery -Query $addIdleTimeColumnInGamesTableQuery -SQLiteConnection $dbConnection
+            Invoke-SqliteQuery -Query $addIdleTimeColumnInGamesTableQuery -SQLiteConnection $dbConnection | Out-Null
         }
         # End Migration 1
 
         # Migration 2
         if (-Not $gamesTableSchema.name.Contains("session_count")) {
             $addSessionCountColumnInGamesTableQuery = "ALTER TABLE games ADD COLUMN session_count INTEGER DEFAULT 0"
-            Invoke-SqliteQuery -Query $addSessionCountColumnInGamesTableQuery -SQLiteConnection $dbConnection
+            Invoke-SqliteQuery -Query $addSessionCountColumnInGamesTableQuery -SQLiteConnection $dbConnection | Out-Null
         }
         # End Migration 2
 
@@ -66,8 +66,8 @@
             $addRomBasedNameColumnInGamesTableQuery = "ALTER TABLE games ADD COLUMN rom_based_name TEXT"
             $updateRomBasedNameColumnValues = "UPDATE games SET rom_based_name = name WHERE exe_name IN (SELECT DISTINCT exe_name FROM emulated_platforms)"
 
-            Invoke-SqliteQuery -Query $addRomBasedNameColumnInGamesTableQuery -SQLiteConnection $dbConnection
-            Invoke-SqliteQuery -Query $updateRomBasedNameColumnValues -SQLiteConnection $dbConnection
+            Invoke-SqliteQuery -Query $addRomBasedNameColumnInGamesTableQuery -SQLiteConnection $dbConnection | Out-Null
+            Invoke-SqliteQuery -Query $updateRomBasedNameColumnValues -SQLiteConnection $dbConnection | Out-Null
         }
         # End Migration 3
 
@@ -75,7 +75,7 @@
         if (-Not $gamesTableSchema.name.Contains("status")) {
             $addStatusColumnInGamesTableQuery = "ALTER TABLE games ADD COLUMN status TEXT"
 
-            Invoke-SqliteQuery -Query $addStatusColumnInGamesTableQuery -SQLiteConnection $dbConnection
+            Invoke-SqliteQuery -Query $addStatusColumnInGamesTableQuery -SQLiteConnection $dbConnection | Out-Null
         }
         # End Migration 4
 

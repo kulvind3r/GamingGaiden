@@ -12,14 +12,14 @@
 [System.Reflection.assembly]::LoadwithPartialname("Microsoft.VisualBasic")   | Out-Null
 
 try {
-    Import-Module ".\modules\PSSQLite"
-    Import-Module ".\modules\ThreadJob"
-    Import-Module ".\modules\HelperFunctions.psm1"
-    Import-Module ".\modules\QueryFunctions.psm1"
-    Import-Module ".\modules\SettingsFunctions.psm1"
-    Import-Module ".\modules\SetupDatabase.psm1"
-    Import-Module ".\modules\StorageFunctions.psm1"
-    Import-Module ".\modules\UIFunctions.psm1"
+    Import-Module ".\modules\PSSQLite" | Out-Null
+    Import-Module ".\modules\ThreadJob" | Out-Null
+    Import-Module ".\modules\HelperFunctions.psm1" | Out-Null
+    Import-Module ".\modules\QueryFunctions.psm1" | Out-Null
+    Import-Module ".\modules\SettingsFunctions.psm1" | Out-Null
+    Import-Module ".\modules\SetupDatabase.psm1" | Out-Null
+    Import-Module ".\modules\StorageFunctions.psm1" | Out-Null
+    Import-Module ".\modules\UIFunctions.psm1" | Out-Null
 
     #------------------------------------------
     # Exit if Gaming Gaiden is being started from non standard location
@@ -59,14 +59,14 @@ try {
 
     if ((Test-Path "HKCU:\SOFTWARE\HWiNFO64") -And -Not (Test-Path "HKCU:\SOFTWARE\HWiNFO64\Sensors\Custom\Gaming Gaiden")) {
         Log "Integrating with HWiNFO"
-        New-Item -path 'HKCU:\SOFTWARE\HWiNFO64\Sensors\Custom\Gaming Gaiden' -Name 'Other0' -Force
-        New-Item -path 'HKCU:\SOFTWARE\HWiNFO64\Sensors\Custom\Gaming Gaiden' -Name 'Other1' -Force
-        Set-Itemproperty -path $HWInfoSensorTracking -Name 'Name' -value 'Tracking'
-        Set-Itemproperty -path $HWInfoSensorTracking -Name 'Unit' -value 'Yes/No'
-        Set-Itemproperty -path $HWInfoSensorTracking -Name 'Value' -value 0
-        Set-Itemproperty -path $HWInfoSensorSession -Name 'Name' -value 'Session Length'
-        Set-Itemproperty -path $HWInfoSensorSession -Name 'Unit' -value 'Min'
-        Set-Itemproperty -path $HWInfoSensorSession -Name 'Value' -value 0
+        New-Item -path 'HKCU:\SOFTWARE\HWiNFO64\Sensors\Custom\Gaming Gaiden' -Name 'Other0' -Force | Out-Null
+        New-Item -path 'HKCU:\SOFTWARE\HWiNFO64\Sensors\Custom\Gaming Gaiden' -Name 'Other1' -Force | Out-Null
+        Set-Itemproperty -path $HWInfoSensorTracking -Name 'Name' -value 'Tracking' | Out-Null
+        Set-Itemproperty -path $HWInfoSensorTracking -Name 'Unit' -value 'Yes/No' | Out-Null
+        Set-Itemproperty -path $HWInfoSensorTracking -Name 'Value' -value 0 | Out-Null
+        Set-Itemproperty -path $HWInfoSensorSession -Name 'Name' -value 'Session Length' | Out-Null
+        Set-Itemproperty -path $HWInfoSensorSession -Name 'Unit' -value 'Min' | Out-Null
+        Set-Itemproperty -path $HWInfoSensorSession -Name 'Value' -value 0 | Out-Null
     }
     else {
         Log "HWiNFO not detected. Or Gaming Gaiden is already Integrated. Skipping Auto Integration"
@@ -106,13 +106,13 @@ try {
     function ResetIconAndSensors() {
         Log "Resetting Icon and Sensors"
         Remove-Item "$env:TEMP\GmGdn-TrackingGame.txt" -ErrorAction silentlycontinue
-        Set-Itemproperty -path $HWInfoSensorTracking -Name 'Value' -value 0
-        Set-Itemproperty -path $HWInfoSensorSession -Name 'Value' -value 0
+    Set-Itemproperty -path $HWInfoSensorTracking -Name 'Value' -value 0 | Out-Null
+    Set-Itemproperty -path $HWInfoSensorSession -Name 'Value' -value 0 | Out-Null
         $AppNotifyIcon.Text = "Gaming Gaiden"
     }
 
     function  StartTrackerJob() {
-        Start-ThreadJob -InitializationScript $TrackerJobInitializationScript -ScriptBlock $TrackerJobScript -Name "TrackerJob"
+    Start-ThreadJob -InitializationScript $TrackerJobInitializationScript -ScriptBlock $TrackerJobScript -Name "TrackerJob" | Out-Null
         $StopTrackerMenuItem.Enabled = $true
         $StartTrackerMenuItem.Enabled = $false
 
@@ -123,7 +123,7 @@ try {
     }
 
     function  StopTrackerJob() {
-        Stop-Job "TrackerJob" -ErrorAction silentlycontinue
+    Stop-Job "TrackerJob" -ErrorAction silentlycontinue | Out-Null
         $StopTrackerMenuItem.Enabled = $false
         $StartTrackerMenuItem.Enabled = $true
 
@@ -165,7 +165,7 @@ try {
             $gameName = Get-Content "$env:TEMP\GmGdn-TrackingGame.txt"
             $AppNotifyIcon.Text = "Tracking $gameName"
             $AppNotifyIcon.Icon = $IconTracking
-            Set-Itemproperty -path $HWInfoSensorTracking -Name 'Value' -value 1
+            Set-Itemproperty -path $HWInfoSensorTracking -Name 'Value' -value 1 | Out-Null
         }
         else {
             if ($AppNotifyIcon.Text -ne "Gaming Gaiden") {
@@ -286,7 +286,7 @@ try {
 
     $exitMenuItem.Add_Click({
             $AppNotifyIcon.Visible = $false;
-            Stop-Job -Name "TrackerJob";
+            Stop-Job -Name "TrackerJob" | Out-Null
             $Timer.Stop()
             $Timer.Dispose()
             [System.Windows.Forms.Application]::Exit();
