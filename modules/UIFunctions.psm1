@@ -470,21 +470,14 @@ function RenderAboutDialog() {
 }
 
 function RenderQuickView() {
-    $lastFiveGamesQuery = "Select icon, name, play_time, last_play_date from games ORDER BY completed, last_play_date DESC LIMIT 5"
-    $gameRecords = RunDBQuery $lastFiveGamesQuery
-    if ($gameRecords.Length -eq 0) {
-        ShowMessage "No Games found in DB. Please add some games first." "OK" "Error"
-        Log "Error: Games list empty. Returning"
-        return
-    }
-
-    $quickViewForm = CreateForm "Currently Playing / Recently Finished Games" 390 378 ".\icons\running.ico"
-    $quickViewForm.MaximizeBox = $false; $quickViewForm.MinimizeBox = $false;
+    $quickViewForm = CreateForm "Quick View" 420 420 ".\icons\running.ico"
+    $quickViewForm.MaximizeBox = $false
+    $quickViewForm.MinimizeBox = $false
     $quickViewForm.StartPosition = [System.Windows.Forms.FormStartPosition]::Manual
 
     $screenBounds = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
     $quickViewForm.Left = $screenBounds.Width - $quickViewForm.Width - 20
-    $quickViewForm.Top = $screenBounds.Height - $quickViewForm.Height - 40
+    $quickViewForm.Top = $screenBounds.Height - $quickViewForm.Height - 60
 
     $dataGridView = New-Object System.Windows.Forms.DataGridView
     $dataGridView.Dock = [System.Windows.Forms.DockStyle]::Fill
@@ -498,52 +491,110 @@ function RenderQuickView() {
     $dataGridView.DefaultCellStyle.Padding = New-Object System.Windows.Forms.Padding(2, 2, 2, 2)
     $dataGridView.DefaultCellStyle.BackColor = [System.Drawing.Color]::FromArgb(240, 240, 240)
 
-    $IconColumn = New-Object System.Windows.Forms.DataGridViewImageColumn
-    $IconColumn.Name = "icon"
-    $IconColumn.HeaderText = ""
-    $IconColumn.ImageLayout = [System.Windows.Forms.DataGridViewImageCellLayout]::Zoom
-    $dataGridView.Columns.Add($IconColumn)
+    $toggleSwitch = New-Object System.Windows.Forms.CheckBox
+    $toggleSwitch.Text = "Show Most Played"
+    $toggleSwitch.Dock = [System.Windows.Forms.DockStyle]::Bottom
+    $toggleSwitch.Appearance = [System.Windows.Forms.Appearance]::Button
+    $toggleSwitch.TextAlign = [System.Drawing.ContentAlignment]::MiddleCenter
+    $toggleSwitch.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
+    $toggleSwitch.FlatAppearance.BorderSize = 0
 
-    $dataGridView.Columns.Add("name", "Name")
-    $dataGridView.Columns.Add("play_time", "Playtime")
-    $dataGridView.Columns.Add("last_play_date", "Last Played On")
-
-    foreach ($column in $dataGridView.Columns) {
-        $column.Resizable = [System.Windows.Forms.DataGridViewTriState]::False
-    }
-
-    foreach ($row in $GameRecords) {
-
-        $iconByteStream = [System.IO.MemoryStream]::new($row.icon)
-        $gameIcon = [System.Drawing.Bitmap]::FromStream($iconByteStream)
-
-        $minutes = $null; $hours = [math]::divrem($row.play_time, 60, [ref]$minutes);
-        $playTimeFormatted = "{0} Hr {1} Min" -f $hours, $minutes
-
-        [datetime]$origin = '1970-01-01 00:00:00'
-        $dateFormatted = $origin.AddSeconds($row.last_play_date).ToLocalTime().ToString("dd MMMM yyyy")
-
-        $dataGridView.Rows.Add($gameIcon, $row.name, $playTimeFormatted, $dateFormatted)
-    }
-
-    foreach ($row in $dataGridView.Rows) {
-        $row.Resizable = [System.Windows.Forms.DataGridViewTriState]::False
-    }
-
-    # Remove flickering in Data Grid View
     $doubleBufferProperty = $dataGridView.GetType().GetProperty('DoubleBuffered', [System.Reflection.BindingFlags]::NonPublic -bor [System.Reflection.BindingFlags]::Instance)
     $doubleBufferProperty.SetValue($dataGridView, $true, $null)
 
+    function Load-RecentSessions {
+        $quickViewForm.text = "Recent Sessions"
+        $dataGridView.Rows.Clear()
+        $dataGridView.Columns.Clear()
+
+        $lastFiveSessionsQuery = "SELECT sh.game_name, g.icon, sh.session_duration_minutes, sh.session_start_time FROM session_history sh JOIN games g ON sh.game_name = g.name ORDER BY sh.session_start_time DESC LIMIT 5"
+        $sessionRecords = RunDBQuery $lastFiveSessionsQuery
+        if ($sessionRecords.Length -eq 0) {
+            ShowMessage "No sessions found in DB. Please play some games first." "OK" "Error"
+            Log "Error: Session history empty. Returning"
+            $quickViewForm.Close()
+            return
+        }
+
+        $IconColumn = New-Object System.Windows.Forms.DataGridViewImageColumn
+        $IconColumn.Name = "icon"
+        $IconColumn.HeaderText = ""
+        $IconColumn.ImageLayout = [System.Windows.Forms.DataGridViewImageCellLayout]::Zoom
+        $null = $dataGridView.Columns.Add($IconColumn)
+
+        $null = $dataGridView.Columns.Add("name", "Name")
+        $null = $dataGridView.Columns.Add("duration", "Duration")
+        $null = $dataGridView.Columns.Add("played_on", "Played On")
+
+        foreach ($column in $dataGridView.Columns) {
+            $column.Resizable = [System.Windows.Forms.DataGridViewTriState]::False
+        }
+
+        foreach ($row in $sessionRecords) {
+            $iconByteStream = [System.IO.MemoryStream]::new($row.icon)
+            $gameIcon = [System.Drawing.Bitmap]::FromStream($iconByteStream)
+            $minutes = $null; $hours = [math]::divrem($row.session_duration_minutes, 60, [ref]$minutes);
+            $durationFormatted = "{0} Hr {1} Min" -f $hours, $minutes
+            [datetime]$origin = '1970-01-01 00:00:00'
+            $dateFormatted = $origin.AddSeconds($row.session_start_time).ToLocalTime().ToString("dd MMM HH:mm")
+            $null = $dataGridView.Rows.Add($gameIcon, $row.game_name, $durationFormatted, $dateFormatted)
+        }
+    }
+
+    function Load-MostPlayed {
+        $quickViewForm.text = "Most Played Games"
+        $dataGridView.Rows.Clear()
+        $dataGridView.Columns.Clear()
+
+        $mostPlayedQuery = "SELECT name, icon, play_time FROM games ORDER BY play_time DESC LIMIT 5"
+        $gameRecords = RunDBQuery $mostPlayedQuery
+        if ($gameRecords.Length -eq 0) {
+            ShowMessage "No Games found in DB. Please add some games first." "OK" "Error"
+            Log "Error: Games list empty. Returning"
+            $quickViewForm.Close()
+            return
+        }
+
+        $IconColumn = New-Object System.Windows.Forms.DataGridViewImageColumn
+        $IconColumn.Name = "icon"
+        $IconColumn.HeaderText = ""
+        $IconColumn.ImageLayout = [System.Windows.Forms.DataGridViewImageCellLayout]::Zoom
+        $null = $dataGridView.Columns.Add($IconColumn)
+
+        $null = $dataGridView.Columns.Add("name", "Name")
+        $null = $dataGridView.Columns.Add("play_time", "Playtime")
+
+        foreach ($column in $dataGridView.Columns) {
+            $column.Resizable = [System.Windows.Forms.DataGridViewTriState]::False
+        }
+
+        foreach ($row in $gameRecords) {
+            $iconByteStream = [System.IO.MemoryStream]::new($row.icon)
+            $gameIcon = [System.Drawing.Bitmap]::FromStream($iconByteStream)
+            $minutes = $null; $hours = [math]::divrem($row.play_time, 60, [ref]$minutes);
+            $playTimeFormatted = "{0} Hr {1} Min" -f $hours, $minutes
+            $null = $dataGridView.Rows.Add($gameIcon, $row.name, $playTimeFormatted)
+        }
+    }
+
+    $toggleSwitch.Add_CheckedChanged({
+        if ($toggleSwitch.Checked) {
+            Load-MostPlayed
+        } else {
+            Load-RecentSessions
+        }
+        $dataGridView.ClearSelection()
+    })
+
     $quickViewForm.Controls.Add($dataGridView)
+    $quickViewForm.Controls.Add($toggleSwitch)
 
-    $quickViewForm.Add_Deactivate({
-            $quickViewForm.Dispose()
-        })
-
+    $quickViewForm.Add_Deactivate({ $quickViewForm.Dispose() })
     $quickViewForm.Add_Shown({
-            $dataGridView.ClearSelection()
-            $quickViewForm.Activate()
-        })
+        Load-RecentSessions
+        $dataGridView.ClearSelection()
+        $quickViewForm.Activate()
+    })
 
     $quickViewForm.ShowDialog()
 }
