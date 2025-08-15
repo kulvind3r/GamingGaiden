@@ -43,6 +43,20 @@ class GamingPC {
     }
 }
 
+class Session {
+    [ValidateNotNullOrEmpty()][string]$Icon
+    [ValidateNotNullOrEmpty()][string]$Name
+    [ValidateNotNullOrEmpty()][string]$Duration
+    [ValidateNotNullOrEmpty()][string]$StartTime
+
+    Session($IconUri, $Name, $Duration, $StartTime) {
+        $this.Icon = $IconUri
+        $this.Name = $Name
+        $this.Duration = $Duration
+        $this.StartTime = $StartTime
+    }
+}
+
 function UpdateAllStatsInBackground() {
     RenderGameList -InBackground $true
     RenderSummary -InBackground $true
@@ -50,7 +64,6 @@ function UpdateAllStatsInBackground() {
     RenderGamesPerPlatform -InBackground $true
     RenderMostPlayed -InBackground $true
     RenderIdleTime -InBackground $true
-    RenderPCvsEmulation -InBackground $true
 }
 
 function RenderGameList() {
@@ -357,40 +370,65 @@ function RenderGamesPerPlatform() {
     [System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $workingDirectory\ui\GamesPerPlatform.html
 }
 
-function RenderPCvsEmulation() {
+function RenderSessionHistory() {
     param(
         [bool]$InBackground = $false
     )
 
-    Log "Rendering PC vs Emulation"
+    Log "Rendering session history"
 
     $workingDirectory = (Get-Location).Path
 
-    $getPCvsEmulationTimeQuery = "SELECT  platform, IFNULL(SUM(play_time), 0) as play_time FROM games WHERE platform LIKE 'PC' UNION SELECT 'Emulation', IFNULL(SUM(play_time), 0) as play_time FROM games WHERE platform NOT LIKE 'PC'"
-    $pcVsEmulationTime = RunDBQuery $getPCvsEmulationTimeQuery
-    if ($pcVsEmulationTime.Length -eq 0) {
+    $getSessionHistoryQuery = "SELECT sh.game_name, sh.session_start_time, sh.session_duration_minutes, g.icon FROM session_history sh JOIN games g ON sh.game_name = g.name ORDER BY sh.session_start_time DESC LIMIT 50"
+    $sessionRecords = RunDBQuery $getSessionHistoryQuery
+    if ($sessionRecords.Length -eq 0) {
         if(-Not $InBackground) {
-            ShowMessage "No Games found in DB. Please add some games first." "OK" "Error"
+            ShowMessage "No session history found in DB. Please play some games first." "OK" "Error"
         }
-        Log "Error: Games list empty. Returning"
+        Log "Error: Session history empty. Returning"
         return $false
     }
 
-    $totalPlayTime = $pcVsEmulationTime[0].play_time + $pcVsEmulationTime[1].play_time
+    $sessions = [System.Collections.Generic.List[Session]]::new()
+    $iconUri = $null
 
-    if ($totalPlayTime -eq 0 ) {
-        if(-Not $InBackground) {
-            ShowMessage "No play time found in DB. Please play some games first." "OK" "Error"
+    foreach ($sessionRecord in $sessionRecords) {
+        $name = $sessionRecord.game_name
+        $imageFileName = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($name))
+
+        if ( (Test-Path "$workingDirectory\ui\resources\images\$imageFileName.jpg") ) {
+            $iconUri = "<img src=`".\resources\images\$imageFileName.jpg`">"
         }
-        Log "Error: No playtime found in DB. Returning"
-        return $false
+        elseif ( (Test-Path "$workingDirectory\ui\resources\images\$imageFileName.png") ) {
+            $iconUri = "<img src=`".\resources\images\$imageFileName.png`">"
+        }
+        else {
+            $iconByteStream = [System.IO.MemoryStream]::new($sessionRecord.icon)
+            $iconBitmap = [System.Drawing.Bitmap]::FromStream($iconByteStream)
+
+            if ($iconBitmap.PixelFormat -eq "Format32bppArgb") {
+                $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.png", [System.Drawing.Imaging.ImageFormat]::Png)
+                $iconUri = "<img src=`".\resources\images\$imageFileName.png`">"
+            }
+            else {
+                $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.jpg", [System.Drawing.Imaging.ImageFormat]::Jpeg)
+                $iconUri = "<img src=`".\resources\images\$imageFileName.jpg`">"
+            }
+
+            $iconBitmap.Dispose()
+        }
+
+        $currentSession = [Session]::new($iconUri, $name, $sessionRecord.session_duration_minutes, $sessionRecord.session_start_time)
+        $null = $sessions.Add($currentSession)
     }
 
-    $table = $pcVsEmulationTime | ConvertTo-Html -Fragment
+    $table = $sessions | ConvertTo-Html -Fragment
 
-    $report = (Get-Content $workingDirectory\ui\templates\PCvsEmulation.html.template) -replace "_PCVSEMULATIONTABLE_", $table
+    $report = (Get-Content $workingDirectory\ui\templates\SessionHistory.html.template) -replace "_SESSIONSTABLE_", $table
+    $report = $report -replace "StartTime", "Session Start"
+    $report = $report -replace "Name", "Game"
 
-    [System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $workingDirectory\ui\PCvsEmulation.html
+    [System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $workingDirectory\ui\SessionHistory.html
 }
 
 function RenderAboutDialog() {

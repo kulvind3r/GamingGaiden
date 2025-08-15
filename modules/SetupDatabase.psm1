@@ -38,6 +38,13 @@
 
         Invoke-SqliteQuery -Query $createPCTableQuery -SQLiteConnection $dbConnection
 
+        $createSessionHistoryTableQuery = "CREATE TABLE IF NOT EXISTS session_history (
+                                    game_name TEXT,
+                                    session_start_time INTEGER,
+                                    session_duration_minutes INTEGER
+        )"
+        Invoke-SqliteQuery -Query $createSessionHistoryTableQuery -SQLiteConnection $dbConnection
+
         $gamesTableSchema = Invoke-SqliteQuery -query "PRAGMA table_info('games')" -SQLiteConnection $dbConnection
 
         # Migration 1

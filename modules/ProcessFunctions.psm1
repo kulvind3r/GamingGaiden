@@ -102,7 +102,7 @@ function TimeTrackerLoop($DetectedExe) {
     $PlayTimeExcludingIdleTime = $playTimeForCurrentSession - $idleTimeForCurrentSession
     Log "Play time for current session excluding Idle time $PlayTimeExcludingIdleTime min"
 
-    return @($PlayTimeExcludingIdleTime, $idleTimeForCurrentSession)
+    return @($PlayTimeExcludingIdleTime, $idleTimeForCurrentSession, $exeStartTime)
 }
 
 function MonitorGame($DetectedExe) {
@@ -147,8 +147,13 @@ function MonitorGame($DetectedExe) {
     $sessionTimeDetails = TimeTrackerLoop $DetectedExe
     $currentPlayTime = $sessionTimeDetails[0]
     $currentIdleTime = $sessionTimeDetails[1]
+    $sessionStartTime = $sessionTimeDetails[2]
     # Remove Temp file to signal parent process to update notification icon color to show game has finished
     Remove-Item "$env:TEMP\GmGdn-TrackingGame.txt"
+
+    if ($currentPlayTime -gt 0) {
+        RecordSessionHistory -GameName $gameName -SessionStartTime $sessionStartTime -SessionDuration $currentPlayTime
+    }
 
     if ($null -ne $entityFound) {
         Log "Game Already Exists. Updating PlayTime and Last Played Date"

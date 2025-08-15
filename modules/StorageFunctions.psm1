@@ -316,3 +316,23 @@ function RecordPlaytimOnDate($PlayTime) {
     Log "Updating playTime for today in database"
     RunDBQuery $recordPlayTimeQuery
 }
+
+function RecordSessionHistory() {
+    param(
+        [string]$GameName,
+        [datetime]$SessionStartTime,
+        [int]$SessionDuration
+    )
+
+    $gameNamePattern = SQLEscapedMatchPattern($GameName.Trim())
+    $sessionStartTimeUnix = (Get-Date $SessionStartTime -UFormat %s).Split('.')[0]
+
+    $insertSessionQuery = "INSERT INTO session_history (game_name, session_start_time, session_duration_minutes) VALUES (@GameName, @SessionStartTime, @SessionDuration)"
+
+    Log "Recording session history for $GameName"
+    RunDBQuery $insertSessionQuery @{
+        GameName         = $GameName
+        SessionStartTime = $sessionStartTimeUnix
+        SessionDuration  = $SessionDuration
+    }
+}
