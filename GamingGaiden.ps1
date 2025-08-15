@@ -217,14 +217,14 @@ try {
     $editPlatformMenuItem = CreateMenuItem "Edit Emulator"
     $gamingPCMenuItem = CreateMenuItem "Gaming PCs"
     $openInstallDirectoryMenuItem = CreateMenuItem "Open Install Directory"
-    $settingsSubMenuItem.DropDownItems.Add($addGameMenuItem)
-    $settingsSubMenuItem.DropDownItems.Add($editGameMenuItem)
-    $settingsSubMenuItem.DropDownItems.Add($menuItemSeparator1)
-    $settingsSubMenuItem.DropDownItems.Add($addPlatformMenuItem)
-    $settingsSubMenuItem.DropDownItems.Add($editPlatformMenuItem)
-    $settingsSubMenuItem.DropDownItems.Add($menuItemSeparator7)
-    $settingsSubMenuItem.DropDownItems.Add($gamingPCMenuItem)
-    $settingsSubMenuItem.DropDownItems.Add($openInstallDirectoryMenuItem)
+    $null = $settingsSubMenuItem.DropDownItems.Add($addGameMenuItem)
+    $null = $settingsSubMenuItem.DropDownItems.Add($editGameMenuItem)
+    $null = $settingsSubMenuItem.DropDownItems.Add($menuItemSeparator1)
+    $null = $settingsSubMenuItem.DropDownItems.Add($addPlatformMenuItem)
+    $null = $settingsSubMenuItem.DropDownItems.Add($editPlatformMenuItem)
+    $null = $settingsSubMenuItem.DropDownItems.Add($menuItemSeparator7)
+    $null = $settingsSubMenuItem.DropDownItems.Add($gamingPCMenuItem)
+    $null = $settingsSubMenuItem.DropDownItems.Add($openInstallDirectoryMenuItem)
 
     $statsSubMenuItem = CreateMenuItem "Statistics"
     $sessionHistoryMenuItem = CreateMenuItem "Session History"
@@ -233,12 +233,12 @@ try {
     $idleTimeMenuItem = CreateMenuItem "Idle Time"
     $summaryItem = CreateMenuItem "Life Time Summary"
     $gamesPerPlatformMenuItem = CreateMenuItem "Games Per Platform"
-    $statsSubMenuItem.DropDownItems.Add($summaryItem)
-    $statsSubMenuItem.DropDownItems.Add($gamingTimeMenuItem)
-    $statsSubMenuItem.DropDownItems.Add($gamesPerPlatformMenuItem)
-    $statsSubMenuItem.DropDownItems.Add($mostPlayedMenuItem)
-    $statsSubMenuItem.DropDownItems.Add($idleTimeMenuItem)
-    $statsSubMenuItem.DropDownItems.Add($sessionHistoryMenuItem)
+    $null = $statsSubMenuItem.DropDownItems.Add($summaryItem)
+    $null = $statsSubMenuItem.DropDownItems.Add($gamingTimeMenuItem)
+    $null = $statsSubMenuItem.DropDownItems.Add($gamesPerPlatformMenuItem)
+    $null = $statsSubMenuItem.DropDownItems.Add($mostPlayedMenuItem)
+    $null = $statsSubMenuItem.DropDownItems.Add($idleTimeMenuItem)
+    $null = $statsSubMenuItem.DropDownItems.Add($sessionHistoryMenuItem)
 
     $appContextMenu = New-Object System.Windows.Forms.ContextMenuStrip
     $appContextMenu.Items.AddRange(@($allGamesMenuItem, $menuItemSeparator2, $statsSubMenuItem, $menuItemSeparator3, $settingsSubMenuItem, $menuItemSeparator4, $StartTrackerMenuItem, $StopTrackerMenuItem, $menuItemSeparator5, $helpMenuItem, $aboutMenuItem, $menuItemSeparator6, $exitMenuItem))
