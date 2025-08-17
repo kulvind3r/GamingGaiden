@@ -470,7 +470,7 @@ function RenderAboutDialog() {
 }
 
 function RenderQuickView() {
-    $quickViewForm = CreateForm "Quick View" 420 420 ".\icons\running.ico"
+    $quickViewForm = CreateForm "Quick View" 420 400 ".\icons\running.ico"
     $quickViewForm.MaximizeBox = $false
     $quickViewForm.MinimizeBox = $false
     $quickViewForm.StartPosition = [System.Windows.Forms.FormStartPosition]::Manual

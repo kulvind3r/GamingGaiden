@@ -14,9 +14,10 @@
     )
 
     $gameIconBytes = (Get-Content -Path $GameIconPath -Encoding byte -Raw);
+    $gameIconColor = Get-DominantColor $gameIconBytes
 
-    $addGameQuery = "INSERT INTO games (name, exe_name, icon, play_time, idle_time, last_play_date, completed, platform, session_count, status, rom_based_name)" +
-    "VALUES (@GameName, @GameExeName, @gameIconBytes, @GamePlayTime, @GameIdleTime, @GameLastPlayDate, @GameCompleteStatus, @GamePlatform, @GameSessionCount, @GameStatus, @GameRomBasedName)"
+    $addGameQuery = "INSERT INTO games (name, exe_name, icon, play_time, idle_time, last_play_date, completed, platform, session_count, status, rom_based_name, color_hex)" +
+    "VALUES (@GameName, @GameExeName, @gameIconBytes, @GamePlayTime, @GameIdleTime, @GameLastPlayDate, @GameCompleteStatus, @GamePlatform, @GameSessionCount, @GameStatus, @GameRomBasedName, @GameIconColor)"
 
     $gameNamePattern = SQLEscapedMatchPattern($GameName.Trim())
     $setGameStatusNull = "UPDATE games SET status = @GameStatus WHERE name LIKE '{0}'" -f $gameNamePattern
@@ -36,6 +37,7 @@
         GameSessionCount   = $GameSessionCount
         GameStatus         = $GameStatus
         GameRomBasedName   = $GameRomBasedName.Trim()
+        GameIconColor      = $gameIconColor
     }
 
     # Have to set Null Values after the Save for clean code, bcause the following doesn't work
@@ -151,11 +153,12 @@ function UpdateGameOnEdit() {
     )
 
     $gameIconBytes = (Get-Content -Path $GameIconPath -Encoding byte -Raw);
+    $gameIconColor = Get-DominantColor $gameIconBytes
 
     $gameNamePattern = SQLEscapedMatchPattern($OriginalGameName.Trim())
 
     if ( $OriginalGameName -eq $GameName) {
-        $updateGameQuery = "UPDATE games SET exe_name = @GameExeName, icon = @gameIconBytes, play_time = @GamePlayTime, completed = @GameCompleteStatus, platform = @GamePlatform, status = @GameStatus WHERE name LIKE '{0}'" -f $gameNamePattern
+        $updateGameQuery = "UPDATE games SET exe_name = @GameExeName, icon = @gameIconBytes, play_time = @GamePlayTime, completed = @GameCompleteStatus, platform = @GamePlatform, status = @GameStatus, color_hex = @GameIconColor WHERE name LIKE '{0}'" -f $gameNamePattern
 
         Log "Editing $GameName in database"
         RunDBQuery $updateGameQuery @{
@@ -165,6 +168,7 @@ function UpdateGameOnEdit() {
             GameCompleteStatus = $GameCompleteStatus
             GamePlatform       = $GamePlatform.Trim()
             GameStatus         = $GameStatus
+            GameIconColor      = $gameIconColor
         }
     }
     else {

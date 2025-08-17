@@ -79,6 +79,14 @@
         }
         # End Migration 4
 
+        # Migration 5
+        if (-Not $gamesTableSchema.name.Contains("color_hex")) {
+            $addColorHexColumnInGamesTableQuery = "ALTER TABLE games ADD COLUMN color_hex TEXT"
+
+            Invoke-SqliteQuery -Query $addColorHexColumnInGamesTableQuery -SQLiteConnection $dbConnection | Out-Null
+        }
+        # End Migration 5
+
         $dbConnection.Close()
         $dbConnection.Dispose()
     }
