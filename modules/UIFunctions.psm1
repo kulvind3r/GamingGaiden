@@ -504,6 +504,7 @@ function RenderQuickView() {
 
     function Load-RecentSessions {
         $quickViewForm.text = "Recent Sessions"
+        $toggleSwitch.Text = "Show Most Played"
         $dataGridView.Rows.Clear()
         $dataGridView.Columns.Clear()
 
@@ -543,10 +544,11 @@ function RenderQuickView() {
 
     function Load-MostPlayed {
         $quickViewForm.text = "Most Played Games"
+        $toggleSwitch.Text = "Show Recent Sessions"
         $dataGridView.Rows.Clear()
         $dataGridView.Columns.Clear()
 
-        $mostPlayedQuery = "SELECT name, icon, play_time FROM games ORDER BY play_time DESC LIMIT 5"
+        $mostPlayedQuery = "SELECT name, icon, play_time, last_play_date FROM games ORDER BY play_time DESC LIMIT 5"
         $gameRecords = RunDBQuery $mostPlayedQuery
         if ($gameRecords.Length -eq 0) {
             ShowMessage "No Games found in DB. Please add some games first." "OK" "Error"
@@ -563,6 +565,7 @@ function RenderQuickView() {
 
         $null = $dataGridView.Columns.Add("name", "Name")
         $null = $dataGridView.Columns.Add("play_time", "Playtime")
+        $null = $dataGridView.Columns.Add("last_play_date", "Last Played On")
 
         foreach ($column in $dataGridView.Columns) {
             $column.Resizable = [System.Windows.Forms.DataGridViewTriState]::False
@@ -573,7 +576,9 @@ function RenderQuickView() {
             $gameIcon = [System.Drawing.Bitmap]::FromStream($iconByteStream)
             $minutes = $null; $hours = [math]::divrem($row.play_time, 60, [ref]$minutes);
             $playTimeFormatted = "{0} Hr {1} Min" -f $hours, $minutes
-            $null = $dataGridView.Rows.Add($gameIcon, $row.name, $playTimeFormatted)
+            [datetime]$origin = '1970-01-01 00:00:00'
+            $dateFormatted = $origin.AddSeconds($row.last_play_date).ToLocalTime().ToString("dd MMMM yyyy")
+            $null = $dataGridView.Rows.Add($gameIcon, $row.name, $playTimeFormatted, $dateFormatted)
         }
     }
 

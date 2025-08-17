@@ -20,7 +20,7 @@ function updateChart(gameCount, labelText, stepSize = 1) {
   for (const game of gamingData) {
     if (i == gameCount) break;
     labels.push(game.name);
-    data.push({ game: game.name, time: (game.time / 60).toFixed(1) });
+    data.push({ game: game.name, time: game.time });
     i++;
   }
 
@@ -51,6 +51,9 @@ function updateChart(gameCount, labelText, stepSize = 1) {
         y: {
           ticks: {
             autoSkip: false,
+            font: {
+              size: 14,
+            }
           },
         },
         // Alignment Hack: Add an identical y scale on right side, to center the graph on page.
@@ -68,6 +71,12 @@ function updateChart(gameCount, labelText, stepSize = 1) {
           type: "log2",
           ticks: {
             stepSize: stepSize,
+            callback: function(value) {
+              let hours = Math.floor(value / 60);
+              if (hours === value / 60) {
+                return hours;
+              }
+            }
           },
           title: chartTitleConfig(labelText, 15),
         },
@@ -87,6 +96,14 @@ function updateChart(gameCount, labelText, stepSize = 1) {
         datalabels: {
           anchor: "end",
           align: "right",
+          formatter: function (value) {
+            if (value === 0) {
+              return "";
+            }
+            const hours = Math.floor(value / 60);
+            const minutes = value % 60;
+            return `${hours}h ${minutes}m`;
+          },
           color: "#000000",
           font: {
             family: "monospace",

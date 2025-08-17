@@ -72,7 +72,7 @@ function updateChart(
           itemDate.getDate() === date.getDate()
         );
       });
-      data.push(gamingEntry ? (gamingEntry.time / 60).toFixed(1) : 0);
+      data.push(gamingEntry ? gamingEntry.time : 0);
       monthTotalTime =
         monthTotalTime + (gamingEntry ? gamingEntry.time / 60 : 0);
     }
@@ -109,7 +109,7 @@ function updateChart(
       });
       data.push({
         month: labels.at(month),
-        time: (monthPlayTime / 60).toFixed(1),
+        time: monthPlayTime,
       });
       yearTotalTime = yearTotalTime + monthPlayTime / 60;
     }
@@ -145,6 +145,14 @@ function updateChart(
           suggestedMax: ylimit,
           type: "log2",
           title: chartTitleConfig("PlayTime (Hours)", 15),
+          ticks: {
+            callback: function(value) {
+              let hours = Math.floor(value / 60);
+              if (hours === value / 60) {
+                return hours;
+              }
+            }
+          }
         },
         // Alignment Hack: Add an identical y scale on right side, to center the graph on page.
         // Then hide the right side scale by setting label color identical to background.
@@ -186,11 +194,12 @@ function updateChart(
           anchor: "end",
           align: "top",
           formatter: function (value) {
-            var formattedValue = "";
-            if (value != 0) {
-              formattedValue = value;
+            if (value === 0) {
+              return "";
             }
-            return formattedValue;
+            const hours = Math.floor(value / 60);
+            const minutes = value % 60;
+            return `${hours}h ${minutes}m`;
           },
           color: "#000000",
           font: {
