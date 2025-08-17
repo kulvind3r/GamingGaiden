@@ -1,7 +1,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml" style="background : #ffffff">
   <head>
-    <title>Gaming Gaiden</title>
+    <title>Gaming Gaiden - Most Played</title>
     <link
       rel="icon"
       type="image/x-icon"
@@ -11,69 +11,57 @@
     <script src="./resources/js/jquery-3.7.1.min.js"></script>
     <script src="./resources/js/chart.js"></script>
     <script src="./resources/js/chartjs-plugin-datalabels-2.0.0.js"></script>
-    <script>
-      $(document).ready(function () {
-        $("table").each(function () {
-          var tHead = $(this).find("tr:first").html();
-          $(this).find("colgroup").remove();
-          $(this).find("tr:first").remove();
-          $(this)
-            .find("tbody")
-            .before("<thead>" + tHead + "</thead>");
-        });
-      });
-    </script>
   </head>
 
   <body>
     <h1>Your Most Played Games</h1>
     <div id="chart-container">
-      <canvas id="game-vs-time-chart"></canvas>
+      <canvas id="most-played-chart-canvas"></canvas>
     </div>
     <div id="chart-navigation-bar">
       <div>Top</div>
-      <select id="game-count"></select>
+      <select id="game-count-selector"></select>
       <div>Games</div>
     </div>
+
     <script>
       const gamingData = _GAMINGDATA_;
     </script>
     <script src="./resources/js/common.js"></script>
-    <script src="./resources/js/GameVsTime.js"></script>
+    <script src="./resources/js/MostPlayed.js"></script>
     <script>
-      // gamingData is already defined from the embedded JSON
-      if (typeof gamingData !== 'undefined' && gamingData.length > 0) {
-        var selectBox = document.getElementById("game-count");
-        const maxOptions = Math.min(50, gamingData.length);
+      $(document).ready(function () {
+        if (typeof gamingData !== 'undefined' && gamingData.length > 0) {
+          const selectBox = document.getElementById("game-count-selector");
+          const maxOptions = Math.min(50, gamingData.length);
 
-        /* Create options for select box */
-        for (let i = 10; i <= maxOptions; i += 10) {
-          if (i > maxOptions) break;
-          const option = document.createElement("option");
-          option.value = i;
-          option.text = i;
-          selectBox.add(option);
+          // Create options for select box
+          for (let i = 10; i <= maxOptions; i += 10) {
+            if (i > maxOptions) break;
+            const option = document.createElement("option");
+            option.value = i;
+            option.text = i;
+            if (i === 10) option.selected = true; // Default to 10
+            selectBox.add(option);
+          }
+          if (gamingData.length < 50 && gamingData.length % 10 !== 0) {
+            const showAllOption = document.createElement("option");
+            showAllOption.value = gamingData.length;
+            showAllOption.text = "All";
+            selectBox.add(showAllOption);
+          }
+
+          // Add event listener
+          selectBox.addEventListener("change", (event) => {
+            updateMostPlayedChart(parseInt(event.target.value, 10));
+          });
+
+          // Initial chart render
+          updateMostPlayedChart(10);
         }
-        if (gamingData.length < 50 && gamingData.length > 0) {
-          const showAllOption = document.createElement("option");
-          showAllOption.value = gamingData.length;
-          showAllOption.text = "All";
-          selectBox.add(showAllOption);
-        }
-        /* End */
-
-        document.getElementById("game-count").addEventListener("change", () => {
-          updateChart(
-            document.getElementById("game-count").value,
-            "Playtime (Hours)",
-            10
-          );
-        });
-
-        // Initial chart render
-        updateChart(10, "Playtime (Hours)", 10);
-      }
+      });
     </script>
+
     <div id="navigation-bar">
       <button class="custom-button" id="summary-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/Summary.html';">Life Time Summary</button>
       <button class="custom-button" id="gaming-time-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/GamingTime.html';">Time Spent Gaming</button>

@@ -1,14 +1,9 @@
-/*global ChartDataLabels, Chart, chartTitleConfig, gamingData, Log2Axis*/
+/*global ChartDataLabels, Chart, chartTitleConfig, gamingData*/
 /*from chart.js, common.js and html templates*/
 
 let chart;
 
-Log2Axis.id = "log2";
-Log2Axis.defaults = {};
-
-Chart.register(Log2Axis);
-
-function updateChart(gameCount, labelText, stepSize = 1) {
+function updateChart(gameCount, labelText) {
   let labels = [];
   let data = [];
 
@@ -20,7 +15,7 @@ function updateChart(gameCount, labelText, stepSize = 1) {
   for (const game of gamingData) {
     if (i == gameCount) break;
     labels.push(game.name);
-    data.push({ game: game.name, time: game.time, color_hex: game.color_hex });
+    data.push({ game: game.name, time: game.time });
     i++;
   }
 
@@ -39,8 +34,8 @@ function updateChart(gameCount, labelText, stepSize = 1) {
         {
           label: labelText,
           data: data.map((row) => row.time),
-          backgroundColor: data.map((row) => row.color_hex),
-          borderWidth: 2,
+          backgroundColor: '#ff6384', // Use a single, consistent color
+          borderWidth: 1,
         },
       ],
     },
@@ -57,39 +52,22 @@ function updateChart(gameCount, labelText, stepSize = 1) {
             }
           },
         },
-        // Alignment Hack: Add an identical y scale on right side, to center the graph on page.
-        // Then hide the right side scale by setting label color identical to background.
-        yRight: {
-          position: "right",
-          grid: {
-            display: false,
-          },
-          ticks: {
-            color: "white",
-          },
-        },
         x: {
-          type: "log2",
-          ticks: {
-            stepSize: stepSize,
-            callback: function(value) {
-              let hours = Math.floor(value / 60);
-              if (hours === value / 60) {
-                return hours;
-              }
-            }
-          },
+          type: "linear", // Use a standard linear axis
           title: chartTitleConfig(labelText, 15),
-        },
-      },
-      elements: {
-        bar: {
-          borderWidth: 1,
         },
       },
       plugins: {
         tooltip: {
-          enabled: false,
+          enabled: true,
+          callbacks: {
+            label: function(context) {
+              const value = context.raw;
+              const hours = Math.floor(value / 60);
+              const minutes = value % 60;
+              return `${hours}h ${minutes}m`;
+            }
+          }
         },
         legend: {
           display: false,
