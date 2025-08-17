@@ -35,40 +35,44 @@
       <select id="game-count"></select>
       <div>Games</div>
     </div>
-    <div style="display: none">_GAMESPLAYTIMETABLE_</div>
+    <script>
+      const gamingData = _GAMINGDATA_;
+    </script>
     <script src="./resources/js/common.js"></script>
     <script src="./resources/js/GameVsTime.js"></script>
     <script>
-      $("table")[0].setAttribute("id", "data-table");
-      var gamingData = buildGamingData("name", "time");
+      // gamingData is already defined from the embedded JSON
+      if (typeof gamingData !== 'undefined' && gamingData.length > 0) {
+        var selectBox = document.getElementById("game-count");
+        const maxOptions = Math.min(50, gamingData.length);
 
-      var selectBox = document.getElementById("game-count");
-      const maxOptions = Math.min(50, gamingData.length);
+        /* Create options for select box */
+        for (let i = 10; i <= maxOptions; i += 10) {
+          if (i > maxOptions) break;
+          const option = document.createElement("option");
+          option.value = i;
+          option.text = i;
+          selectBox.add(option);
+        }
+        if (gamingData.length < 50 && gamingData.length > 0) {
+          const showAllOption = document.createElement("option");
+          showAllOption.value = gamingData.length;
+          showAllOption.text = "All";
+          selectBox.add(showAllOption);
+        }
+        /* End */
 
-      /* Create options for select box */
-      for (let i = 10; i <= maxOptions; i += 10) {
-        const option = document.createElement("option");
-        option.value = i;
-        option.text = i;
-        selectBox.add(option);
+        document.getElementById("game-count").addEventListener("change", () => {
+          updateChart(
+            document.getElementById("game-count").value,
+            "Playtime (Hours)",
+            10
+          );
+        });
+
+        // Initial chart render
+        updateChart(10, "Playtime (Hours)", 10);
       }
-      if (gamingData.length < 50) {
-        const showAllOption = document.createElement("option");
-        showAllOption.value = gamingData.length;
-        showAllOption.text = gamingData.length;
-        selectBox.add(showAllOption);
-      }
-      /* End */
-
-      document.getElementById("game-count").addEventListener("change", () => {
-        updateChart(
-          document.getElementById("game-count").value,
-          "Playtime (Hours)",
-          10
-        );
-      });
-
-      updateChart(10, "Playtime (Hours)", 10);
     </script>
     <div id="navigation-bar">
       <button class="custom-button" id="summary-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/Summary.html';">Life Time Summary</button>

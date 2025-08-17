@@ -1,7 +1,6 @@
-/*global ChartDataLabels, Chart, chartTitleConfig, buildGamingData, Log2Axis*/
-/*from chart.js, common.js*/
+/*global ChartDataLabels, Chart, chartTitleConfig, gamingData, Log2Axis*/
+/*from chart.js, common.js and html template*/
 
-let gamingData = [];
 let selectedYear;
 let selectedMonth;
 let firstYear;
@@ -11,112 +10,102 @@ let finalMonth;
 let chart;
 let summaryPeriod = "monthly";
 let periodLabel = "Day of Month";
-let yearTotalTime;
-let monthTotalTime;
-
-$("table")[0].setAttribute("id", "data-table");
 
 Log2Axis.id = "log2";
 Log2Axis.defaults = {};
-
 Chart.register(Log2Axis);
 
-function updatePeriodDisplayWithMonth(selectedYear, selectedMonth) {
-  selectedMonth = selectedMonth + 1;
-  let selectedDate = new Date(`${selectedYear}-${selectedMonth}-1`);
-  let monthString = selectedDate.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
+function formatTime(minutes) {
+  if (minutes === 0 || minutes === null) return "0m";
+  const h = Math.floor(minutes / 60);
+  const m = minutes % 60;
+  return h > 0 ? `${h}h ${m}m` : `${m}m`;
+}
+
+function processDataForChart(targetYear, targetMonth, isYearly) {
+  const filteredData = gamingData.filter(d => {
+    const date = new Date(d.play_date);
+    if (isYearly) {
+      return date.getFullYear() === targetYear;
+    }
+    return date.getFullYear() === targetYear && date.getMonth() === targetMonth;
   });
-  document.getElementById("time-period-display").innerText =
-    monthString + " : " + parseInt(monthTotalTime) + " Hrs";
+
+  const labels = [];
+  const games = [...new Set(filteredData.map(d => d.game_name))];
+  const colors = [...new Set(filteredData.map(d => d.color_hex))];
+  const gameColorMap = Object.fromEntries(games.map((g, i) => [g, colors[i]]));
+
+  const datasets = games.map(game => ({
+    label: game,
+    data: [],
+    backgroundColor: gameColorMap[game],
+  }));
+
+  if (isYearly) {
+    periodLabel = "Month of Year";
+    const months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+    labels.push(...months);
+    months.forEach((month, monthIndex) => {
+      const monthData = filteredData.filter(d => new Date(d.play_date).getMonth() === monthIndex);
+      games.forEach(game => {
+        const totalDuration = monthData
+          .filter(d => d.game_name === game)
+          .reduce((sum, d) => sum + d.total_duration, 0);
+        const dataset = datasets.find(ds => ds.label === game);
+        dataset.data.push(totalDuration);
+      });
+    });
+  } else {
+    periodLabel = "Day of Month";
+    const daysInMonth = new Date(targetYear, targetMonth + 1, 0).getDate();
+    for (let i = 1; i <= daysInMonth; i++) {
+      labels.push(i);
+    }
+    labels.forEach(day => {
+      const dayData = filteredData.filter(d => new Date(d.play_date).getDate() === day);
+      games.forEach(game => {
+        const totalDuration = dayData
+          .filter(d => d.game_name === game)
+          .reduce((sum, d) => sum + d.total_duration, 0);
+        const dataset = datasets.find(ds => ds.label === game);
+        dataset.data.push(totalDuration);
+      });
+    });
+  }
+
+  return { labels, datasets };
+}
+
+
+function updatePeriodDisplay(year, month, isYearly) {
+  let displayString = "";
+  if (isYearly) {
+    const yearTotal = gamingData
+      .filter(d => new Date(d.play_date).getFullYear() === year)
+      .reduce((sum, d) => sum + d.total_duration, 0);
+    displayString = `${year} : ${formatTime(yearTotal)}`;
+  } else {
+    const monthTotal = gamingData
+      .filter(d => {
+        const date = new Date(d.play_date);
+        return date.getFullYear() === year && date.getMonth() === month;
+      })
+      .reduce((sum, d) => sum + d.total_duration, 0);
+    let monthString = new Date(year, month).toLocaleDateString("en-US", { year: 'numeric', month: 'long' });
+    displayString = `${monthString} : ${formatTime(monthTotal)}`;
+  }
+  document.getElementById("time-period-display").innerText = displayString;
   updateWarnMessage("");
 }
 
-function updatePeriodDisplayWithYear(selectedYear) {
-  document.getElementById("time-period-display").innerText =
-    selectedYear + " : " + parseInt(yearTotalTime) + " Hrs";
-  updateWarnMessage("");
-}
 
 function updateWarnMessage(message) {
   document.getElementById("warn-msg").innerText = message;
 }
 
-function updateChart(
-  selectedYear,
-  selectedMonth,
-  yearlySummaryEnabled = false
-) {
-  let labels = [];
-  let data = [];
-  let datasetData;
-  let ylimit;
-
-  if (!yearlySummaryEnabled) {
-    monthTotalTime = 0;
-    let firstDate = new Date(selectedYear, selectedMonth, 1);
-    let lastDate = new Date(selectedYear, selectedMonth + 1, 0);
-
-    for (
-      let date = new Date(firstDate);
-      date <= lastDate;
-      date.setDate(date.getDate() + 1)
-    ) {
-      labels.push(date.getDate());
-      const gamingEntry = gamingData.find((item) => {
-        const itemDate = new Date(item.date);
-        return (
-          itemDate.getFullYear() === selectedYear &&
-          itemDate.getMonth() === selectedMonth &&
-          itemDate.getDate() === date.getDate()
-        );
-      });
-      data.push(gamingEntry ? gamingEntry.time : 0);
-      monthTotalTime =
-        monthTotalTime + (gamingEntry ? gamingEntry.time / 60 : 0);
-    }
-
-    datasetData = data;
-    ylimit = 24;
-  } else {
-    yearTotalTime = 0;
-    labels = [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ];
-
-    for (let month = 0; month <= 11; month = month + 1) {
-      let monthPlayTime = 0;
-      gamingData.find((item) => {
-        const itemDate = new Date(item.date);
-        if (
-          itemDate.getFullYear() === selectedYear &&
-          itemDate.getMonth() === month
-        ) {
-          monthPlayTime = monthPlayTime + item.time;
-        }
-      });
-      data.push({
-        month: labels.at(month),
-        time: monthPlayTime,
-      });
-      yearTotalTime = yearTotalTime + monthPlayTime / 60;
-    }
-
-    datasetData = data.map((row) => row.time);
-    ylimit = 120;
-  }
+function updateChart(year, month, isYearly = false) {
+  const { labels, datasets } = processDataForChart(year, month, isYearly);
 
   if (chart) {
     chart.destroy();
@@ -129,215 +118,140 @@ function updateChart(
     plugins: [ChartDataLabels],
     data: {
       labels: labels,
-      datasets: [
-        {
-          data: datasetData,
-          borderWidth: 2,
-        },
-      ],
+      datasets: datasets,
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
       scales: {
         y: {
+          stacked: true,
           beginAtZero: true,
-          suggestedMax: ylimit,
-          type: "log2",
-          title: chartTitleConfig("PlayTime (Hours)", 15),
+          title: chartTitleConfig("PlayTime", 15),
           ticks: {
             callback: function(value) {
-              let hours = Math.floor(value / 60);
-              if (hours === value / 60) {
-                return hours;
-              }
+              const hours = Math.floor(value / 60);
+              if (value > 0 && value % 60 === 0) return `${hours}h`;
+              if (value === 0) return 0;
             }
           }
         },
-        // Alignment Hack: Add an identical y scale on right side, to center the graph on page.
-        // Then hide the right side scale by setting label color identical to background.
         yRight: {
-          title: chartTitleConfig("PlayTime (Hours)", 15, "#fff"),
           position: "right",
-          grid: {
-            display: false,
-          },
-          ticks: {
-            color: "white",
-          },
+          grid: { display: false },
+          ticks: { color: "white" }
         },
         x: {
+          stacked: true,
           title: chartTitleConfig(periodLabel, 15),
-          ticks: {
-            color: (tickObj) => {
-              const date = new Date(
-                selectedYear,
-                selectedMonth,
-                tickObj["tick"]["label"]
-              );
-              let day = date.getDay();
-              if (day === 0 || day === 6) {
-                return "red";
-              }
-            },
-          },
         },
       },
       plugins: {
         tooltip: {
-          enabled: false,
+          callbacks: {
+            label: function(context) {
+              let label = context.dataset.label || '';
+              if (label) {
+                label += ': ';
+              }
+              if (context.parsed.y !== null) {
+                label += formatTime(context.parsed.y);
+              }
+              return label;
+            }
+          }
         },
         legend: {
-          display: false,
+          display: true,
+          position: 'bottom',
         },
         datalabels: {
-          anchor: "end",
-          align: "top",
-          formatter: function (value) {
-            if (value === 0) {
-              return "";
-            }
-            const hours = Math.floor(value / 60);
-            const minutes = value % 60;
-            return `${hours}h ${minutes}m`;
+          display: function(context) {
+            return context.dataset.data[context.dataIndex] > 0;
           },
-          color: "#000000",
+          formatter: function(value) {
+            return formatTime(value);
+          },
+          color: "#FFFFFF",
           font: {
             family: "monospace",
+            weight: "bold"
           },
         },
       }
     },
   });
+  updatePeriodDisplay(year, month, isYearly);
 }
 
-function switchToNextMonth() {
-  if (selectedMonth === finalMonth && selectedYear === finalYear) {
-    updateWarnMessage("No More Data");
-    return;
-  }
-
-  if (selectedMonth === 11) {
-    if (selectedYear != finalYear) {
-      selectedYear = selectedYear + 1;
+function switchToNext() {
+  if (summaryPeriod === 'monthly') {
+    if (selectedMonth === finalMonth && selectedYear === finalYear) {
+      updateWarnMessage("No More Data"); return;
+    }
+    selectedMonth++;
+    if (selectedMonth > 11) {
       selectedMonth = 0;
+      selectedYear++;
     }
   } else {
-    selectedMonth = selectedMonth + 1;
+    if (selectedYear === finalYear) {
+      updateWarnMessage("No More Data"); return;
+    }
+    selectedYear++;
   }
-  updateChart(selectedYear, selectedMonth);
-  updatePeriodDisplayWithMonth(selectedYear, selectedMonth);
+  updateChart(selectedYear, selectedMonth, summaryPeriod === 'yearly');
 }
 
-function switchToPrevMonth() {
-  if (selectedMonth === firstMonth && selectedYear === firstYear) {
-    updateWarnMessage("No More Data");
-    return;
-  }
-
-  if (selectedMonth === 0) {
-    if (selectedYear != firstYear) {
-      selectedYear = selectedYear - 1;
+function switchToPrev() {
+  if (summaryPeriod === 'monthly') {
+    if (selectedMonth === firstMonth && selectedYear === firstYear) {
+      updateWarnMessage("No More Data"); return;
+    }
+    selectedMonth--;
+    if (selectedMonth < 0) {
       selectedMonth = 11;
+      selectedYear--;
     }
   } else {
-    selectedMonth = selectedMonth - 1;
+    if (selectedYear === firstYear) {
+      updateWarnMessage("No More Data"); return;
+    }
+    selectedYear--;
   }
-  updateChart(selectedYear, selectedMonth);
-  updatePeriodDisplayWithMonth(selectedYear, selectedMonth);
-}
-
-function switchToNextYear() {
-  if (selectedYear === finalYear) {
-    updateWarnMessage("No More Data");
-    return;
-  } else {
-    selectedYear = selectedYear + 1;
-  }
-  updateChart(selectedYear, selectedMonth, true);
-  updatePeriodDisplayWithYear(selectedYear);
-}
-
-function switchToPrevYear() {
-  if (selectedYear === firstYear) {
-    updateWarnMessage("No More Data");
-    return;
-  } else {
-    selectedYear = selectedYear - 1;
-  }
-  updateChart(selectedYear, selectedMonth, true);
-  updatePeriodDisplayWithYear(selectedYear);
-}
-
-function bindButtonsToMonths() {
-  document
-    .getElementById("prev-button")
-    .addEventListener("click", () => switchToPrevMonth());
-  document
-    .getElementById("next-button")
-    .addEventListener("click", () => switchToNextMonth());
+  updateChart(selectedYear, selectedMonth, summaryPeriod === 'yearly');
 }
 
 function toggleSummaryPeriod() {
-  document
-    .getElementById("prev-button")
-    .replaceWith(document.getElementById("prev-button").cloneNode(true));
-  document
-    .getElementById("next-button")
-    .replaceWith(document.getElementById("next-button").cloneNode(true));
-
   if (summaryPeriod === "monthly") {
-    document
-      .getElementById("prev-button")
-      .addEventListener("click", () => switchToPrevYear());
-    document
-      .getElementById("next-button")
-      .addEventListener("click", () => switchToNextYear());
-
     summaryPeriod = "yearly";
-    periodLabel = "Month of Year";
-    selectedYear = finalYear;
-    selectedMonth = finalMonth;
     document.getElementById("period-button").innerText = "Monthly Summary";
-
-    updateChart(selectedYear, selectedMonth, true);
-    updatePeriodDisplayWithYear(selectedYear);
   } else {
-    bindButtonsToMonths();
-
     summaryPeriod = "monthly";
-    periodLabel = "Day of Month";
-    selectedYear = finalYear;
-    selectedMonth = finalMonth;
     document.getElementById("period-button").innerText = "Yearly Summary";
-
-    updateChart(selectedYear, selectedMonth);
-    updatePeriodDisplayWithMonth(selectedYear, selectedMonth);
   }
+  updateChart(selectedYear, selectedMonth, summaryPeriod === 'yearly');
 }
 
-function loadDataFromTable() {
-  gamingData = buildGamingData("date", "time");
-
-  // Initialize the chart with the first year in the table
-  const firstDate = new Date(gamingData[0].date);
-  const lastDate = new Date(gamingData[gamingData.length - 1].date);
-  firstYear = parseInt(firstDate.getFullYear());
-  firstMonth = parseInt(firstDate.getMonth());
-  finalYear = parseInt(lastDate.getFullYear());
-  finalMonth = parseInt(lastDate.getMonth());
-
+function initialize() {
+  if (gamingData.length === 0) {
+    updateWarnMessage("No data to display.");
+    return;
+  }
+  const firstDate = new Date(gamingData[0].play_date);
+  const lastDate = new Date(gamingData[gamingData.length - 1].play_date);
+  firstYear = firstDate.getFullYear();
+  firstMonth = firstDate.getMonth();
+  finalYear = lastDate.getFullYear();
+  finalMonth = lastDate.getMonth();
   selectedYear = finalYear;
   selectedMonth = finalMonth;
 
-  updateChart(selectedYear, selectedMonth);
-  updatePeriodDisplayWithMonth(selectedYear, selectedMonth);
+  document.getElementById("prev-button").addEventListener("click", switchToPrev);
+  document.getElementById("next-button").addEventListener("click", switchToNext);
+  document.getElementById("period-button").addEventListener("click", toggleSummaryPeriod);
+
+  updateChart(selectedYear, selectedMonth, false);
 }
 
-bindButtonsToMonths();
-
-document
-  .getElementById("period-button")
-  .addEventListener("click", () => toggleSummaryPeriod());
-
-loadDataFromTable();
+initialize();

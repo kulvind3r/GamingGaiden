@@ -64,6 +64,7 @@ function UpdateAllStatsInBackground() {
     RenderGamesPerPlatform -InBackground $true
     RenderMostPlayed -InBackground $true
     RenderIdleTime -InBackground $true
+    RenderSessionHistory -InBackground $true
 }
 
 function RenderGameList() {
@@ -165,19 +166,20 @@ function RenderGamingTime() {
 
     $workingDirectory = (Get-Location).Path
 
-    $getDailyPlayTimeDataQuery = "SELECT play_date as date, play_time as time FROM daily_playtime ORDER BY date ASC"
-    $dailyPlayTimeData = RunDBQuery $getDailyPlayTimeDataQuery
-    if ($dailyPlayTimeData.Length -eq 0) {
+    $getGamingTimeByGameQuery = "SELECT strftime('%Y-%m-%d', session_start_time, 'unixepoch') as play_date, game_name, SUM(session_duration_minutes) as total_duration, g.color_hex FROM session_history sh JOIN games g ON sh.game_name = g.name GROUP BY play_date, game_name ORDER BY play_date"
+
+    $gamingTimeData = RunDBQuery $getGamingTimeByGameQuery
+    if ($gamingTimeData.Length -eq 0) {
         if(-Not $InBackground) {
-            ShowMessage "No Records of Game Time found in DB. Please play some games first." "OK" "Error"
+            ShowMessage "No session history found in DB. Please play some games first." "OK" "Error"
         }
-        Log "Error: Game time records empty. Returning"
+        Log "Error: Session history empty. Returning"
         return $false
     }
 
-    $table = $dailyPlayTimeData | ConvertTo-Html -Fragment
+    $jsonData = $gamingTimeData | ConvertTo-Json -Depth 5 -Compress
 
-    $report = (Get-Content $workingDirectory\ui\templates\GamingTime.html.template) -replace "_DAILYPLAYTIMETABLE_", $table
+    $report = (Get-Content $workingDirectory\ui\templates\GamingTime.html.template) -replace "_GAMINGDATA_", $jsonData
 
     [System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $workingDirectory\ui\GamingTime.html
 }
@@ -191,7 +193,7 @@ function RenderMostPlayed() {
 
     $workingDirectory = (Get-Location).Path
 
-    $getGamesPlayTimeDataQuery = "SELECT name, play_time as time FROM games Order By play_time DESC"
+    $getGamesPlayTimeDataQuery = "SELECT name, play_time as time, color_hex FROM games ORDER BY play_time DESC"
     $gamesPlayTimeData = RunDBQuery $getGamesPlayTimeDataQuery
     if ($gamesPlayTimeData.Length -eq 0) {
         if(-Not $InBackground) {
@@ -201,9 +203,9 @@ function RenderMostPlayed() {
         return $false
     }
 
-    $table = $gamesPlayTimeData | ConvertTo-Html -Fragment
+    $jsonData = $gamesPlayTimeData | ConvertTo-Json -Depth 5 -Compress
 
-    $report = (Get-Content $workingDirectory\ui\templates\MostPlayed.html.template) -replace "_GAMESPLAYTIMETABLE_", $table
+    $report = (Get-Content $workingDirectory\ui\templates\MostPlayed.html.template) -replace "_GAMINGDATA_", $jsonData
 
     [System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $workingDirectory\ui\MostPlayed.html
 }
@@ -498,6 +500,7 @@ function RenderQuickView() {
     $toggleSwitch.TextAlign = [System.Drawing.ContentAlignment]::MiddleCenter
     $toggleSwitch.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
     $toggleSwitch.FlatAppearance.BorderSize = 0
+    $toggleSwitch.BackColor = [System.Drawing.Color]::White
 
     $doubleBufferProperty = $dataGridView.GetType().GetProperty('DoubleBuffered', [System.Reflection.BindingFlags]::NonPublic -bor [System.Reflection.BindingFlags]::Instance)
     $doubleBufferProperty.SetValue($dataGridView, $true, $null)

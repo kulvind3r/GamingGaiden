@@ -37,7 +37,9 @@
     </div>
     <div id="warn-msg"></div>
     <button class="custom-button" id="period-button">Yearly Summary</button>
-    <div style="display: none">_DAILYPLAYTIMETABLE_</div>
+    <script>
+      const gamingData = _GAMINGDATA_;
+    </script>
     <script src="./resources/js/common.js"></script>
     <script src="./resources/js/GamingTime.js"></script>
     <div id="navigation-bar">

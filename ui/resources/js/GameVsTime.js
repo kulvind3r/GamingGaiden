@@ -20,7 +20,7 @@ function updateChart(gameCount, labelText, stepSize = 1) {
   for (const game of gamingData) {
     if (i == gameCount) break;
     labels.push(game.name);
-    data.push({ game: game.name, time: game.time });
+    data.push({ game: game.name, time: game.time, color_hex: game.color_hex });
     i++;
   }
 
@@ -39,6 +39,7 @@ function updateChart(gameCount, labelText, stepSize = 1) {
         {
           label: labelText,
           data: data.map((row) => row.time),
+          backgroundColor: data.map((row) => row.color_hex),
           borderWidth: 2,
         },
       ],

@@ -87,6 +87,27 @@
         }
         # End Migration 5
 
+        # Backfill color_hex for existing games
+        Log "Checking for games with missing color data."
+        $gamesMissingColor = Invoke-SqliteQuery -Query "SELECT name, icon FROM games WHERE color_hex IS NULL" -SQLiteConnection $dbConnection
+        if ($gamesMissingColor.Length -gt 0) {
+            Log "Found $($gamesMissingColor.Length) games with missing color data. Backfilling now..."
+            foreach ($game in $gamesMissingColor) {
+                $gameName = $game.name
+                $iconBytes = $game.icon
+                $dominantColor = Get-DominantColor $iconBytes
+
+                $updateColorQuery = "UPDATE games SET color_hex = @color WHERE name = @name"
+                $updateParams = @{
+                    color = $dominantColor
+                    name = $gameName
+                }
+                Invoke-SqliteQuery -Query $updateColorQuery -SQLiteConnection $dbConnection -SqlParameters $updateParams | Out-Null
+                Log "Updated color for $gameName to $dominantColor"
+            }
+            Log "Color backfill complete."
+        }
+
         $dbConnection.Close()
         $dbConnection.Dispose()
     }
