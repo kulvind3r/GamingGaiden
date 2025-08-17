@@ -377,30 +377,20 @@ function RenderSessionHistory() {
         [bool]$InBackground = $false
     )
 
-    Log "Rendering session history"
+    Log "Rendering session history data for client-side processing."
 
     $workingDirectory = (Get-Location).Path
 
-    $getSessionHistoryQuery = "SELECT sh.game_name, sh.session_start_time, sh.session_duration_minutes, g.icon FROM session_history sh JOIN games g ON sh.game_name = g.name ORDER BY sh.session_start_time DESC LIMIT 50"
+    $getSessionHistoryQuery = "SELECT sh.game_name, sh.session_start_time, sh.session_duration_minutes, g.icon FROM session_history sh JOIN games g ON sh.game_name = g.name ORDER BY sh.session_start_time DESC"
     $sessionRecords = RunDBQuery $getSessionHistoryQuery
-    if ($sessionRecords.Length -eq 0) {
-        if(-Not $InBackground) {
-            ShowMessage "No session history found in DB. Please play some games first." "OK" "Error"
-        }
-        Log "Error: Session history empty. Returning"
-        return $false
-    }
 
-    $sessions = [System.Collections.Generic.List[Session]]::new()
-    $iconUri = $null
+    $sessionData = [System.Collections.Generic.List[object]]::new()
 
     foreach ($sessionRecord in $sessionRecords) {
-        $name = $sessionRecord.game_name
-        $imageFileName = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($name))
-
+        # --- Robust Icon Path Generation ---
+        $imageFileName = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($sessionRecord.game_name))
         $pngPath = "$workingDirectory\ui\resources\images\$imageFileName.png"
         $jpgPath = "$workingDirectory\ui\resources\images\$imageFileName.jpg"
-        $iconUri = "<img src=`"$pngPath`">"
 
         if (-Not (Test-Path $pngPath)) {
             if (Test-Path $jpgPath) {
@@ -416,17 +406,36 @@ function RenderSessionHistory() {
                 $image.Dispose()
             }
         }
+        # --- End Icon Logic ---
 
-        $currentSession = [Session]::new($iconUri, $name, $sessionRecord.session_duration_minutes, $sessionRecord.session_start_time)
-        $null = $sessions.Add($currentSession)
+        # --- Data Formatting ---
+        $durationMinutes = $sessionRecord.session_duration_minutes
+        $hours = [math]::Floor($durationMinutes / 60)
+        $minutes = $durationMinutes % 60
+        $durationFormatted = "{0}h {1}m" -f $hours, $minutes
+
+        [datetime]$origin = '1970-01-01 00:00:00'
+        $sessionDateTime = $origin.AddSeconds($sessionRecord.session_start_time).ToLocalTime()
+        $startDateFormatted = $sessionDateTime.ToString("yyyy-MM-dd")
+        $startTimeFormatted = $sessionDateTime.ToString("HH:mm:ss")
+        # --- End Data Formatting ---
+
+        $sessionObject = [pscustomobject]@{
+            GameName  = $sessionRecord.game_name
+            IconPath  = $pngPath
+            Duration  = $durationFormatted
+            StartDate = $startDateFormatted
+            StartTime = $startTimeFormatted
+        }
+        $null = $sessionData.Add($sessionObject)
     }
 
-    $table = $sessions | ConvertTo-Html -Fragment
+    $jsonData = $sessionData | ConvertTo-Json -Depth 5
+    if ([string]::IsNullOrEmpty($jsonData)) {
+        $jsonData = "[]"
+    }
 
-    $report = (Get-Content $workingDirectory\ui\templates\SessionHistory.html.template) -replace "_SESSIONSTABLE_", $table
-    $report = $report -replace "StartTime", "Session Start"
-    $report = $report -replace "Name", "Game"
-
+    $report = (Get-Content $workingDirectory\ui\templates\SessionHistory.html.template) -replace '"_SESSIONDATA_"', $jsonData
     [System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $workingDirectory\ui\SessionHistory.html
 }
 
