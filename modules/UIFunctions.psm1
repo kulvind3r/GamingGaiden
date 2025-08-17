@@ -43,6 +43,20 @@ class GamingPC {
     }
 }
 
+class Session {
+    [ValidateNotNullOrEmpty()][string]$Icon
+    [ValidateNotNullOrEmpty()][string]$Name
+    [ValidateNotNullOrEmpty()][string]$Duration
+    [ValidateNotNullOrEmpty()][string]$StartTime
+
+    Session($IconUri, $Name, $Duration, $StartTime) {
+        $this.Icon = $IconUri
+        $this.Name = $Name
+        $this.Duration = $Duration
+        $this.StartTime = $StartTime
+    }
+}
+
 function UpdateAllStatsInBackground() {
     RenderGameList -InBackground $true
     RenderSummary -InBackground $true
@@ -50,7 +64,7 @@ function UpdateAllStatsInBackground() {
     RenderGamesPerPlatform -InBackground $true
     RenderMostPlayed -InBackground $true
     RenderIdleTime -InBackground $true
-    RenderPCvsEmulation -InBackground $true
+    RenderSessionHistory -InBackground $true
 }
 
 function RenderGameList() {
@@ -152,19 +166,20 @@ function RenderGamingTime() {
 
     $workingDirectory = (Get-Location).Path
 
-    $getDailyPlayTimeDataQuery = "SELECT play_date as date, play_time as time FROM daily_playtime ORDER BY date ASC"
-    $dailyPlayTimeData = RunDBQuery $getDailyPlayTimeDataQuery
-    if ($dailyPlayTimeData.Length -eq 0) {
+    $getGamingTimeByGameQuery = "SELECT strftime('%Y-%m-%d', session_start_time, 'unixepoch') as play_date, game_name, SUM(session_duration_minutes) as total_duration, g.color_hex FROM session_history sh JOIN games g ON sh.game_name = g.name GROUP BY play_date, game_name ORDER BY play_date"
+
+    $gamingTimeData = RunDBQuery $getGamingTimeByGameQuery
+    if ($gamingTimeData.Length -eq 0) {
         if(-Not $InBackground) {
-            ShowMessage "No Records of Game Time found in DB. Please play some games first." "OK" "Error"
+            ShowMessage "No session history found in DB. Please play some games first." "OK" "Error"
         }
-        Log "Error: Game time records empty. Returning"
+        Log "Error: Session history empty. Returning"
         return $false
     }
 
-    $table = $dailyPlayTimeData | ConvertTo-Html -Fragment
+    $jsonData = $gamingTimeData | ConvertTo-Json -Depth 5 -Compress
 
-    $report = (Get-Content $workingDirectory\ui\templates\GamingTime.html.template) -replace "_DAILYPLAYTIMETABLE_", $table
+    $report = (Get-Content $workingDirectory\ui\templates\GamingTime.html.template) -replace "_GAMINGDATA_", $jsonData
 
     [System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $workingDirectory\ui\GamingTime.html
 }
@@ -178,7 +193,7 @@ function RenderMostPlayed() {
 
     $workingDirectory = (Get-Location).Path
 
-    $getGamesPlayTimeDataQuery = "SELECT name, play_time as time FROM games Order By play_time DESC"
+    $getGamesPlayTimeDataQuery = "SELECT name, play_time as time, color_hex FROM games ORDER BY play_time DESC"
     $gamesPlayTimeData = RunDBQuery $getGamesPlayTimeDataQuery
     if ($gamesPlayTimeData.Length -eq 0) {
         if(-Not $InBackground) {
@@ -188,9 +203,9 @@ function RenderMostPlayed() {
         return $false
     }
 
-    $table = $gamesPlayTimeData | ConvertTo-Html -Fragment
+    $jsonData = $gamesPlayTimeData | ConvertTo-Json -Depth 5 -Compress
 
-    $report = (Get-Content $workingDirectory\ui\templates\MostPlayed.html.template) -replace "_GAMESPLAYTIMETABLE_", $table
+    $report = (Get-Content $workingDirectory\ui\templates\MostPlayed.html.template) -replace "_GAMINGDATA_", $jsonData
 
     [System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $workingDirectory\ui\MostPlayed.html
 }
@@ -357,40 +372,65 @@ function RenderGamesPerPlatform() {
     [System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $workingDirectory\ui\GamesPerPlatform.html
 }
 
-function RenderPCvsEmulation() {
+function RenderSessionHistory() {
     param(
         [bool]$InBackground = $false
     )
 
-    Log "Rendering PC vs Emulation"
+    Log "Rendering session history"
 
     $workingDirectory = (Get-Location).Path
 
-    $getPCvsEmulationTimeQuery = "SELECT  platform, IFNULL(SUM(play_time), 0) as play_time FROM games WHERE platform LIKE 'PC' UNION SELECT 'Emulation', IFNULL(SUM(play_time), 0) as play_time FROM games WHERE platform NOT LIKE 'PC'"
-    $pcVsEmulationTime = RunDBQuery $getPCvsEmulationTimeQuery
-    if ($pcVsEmulationTime.Length -eq 0) {
+    $getSessionHistoryQuery = "SELECT sh.game_name, sh.session_start_time, sh.session_duration_minutes, g.icon FROM session_history sh JOIN games g ON sh.game_name = g.name ORDER BY sh.session_start_time DESC LIMIT 50"
+    $sessionRecords = RunDBQuery $getSessionHistoryQuery
+    if ($sessionRecords.Length -eq 0) {
         if(-Not $InBackground) {
-            ShowMessage "No Games found in DB. Please add some games first." "OK" "Error"
+            ShowMessage "No session history found in DB. Please play some games first." "OK" "Error"
         }
-        Log "Error: Games list empty. Returning"
+        Log "Error: Session history empty. Returning"
         return $false
     }
 
-    $totalPlayTime = $pcVsEmulationTime[0].play_time + $pcVsEmulationTime[1].play_time
+    $sessions = [System.Collections.Generic.List[Session]]::new()
+    $iconUri = $null
 
-    if ($totalPlayTime -eq 0 ) {
-        if(-Not $InBackground) {
-            ShowMessage "No play time found in DB. Please play some games first." "OK" "Error"
+    foreach ($sessionRecord in $sessionRecords) {
+        $name = $sessionRecord.game_name
+        $imageFileName = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($name))
+
+        if ( (Test-Path "$workingDirectory\ui\resources\images\$imageFileName.jpg") ) {
+            $iconUri = "<img src=`".\resources\images\$imageFileName.jpg`">"
         }
-        Log "Error: No playtime found in DB. Returning"
-        return $false
+        elseif ( (Test-Path "$workingDirectory\ui\resources\images\$imageFileName.png") ) {
+            $iconUri = "<img src=`".\resources\images\$imageFileName.png`">"
+        }
+        else {
+            $iconByteStream = [System.IO.MemoryStream]::new($sessionRecord.icon)
+            $iconBitmap = [System.Drawing.Bitmap]::FromStream($iconByteStream)
+
+            if ($iconBitmap.PixelFormat -eq "Format32bppArgb") {
+                $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.png", [System.Drawing.Imaging.ImageFormat]::Png)
+                $iconUri = "<img src=`".\resources\images\$imageFileName.png`">"
+            }
+            else {
+                $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.jpg", [System.Drawing.Imaging.ImageFormat]::Jpeg)
+                $iconUri = "<img src=`".\resources\images\$imageFileName.jpg`">"
+            }
+
+            $iconBitmap.Dispose()
+        }
+
+        $currentSession = [Session]::new($iconUri, $name, $sessionRecord.session_duration_minutes, $sessionRecord.session_start_time)
+        $null = $sessions.Add($currentSession)
     }
 
-    $table = $pcVsEmulationTime | ConvertTo-Html -Fragment
+    $table = $sessions | ConvertTo-Html -Fragment
 
-    $report = (Get-Content $workingDirectory\ui\templates\PCvsEmulation.html.template) -replace "_PCVSEMULATIONTABLE_", $table
+    $report = (Get-Content $workingDirectory\ui\templates\SessionHistory.html.template) -replace "_SESSIONSTABLE_", $table
+    $report = $report -replace "StartTime", "Session Start"
+    $report = $report -replace "Name", "Game"
 
-    [System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $workingDirectory\ui\PCvsEmulation.html
+    [System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $workingDirectory\ui\SessionHistory.html
 }
 
 function RenderAboutDialog() {
@@ -432,21 +472,14 @@ function RenderAboutDialog() {
 }
 
 function RenderQuickView() {
-    $lastFiveGamesQuery = "Select icon, name, play_time, last_play_date from games ORDER BY completed, last_play_date DESC LIMIT 5"
-    $gameRecords = RunDBQuery $lastFiveGamesQuery
-    if ($gameRecords.Length -eq 0) {
-        ShowMessage "No Games found in DB. Please add some games first." "OK" "Error"
-        Log "Error: Games list empty. Returning"
-        return
-    }
-
-    $quickViewForm = CreateForm "Currently Playing / Recently Finished Games" 390 378 ".\icons\running.ico"
-    $quickViewForm.MaximizeBox = $false; $quickViewForm.MinimizeBox = $false;
+    $quickViewForm = CreateForm "Quick View" 420 400 ".\icons\running.ico"
+    $quickViewForm.MaximizeBox = $false
+    $quickViewForm.MinimizeBox = $false
     $quickViewForm.StartPosition = [System.Windows.Forms.FormStartPosition]::Manual
 
     $screenBounds = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
     $quickViewForm.Left = $screenBounds.Width - $quickViewForm.Width - 20
-    $quickViewForm.Top = $screenBounds.Height - $quickViewForm.Height - 40
+    $quickViewForm.Top = $screenBounds.Height - $quickViewForm.Height - 60
 
     $dataGridView = New-Object System.Windows.Forms.DataGridView
     $dataGridView.Dock = [System.Windows.Forms.DockStyle]::Fill
@@ -460,52 +493,116 @@ function RenderQuickView() {
     $dataGridView.DefaultCellStyle.Padding = New-Object System.Windows.Forms.Padding(2, 2, 2, 2)
     $dataGridView.DefaultCellStyle.BackColor = [System.Drawing.Color]::FromArgb(240, 240, 240)
 
-    $IconColumn = New-Object System.Windows.Forms.DataGridViewImageColumn
-    $IconColumn.Name = "icon"
-    $IconColumn.HeaderText = ""
-    $IconColumn.ImageLayout = [System.Windows.Forms.DataGridViewImageCellLayout]::Zoom
-    $dataGridView.Columns.Add($IconColumn)
+    $toggleSwitch = New-Object System.Windows.Forms.CheckBox
+    $toggleSwitch.Text = "Show Most Played"
+    $toggleSwitch.Dock = [System.Windows.Forms.DockStyle]::Bottom
+    $toggleSwitch.Appearance = [System.Windows.Forms.Appearance]::Button
+    $toggleSwitch.TextAlign = [System.Drawing.ContentAlignment]::MiddleCenter
+    $toggleSwitch.FlatStyle = [System.Windows.Forms.FlatStyle]::Flat
+    $toggleSwitch.FlatAppearance.BorderSize = 0
+    $toggleSwitch.BackColor = [System.Drawing.Color]::White
 
-    $dataGridView.Columns.Add("name", "Name")
-    $dataGridView.Columns.Add("play_time", "Playtime")
-    $dataGridView.Columns.Add("last_play_date", "Last Played On")
-
-    foreach ($column in $dataGridView.Columns) {
-        $column.Resizable = [System.Windows.Forms.DataGridViewTriState]::False
-    }
-
-    foreach ($row in $GameRecords) {
-
-        $iconByteStream = [System.IO.MemoryStream]::new($row.icon)
-        $gameIcon = [System.Drawing.Bitmap]::FromStream($iconByteStream)
-
-        $minutes = $null; $hours = [math]::divrem($row.play_time, 60, [ref]$minutes);
-        $playTimeFormatted = "{0} Hr {1} Min" -f $hours, $minutes
-
-        [datetime]$origin = '1970-01-01 00:00:00'
-        $dateFormatted = $origin.AddSeconds($row.last_play_date).ToLocalTime().ToString("dd MMMM yyyy")
-
-        $dataGridView.Rows.Add($gameIcon, $row.name, $playTimeFormatted, $dateFormatted)
-    }
-
-    foreach ($row in $dataGridView.Rows) {
-        $row.Resizable = [System.Windows.Forms.DataGridViewTriState]::False
-    }
-
-    # Remove flickering in Data Grid View
     $doubleBufferProperty = $dataGridView.GetType().GetProperty('DoubleBuffered', [System.Reflection.BindingFlags]::NonPublic -bor [System.Reflection.BindingFlags]::Instance)
     $doubleBufferProperty.SetValue($dataGridView, $true, $null)
 
+    function Load-RecentSessions {
+        $quickViewForm.text = "Recent Sessions"
+        $toggleSwitch.Text = "Show Most Played"
+        $dataGridView.Rows.Clear()
+        $dataGridView.Columns.Clear()
+
+        $lastFiveSessionsQuery = "SELECT sh.game_name, g.icon, sh.session_duration_minutes, sh.session_start_time FROM session_history sh JOIN games g ON sh.game_name = g.name ORDER BY sh.session_start_time DESC LIMIT 5"
+        $sessionRecords = RunDBQuery $lastFiveSessionsQuery
+        if ($sessionRecords.Length -eq 0) {
+            ShowMessage "No sessions found in DB. Please play some games first." "OK" "Error"
+            Log "Error: Session history empty. Returning"
+            $quickViewForm.Close()
+            return
+        }
+
+        $IconColumn = New-Object System.Windows.Forms.DataGridViewImageColumn
+        $IconColumn.Name = "icon"
+        $IconColumn.HeaderText = ""
+        $IconColumn.ImageLayout = [System.Windows.Forms.DataGridViewImageCellLayout]::Zoom
+        $null = $dataGridView.Columns.Add($IconColumn)
+
+        $null = $dataGridView.Columns.Add("name", "Name")
+        $null = $dataGridView.Columns.Add("duration", "Duration")
+        $null = $dataGridView.Columns.Add("played_on", "Played On")
+
+        foreach ($column in $dataGridView.Columns) {
+            $column.Resizable = [System.Windows.Forms.DataGridViewTriState]::False
+        }
+
+        foreach ($row in $sessionRecords) {
+            $iconByteStream = [System.IO.MemoryStream]::new($row.icon)
+            $gameIcon = [System.Drawing.Bitmap]::FromStream($iconByteStream)
+            $minutes = $null; $hours = [math]::divrem($row.session_duration_minutes, 60, [ref]$minutes);
+            $durationFormatted = "{0} Hr {1} Min" -f $hours, $minutes
+            [datetime]$origin = '1970-01-01 00:00:00'
+            $dateFormatted = $origin.AddSeconds($row.session_start_time).ToLocalTime().ToString("dd MMM HH:mm")
+            $null = $dataGridView.Rows.Add($gameIcon, $row.game_name, $durationFormatted, $dateFormatted)
+        }
+    }
+
+    function Load-MostPlayed {
+        $quickViewForm.text = "Most Played Games"
+        $toggleSwitch.Text = "Show Recent Sessions"
+        $dataGridView.Rows.Clear()
+        $dataGridView.Columns.Clear()
+
+        $mostPlayedQuery = "SELECT name, icon, play_time, last_play_date FROM games ORDER BY play_time DESC LIMIT 5"
+        $gameRecords = RunDBQuery $mostPlayedQuery
+        if ($gameRecords.Length -eq 0) {
+            ShowMessage "No Games found in DB. Please add some games first." "OK" "Error"
+            Log "Error: Games list empty. Returning"
+            $quickViewForm.Close()
+            return
+        }
+
+        $IconColumn = New-Object System.Windows.Forms.DataGridViewImageColumn
+        $IconColumn.Name = "icon"
+        $IconColumn.HeaderText = ""
+        $IconColumn.ImageLayout = [System.Windows.Forms.DataGridViewImageCellLayout]::Zoom
+        $null = $dataGridView.Columns.Add($IconColumn)
+
+        $null = $dataGridView.Columns.Add("name", "Name")
+        $null = $dataGridView.Columns.Add("play_time", "Playtime")
+        $null = $dataGridView.Columns.Add("last_play_date", "Last Played On")
+
+        foreach ($column in $dataGridView.Columns) {
+            $column.Resizable = [System.Windows.Forms.DataGridViewTriState]::False
+        }
+
+        foreach ($row in $gameRecords) {
+            $iconByteStream = [System.IO.MemoryStream]::new($row.icon)
+            $gameIcon = [System.Drawing.Bitmap]::FromStream($iconByteStream)
+            $minutes = $null; $hours = [math]::divrem($row.play_time, 60, [ref]$minutes);
+            $playTimeFormatted = "{0} Hr {1} Min" -f $hours, $minutes
+            [datetime]$origin = '1970-01-01 00:00:00'
+            $dateFormatted = $origin.AddSeconds($row.last_play_date).ToLocalTime().ToString("dd MMMM yyyy")
+            $null = $dataGridView.Rows.Add($gameIcon, $row.name, $playTimeFormatted, $dateFormatted)
+        }
+    }
+
+    $toggleSwitch.Add_CheckedChanged({
+        if ($toggleSwitch.Checked) {
+            Load-MostPlayed
+        } else {
+            Load-RecentSessions
+        }
+        $dataGridView.ClearSelection()
+    })
+
     $quickViewForm.Controls.Add($dataGridView)
+    $quickViewForm.Controls.Add($toggleSwitch)
 
-    $quickViewForm.Add_Deactivate({
-            $quickViewForm.Dispose()
-        })
-
+    $quickViewForm.Add_Deactivate({ $quickViewForm.Dispose() })
     $quickViewForm.Add_Shown({
-            $dataGridView.ClearSelection()
-            $quickViewForm.Activate()
-        })
+        Load-RecentSessions
+        $dataGridView.ClearSelection()
+        $quickViewForm.Activate()
+    })
 
     $quickViewForm.ShowDialog()
 }

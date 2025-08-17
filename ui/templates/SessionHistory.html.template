@@ -1,0 +1,86 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" style="background : #ffffff">
+  <head>
+    <title>Gaming Gaiden</title>
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="./resources/images/favicon.ico"
+    />
+    <link rel="stylesheet" href="./resources/css/SessionHistory.css" />
+    <link rel="stylesheet" href="./resources/css/jquery.dataTables.css" />
+    <script src="./resources/js/jquery-3.7.1.min.js"></script>
+    <script src="./resources/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript">
+      $(document).ready(function () {
+        $("table").each(function () {
+          var tHead = $(this).find("tr:first").html();
+          $(this).find("colgroup").remove();
+          $(this).find("tr:first").remove();
+          $(this)
+            .find("tbody")
+            .before("<thead>" + tHead + "</thead>");
+        });
+
+        $("table").DataTable({
+          columnDefs: [
+            {
+              targets: 2,
+              render: function (data, type, row, meta) {
+                if (type === "display" || type === "filter") {
+                  var hours = parseInt(parseInt(data) / 60);
+                  var minutes = parseInt(data) % 60;
+                  return hours + " Hr " + minutes + " Min";
+                }
+                return data;
+              },
+            },
+            {
+              targets: 3,
+              render: function (data, type, row, meta) {
+                if (type === "display" || type === "filter") {
+                  var utcSeconds = parseInt(data);
+                  var date = new Date(0);
+                  date.setUTCSeconds(utcSeconds);
+                  return date.toLocaleString(undefined, {
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit",
+                    hour12: false
+                  });
+                }
+                return data;
+              },
+            },
+          ],
+          order: [
+            [3, "desc"],
+          ],
+          ordering: true,
+          paging: "numbers",
+          pageLength: 25,
+          lengthChange: false,
+          searching: true,
+        });
+
+        $("#sessions-table-container").show();
+      });
+    </script>
+  </head>
+
+  <body>
+    <div id="sessions-table-container" style="display: none">_SESSIONSTABLE_</div>
+    <div id="navigation-bar">
+        <button class="custom-button" id="summary-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/Summary.html';">Life Time Summary</button>
+        <button class="custom-button" id="gaming-time-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/GamingTime.html';">Time Spent Gaming</button>
+        <button class="custom-button" id="most-played-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/MostPlayed.html';">Most Played</button>
+        <button class="custom-button" id="all-games-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/AllGames.html';">All Games</button>
+        <button class="custom-button" id="idle-time-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/IdleTime.html';">Idle Time</button>
+        <button class="custom-button" id="games-per-platform-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/GamesPerPlatform.html';">Games Per Platform</button>
+        <button class="custom-button" id="session-history-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/SessionHistory.html';">Session History</button>
+    </div>
+  </body>
+</html>

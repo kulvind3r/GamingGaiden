@@ -12,14 +12,14 @@
 [System.Reflection.assembly]::LoadwithPartialname("Microsoft.VisualBasic")   | Out-Null
 
 try {
-    Import-Module ".\modules\PSSQLite"
-    Import-Module ".\modules\ThreadJob"
-    Import-Module ".\modules\HelperFunctions.psm1"
-    Import-Module ".\modules\QueryFunctions.psm1"
-    Import-Module ".\modules\SettingsFunctions.psm1"
-    Import-Module ".\modules\SetupDatabase.psm1"
-    Import-Module ".\modules\StorageFunctions.psm1"
-    Import-Module ".\modules\UIFunctions.psm1"
+    Import-Module ".\modules\PSSQLite" | Out-Null
+    Import-Module ".\modules\ThreadJob" | Out-Null
+    Import-Module ".\modules\HelperFunctions.psm1" | Out-Null
+    Import-Module ".\modules\QueryFunctions.psm1" | Out-Null
+    Import-Module ".\modules\SettingsFunctions.psm1" | Out-Null
+    Import-Module ".\modules\SetupDatabase.psm1" | Out-Null
+    Import-Module ".\modules\StorageFunctions.psm1" | Out-Null
+    Import-Module ".\modules\UIFunctions.psm1" | Out-Null
 
     #------------------------------------------
     # Exit if Gaming Gaiden is being started from non standard location
@@ -59,14 +59,14 @@ try {
 
     if ((Test-Path "HKCU:\SOFTWARE\HWiNFO64") -And -Not (Test-Path "HKCU:\SOFTWARE\HWiNFO64\Sensors\Custom\Gaming Gaiden")) {
         Log "Integrating with HWiNFO"
-        New-Item -path 'HKCU:\SOFTWARE\HWiNFO64\Sensors\Custom\Gaming Gaiden' -Name 'Other0' -Force
-        New-Item -path 'HKCU:\SOFTWARE\HWiNFO64\Sensors\Custom\Gaming Gaiden' -Name 'Other1' -Force
-        Set-Itemproperty -path $HWInfoSensorTracking -Name 'Name' -value 'Tracking'
-        Set-Itemproperty -path $HWInfoSensorTracking -Name 'Unit' -value 'Yes/No'
-        Set-Itemproperty -path $HWInfoSensorTracking -Name 'Value' -value 0
-        Set-Itemproperty -path $HWInfoSensorSession -Name 'Name' -value 'Session Length'
-        Set-Itemproperty -path $HWInfoSensorSession -Name 'Unit' -value 'Min'
-        Set-Itemproperty -path $HWInfoSensorSession -Name 'Value' -value 0
+        New-Item -path 'HKCU:\SOFTWARE\HWiNFO64\Sensors\Custom\Gaming Gaiden' -Name 'Other0' -Force | Out-Null
+        New-Item -path 'HKCU:\SOFTWARE\HWiNFO64\Sensors\Custom\Gaming Gaiden' -Name 'Other1' -Force | Out-Null
+        Set-Itemproperty -path $HWInfoSensorTracking -Name 'Name' -value 'Tracking' | Out-Null
+        Set-Itemproperty -path $HWInfoSensorTracking -Name 'Unit' -value 'Yes/No' | Out-Null
+        Set-Itemproperty -path $HWInfoSensorTracking -Name 'Value' -value 0 | Out-Null
+        Set-Itemproperty -path $HWInfoSensorSession -Name 'Name' -value 'Session Length' | Out-Null
+        Set-Itemproperty -path $HWInfoSensorSession -Name 'Unit' -value 'Min' | Out-Null
+        Set-Itemproperty -path $HWInfoSensorSession -Name 'Value' -value 0 | Out-Null
     }
     else {
         Log "HWiNFO not detected. Or Gaming Gaiden is already Integrated. Skipping Auto Integration"
@@ -106,13 +106,13 @@ try {
     function ResetIconAndSensors() {
         Log "Resetting Icon and Sensors"
         Remove-Item "$env:TEMP\GmGdn-TrackingGame.txt" -ErrorAction silentlycontinue
-        Set-Itemproperty -path $HWInfoSensorTracking -Name 'Value' -value 0
-        Set-Itemproperty -path $HWInfoSensorSession -Name 'Value' -value 0
+    Set-Itemproperty -path $HWInfoSensorTracking -Name 'Value' -value 0 | Out-Null
+    Set-Itemproperty -path $HWInfoSensorSession -Name 'Value' -value 0 | Out-Null
         $AppNotifyIcon.Text = "Gaming Gaiden"
     }
 
     function  StartTrackerJob() {
-        Start-ThreadJob -InitializationScript $TrackerJobInitializationScript -ScriptBlock $TrackerJobScript -Name "TrackerJob"
+    Start-ThreadJob -InitializationScript $TrackerJobInitializationScript -ScriptBlock $TrackerJobScript -Name "TrackerJob" | Out-Null
         $StopTrackerMenuItem.Enabled = $true
         $StartTrackerMenuItem.Enabled = $false
 
@@ -123,7 +123,7 @@ try {
     }
 
     function  StopTrackerJob() {
-        Stop-Job "TrackerJob" -ErrorAction silentlycontinue
+    Stop-Job "TrackerJob" -ErrorAction silentlycontinue | Out-Null
         $StopTrackerMenuItem.Enabled = $false
         $StartTrackerMenuItem.Enabled = $true
 
@@ -165,7 +165,7 @@ try {
             $gameName = Get-Content "$env:TEMP\GmGdn-TrackingGame.txt"
             $AppNotifyIcon.Text = "Tracking $gameName"
             $AppNotifyIcon.Icon = $IconTracking
-            Set-Itemproperty -path $HWInfoSensorTracking -Name 'Value' -value 1
+            Set-Itemproperty -path $HWInfoSensorTracking -Name 'Value' -value 1 | Out-Null
         }
         else {
             if ($AppNotifyIcon.Text -ne "Gaming Gaiden") {
@@ -217,28 +217,28 @@ try {
     $editPlatformMenuItem = CreateMenuItem "Edit Emulator"
     $gamingPCMenuItem = CreateMenuItem "Gaming PCs"
     $openInstallDirectoryMenuItem = CreateMenuItem "Open Install Directory"
-    $settingsSubMenuItem.DropDownItems.Add($addGameMenuItem)
-    $settingsSubMenuItem.DropDownItems.Add($editGameMenuItem)
-    $settingsSubMenuItem.DropDownItems.Add($menuItemSeparator1)
-    $settingsSubMenuItem.DropDownItems.Add($addPlatformMenuItem)
-    $settingsSubMenuItem.DropDownItems.Add($editPlatformMenuItem)
-    $settingsSubMenuItem.DropDownItems.Add($menuItemSeparator7)
-    $settingsSubMenuItem.DropDownItems.Add($gamingPCMenuItem)
-    $settingsSubMenuItem.DropDownItems.Add($openInstallDirectoryMenuItem)
+    $null = $settingsSubMenuItem.DropDownItems.Add($addGameMenuItem)
+    $null = $settingsSubMenuItem.DropDownItems.Add($editGameMenuItem)
+    $null = $settingsSubMenuItem.DropDownItems.Add($menuItemSeparator1)
+    $null = $settingsSubMenuItem.DropDownItems.Add($addPlatformMenuItem)
+    $null = $settingsSubMenuItem.DropDownItems.Add($editPlatformMenuItem)
+    $null = $settingsSubMenuItem.DropDownItems.Add($menuItemSeparator7)
+    $null = $settingsSubMenuItem.DropDownItems.Add($gamingPCMenuItem)
+    $null = $settingsSubMenuItem.DropDownItems.Add($openInstallDirectoryMenuItem)
 
     $statsSubMenuItem = CreateMenuItem "Statistics"
+    $sessionHistoryMenuItem = CreateMenuItem "Session History"
     $gamingTimeMenuItem = CreateMenuItem "Time Spent Gaming"
     $mostPlayedMenuItem = CreateMenuItem "Most Played"
     $idleTimeMenuItem = CreateMenuItem "Idle Time"
-    $pcVsEmulationMenuItem = CreateMenuItem "PC vs Emulation Time"
     $summaryItem = CreateMenuItem "Life Time Summary"
     $gamesPerPlatformMenuItem = CreateMenuItem "Games Per Platform"
-    $statsSubMenuItem.DropDownItems.Add($summaryItem)
-    $statsSubMenuItem.DropDownItems.Add($gamingTimeMenuItem)
-    $statsSubMenuItem.DropDownItems.Add($gamesPerPlatformMenuItem)
-    $statsSubMenuItem.DropDownItems.Add($mostPlayedMenuItem)
-    $statsSubMenuItem.DropDownItems.Add($idleTimeMenuItem)
-    $statsSubMenuItem.DropDownItems.Add($pcVsEmulationMenuItem)
+    $null = $statsSubMenuItem.DropDownItems.Add($summaryItem)
+    $null = $statsSubMenuItem.DropDownItems.Add($gamingTimeMenuItem)
+    $null = $statsSubMenuItem.DropDownItems.Add($gamesPerPlatformMenuItem)
+    $null = $statsSubMenuItem.DropDownItems.Add($mostPlayedMenuItem)
+    $null = $statsSubMenuItem.DropDownItems.Add($idleTimeMenuItem)
+    $null = $statsSubMenuItem.DropDownItems.Add($sessionHistoryMenuItem)
 
     $appContextMenu = New-Object System.Windows.Forms.ContextMenuStrip
     $appContextMenu.Items.AddRange(@($allGamesMenuItem, $menuItemSeparator2, $statsSubMenuItem, $menuItemSeparator3, $settingsSubMenuItem, $menuItemSeparator4, $StartTrackerMenuItem, $StopTrackerMenuItem, $menuItemSeparator5, $helpMenuItem, $aboutMenuItem, $menuItemSeparator6, $exitMenuItem))
@@ -286,7 +286,7 @@ try {
 
     $exitMenuItem.Add_Click({
             $AppNotifyIcon.Visible = $false;
-            Stop-Job -Name "TrackerJob";
+            Stop-Job -Name "TrackerJob" | Out-Null
             $Timer.Stop()
             $Timer.Dispose()
             [System.Windows.Forms.Application]::Exit();
@@ -329,10 +329,10 @@ try {
             }
         })
 
-    $pcVsEmulationMenuItem.Add_Click({
-            $pcVsEmulationCheckResult = RenderPCvsEmulation
-            if ($pcVsEmulationCheckResult -ne $false) {
-                Invoke-Item ".\ui\PCvsEmulation.html"
+    $sessionHistoryMenuItem.Add_Click({
+            $sessionHistoryCheckResult = RenderSessionHistory
+            if ($sessionHistoryCheckResult -ne $false) {
+                Invoke-Item ".\ui\SessionHistory.html"
             }
         })
 
