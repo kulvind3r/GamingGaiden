@@ -97,27 +97,23 @@ function RenderGameList() {
         $name = $gameRecord.name
         $imageFileName = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($name))
 
-        # Check if image is pre loaded for ui. Render if not found.
-        if ( (Test-Path "$workingDirectory\ui\resources\images\$imageFileName.jpg") ) {
-            $iconUri = "<img src=`".\resources\images\$imageFileName.jpg`">"
-        }
-        elseif ( (Test-Path "$workingDirectory\ui\resources\images\$imageFileName.png") ) {
-            $iconUri = "<img src=`".\resources\images\$imageFileName.png`">"
-        }
-        else {
-            $iconByteStream = [System.IO.MemoryStream]::new($gameRecord.icon)
-            $iconBitmap = [System.Drawing.Bitmap]::FromStream($iconByteStream)
+        $pngPath = "$workingDirectory\ui\resources\images\$imageFileName.png"
+        $jpgPath = "$workingDirectory\ui\resources\images\$imageFileName.jpg"
+        $iconUri = "<img src=`"$pngPath`">"
 
-            if ($iconBitmap.PixelFormat -eq "Format32bppArgb") {
-                $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.png", [System.Drawing.Imaging.ImageFormat]::Png)
-                $iconUri = "<img src=`".\resources\images\$imageFileName.png`">"
+        if (-Not (Test-Path $pngPath)) {
+            if (Test-Path $jpgPath) {
+                $image = [System.Drawing.Image]::FromFile($jpgPath)
+                $image.Save($pngPath, [System.Drawing.Imaging.ImageFormat]::Png)
+                $image.Dispose()
+                Remove-Item $jpgPath
             }
             else {
-                $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.jpg", [System.Drawing.Imaging.ImageFormat]::Jpeg)
-                $iconUri = "<img src=`".\resources\images\$imageFileName.jpg`">"
+                $iconByteStream = [System.IO.MemoryStream]::new($gameRecord.icon)
+                $image = [System.Drawing.Image]::FromStream($iconByteStream)
+                $image.Save($pngPath, [System.Drawing.Imaging.ImageFormat]::Png)
+                $image.Dispose()
             }
-
-            $iconBitmap.Dispose()
         }
 
         $statusUri = "<div>Finished</div><img src=`".\resources\images\finished.png`">"
@@ -193,7 +189,7 @@ function RenderMostPlayed() {
 
     $workingDirectory = (Get-Location).Path
 
-    $getGamesPlayTimeDataQuery = "SELECT name, play_time as time, color_hex FROM games ORDER BY play_time DESC"
+    $getGamesPlayTimeDataQuery = "SELECT name, play_time as time, COALESCE(color_hex, '#cccccc') as color_hex FROM games WHERE play_time > 0 ORDER BY play_time DESC"
     $gamesPlayTimeData = RunDBQuery $getGamesPlayTimeDataQuery
     if ($gamesPlayTimeData.Length -eq 0) {
         if(-Not $InBackground) {
@@ -205,7 +201,11 @@ function RenderMostPlayed() {
 
     $jsonData = $gamesPlayTimeData | ConvertTo-Json -Depth 5 -Compress
 
-    $report = (Get-Content $workingDirectory\ui\templates\MostPlayed.html.template) -replace "_GAMINGDATA_", $jsonData
+    if ([string]::IsNullOrEmpty($jsonData)) {
+        $jsonData = "[]"
+    }
+
+    $report = (Get-Content $workingDirectory\ui\templates\MostPlayed_New.html.template) -replace "_GAMINGDATA_", $jsonData
 
     [System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $workingDirectory\ui\MostPlayed.html
 }
@@ -398,26 +398,23 @@ function RenderSessionHistory() {
         $name = $sessionRecord.game_name
         $imageFileName = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($name))
 
-        if ( (Test-Path "$workingDirectory\ui\resources\images\$imageFileName.jpg") ) {
-            $iconUri = "<img src=`".\resources\images\$imageFileName.jpg`">"
-        }
-        elseif ( (Test-Path "$workingDirectory\ui\resources\images\$imageFileName.png") ) {
-            $iconUri = "<img src=`".\resources\images\$imageFileName.png`">"
-        }
-        else {
-            $iconByteStream = [System.IO.MemoryStream]::new($sessionRecord.icon)
-            $iconBitmap = [System.Drawing.Bitmap]::FromStream($iconByteStream)
+        $pngPath = "$workingDirectory\ui\resources\images\$imageFileName.png"
+        $jpgPath = "$workingDirectory\ui\resources\images\$imageFileName.jpg"
+        $iconUri = "<img src=`"$pngPath`">"
 
-            if ($iconBitmap.PixelFormat -eq "Format32bppArgb") {
-                $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.png", [System.Drawing.Imaging.ImageFormat]::Png)
-                $iconUri = "<img src=`".\resources\images\$imageFileName.png`">"
+        if (-Not (Test-Path $pngPath)) {
+            if (Test-Path $jpgPath) {
+                $image = [System.Drawing.Image]::FromFile($jpgPath)
+                $image.Save($pngPath, [System.Drawing.Imaging.ImageFormat]::Png)
+                $image.Dispose()
+                Remove-Item $jpgPath
             }
             else {
-                $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.jpg", [System.Drawing.Imaging.ImageFormat]::Jpeg)
-                $iconUri = "<img src=`".\resources\images\$imageFileName.jpg`">"
+                $iconByteStream = [System.IO.MemoryStream]::new($sessionRecord.icon)
+                $image = [System.Drawing.Image]::FromStream($iconByteStream)
+                $image.Save($pngPath, [System.Drawing.Imaging.ImageFormat]::Png)
+                $image.Dispose()
             }
-
-            $iconBitmap.Dispose()
         }
 
         $currentSession = [Session]::new($iconUri, $name, $sessionRecord.session_duration_minutes, $sessionRecord.session_start_time)
@@ -472,14 +469,13 @@ function RenderAboutDialog() {
 }
 
 function RenderQuickView() {
-    $quickViewForm = CreateForm "Quick View" 420 400 ".\icons\running.ico"
+    $quickViewForm = CreateForm "Quick View" 420 100 ".\icons\running.ico" # Start with a small height, it will be resized
     $quickViewForm.MaximizeBox = $false
     $quickViewForm.MinimizeBox = $false
     $quickViewForm.StartPosition = [System.Windows.Forms.FormStartPosition]::Manual
 
     $screenBounds = [System.Windows.Forms.Screen]::PrimaryScreen.Bounds
     $quickViewForm.Left = $screenBounds.Width - $quickViewForm.Width - 20
-    $quickViewForm.Top = $screenBounds.Height - $quickViewForm.Height - 60
 
     $dataGridView = New-Object System.Windows.Forms.DataGridView
     $dataGridView.Dock = [System.Windows.Forms.DockStyle]::Fill
@@ -504,6 +500,18 @@ function RenderQuickView() {
 
     $doubleBufferProperty = $dataGridView.GetType().GetProperty('DoubleBuffered', [System.Reflection.BindingFlags]::NonPublic -bor [System.Reflection.BindingFlags]::Instance)
     $doubleBufferProperty.SetValue($dataGridView, $true, $null)
+
+    function Resize-Form() {
+        $totalRowsHeight = 0
+        foreach ($row in $dataGridView.Rows) {
+            $totalRowsHeight += $row.Height
+        }
+        $headerHeight = $dataGridView.ColumnHeadersHeight
+        $toggleHeight = $toggleSwitch.Height
+        $newHeight = $totalRowsHeight + $headerHeight + $toggleHeight
+        $quickViewForm.ClientSize = New-Object System.Drawing.Size($quickViewForm.ClientSize.Width, $newHeight)
+        $quickViewForm.Top = $screenBounds.Height - $quickViewForm.Height - 60
+    }
 
     function Load-RecentSessions {
         $quickViewForm.text = "Recent Sessions"
@@ -543,6 +551,7 @@ function RenderQuickView() {
             $dateFormatted = $origin.AddSeconds($row.session_start_time).ToLocalTime().ToString("dd MMM HH:mm")
             $null = $dataGridView.Rows.Add($gameIcon, $row.game_name, $durationFormatted, $dateFormatted)
         }
+        Resize-Form
     }
 
     function Load-MostPlayed {
@@ -583,6 +592,7 @@ function RenderQuickView() {
             $dateFormatted = $origin.AddSeconds($row.last_play_date).ToLocalTime().ToString("dd MMMM yyyy")
             $null = $dataGridView.Rows.Add($gameIcon, $row.name, $playTimeFormatted, $dateFormatted)
         }
+        Resize-Form
     }
 
     $toggleSwitch.Add_CheckedChanged({
