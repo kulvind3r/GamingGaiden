@@ -37,18 +37,30 @@ $(document).ready(function () {
             className: "playtimegradient",
             render: function (data, type, row, meta) {
               if (type === "display" || type === "filter") {
-                var hours = parseInt(parseInt(data) / 60);
-                var minutes = parseInt(data) % 60;
+                var playtime = parseInt(data);
+                if (isNaN(playtime)) {
+                    playtime = 0;
+                }
+                var hours = Math.floor(playtime / 60);
+                var minutes = playtime % 60;
                 return hours + " Hr " + minutes + " Min";
               }
               return data;
             },
             createdCell: function (td, cellData, rowData, row, col) {
               var maxPlayTime = gamesData.maxPlaytime;
-              var percentage = (
-                (parseInt(cellData) / maxPlayTime) *
-                95
-              ).toFixed(2);
+              var playtime = parseInt(cellData);
+              if (isNaN(playtime)) {
+                  playtime = 0;
+              }
+
+              var percentage = 0;
+              if (maxPlayTime > 0) {
+                percentage = (
+                  (playtime / maxPlayTime) *
+                  95
+                ).toFixed(2);
+              }
               $(td).css("background-size", percentage + "% 85%");
             },
           },
