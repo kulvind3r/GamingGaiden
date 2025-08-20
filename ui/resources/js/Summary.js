@@ -173,7 +173,7 @@ function loadPCDataFromTable() {
   const pcRows = pcTable.querySelectorAll("tbody tr");
 
   pcData = Array.from(pcRows).map((row) => {
-    const iconUri = DOMPurify.sanitize(row.cells[0].innerHTML);
+    const iconPath = DOMPurify.sanitize(row.cells[0].textContent);
     const name = row.cells[1].textContent;
     const current = row.cells[2].textContent;
     const cost = row.cells[3].textContent;
@@ -204,7 +204,7 @@ function loadPCDataFromTable() {
     const totalHours = row.cells[8].textContent;
 
     return {
-      iconUri,
+      iconPath,
       name,
       current,
       cost,
@@ -232,7 +232,7 @@ function updatePCStatsSection(pcData) {
 
   // Use DomPurify with Jquery $().html() instead of plain document.getElementByID().innerHTML()
   // to prevent Codacy from triggering false positives for XSS attack vulnerabilities.
-  $("#pc-icon").html(DOMPurify.sanitize(pcData.iconUri));
+  $("#pc-icon").html(DOMPurify.sanitize(`<img src="${pcData.iconPath}">`));
 
   $("#pc-in-use").html(DOMPurify.sanitize("<b>In Use: </b>" + pcData.start_date + " - " + pcData.end_date));
   if (pcData.current == "TRUE") {
@@ -322,7 +322,7 @@ loadPCDataFromTable();
 if (pcData.length > 0) {
   updatePCStatsSection(pcData.at(currentPCIndex));
 } else {
-  $("#pc-icon").html(DOMPurify.sanitize('<img src=".\\resources\\images\\pc.png"></img>'));
+  $("#pc-icon").html(DOMPurify.sanitize(`<img src=".\resources\images\pc.png">`));
   document.getElementById("pc-icon").querySelector("img").style.border = "none";
   document.getElementById("pc-navigation-bar").style.display = "none";
   document.getElementById("pc-status").textContent = "Add Gaming PCs to see more stats";

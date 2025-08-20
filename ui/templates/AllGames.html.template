@@ -11,99 +11,33 @@
     <link rel="stylesheet" href="./resources/css/jquery.dataTables.css" />
     <script src="./resources/js/jquery-3.7.1.min.js"></script>
     <script src="./resources/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript">
-      $(document).ready(function () {
-        $("table").each(function () {
-          var tHead = $(this).find("tr:first").html();
-          $(this).find("colgroup").remove();
-          $(this).find("tr:first").remove();
-          $(this)
-            .find("tbody")
-            .before("<thead>" + tHead + "</thead>");
-        });
-
-        $("table").DataTable({
-          columnDefs: [
-            {
-              targets: 3,
-              className: "playtimegradient",
-              render: function (data, type, row, meta) {
-                if (type === "display" || type === "filter") {
-                  var hours = parseInt(parseInt(data) / 60);
-                  var minutes = parseInt(data) % 60;
-                  return hours + " Hr " + minutes + " Min";
-                }
-                return data;
-              },
-              createdCell: function (td, cellData, rowData, row, col) {
-                var maxPlayTime = _MAXPLAYTIME_;
-                var percentage = (
-                  (parseInt(cellData) / maxPlayTime) *
-                  95
-                ).toFixed(2);
-                $(td).css("background-size", percentage + "% 85%");
-              },
-            },
-            {
-              targets: 6,
-              render: function (data, type, row, meta) {
-                if (type === "display" || type === "filter") {
-                  var utcSeconds = parseInt(data);
-                  var date = new Date(0);
-                  date.setUTCSeconds(utcSeconds);
-                  return date.toLocaleDateString(undefined, {
-                    year: "numeric",
-                    month: "long",
-                    day: "numeric",
-                  });
-                }
-                return data;
-              },
-            },
-          ],
-          order: [
-            [6, "desc"],
-          ],
-          ordering: true,
-          paging: "numbers",
-          pageLength: 9,
-          lengthChange: false,
-          searching: true,
-        });
-
-        $("#DataTables_Table_0_wrapper")[0].insertAdjacentHTML(
-          "afterbegin",
-          '<div id="AllGames">All Games\n_TOTALGAMECOUNT_</div>'
-        );
-        $("#DataTables_Table_0_wrapper")[0].insertAdjacentHTML(
-          "afterbegin",
-          '<div id="TotalPlaytime">Total Playtime\n_TOTALPLAYTIME_</div>'
-        );
-
-        document
-          .getElementById("Toggle-Pagination")
-          .addEventListener("click", () => {
-            if ($("table").DataTable().page.len() == 9) {
-              document.getElementById("Toggle-Pagination").innerText =
-                "Paginate";
-              $("table").DataTable().page.len(-1).draw();
-            } else {
-              document.getElementById("Toggle-Pagination").innerText =
-                "Show All";
-              $("table").DataTable().page.len(9).draw();
-            }
-          });
-
-        $("#games-table-container").show();
-      });
-    </script>
+    <script src="./resources/js/purify.min.js"></script>
   </head>
-
   <body>
-    <div id="games-table-container" style="display: none">_GAMESTABLE_</div>
+    <div id="games-table-container">
+      <table id="games-table" class="display">
+        <thead>
+          <tr>
+            <th>Icon</th>
+            <th>Name</th>
+            <th>Platform</th>
+            <th>Playtime</th>
+            <th>Sessions</th>
+            <th>Status</th>
+            <th>Last Played On</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
     <div id="button-container">
       <button class="custom-button" id="Toggle-Pagination">Show All</button>
     </div>
+    <script>
+      const gamesData = _GAMESDATA_;
+    </script>
+    <script src="./resources/js/AllGames.js"></script>
     <div id="navigation-bar">
       <button class="custom-button" id="summary-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/Summary.html';">Life Time Summary</button>
       <button class="custom-button" id="gaming-time-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/GamingTime.html';">Time Spent Gaming</button>
