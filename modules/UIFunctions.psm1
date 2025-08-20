@@ -89,9 +89,8 @@ function RenderGameList() {
     $getMaxPlayTime = "SELECT max(play_time) as 'max_play_time' FROM games"
     $maxPlayTime = (RunDBQuery $getMaxPlayTime).max_play_time
 
-    $games = [System.Collections.Generic.List[Game]]::new()
-    $iconUri = $null
-    $totalPlayTime = $null
+    $games = [System.Collections.Generic.List[object]]::new()
+    $totalPlayTime = 0
 
     foreach ($gameRecord in $gameRecords) {
         $name = $gameRecord.name
@@ -99,7 +98,7 @@ function RenderGameList() {
 
         $pngPath = "$workingDirectory\ui\resources\images\$imageFileName.png"
         $jpgPath = "$workingDirectory\ui\resources\images\$imageFileName.jpg"
-        $iconUri = "<img src=`"$pngPath`">"
+        $iconPath = ".\resources\images\$imageFileName.png"
 
         if (-Not (Test-Path $pngPath)) {
             if (Test-Path $jpgPath) {
@@ -116,39 +115,51 @@ function RenderGameList() {
             }
         }
 
-        $statusUri = "<div>Finished</div><img src=`".\resources\images\finished.png`">"
+        $statusText = "Finished"
+        $statusIcon = ".\resources\images\finished.png"
         if ($gameRecord.completed -eq 'FALSE') {
-            $statusUri = "<div>Playing</div><img src=`".\resources\images\playing.png`">"
+            $statusText = "Playing"
+            $statusIcon = ".\resources\images\playing.png"
         }
         if ($gameRecord.status -eq 'dropped') {
-            $statusUri = "<div>Dropped</div><img title=`"Utter Garbage!!`" src=`".\resources\images\dropped.png`">"
+            $statusText = "Dropped"
+            $statusIcon = ".\resources\images\dropped.png"
         }
         if ($gameRecord.status -eq 'hold') {
-            $statusUri = "<div>Pick Later</div><img src=`".\resources\images\hold.png`">"
+            $statusText = "On Hold"
+            $statusIcon = ".\resources\images\hold.png"
         }
         if ($gameRecord.status -eq 'forever') {
-            $statusUri = "<div>Forever</div><img src=`".\resources\images\forever.png`">"
+            $statusText = "Forever"
+            $statusIcon = ".\resources\images\forever.png"
         }
 
-        $currentGame = [Game]::new($iconUri, $name, $gameRecord.platform, $gameRecord.play_time, $gameRecord.session_count, $statusUri, $gameRecord.last_play_date)
-
-        # Assign to null to avoid appending output to pipeline, improves performance and resource consumption
-        $null = $games.Add($currentGame)
-
+        $gameObject = [pscustomobject]@{
+            IconPath      = $iconPath
+            Name          = $name
+            Platform      = $gameRecord.platform
+            Playtime      = $gameRecord.play_time
+            SessionCount  = $gameRecord.session_count
+            StatusText    = $statusText
+            StatusIcon    = $statusIcon
+            LastPlayedOn  = $gameRecord.last_play_date
+        }
+        $null = $games.Add($gameObject)
         $totalPlayTime += $gameRecord.play_time
     }
 
     $totalPlayTimeString = PlayTimeMinsToString $totalPlayTime
 
-    $table = $games | ConvertTo-Html -Fragment
+    $gamesData = @{
+        games = $games
+        maxPlaytime = $maxPlayTime
+        totalGameCount = $games.Count
+        totalPlaytime = $totalPlayTimeString
+    }
 
-    $report = (Get-Content $workingDirectory\ui\templates\AllGames.html.template) -replace "_GAMESTABLE_", $table
-    $report = $report -replace "Last_Played_On", "Last Played On"
-    $report = $report -replace "Session_Count", "Sessions"
-    $report = $report -replace "Completed", "Status"
-    $report = $report -replace "_MAXPLAYTIME_", $maxPlayTime
-    $report = $report -replace "_TOTALGAMECOUNT_", $games.Count
-    $report = $report -replace "_TOTALPLAYTIME_", $totalPlayTimeString
+    $jsonData = $gamesData | ConvertTo-Json -Depth 5
+
+    $report = (Get-Content $workingDirectory\ui\templates\AllGames.html.template) -replace "_GAMESDATA_", $jsonData
 
     $report | Out-File -encoding UTF8 $workingDirectory\ui\AllGames.html
 }
@@ -265,11 +276,11 @@ function RenderSummary() {
 
         if ($iconBitmap.PixelFormat -eq "Format32bppArgb") {
             $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.png", [System.Drawing.Imaging.ImageFormat]::Png)
-            $pcIconUri = "<img src=`".\resources\images\$imageFileName.png`">"
+            $pcIconUri = ".\resources\images\$imageFileName.png"
         }
         else {
             $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.jpg", [System.Drawing.Imaging.ImageFormat]::Jpeg)
-            $pcIconUri = "<img src=`".\resources\images\$imageFileName.jpg`">"
+            $pcIconUri = ".\resources\images\$imageFileName.jpg"
         }
 
         $iconBitmap.Dispose()
