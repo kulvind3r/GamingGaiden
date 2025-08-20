@@ -19,10 +19,6 @@ th {
   text-align: center !important;
 }
 
-th:first-child {
-  color: #333;
-}
-
 /* Table Row styles */
 tr:hover {
   background-color: gray !important;
@@ -39,40 +35,48 @@ tr:nth-child(even) {
 /* Table Cell & Column styles */
 td {
   border: 1px solid #333;
-  width: auto;
   text-align: center;
   height: 50px;
   padding: 6px 5px !important;
 }
 
-/* Define specific styles for the Icon column */
-td:first-child {
-  width: 5%;
+.game-cell {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 10px;
 }
 
-td:first-child img {
-  height: 70px;
-  margin-left: auto;
-  margin-right: auto;
-  display: block;
-  filter: drop-shadow(4px 4px 2px gray);
+.game-icon {
+  height: 40px;
+  margin-right: 10px;
+  filter: drop-shadow(3px 3px 1px gray);
 }
 
-/* Define specific styles for the Name column */
-td:nth-child(2) {
+.game-cell span {
   font-weight: bold;
-  width: 45%;
   text-transform: uppercase;
 }
 
-/* Define specific styles for the Duration column */
-td:nth-child(3) {
+#sessionHistoryTable td:nth-child(1) {
+  width: 20%;
+  text-align: left;
+}
+
+#sessionHistoryTable td:nth-child(2) {
   width: 20%;
 }
 
-/* Define specific styles for the Start Time column */
-td:nth-child(4) {
-    width: 30%;
+#sessionHistoryTable td:nth-child(3) {
+  width: 20%;
+}
+
+#sessionHistoryTable td:nth-child(4) {
+  width: 20%;
+}
+
+#sessionHistoryTable td:nth-child(5) {
+  width: 20%;
 }
 
 

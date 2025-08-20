@@ -22,6 +22,7 @@
             <th>Duration</th>
             <th>Date</th>
             <th>Start Time</th>
+            <th>End Time</th>
           </tr>
         </thead>
         <tbody>

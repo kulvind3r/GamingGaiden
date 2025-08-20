@@ -17,6 +17,7 @@ $(document).ready(function() {
         const safeDuration = DOMPurify.sanitize(session.Duration);
         const safeStartDate = DOMPurify.sanitize(session.StartDate);
         const safeStartTime = DOMPurify.sanitize(session.StartTime);
+        const safeEndTime = DOMPurify.sanitize(session.EndTime);
 
         // Create the HTML for the new table row
         const row = `
@@ -30,6 +31,7 @@ $(document).ready(function() {
                 <td>${safeDuration}</td>
                 <td>${safeStartDate}</td>
                 <td>${safeStartTime}</td>
+                <td>${safeEndTime}</td>
             </tr>
         `;
         // Append the new row to the table body
@@ -47,7 +49,8 @@ $(document).ready(function() {
             { "targets": 0, "orderable": true, "searchable": true }, // Game
             { "targets": 1, "orderable": false, "searchable": false }, // Duration
             { "targets": 2, "orderable": true, "searchable": true }, // Date
-            { "targets": 3, "orderable": true, "searchable": false }  // Time
+            { "targets": 3, "orderable": true, "searchable": false },  // Start Time
+            { "targets": 4, "orderable": true, "searchable": false }  // End Time
         ]
     });
 });
