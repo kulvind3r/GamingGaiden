@@ -60,6 +60,8 @@ function updateMostPlayedChart(gameCount) {
           type: "linear",
           title: chartTitleConfig("Playtime (Hours)", 15),
           ticks: {
+            stepSize: 60,
+            precision: 0,
             callback: function(value) {
                 // Display ticks as hours
                 return Math.floor(value / 60);
