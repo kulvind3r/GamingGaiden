@@ -418,6 +418,7 @@ function RenderSessionHistory() {
         $sessionDateTime = $origin.AddSeconds($sessionRecord.session_start_time).ToLocalTime()
         $startDateFormatted = $sessionDateTime.ToString("yyyy-MM-dd")
         $startTimeFormatted = $sessionDateTime.ToString("HH:mm:ss")
+        $endTimeFormatted = $sessionDateTime.AddMinutes($durationMinutes).ToString("HH:mm:ss")
         # --- End Data Formatting ---
 
         $sessionObject = [pscustomobject]@{
@@ -426,6 +427,7 @@ function RenderSessionHistory() {
             Duration  = $durationFormatted
             StartDate = $startDateFormatted
             StartTime = $startTimeFormatted
+            EndTime   = $endTimeFormatted
         }
         $null = $sessionData.Add($sessionObject)
     }
