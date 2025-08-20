@@ -1,4 +1,4 @@
-﻿function FilterListBox {
+function FilterListBox {
     param(
         [string]$filterText,
         [System.Windows.Forms.ListBox]$listBox,
@@ -40,7 +40,7 @@ function RenderEditGameForm($GamesList) {
         })
 
     $labelName = Createlabel "Name:" 170 20; $editGameForm.Controls.Add($labelName)
-    $textName = CreateTextBox "" 245 20 300 20;	$editGameForm.Controls.Add($textName)
+    $textName = CreateTextBox "" 245 20 200 20;	$editGameForm.Controls.Add($textName)
 
     $labelExe = Createlabel "Exe:" 170 60; $editGameForm.Controls.Add($labelExe)
     $textExe = CreateTextBox "" 245 60 200 20; $textExe.ReadOnly = $true; $editGameForm.Controls.Add($textExe)
@@ -53,13 +53,13 @@ function RenderEditGameForm($GamesList) {
 
     $checkboxCompleted = New-Object Windows.Forms.CheckBox
     $checkboxCompleted.Text = "Finished"
-    $checkboxCompleted.Top = 135
+    $checkboxCompleted.Top = 100
     $checkboxCompleted.Left = 470
     $editGameForm.Controls.Add($checkboxCompleted)
 
     $checkboxDropped = New-Object Windows.Forms.CheckBox
     $checkboxDropped.Text = "Dropped"
-    $checkboxDropped.Top = 155
+    $checkboxDropped.Top = 120
     $checkboxDropped.Left = 470
     $checkboxDropped.Add_CheckedChanged({
             if ($checkboxDropped.Checked) {
@@ -78,7 +78,7 @@ function RenderEditGameForm($GamesList) {
 
     $checkboxHold = New-Object Windows.Forms.CheckBox
     $checkboxHold.Text = "Pick Up Later"
-    $checkboxHold.Top = 175
+    $checkboxHold.Top = 140
     $checkboxHold.Left = 470
     $checkboxHold.Add_CheckedChanged({
             if ($checkboxHold.Checked) {
@@ -97,7 +97,7 @@ function RenderEditGameForm($GamesList) {
 
     $checkboxForever = New-Object Windows.Forms.CheckBox
     $checkboxForever.Text = "Forever Game"
-    $checkboxForever.Top = 195
+    $checkboxForever.Top = 160
     $checkboxForever.Left = 470
     $checkboxForever.Add_CheckedChanged({
             if ($checkboxForever.Checked) {
@@ -114,6 +114,13 @@ function RenderEditGameForm($GamesList) {
         })
     $editGameForm.Controls.Add($checkboxForever)
 
+    $checkboxDisableIdle = New-Object Windows.Forms.CheckBox
+    $checkboxDisableIdle.Text = "Idle Detection"
+    $checkboxDisableIdle.Top = 180
+    $checkboxDisableIdle.Left = 470
+    $checkboxDisableIdle.AutoSize = $true
+    $editGameForm.Controls.Add($checkboxDisableIdle)
+
     $labelPictureBox = Createlabel "Game Icon" 57 165; $editGameForm.Controls.Add($labelPictureBox)
     $pictureBox = CreatePictureBox $imagePath 15 20 140 140
     $editGameForm.Controls.Add($pictureBox)
@@ -121,7 +128,8 @@ function RenderEditGameForm($GamesList) {
     $listBox.Add_SelectedIndexChanged({
             $selectedGame = GetGameDetails $listBox.SelectedItem
 
-            $textName.Text = $selectedGame.name
+            if ($null -ne $selectedGame) {
+                $textName.Text = $selectedGame.name
             $textOriginalGameName.Text = $selectedGame.name
             $textExe.Text = ($selectedGame.exe_name + ".exe")
             $textPlatform.Text = $selectedGame.platform
@@ -129,6 +137,7 @@ function RenderEditGameForm($GamesList) {
             $checkboxDropped.Checked = ($selectedGame.status -eq 'dropped')
             $checkboxHold.Checked = ($selectedGame.status -eq 'hold')
             $checkboxForever.Checked = ($selectedGame.status -eq 'forever')
+            $checkboxDisableIdle.Checked = -Not ([System.Convert]::ToBoolean($selectedGame.disable_idle_detection))
 
             if ($checkboxForever.Checked -or $checkboxHold.Checked -or $checkboxDropped.Checked) {
                 $checkboxCompleted.Enabled = $false
@@ -155,7 +164,7 @@ function RenderEditGameForm($GamesList) {
             $pictureBoxImagePath.Text = $imagePath
             $pictureBox.Image.Dispose()
             $pictureBox.Image = [System.Drawing.Image]::FromFile($imagePath)
-
+            }
         })
     $editGameForm.Controls.Add($listBox)
 
@@ -199,7 +208,7 @@ function RenderEditGameForm($GamesList) {
         })
     $editGameForm.Controls.Add($buttonUpdateExe)
 
-    $buttonRemove = CreateButton "Delete" 470 100
+    $buttonRemove = CreateButton "Delete" 470 20
     $buttonRemove.Add_Click({
             $gameName = $textName.Text
 
@@ -250,7 +259,9 @@ function RenderEditGameForm($GamesList) {
             if ($checkboxHold.Checked) { $gameStatus = "hold"; $checkboxCompleted.Checked = $true; $gameCompleteStatus = "TRUE"; }
             if ($checkboxForever.Checked) { $gameStatus = "forever"; $checkboxCompleted.Checked = $true; $gameCompleteStatus = "TRUE"; }
 
-            UpdateGameOnEdit -OriginalGameName $textOriginalGameName.Text -GameName $gameName -GameExeName $gameExeName -GameIconPath $pictureBoxImagePath.Text -GamePlayTime $playTimeInMin -GameCompleteStatus $gameCompleteStatus -GamePlatform $textPlatform.Text -GameStatus $gameStatus
+            $gameDisableIdleDetection = -Not $checkboxDisableIdle.Checked
+
+            UpdateGameOnEdit -OriginalGameName $textOriginalGameName.Text -GameName $gameName -GameExeName $gameExeName -GameIconPath $pictureBoxImagePath.Text -GamePlayTime $playTimeInMin -GameCompleteStatus $gameCompleteStatus -GamePlatform $textPlatform.Text -GameStatus $gameStatus -GameDisableIdleDetection $gameDisableIdleDetection
 
             ShowMessage "Updated '$gameName' in Database." "OK" "Asterisk"
 
@@ -474,6 +485,14 @@ function RenderAddGameForm() {
     $labelPlayTime = Createlabel "PlayTime:" 170 140; $addGameForm.Controls.Add($labelPlayTime)
     $textPlayTime = CreateTextBox "0 Hr 0 Min" 245 140 200 20; $textPlayTime.ReadOnly = $true; $addGameForm.Controls.Add($textPlayTime)
 
+    $checkboxDisableIdle = New-Object Windows.Forms.CheckBox
+    $checkboxDisableIdle.Text = "Idle Detection"
+    $checkboxDisableIdle.Top = 165
+    $checkboxDisableIdle.Left = 245
+    $checkboxDisableIdle.AutoSize = $true
+    $checkboxDisableIdle.Checked = $true
+    $addGameForm.Controls.Add($checkboxDisableIdle)
+
     $buttonSearchIcon = CreateButton "Search" 25 185
     $buttonSearchIcon.Size = New-Object System.Drawing.Size(60, 23)
     $buttonSearchIcon.Add_Click({
@@ -554,9 +573,10 @@ function RenderAddGameForm() {
             $gameExeName = $gameExeFile.BaseName
             $gameIconPath = $pictureBoxImagePath.Text
             $gameLastPlayDate = (Get-Date ([datetime]::UtcNow) -UFormat "%s").Split('.').Get(0)
+            $gameDisableIdleDetection = -Not $checkboxDisableIdle.Checked
 
             SaveGame -GameName $gameName -GameExeName $gameExeName -GameIconPath $gameIconPath `
-                -GamePlayTime 0 -GameIdleTime 0 -GameLastPlayDate $gameLastPlayDate -GameCompleteStatus 'FALSE' -GamePlatform 'PC' -GameSessionCount 0
+                -GamePlayTime 0 -GameIdleTime 0 -GameLastPlayDate $gameLastPlayDate -GameCompleteStatus 'FALSE' -GamePlatform 'PC' -GameSessionCount 0 -GameDisableIdleDetection $gameDisableIdleDetection
 
             ShowMessage "Registered '$gameName' in Database." "OK" "Asterisk"
 
@@ -611,8 +631,8 @@ function RenderGamingPCForm($PCList) {
 
     $labelStartDate = Createlabel "Start Date" 190 80; $gamingPCForm.Controls.Add($labelStartDate)
     $startDatePicker = New-Object Windows.Forms.DateTimePicker
-    $startDatePicker.Location = “170, 100”
-    $startDatePicker.Width = “100”
+    $startDatePicker.Location = New-Object System.Drawing.Point(170, 100)
+    $startDatePicker.Width = 100
     $startDatePicker.MaxDate = [DateTime]::Today
     $startDatePicker.Format = [windows.forms.datetimepickerFormat]::custom
     $startDatePicker.CustomFormat = “dd/MM/yyyy”
@@ -620,8 +640,8 @@ function RenderGamingPCForm($PCList) {
 
     $labelEndDate = Createlabel "End Date" 360 80; $gamingPCForm.Controls.Add($labelEndDate)
     $endDatePicker = New-Object Windows.Forms.DateTimePicker
-    $endDatePicker.Location = “335, 100”
-    $endDatePicker.Width = “100”
+    $endDatePicker.Location = New-Object System.Drawing.Point(335, 100)
+    $endDatePicker.Width = 100
     $endDatePicker.MaxDate = [DateTime]::Today
     $endDatePicker.Format = [windows.forms.datetimepickerFormat]::custom
     $endDatePicker.CustomFormat = “dd/MM/yyyy”

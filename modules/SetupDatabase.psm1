@@ -9,7 +9,8 @@
                             play_time INTEGER,
                             last_play_date INTEGER,
                             completed TEXT,
-                            platform TEXT)"
+                            platform TEXT,
+                            disable_idle_detection BOOLEAN)"
 
         Invoke-SqliteQuery -Query $createGamesTableQuery -SQLiteConnection $dbConnection | Out-Null
 
@@ -86,6 +87,13 @@
             Invoke-SqliteQuery -Query $addColorHexColumnInGamesTableQuery -SQLiteConnection $dbConnection | Out-Null
         }
         # End Migration 5
+
+        # Migration 6
+        if (-Not $gamesTableSchema.name.Contains("disable_idle_detection")) {
+            $addIdleDetectionColumnInGamesTableQuery = "ALTER TABLE games ADD COLUMN disable_idle_detection BOOLEAN DEFAULT 0"
+            Invoke-SqliteQuery -Query $addIdleDetectionColumnInGamesTableQuery -SQLiteConnection $dbConnection | Out-Null
+        }
+        # End Migration 6
 
         # Backfill color_hex for existing games
         Log "Checking for games with missing color data."
