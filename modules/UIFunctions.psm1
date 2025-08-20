@@ -430,12 +430,12 @@ function RenderSessionHistory() {
         $null = $sessionData.Add($sessionObject)
     }
 
-    $jsonData = $sessionData | ConvertTo-Json -Depth 5
+    $jsonData = @($sessionData) | ConvertTo-Json -Depth 5
     if ([string]::IsNullOrEmpty($jsonData)) {
         $jsonData = "[]"
     }
 
-    $report = (Get-Content $workingDirectory\ui\templates\SessionHistory.html.template) -replace '"_SESSIONDATA_"', $jsonData
+    $report = (Get-Content $workingDirectory\ui\templates\SessionHistory.html.template) -replace '_SESSIONDATA_', $jsonData
     $report | Out-File -encoding UTF8 $workingDirectory\ui\SessionHistory.html
 }
 
