@@ -150,7 +150,7 @@ function RenderGameList() {
     $report = $report -replace "_TOTALGAMECOUNT_", $games.Count
     $report = $report -replace "_TOTALPLAYTIME_", $totalPlayTimeString
 
-    [System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $workingDirectory\ui\AllGames.html
+    $report | Out-File -encoding UTF8 $workingDirectory\ui\AllGames.html
 }
 
 function RenderGamingTime() {
@@ -177,7 +177,7 @@ function RenderGamingTime() {
 
     $report = (Get-Content $workingDirectory\ui\templates\GamingTime.html.template) -replace "_GAMINGDATA_", $jsonData
 
-    [System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $workingDirectory\ui\GamingTime.html
+    $report | Out-File -encoding UTF8 $workingDirectory\ui\GamingTime.html
 }
 
 function RenderMostPlayed() {
@@ -189,7 +189,7 @@ function RenderMostPlayed() {
 
     $workingDirectory = (Get-Location).Path
 
-    $getGamesPlayTimeDataQuery = "SELECT name, play_time as time, COALESCE(color_hex, '#cccccc') as color_hex FROM games WHERE play_time > 0 ORDER BY play_time DESC"
+    $getGamesPlayTimeDataQuery = "SELECT name, play_time as time, COALESCE(color_hex, '#cccccc') as color_hex FROM games ORDER BY play_time DESC"
     $gamesPlayTimeData = RunDBQuery $getGamesPlayTimeDataQuery
     if ($gamesPlayTimeData.Length -eq 0) {
         if(-Not $InBackground) {
@@ -199,7 +199,7 @@ function RenderMostPlayed() {
         return $false
     }
 
-    $jsonData = $gamesPlayTimeData | ConvertTo-Json -Depth 5 -Compress
+    $jsonData = @($gamesPlayTimeData) | ConvertTo-Json -Depth 5 -Compress
 
     if ([string]::IsNullOrEmpty($jsonData)) {
         $jsonData = "[]"
@@ -207,7 +207,7 @@ function RenderMostPlayed() {
 
     $report = (Get-Content $workingDirectory\ui\templates\MostPlayed_New.html.template) -replace "_GAMINGDATA_", $jsonData
 
-    [System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $workingDirectory\ui\MostPlayed.html
+    $report | Out-File -encoding UTF8 $workingDirectory\ui\MostPlayed.html
 }
 
 function RenderSummary() {
@@ -312,7 +312,7 @@ function RenderSummary() {
     $report = $report -replace "_ANNUALGAMINGHOURSTABLE_", $annualHoursTable
     $report = $report -replace "_PCTABLE_", $pcTable
 
-    [System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $workingDirectory\ui\Summary.html
+    $report | Out-File -encoding UTF8 $workingDirectory\ui\Summary.html
 }
 
 function RenderIdleTime() {
@@ -343,7 +343,7 @@ function RenderIdleTime() {
     $report = (Get-Content $workingDirectory\ui\templates\IdleTime.html.template) -replace "_GAMESIDLETIMETABLE_", $table
     $report = $report -replace "_TOTALIDLETIME_", $totalIdleTimeString
 
-    [System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $workingDirectory\ui\IdleTime.html
+    $report | Out-File -encoding UTF8 $workingDirectory\ui\IdleTime.html
 }
 
 function RenderGamesPerPlatform() {
@@ -369,7 +369,7 @@ function RenderGamesPerPlatform() {
 
     $report = (Get-Content $workingDirectory\ui\templates\GamesPerPlatform.html.template) -replace "_GAMESPERPLATFORMTABLE_", $table
 
-    [System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $workingDirectory\ui\GamesPerPlatform.html
+    $report | Out-File -encoding UTF8 $workingDirectory\ui\GamesPerPlatform.html
 }
 
 function RenderSessionHistory() {
@@ -436,7 +436,7 @@ function RenderSessionHistory() {
     }
 
     $report = (Get-Content $workingDirectory\ui\templates\SessionHistory.html.template) -replace '"_SESSIONDATA_"', $jsonData
-    [System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $workingDirectory\ui\SessionHistory.html
+    $report | Out-File -encoding UTF8 $workingDirectory\ui\SessionHistory.html
 }
 
 function RenderAboutDialog() {

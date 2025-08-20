@@ -9,14 +9,11 @@ function updateMostPlayedChart(gameCount) {
     return;
   }
 
-  // Filter out games with 0 playtime as a safety measure
-  const filteredData = gamingData.filter(game => game.time > 0);
-
   const labels = [];
   const data = [];
   const colors = [];
 
-  const displayData = filteredData.slice(0, gameCount);
+  const displayData = gamingData.slice(0, gameCount);
 
   for (const game of displayData) {
     labels.push(game.name);
