@@ -62,7 +62,8 @@
       <div id="stats-container">
         <div id="pc-stats-section">
           <div id="pc-icon"></div>
-          <div id="pc-stats">  
+          <div id="pc-stats">
+            <p id="no-pcs-msg">Add Gaming PCs to see more stats.<br><br>Settings => Gaming PCs</p>
             <p id="pc-in-use"></p>
             <p id="pc-lifespan"></p>
             <p id="pc-price"></p>

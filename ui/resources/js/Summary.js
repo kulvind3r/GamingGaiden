@@ -172,6 +172,10 @@ function loadPCDataFromTable() {
   const pcTable = document.getElementById("pc-table").querySelector("table");
   const pcRows = pcTable.querySelectorAll("tbody tr");
 
+  if (pcRows.length = 0) {
+    return
+  }
+
   pcData = Array.from(pcRows).map((row) => {
     const iconUri = DOMPurify.sanitize(row.cells[0].innerHTML);
     const name = row.cells[1].textContent;
@@ -320,12 +324,13 @@ loadSummaryDataFromTable();
 loadPCDataFromTable();
 
 if (pcData.length > 0) {
+  document.getElementById("no-pcs-msg").style.display = "none";
   updatePCStatsSection(pcData.at(currentPCIndex));
 } else {
   $("#pc-icon").html(DOMPurify.sanitize('<img src=".\\resources\\images\\pc.png"></img>'));
   document.getElementById("pc-icon").querySelector("img").style.border = "none";
   document.getElementById("pc-navigation-bar").style.display = "none";
-  document.getElementById("pc-status").textContent = "Add Gaming PCs to see more stats";
+  document.getElementById("pc-stat-disclaimer").style.display = "none";
 }
 
 updateAnnualHoursChart();
