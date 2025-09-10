@@ -53,6 +53,12 @@ https://github.com/user-attachments/assets/4837b88c-e403-4069-a3f5-3f0147e9328a
 4. Use the shortcut on desktop / start menu for launching the application.
 5. Regularly backup your `GamingGaiden.db` and `backups` folder to avoid data loss. Click ***Settings => Open Install Directory*** option in app menu to find them.
 
+## How to uninstall
+1. Save any backups if you want from the `C:\ProgramData\GamingGaiden\backups` directory.
+2. Delete the directory `C:\ProgramData\GamingGaiden`
+3. Delete the shortcuts from Start Menu and Desktop.
+4. Open Run Dialog by pressing `Win + R` , enter `"%APPDATA%\Microsoft\Windows\Start Menu\Programs\StartUp"` in the dialog (including quotes) and press enter. Delete the shortcut from the directory that opens.
+
 ## Unknown Publisher
 Windows SmartScreen may warn that the application is from an ***Unknown Publisher*** because it lacks signature from a public CA. 
 Signing cost for apps is hundreds of dollars per year. Can't afford them.
