@@ -51,6 +51,7 @@ function UpdateAllStatsInBackground() {
     RenderMostPlayed -InBackground $true
     RenderIdleTime -InBackground $true
     RenderPCvsEmulation -InBackground $true
+    RenderSessionHistory -InBackground $true
 }
 
 function RenderGameList() {
@@ -508,4 +509,107 @@ function RenderQuickView() {
         })
 
     $quickViewForm.ShowDialog()
+}
+
+function RenderSessionHistory() {
+    param(
+        [bool]$InBackground = $false
+    )
+
+    Log "Rendering session history page"
+    $workingDirectory = (Get-Location).Path
+
+    # Query ALL sessions with game info
+    $getSessionDataQuery = @"
+SELECT
+    sh.id,
+    sh.game_name,
+    g.platform,
+    DATE(sh.start_time, 'unixepoch', 'localtime') as session_date,
+    sh.start_time,
+    sh.duration
+FROM session_history sh
+LEFT JOIN games g ON sh.game_name = g.name
+ORDER BY sh.start_time DESC
+"@
+
+    $sessionData = RunDBQuery $getSessionDataQuery
+
+    if ($sessionData.Length -eq 0) {
+        if (-Not $InBackground) {
+            ShowMessage "No session history found. Play some games first!" "OK" "Info"
+        }
+        Log "No session data available"
+        return $false
+    }
+
+    # Ensure array format
+    if ($sessionData -isnot [System.Array]) {
+        $sessionData = @($sessionData)
+    }
+
+    # Get unique games with session counts for the left panel
+    $getGamesWithSessionsQuery = @"
+SELECT
+    sh.game_name,
+    g.platform,
+    g.icon,
+    COUNT(sh.id) as session_count,
+    SUM(sh.duration) as total_duration
+FROM session_history sh
+LEFT JOIN games g ON sh.game_name = g.name
+GROUP BY sh.game_name
+ORDER BY sh.game_name ASC
+"@
+
+    $gamesWithSessions = RunDBQuery $getGamesWithSessionsQuery
+
+    if ($gamesWithSessions -isnot [System.Array]) {
+        $gamesWithSessions = @($gamesWithSessions)
+    }
+
+    # Process icons for games data (icons will be used in sidebar and header)
+    foreach ($game in $gamesWithSessions) {
+        if ($null -ne $game.icon) {
+            $name = $game.game_name
+            $imageFileName = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($name))
+
+            # Check if icon already exists on disk (cache check)
+            if (Test-Path "$workingDirectory\ui\resources\images\$imageFileName.jpg") {
+                $game.icon = ".\resources\images\$imageFileName.jpg"
+            }
+            elseif (Test-Path "$workingDirectory\ui\resources\images\$imageFileName.png") {
+                $game.icon = ".\resources\images\$imageFileName.png"
+            }
+            else {
+                # Extract and save icon from BLOB
+                $iconByteStream = [System.IO.MemoryStream]::new($game.icon)
+                $iconBitmap = [System.Drawing.Bitmap]::FromStream($iconByteStream)
+
+                if ($iconBitmap.PixelFormat -eq "Format32bppArgb") {
+                    $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.png", [System.Drawing.Imaging.ImageFormat]::Png)
+                    $game.icon = ".\resources\images\$imageFileName.png"
+                }
+                else {
+                    $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.jpg", [System.Drawing.Imaging.ImageFormat]::Jpeg)
+                    $game.icon = ".\resources\images\$imageFileName.jpg"
+                }
+
+                $iconBitmap.Dispose()
+            }
+        }
+    }
+
+    # Convert both to HTML tables (hidden, for JavaScript parsing)
+    $sessionTable = $sessionData | ConvertTo-Html -Fragment
+    $gamesTable = $gamesWithSessions | ConvertTo-Html -Fragment
+
+    # Load template and replace placeholders
+    $report = (Get-Content $workingDirectory\ui\templates\SessionHistory.html.template) `
+        -replace "_SESSIONTABLE_", $sessionTable `
+        -replace "_GAMESTABLE_", $gamesTable
+
+    [System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $workingDirectory\ui\SessionHistory.html
+
+    return $true
 }

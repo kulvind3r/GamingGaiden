@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" style="background: #ffffff">
+  <head>
+    <title>Gaming Gaiden - Session History</title>
+    <link rel="icon" type="image/x-icon" href="./resources/images/favicon.ico" />
+    <link rel="stylesheet" href="./resources/css/SessionHistory.css" />
+    <script src="./resources/js/jquery-3.7.1.min.js"></script>
+    <script src="./resources/js/chart.js"></script>
+    <script src="./resources/js/chartjs-plugin-datalabels-2.0.0.js"></script>
+    <script>
+      $(document).ready(function () {
+        // Standard table header processing
+        $("table").each(function () {
+          var tHead = $(this).find("tr:first").html();
+          $(this).find("colgroup").remove();
+          $(this).find("tr:first").remove();
+          $(this).find("tbody").before("<thead>" + tHead + "</thead>");
+        });
+      });
+    </script>
+  </head>
+  <body>
+    <h1>Session History</h1>
+
+    <!-- Two-column layout container -->
+    <div id="main-container">
+
+      <!-- LEFT COLUMN: Game List -->
+      <div id="left-column">
+        <div id="search-container">
+          <input
+            type="text"
+            id="game-search"
+            placeholder="Search games..."
+            autocomplete="off"
+          />
+        </div>
+
+        <div id="sort-container">
+          <button id="sort-by-name" class="sort-btn">
+            Name <span class="sort-arrow">▼</span>
+          </button>
+          <button id="sort-by-last-played" class="sort-btn active">
+            Last Played <span class="sort-arrow">▼</span>
+          </button>
+        </div>
+
+        <div id="games-list-container">
+          <ul id="games-list">
+            <!-- Populated by JavaScript -->
+          </ul>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: Monthly Session Graph -->
+      <div id="right-column">
+        <div id="selected-game-header">
+          <h2 id="selected-game-name">Select a game to view sessions</h2>
+          <div id="selected-game-stats">
+            <div class="stat-item">
+              <span class="stat-label">Platform:</span>
+              <span class="stat-value" id="stat-platform"></span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Sessions:</span>
+              <span class="stat-value" id="stat-sessions"></span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Total Time:</span>
+              <span class="stat-value" id="stat-hours"></span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">Last Played:</span>
+              <span class="stat-value" id="stat-last-played"></span>
+            </div>
+          </div>
+        </div>
+
+        <div id="chart-container">
+          <canvas id="session-chart"></canvas>
+          <button class="custom-button" id="view-toggle-button">Specific Date</button>
+          <div id="chart-navigation-bar" style="visibility: hidden;">
+            <button class="custom-button" id="prev-date-button">&#11164;</button>
+            <div id="date-display"></div>
+            <button class="custom-button" id="next-date-button">&#11166;</button>
+          </div>
+        </div>
+
+        <div id="no-selection-message">
+          <p>Select a game from the list to view its session history</p>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Hidden data tables for JavaScript parsing -->
+    <div style="display: none">
+      <div id="sessions-data">_SESSIONTABLE_</div>
+      <div id="games-data">_GAMESTABLE_</div>
+    </div>
+
+    <script src="./resources/js/common.js"></script>
+    <script src="./resources/js/SessionHistory.js"></script>
+
+    <!-- Navigation Bar -->
+    <div id="navigation-bar">
+      <button class="custom-button" id="summary-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/Summary.html';">Life Time Summary</button>
+      <button class="custom-button" id="gaming-time-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/GamingTime.html';">Time Spent Gaming</button>
+      <button class="custom-button" id="most-played-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/MostPlayed.html';">Most Played</button>
+      <button class="custom-button" id="all-games-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/AllGames.html';">All Games</button>
+      <button class="custom-button" id="idle-time-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/IdleTime.html';">Idle Time</button>
+      <button class="custom-button" id="session-history-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/SessionHistory.html';">Session History</button>
+      <button class="custom-button" id="games-per-platform-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/GamesPerPlatform.html';">Games Per Platform</button>
+      <button class="custom-button" id="pc-vs-emu-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/PCvsEmulation.html';">PC vs Emulation Time</button>
+    </div>
+  </body>
+</html>

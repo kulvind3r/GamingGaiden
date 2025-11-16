@@ -118,6 +118,10 @@ function MonitorGame($DetectedExe) {
     $updatedPlayTime = 0
     $updatedLastPlayDate = (Get-Date ([datetime]::UtcNow) -UFormat %s).Split('.').Get(0)
 
+    # Capture process start time for session history
+    $processStartTime = ($null = [System.Diagnostics.Process]::GetProcessesByName($DetectedExe)).StartTime | Sort-Object | Select-Object -First 1
+    $sessionStartTimeUnix = [int](Get-Date -Date $processStartTime -UFormat %s)
+
     if (IsExeEmulator $DetectedExe) {
         $emulatedGameDetails = findEmulatedGameDetails $DetectedExe
         if ($emulatedGameDetails -eq $false) {
@@ -167,6 +171,9 @@ function MonitorGame($DetectedExe) {
     }
 
     RecordPlaytimOnDate($currentPlayTime)
+
+    # Record individual session history
+    RecordSessionHistory -GameName $gameName -StartTime $sessionStartTimeUnix -Duration $currentPlayTime
 
     $databaseFileHashAfter = CalculateFileHash '.\GamingGaiden.db'
     Log "Database hash after: $databaseFileHashAfter"

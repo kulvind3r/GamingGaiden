@@ -233,12 +233,14 @@ try {
     $pcVsEmulationMenuItem = CreateMenuItem "PC vs Emulation Time"
     $summaryItem = CreateMenuItem "Life Time Summary"
     $gamesPerPlatformMenuItem = CreateMenuItem "Games Per Platform"
+    $sessionHistoryMenuItem = CreateMenuItem "Session History"
     $statsSubMenuItem.DropDownItems.Add($summaryItem)
     $statsSubMenuItem.DropDownItems.Add($gamingTimeMenuItem)
     $statsSubMenuItem.DropDownItems.Add($gamesPerPlatformMenuItem)
     $statsSubMenuItem.DropDownItems.Add($mostPlayedMenuItem)
     $statsSubMenuItem.DropDownItems.Add($idleTimeMenuItem)
     $statsSubMenuItem.DropDownItems.Add($pcVsEmulationMenuItem)
+    $statsSubMenuItem.DropDownItems.Add($sessionHistoryMenuItem)
 
     $appContextMenu = New-Object System.Windows.Forms.ContextMenuStrip
     $appContextMenu.Items.AddRange(@($allGamesMenuItem, $menuItemSeparator2, $statsSubMenuItem, $menuItemSeparator3, $settingsSubMenuItem, $menuItemSeparator4, $StartTrackerMenuItem, $StopTrackerMenuItem, $menuItemSeparator5, $helpMenuItem, $aboutMenuItem, $menuItemSeparator6, $exitMenuItem))
@@ -333,6 +335,13 @@ try {
             $pcVsEmulationCheckResult = RenderPCvsEmulation
             if ($pcVsEmulationCheckResult -ne $false) {
                 Invoke-Item ".\ui\PCvsEmulation.html"
+            }
+        })
+
+    $sessionHistoryMenuItem.Add_Click({
+            $sessionHistoryCheckResult = RenderSessionHistory
+            if ($sessionHistoryCheckResult -ne $false) {
+                Invoke-Item ".\ui\SessionHistory.html"
             }
         })
 

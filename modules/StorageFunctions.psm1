@@ -316,3 +316,26 @@ function RecordPlaytimOnDate($PlayTime) {
     Log "Updating playTime for today in database"
     RunDBQuery $recordPlayTimeQuery
 }
+
+function RecordSessionHistory($GameName, $StartTime, $Duration) {
+    Log "Recording session history for $GameName - Start: $StartTime, Duration: $Duration min"
+
+    $insertQuery = @"
+INSERT INTO session_history (game_name, start_time, duration)
+VALUES (@GameName, @StartTime, @Duration)
+"@
+
+    $parameters = @{
+        GameName = $GameName
+        StartTime = $StartTime
+        Duration = $Duration
+    }
+
+    try {
+        RunDBQuery $insertQuery $parameters
+        Log "Session history recorded successfully"
+    }
+    catch {
+        Log "Error recording session history: $($_.Exception.Message)"
+    }
+}

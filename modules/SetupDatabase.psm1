@@ -72,6 +72,17 @@
         }
         # End Migration 4
 
+        # Migration 5
+        $createSessionHistoryTableQuery = "CREATE TABLE IF NOT EXISTS session_history (
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            game_name TEXT NOT NULL,
+                            start_time INTEGER NOT NULL,
+                            duration INTEGER NOT NULL,
+                            FOREIGN KEY (game_name) REFERENCES games(name))"
+
+        Invoke-SqliteQuery -Query $createSessionHistoryTableQuery -SQLiteConnection $dbConnection
+        # End Migration 5
+
         $dbConnection.Close()
         $dbConnection.Dispose()
     }
