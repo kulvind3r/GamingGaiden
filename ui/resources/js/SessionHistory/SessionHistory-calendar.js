@@ -156,10 +156,8 @@ function updateDayGrid() {
   dayGrid.innerHTML = '';
 
   // Update selected month display
-  const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
-                      'July', 'August', 'September', 'October', 'November', 'December'];
   document.getElementById('selected-month-display').textContent =
-    `${monthNames[calendarMonth]} ${calendarYear}`;
+    `${MONTH_NAMES[calendarMonth]} ${calendarYear}`;
 
   // Get first day of month and number of days
   const firstDay = new Date(calendarYear, calendarMonth, 1).getDay();

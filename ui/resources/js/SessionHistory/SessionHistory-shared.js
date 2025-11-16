@@ -24,6 +24,10 @@ let availableMonths = new Set(); // Set of 'YYYY-MM' strings
 let minDate = null;
 let maxDate = null;
 
+// Shared constants
+const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June',
+                     'July', 'August', 'September', 'October', 'November', 'December'];
+
 // Register custom log2 scale for logarithmic Y-axis
 Log2Axis.id = "log2";
 Log2Axis.defaults = {};
@@ -96,6 +100,62 @@ function buildAvailableDates() {
     minDate = new Date(minTimestamp * 1000);
     maxDate = new Date(maxTimestamp * 1000);
   }
+}
+
+// ===== SHARED HELPER FUNCTIONS =====
+
+// Filter sessions by date string (YYYY-MM-DD) or month string (YYYY-MM)
+function filterSessionsByDateStr(dateStr, isMonth = false) {
+  return allSessions.filter(session => {
+    const sessionDate = new Date(session.start_time * 1000);
+    const sessionStr = isMonth
+      ? sessionDate.toISOString().substring(0, 7)
+      : sessionDate.toISOString().split('T')[0];
+    return sessionStr === dateStr;
+  });
+}
+
+// Group sessions by game and aggregate stats
+function aggregateGamesBySessions(sessions) {
+  const gameMap = {};
+
+  sessions.forEach(session => {
+    if (!gameMap[session.game_name]) {
+      const gameInfo = gamesList.find(g => g.game_name === session.game_name);
+      gameMap[session.game_name] = {
+        game_name: session.game_name,
+        platform: session.platform,
+        icon: gameInfo ? gameInfo.icon : '',
+        sessions: [],
+        sessionCount: 0,
+        totalDuration: 0,
+        lastPlayed: 0
+      };
+    }
+
+    gameMap[session.game_name].sessions.push(session);
+    gameMap[session.game_name].sessionCount++;
+    gameMap[session.game_name].totalDuration += session.duration;
+    gameMap[session.game_name].lastPlayed = Math.max(
+      gameMap[session.game_name].lastPlayed,
+      session.start_time
+    );
+  });
+
+  // Convert to array and sort by last played
+  return Object.values(gameMap).sort((a, b) => b.lastPlayed - a.lastPlayed);
+}
+
+// Update total games and hours stats in UI
+function updateStatsDisplay(games) {
+  const totalGames = games.length;
+  const totalMinutes = games.reduce((sum, game) => sum + game.totalDuration, 0);
+  const totalHours = (totalMinutes / 60).toFixed(1);
+
+  document.getElementById('total-games-count').textContent =
+    `${totalGames} game${totalGames !== 1 ? 's' : ''}`;
+  document.getElementById('total-time-played').textContent =
+    `${totalHours}h total`;
 }
 
 // ===== INITIALIZATION =====

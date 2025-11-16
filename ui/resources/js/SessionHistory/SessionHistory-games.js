@@ -390,7 +390,6 @@ function updateSpecificDateChart() {
 
   // Create hour buckets (0-23) and place sessions
   const hourlyData = [];
-  const sessionLabels = [];
   const sessionColors = [];
 
   dayData.sessions.forEach((session, index) => {
@@ -405,8 +404,6 @@ function updateSpecificDateChart() {
       label: timeLabel,
       session: session
     });
-
-    sessionLabels.push(timeLabel);
 
     // Alternate colors for visual distinction
     const colors = [
