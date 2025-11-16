@@ -59,12 +59,12 @@ function GetIdleTime($GameName) {
     return $recordedGameIdleTime
 }
 
-function findEmulatedGame($DetectedEmulatorExe, $EmulatorCommandLine) {
+function FindEmulatedGame($DetectedEmulatorExe, $EmulatorCommandLine) {
     Log "Finding emulated game for $DetectedEmulatorExe"
 
     $pattern = SQLEscapedMatchPattern $DetectedEmulatorExe.Trim()
     $getRomExtensionsQuery = "SELECT rom_extensions FROM emulated_platforms WHERE exe_name LIKE '%{0}%'" -f $pattern
-    $romExtensions = (RunDBQuery $getromExtensionsQuery).rom_extensions.Split(',')
+    $romExtensions = (RunDBQuery $getRomExtensionsQuery).rom_extensions.Split(',')
 
     $romName = $null
     foreach ($romExtension in $romExtensions) {
@@ -82,7 +82,7 @@ function findEmulatedGame($DetectedEmulatorExe, $EmulatorCommandLine) {
     return $romBasedGameName.Trim()
 }
 
-function findEmulatedGameCore($DetectedEmulatorExe, $EmulatorCommandLine) {
+function FindEmulatedGameCore($DetectedEmulatorExe, $EmulatorCommandLine) {
     Log "Finding core in use by $DetectedEmulatorExe"
 
     $coreName = $null
@@ -105,7 +105,7 @@ function findEmulatedGameCore($DetectedEmulatorExe, $EmulatorCommandLine) {
     return $coreName
 }
 
-function findEmulatedGamePlatform($DetectedEmulatorExe, $Core) {
+function FindEmulatedGamePlatform($DetectedEmulatorExe, $Core) {
     $getPlatformQuery = $null
 
     $exePattern = SQLEscapedMatchPattern $DetectedEmulatorExe.Trim()
@@ -125,12 +125,12 @@ function findEmulatedGamePlatform($DetectedEmulatorExe, $Core) {
     return $emulatedGamePlatform
 }
 
-function findEmulatedGameDetails($DetectedEmulatorExe) {
+function FindEmulatedGameDetails($DetectedEmulatorExe) {
     Log "Finding emulated game details for $DetectedEmulatorExe"
 
     $emulatorCommandLine = Get-CimInstance -ClassName Win32_Process -Filter "name = '$DetectedEmulatorExe.exe'" | Select-Object -ExpandProperty CommandLine
 
-    $emulatedGameRomBasedName = findEmulatedGame $DetectedEmulatorExe $emulatorCommandLine
+    $emulatedGameRomBasedName = FindEmulatedGame $DetectedEmulatorExe $emulatorCommandLine
     if ($emulatedGameRomBasedName.Length -eq 0) {
         Log "Error: Detected emulated game name of 0 char length. Returning"
         return $false
@@ -139,7 +139,7 @@ function findEmulatedGameDetails($DetectedEmulatorExe) {
     $coreName = $null
     if ($DetectedEmulatorExe.ToLower() -like "*retroarch*") {
         Log "Retroarch detected. Detecting core next"
-        $coreName = findEmulatedGameCore $DetectedEmulatorExe $emulatorCommandLine
+        $coreName = FindEmulatedGameCore $DetectedEmulatorExe $emulatorCommandLine
 
         if ($null -eq $coreName) {
             Log "Error: No core detected. Most likely platform is not registered. Please register platform."
@@ -147,7 +147,7 @@ function findEmulatedGameDetails($DetectedEmulatorExe) {
         }
     }
 
-    $emulatedGamePlatform = findEmulatedGamePlatform $DetectedEmulatorExe $coreName
+    $emulatedGamePlatform = FindEmulatedGamePlatform $DetectedEmulatorExe $coreName
 
     if ($emulatedGamePlatform -is [system.array]) {
         Log "Error: Multiple platforms detected. Returning."
@@ -188,7 +188,7 @@ function GetPlatformDetails($Platform) {
     $pattern = SQLEscapedMatchPattern $Platform.Trim()
     $getPlatformDetailsQuery = "SELECT * FROM emulated_platforms WHERE name LIKE '{0}'" -f $pattern
 
-    $platformDetails = RunDBQuery $getplatformDetailsQuery
+    $platformDetails = RunDBQuery $getPlatformDetailsQuery
 
     Log ("Found details: name: {0}, exe_name: {1}, core: {2}" -f $platformDetails.name, $platformDetails.exe_name, $platformDetails.core)
     return $platformDetails

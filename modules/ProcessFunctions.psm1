@@ -123,7 +123,7 @@ function MonitorGame($DetectedExe) {
     $sessionStartTimeUnix = [int](Get-Date -Date $processStartTime -UFormat %s)
 
     if (IsExeEmulator $DetectedExe) {
-        $emulatedGameDetails = findEmulatedGameDetails $DetectedExe
+        $emulatedGameDetails = FindEmulatedGameDetails $DetectedExe
         if ($emulatedGameDetails -eq $false) {
             Log "Error: Problem in fetching emulated game details. See earlier logs for more info"
             Log "Error: Cannot resume detection until $DetectedExe exits. No playtime will be recorded."
