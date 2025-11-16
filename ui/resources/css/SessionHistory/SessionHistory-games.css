@@ -1,34 +1,4 @@
-body {
-  font-family: monospace;
-  margin: 0;
-  padding: 20px;
-}
-
-h1 {
-  text-align: center;
-  margin-bottom: 20px;
-  color: #333;
-}
-
-/* Two-column layout */
-#main-container {
-  display: flex;
-  gap: 20px;
-  max-width: 1820px;
-  margin: 0 auto 30px auto; /* Bottom margin for nav bar */
-  height: calc(93vh - 130px);
-}
-
-/* LEFT COLUMN */
-#left-column {
-  flex: 0 0 350px;
-  display: flex;
-  flex-direction: column;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-}
+/* ===== GAMES VIEW - SEARCH & SORT ===== */
 
 #search-container {
   padding: 15px;
@@ -89,6 +59,8 @@ h1 {
   font-size: 10px;
   margin-left: 4px;
 }
+
+/* ===== GAMES VIEW - GAMES LIST ===== */
 
 #games-list-container {
   flex: 1;
@@ -155,16 +127,12 @@ h1 {
   color: #999;
 }
 
-/* RIGHT COLUMN */
-#right-column {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  background: white;
-  border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  padding: 20px;
+/* Games View Content - inherits from .left-content */
+#games-view-content {
+  /* No additional styling needed - inherits from .left-content */
 }
+
+/* ===== GAMES VIEW - SELECTED GAME HEADER ===== */
 
 #selected-game-header {
   margin-bottom: 20px;
@@ -179,6 +147,7 @@ h1 {
 }
 
 .selected-game-icon {
+  height: 120px;
   width: auto;
   filter: drop-shadow(4px 4px 2px gray);
   vertical-align: middle;
@@ -210,6 +179,8 @@ h1 {
   font-size: 16px;
   color: #666;
 }
+
+/* ===== GAMES VIEW - CHART CONTROLS ===== */
 
 /* Chart Navigation Bar */
 #chart-navigation-bar {
@@ -266,6 +237,8 @@ h1 {
   min-height: 0;
 }
 
+/* ===== GAMES VIEW - NO SELECTION MESSAGE ===== */
+
 #no-selection-message {
   display: flex;
   align-items: center;
@@ -273,81 +246,4 @@ h1 {
   height: 100%;
   color: #999;
   font-size: 16px;
-}
-
-/* Navigation Bar (consistent with other pages) */
-#navigation-bar {
-  display: flex;
-  width: 100%;
-  justify-content: space-evenly;
-}
-
-#navigation-bar button:first-child {
-  margin-left: 16px;
-}
-
-.custom-button {
-  align-items: center;
-  appearance: none;
-  background-color: #fcfcfd;
-  border-radius: 4px;
-  border-width: 0;
-  box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,
-    rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #d6d6e7 0 -3px 0 inset;
-  box-sizing: border-box;
-  color: #36395a;
-  cursor: pointer;
-  display: inline-flex;
-  font-family: monospace;
-  height: 38px;
-  justify-content: center;
-  line-height: 1;
-  list-style: none;
-  overflow: hidden;
-  padding-left: 16px;
-  padding-right: 16px;
-  position: relative;
-  text-align: left;
-  text-decoration: none;
-  transition: box-shadow 0.15s, transform 0.15s;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: manipulation;
-  white-space: nowrap;
-  will-change: box-shadow, transform;
-  font-size: 18px;
-}
-
-.custom-button:focus {
-  box-shadow: #d6d6e7 0 0 0 1.5px inset, rgba(45, 35, 66, 0.4) 0 2px 4px,
-    rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #d6d6e7 0 -3px 0 inset;
-}
-
-.custom-button:hover {
-  box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px,
-    rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #d6d6e7 0 -3px 0 inset;
-  transform: translateY(-2px);
-}
-
-.custom-button:active {
-  box-shadow: #d6d6e7 0 3px 7px inset;
-  transform: translateY(2px);
-}
-
-/* Scrollbar styling for games list */
-#games-list-container::-webkit-scrollbar {
-  width: 8px;
-}
-
-#games-list-container::-webkit-scrollbar-track {
-  background: #f1f1f1;
-}
-
-#games-list-container::-webkit-scrollbar-thumb {
-  background: #888;
-  border-radius: 4px;
-}
-
-#games-list-container::-webkit-scrollbar-thumb:hover {
-  background: #555;
 }

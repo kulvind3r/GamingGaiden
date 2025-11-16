@@ -1,60 +1,4 @@
-/*global Chart*/
-
-// Parse data from hidden tables
-let allSessions = [];
-let gamesList = [];
-let currentChart = null;
-let selectedGame = null;
-let currentView = 'alltime'; // 'alltime' or 'specificdate'
-let selectedDay = null;
-let selectedDayIndex = 0;
-let sessionsByDay = [];
-let currentSortField = 'lastPlayed'; // 'name' or 'lastPlayed'
-let currentSortDirection = 'desc'; // 'asc' or 'desc'
-
-// Register custom log2 scale for logarithmic Y-axis
-Log2Axis.id = "log2";
-Log2Axis.defaults = {};
-Chart.register(Log2Axis);
-
-// Parse sessions data
-function parseSessionsData() {
-  const table = document.getElementById("sessions-data").querySelector("table");
-  const rows = table.querySelectorAll("tbody tr");
-
-  allSessions = Array.from(rows).map((row) => {
-    return {
-      id: row.cells[0].textContent,
-      game_name: row.cells[1].textContent,
-      platform: row.cells[2].textContent,
-      session_date: row.cells[3].textContent,
-      start_time: parseInt(row.cells[4].textContent),
-      duration: parseFloat(row.cells[5].textContent)
-    };
-  });
-
-  // Remove header row
-  allSessions.shift();
-}
-
-// Parse games list data
-function parseGamesData() {
-  const table = document.getElementById("games-data").querySelector("table");
-  const rows = table.querySelectorAll("tbody tr");
-
-  gamesList = Array.from(rows).map((row) => {
-    return {
-      game_name: row.cells[0].textContent,
-      platform: row.cells[1].textContent,
-      icon: row.cells[2].textContent,
-      session_count: parseInt(row.cells[3].textContent),
-      total_duration: parseFloat(row.cells[4].textContent)
-    };
-  });
-
-  // Remove header row
-  gamesList.shift();
-}
+// ===== GAMES VIEW - LIST MANAGEMENT =====
 
 // Render games list in left column
 function renderGamesList(filteredGames = null) {
@@ -178,6 +122,8 @@ function applySortAndRender() {
   renderGamesList(sorted);
 }
 
+// ===== GAMES VIEW - GAME SELECTION & STATS =====
+
 // Select a game and update right column
 function selectGame(gameName) {
   selectedGame = gameName;
@@ -230,6 +176,8 @@ function selectGame(gameName) {
   updateChart();
 }
 
+// ===== GAMES VIEW - SESSION GROUPING =====
+
 // Group sessions by day and sum durations
 function groupSessionsByDay(sessions) {
   const grouped = {};
@@ -276,6 +224,8 @@ function updateDateDisplay() {
     dateDisplay.textContent = `${dayData.date} (${dayData.sessionCount} session${dayData.sessionCount > 1 ? 's' : ''})`;
   }
 }
+
+// ===== GAMES VIEW - CHART TOGGLES & NAVIGATION =====
 
 // Setup view toggle handler (single button)
 function setupViewToggle() {
@@ -344,6 +294,8 @@ function updateChart() {
     updateSpecificDateChart();
   }
 }
+
+// ===== GAMES VIEW - CHART RENDERING =====
 
 // Create/update the all-time bar chart (daily view)
 function updateAllTimeChart() {
@@ -542,22 +494,3 @@ function updateSpecificDateChart() {
     }
   });
 }
-
-// Initialize on page load (after jQuery table processing)
-$(document).ready(function() {
-  parseSessionsData();
-  parseGamesData();
-  setupSearch();
-  setupSorting();
-  updateSortButtons();
-  applySortAndRender(); // Initial render with default sort (last played, desc)
-  setupViewToggle();
-  setupDateNavigation();
-
-  // Auto-select first game if available
-  if (gamesList.length > 0) {
-    // Select first game from sorted list
-    const sorted = sortGamesList(gamesList, currentSortField, currentSortDirection);
-    selectGame(sorted[0].game_name);
-  }
-});

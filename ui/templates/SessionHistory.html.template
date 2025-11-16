@@ -3,7 +3,10 @@
   <head>
     <title>Gaming Gaiden - Session History</title>
     <link rel="icon" type="image/x-icon" href="./resources/images/favicon.ico" />
-    <link rel="stylesheet" href="./resources/css/SessionHistory.css" />
+    <link rel="stylesheet" href="./resources/css/SessionHistory/SessionHistory-shared.css" />
+    <link rel="stylesheet" href="./resources/css/SessionHistory/SessionHistory-games.css" />
+    <link rel="stylesheet" href="./resources/css/SessionHistory/SessionHistory-calendar.css" />
+    <link rel="stylesheet" href="./resources/css/SessionHistory/SessionHistory-cards.css" />
     <script src="./resources/js/jquery-3.7.1.min.js"></script>
     <script src="./resources/js/chart.js"></script>
     <script src="./resources/js/chartjs-plugin-datalabels-2.0.0.js"></script>
@@ -25,69 +28,144 @@
     <!-- Two-column layout container -->
     <div id="main-container">
 
-      <!-- LEFT COLUMN: Game List -->
+      <!-- LEFT COLUMN: View Buttons + Content -->
       <div id="left-column">
-        <div id="search-container">
-          <input
-            type="text"
-            id="game-search"
-            placeholder="Search games..."
-            autocomplete="off"
-          />
+        <!-- View Switcher Buttons -->
+        <div id="view-buttons">
+          <button class="view-btn active" data-view="games">Games</button>
+          <button class="view-btn" data-view="byday">By Day</button>
+          <button class="view-btn" data-view="bymonth">By Month</button>
         </div>
 
-        <div id="sort-container">
-          <button id="sort-by-name" class="sort-btn">
-            Name <span class="sort-arrow">▼</span>
-          </button>
-          <button id="sort-by-last-played" class="sort-btn active">
-            Last Played <span class="sort-arrow">▼</span>
-          </button>
+        <!-- Games View Content -->
+        <div id="games-view-content" class="left-content">
+          <div id="search-container">
+            <input
+              type="text"
+              id="game-search"
+              placeholder="Search games..."
+              autocomplete="off"
+            />
+          </div>
+
+          <div id="sort-container">
+            <button id="sort-by-name" class="sort-btn">
+              Name <span class="sort-arrow">▼</span>
+            </button>
+            <button id="sort-by-last-played" class="sort-btn active">
+              Last Played <span class="sort-arrow">▼</span>
+            </button>
+          </div>
+
+          <div id="games-list-container">
+            <ul id="games-list">
+              <!-- Populated by JavaScript -->
+            </ul>
+          </div>
         </div>
 
-        <div id="games-list-container">
-          <ul id="games-list">
-            <!-- Populated by JavaScript -->
-          </ul>
+        <!-- Calendar View Content (for By Day and By Month) -->
+        <div id="calendar-view-content" class="left-content" style="display: none;">
+          <div id="calendar-container">
+            <!-- Year Navigation -->
+            <div id="year-navigation">
+              <button class="custom-button calendar-nav-btn" id="prev-year-button">&#11164;</button>
+              <div id="year-display"></div>
+              <button class="custom-button calendar-nav-btn" id="next-year-button">&#11166;</button>
+            </div>
+
+            <!-- Month Grid -->
+            <div id="month-grid">
+              <button class="month-btn" data-month="0">Jan</button>
+              <button class="month-btn" data-month="1">Feb</button>
+              <button class="month-btn" data-month="2">Mar</button>
+              <button class="month-btn" data-month="3">Apr</button>
+              <button class="month-btn" data-month="4">May</button>
+              <button class="month-btn" data-month="5">Jun</button>
+              <button class="month-btn" data-month="6">Jul</button>
+              <button class="month-btn" data-month="7">Aug</button>
+              <button class="month-btn" data-month="8">Sep</button>
+              <button class="month-btn" data-month="9">Oct</button>
+              <button class="month-btn" data-month="10">Nov</button>
+              <button class="month-btn" data-month="11">Dec</button>
+            </div>
+
+            <!-- Day Grid (only shown in By Day view) -->
+            <div id="day-grid-container">
+              <div id="selected-month-display"></div>
+              <div id="day-headers">
+                <div class="day-header weekend">Su</div>
+                <div class="day-header">Mo</div>
+                <div class="day-header">Tu</div>
+                <div class="day-header">We</div>
+                <div class="day-header">Th</div>
+                <div class="day-header">Fr</div>
+                <div class="day-header weekend">Sa</div>
+              </div>
+              <div id="day-grid">
+                <!-- Populated by JavaScript -->
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
-      <!-- RIGHT COLUMN: Monthly Session Graph -->
+      <!-- RIGHT COLUMN: Chart or Game Cards -->
       <div id="right-column">
-        <div id="selected-game-header">
-          <h2 id="selected-game-name">Select a game to view sessions</h2>
-          <div id="selected-game-stats">
-            <div class="stat-item">
-              <span class="stat-label">Platform:</span>
-              <span class="stat-value" id="stat-platform"></span>
+        <!-- Games View: Chart -->
+        <div id="games-view-right" class="right-content">
+          <div id="selected-game-header">
+            <h2 id="selected-game-name">Select a game to view sessions</h2>
+            <div id="selected-game-stats">
+              <div class="stat-item">
+                <span class="stat-label">Platform:</span>
+                <span class="stat-value" id="stat-platform"></span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Sessions:</span>
+                <span class="stat-value" id="stat-sessions"></span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Total Time:</span>
+                <span class="stat-value" id="stat-hours"></span>
+              </div>
+              <div class="stat-item">
+                <span class="stat-label">Last Played:</span>
+                <span class="stat-value" id="stat-last-played"></span>
+              </div>
             </div>
-            <div class="stat-item">
-              <span class="stat-label">Sessions:</span>
-              <span class="stat-value" id="stat-sessions"></span>
+          </div>
+
+          <div id="chart-container">
+            <canvas id="session-chart"></canvas>
+            <button class="custom-button" id="view-toggle-button">Specific Date</button>
+            <div id="chart-navigation-bar" style="visibility: hidden;">
+              <button class="custom-button" id="prev-date-button">&#11164;</button>
+              <div id="date-display"></div>
+              <button class="custom-button" id="next-date-button">&#11166;</button>
             </div>
-            <div class="stat-item">
-              <span class="stat-label">Total Time:</span>
-              <span class="stat-value" id="stat-hours"></span>
-            </div>
-            <div class="stat-item">
-              <span class="stat-label">Last Played:</span>
-              <span class="stat-value" id="stat-last-played"></span>
-            </div>
+          </div>
+
+          <div id="no-selection-message">
+            <p>Select a game from the list to view its session history</p>
           </div>
         </div>
 
-        <div id="chart-container">
-          <canvas id="session-chart"></canvas>
-          <button class="custom-button" id="view-toggle-button">Specific Date</button>
-          <div id="chart-navigation-bar" style="visibility: hidden;">
-            <button class="custom-button" id="prev-date-button">&#11164;</button>
-            <div id="date-display"></div>
-            <button class="custom-button" id="next-date-button">&#11166;</button>
+        <!-- Day/Month View: Game Cards Grid -->
+        <div id="cards-view-right" class="right-content" style="display: none;">
+          <div id="cards-header">
+            <h2 id="selected-date-title">Games Played</h2>
+            <div id="date-stats">
+              <span id="total-games-count"></span>
+              <span id="total-time-played"></span>
+            </div>
           </div>
-        </div>
-
-        <div id="no-selection-message">
-          <p>Select a game from the list to view its session history</p>
+          <div id="game-cards-grid">
+            <!-- Populated by JavaScript -->
+          </div>
+          <div id="no-games-message" style="display: none;">
+            <p>No games played on this date</p>
+          </div>
         </div>
       </div>
 
@@ -100,7 +178,10 @@
     </div>
 
     <script src="./resources/js/common.js"></script>
-    <script src="./resources/js/SessionHistory.js"></script>
+    <script src="./resources/js/SessionHistory/SessionHistory-shared.js"></script>
+    <script src="./resources/js/SessionHistory/SessionHistory-games.js"></script>
+    <script src="./resources/js/SessionHistory/SessionHistory-calendar.js"></script>
+    <script src="./resources/js/SessionHistory/SessionHistory-cards.js"></script>
 
     <!-- Navigation Bar -->
     <div id="navigation-bar">

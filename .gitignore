@@ -2,6 +2,9 @@
 *.code-workspace
 *.db
 *.mp4
+*.sql
+*.bak
+.claude/*
 ui/resources/images/*
 !ui/resources/images/default.png
 !ui/resources/images/dropped.png
@@ -17,3 +20,4 @@ ui/*.html
 !ui/404.html
 backups/*
 build/*
+ignored_*
