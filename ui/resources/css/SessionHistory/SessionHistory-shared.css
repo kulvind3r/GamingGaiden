@@ -25,7 +25,7 @@ h1 {
 
 /* LEFT COLUMN */
 #left-column {
-  flex: 0 0 360px;
+  flex: 0 0 380px;
   display: flex;
   flex-direction: row; /* Changed to row to accommodate view buttons + content */
   background: white;
