@@ -22,7 +22,7 @@ $SourceFiles = ".\Install.bat", ".\modules", ".\icons", ".\ui"
 Copy-Item -Recurse -Path $SourceFiles -Destination .\build\GamingGaiden\ -Force
 
 # Add 404 pages for all ui pages for first time render
-$fileNames = @("Summary.html", "GamingTime.html", "MostPlayed.html", "AllGames.html", "IdleTime.html", "GamesPerPlatform.html", "PCvsEmulation.html")
+$fileNames = @("Summary.html", "GamingTime.html", "MostPlayed.html", "AllGames.html", "IdleTime.html", "GamesPerPlatform.html", "PCvsEmulation.html", "SessionHistory.html")
 foreach ($fileName in $fileNames) {
     Copy-Item -Path .\ui\404.html -Destination .\build\GamingGaiden\ui\$fileName -Force
 }
