@@ -59,8 +59,8 @@ try {
 
     if ((Test-Path "HKCU:\SOFTWARE\HWiNFO64") -And -Not (Test-Path "HKCU:\SOFTWARE\HWiNFO64\Sensors\Custom\Gaming Gaiden")) {
         Log "Integrating with HWiNFO"
-        New-Item -path 'HKCU:\SOFTWARE\HWiNFO64\Sensors\Custom\Gaming Gaiden' -Name 'Other0' -Force
-        New-Item -path 'HKCU:\SOFTWARE\HWiNFO64\Sensors\Custom\Gaming Gaiden' -Name 'Other1' -Force
+        New-Item -path 'HKCU:\SOFTWARE\HWiNFO64\Sensors\Custom\Gaming Gaiden' -Name 'Other0' -Force | Out-Null
+        New-Item -path 'HKCU:\SOFTWARE\HWiNFO64\Sensors\Custom\Gaming Gaiden' -Name 'Other1' -Force | Out-Null
         Set-Itemproperty -path $HWInfoSensorTracking -Name 'Name' -value 'Tracking'
         Set-Itemproperty -path $HWInfoSensorTracking -Name 'Unit' -value 'Yes/No'
         Set-Itemproperty -path $HWInfoSensorTracking -Name 'Value' -value 0

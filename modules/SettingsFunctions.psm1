@@ -143,11 +143,11 @@ function RenderEditGameForm($GamesList) {
 
             if ($iconBitmap.PixelFormat -eq "Format32bppArgb") {
                 $imagePath = "$env:TEMP\GmGdn-{0}-$iconFileName.png" -f $(Get-Random)
-                $iconBitmap.Save($imagePath, [System.Drawing.Imaging.ImageFormat]::Png)
+                $iconBitmap.Save($imagePath, [System.Drawing.Imaging.ImageFormat]::Png) | Out-Null
             }
             else {
                 $imagePath = "$env:TEMP\GmGdn-{0}-$iconFileName.jpg" -f $(Get-Random)
-                $iconBitmap.Save($imagePath, [System.Drawing.Imaging.ImageFormat]::Jpeg)
+                $iconBitmap.Save($imagePath, [System.Drawing.Imaging.ImageFormat]::Jpeg) | Out-Null
             }
 
             $iconBitmap.Dispose()
@@ -212,7 +212,7 @@ function RenderEditGameForm($GamesList) {
                 $gamesList = (RunDBQuery "SELECT name FROM games").name
                 if ($gamesList.Length -eq 0) {
                     ShowMessage "No more games in Database. Closing Edit Form." "OK" "Asterisk"
-                    $editGameForm.Close()
+                    $editGameForm.Close() | Out-Null
                     return
                 }
                 $listBox.Items.Clear(); $listBox.Items.AddRange($gamesList);
@@ -404,7 +404,7 @@ function RenderEditPlatformForm($PlatformsList) {
                 $platformsList = (RunDBQuery "SELECT name FROM emulated_platforms").name
                 if ($platformsList.Length -eq 0) {
                     ShowMessage "No more platforms in Database. Closing Edit Form." "OK" "Asterisk"
-                    $editPlatformForm.Close()
+                    $editPlatformForm.Close() | Out-Null
                     return
                 }
                 $listBox.Items.Clear(); $listBox.Items.AddRange($platformsList);
@@ -664,11 +664,11 @@ function RenderGamingPCForm($PCList) {
 
             if ($iconBitmap.PixelFormat -eq "Format32bppArgb") {
                 $imagePath = "$env:TEMP\GmGdn-{0}-$iconFileName.png" -f $(Get-Random)
-                $iconBitmap.Save($imagePath, [System.Drawing.Imaging.ImageFormat]::Png)
+                $iconBitmap.Save($imagePath, [System.Drawing.Imaging.ImageFormat]::Png) | Out-Null
             }
             else {
                 $imagePath = "$env:TEMP\GmGdn-{0}-$iconFileName.jpg" -f $(Get-Random)
-                $iconBitmap.Save($imagePath, [System.Drawing.Imaging.ImageFormat]::Jpeg)
+                $iconBitmap.Save($imagePath, [System.Drawing.Imaging.ImageFormat]::Jpeg) | Out-Null
             }
 
             $iconBitmap.Dispose()
@@ -712,7 +712,7 @@ function RenderGamingPCForm($PCList) {
                     $listBox.SelectedIndex = 0
                 }
                 else {
-                    $buttonReset.PerformClick()
+                    $buttonReset.PerformClick() | Out-Null
                 }
             }
         })
@@ -813,9 +813,9 @@ function RenderGamingPCForm($PCList) {
         }); 
     $gamingPCForm.Controls.Add($buttonReset)
 
-    $buttonAddNew = CreateButton "Add New" 170 190; $buttonAddNew.Add_Click({ 
+    $buttonAddNew = CreateButton "Add New" 170 190; $buttonAddNew.Add_Click({
             $checkboxNew.Checked = $true
-            $buttonUpdate.PerformClick()
+            $buttonUpdate.PerformClick() | Out-Null
         }); 
     $gamingPCForm.Controls.Add($buttonAddNew)
 
@@ -938,7 +938,7 @@ function RenderAddPlatformForm() {
 
             ShowMessage "Registered '$platformName' in Database." "OK" "Asterisk"
 
-            $addPlatformForm.Close()
+            $addPlatformForm.Close() | Out-Null
         })
     $addPlatformForm.Controls.Add($buttonOK)
 

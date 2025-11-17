@@ -96,11 +96,11 @@ function RenderGameList() {
             $iconBitmap = [System.Drawing.Bitmap]::FromStream($iconByteStream)
 
             if ($iconBitmap.PixelFormat -eq "Format32bppArgb") {
-                $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.png", [System.Drawing.Imaging.ImageFormat]::Png)
+                $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.png", [System.Drawing.Imaging.ImageFormat]::Png) | Out-Null
                 $iconUri = "<img src=`".\resources\images\$imageFileName.png`">"
             }
             else {
-                $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.jpg", [System.Drawing.Imaging.ImageFormat]::Jpeg)
+                $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.jpg", [System.Drawing.Imaging.ImageFormat]::Jpeg) | Out-Null
                 $iconUri = "<img src=`".\resources\images\$imageFileName.jpg`">"
             }
 
@@ -250,11 +250,11 @@ function RenderSummary() {
         $iconBitmap = [System.Drawing.Bitmap]::FromStream($iconByteStream)
 
         if ($iconBitmap.PixelFormat -eq "Format32bppArgb") {
-            $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.png", [System.Drawing.Imaging.ImageFormat]::Png)
+            $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.png", [System.Drawing.Imaging.ImageFormat]::Png) | Out-Null
             $pcIconUri = "<img src=`".\resources\images\$imageFileName.png`">"
         }
         else {
-            $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.jpg", [System.Drawing.Imaging.ImageFormat]::Jpeg)
+            $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.jpg", [System.Drawing.Imaging.ImageFormat]::Jpeg) | Out-Null
             $pcIconUri = "<img src=`".\resources\images\$imageFileName.jpg`">"
         }
 
@@ -587,11 +587,11 @@ ORDER BY sh.game_name ASC
                 $iconBitmap = [System.Drawing.Bitmap]::FromStream($iconByteStream)
 
                 if ($iconBitmap.PixelFormat -eq "Format32bppArgb") {
-                    $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.png", [System.Drawing.Imaging.ImageFormat]::Png)
+                    $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.png", [System.Drawing.Imaging.ImageFormat]::Png) | Out-Null
                     $game.icon = ".\resources\images\$imageFileName.png"
                 }
                 else {
-                    $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.jpg", [System.Drawing.Imaging.ImageFormat]::Jpeg)
+                    $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.jpg", [System.Drawing.Imaging.ImageFormat]::Jpeg) | Out-Null
                     $game.icon = ".\resources\images\$imageFileName.jpg"
                 }
 

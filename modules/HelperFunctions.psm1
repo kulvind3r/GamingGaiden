@@ -99,7 +99,7 @@ function BackupDatabase {
     Log "Backing up database"
 
     $workingDirectory = (Get-Location).Path
-    mkdir -f $workingDirectory\backups
+    mkdir -f $workingDirectory\backups | Out-Null
     $timestamp = Get-Date -f "dd-MM-yyyy-HH.mm.ss"
 
     Copy-Item ".\GamingGaiden.db" "$env:TEMP\"
