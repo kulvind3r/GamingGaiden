@@ -82,7 +82,7 @@ function OpenFileDialog($Title, $Filters, $DirectoryPath = [Environment]::GetFol
 }
 
 function ShowMessage($Msg, $Buttons, $Type) {
-    [System.Windows.Forms.MessageBox]::Show($Msg, 'Gaming Gaiden', $Buttons, $Type)
+    [System.Windows.Forms.MessageBox]::Show($Msg, 'Gaming Gaiden', $Buttons, $Type) | Out-Null
 }
 
 function CalculateFileHash ($FilePath) {
