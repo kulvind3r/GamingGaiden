@@ -86,8 +86,11 @@ function buildAvailableDates() {
 
   allSessions.forEach((session) => {
     const date = new Date(session.start_time * 1000);
-    const dateStr = date.toISOString().split('T')[0]; // YYYY-MM-DD
-    const monthStr = dateStr.substring(0, 7); // YYYY-MM
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
+    const dateStr = `${year}-${month}-${day}`; // YYYY-MM-DD
+    const monthStr = `${year}-${month}`; // YYYY-MM
 
     availableDates.add(dateStr);
     availableMonths.add(monthStr);
@@ -108,9 +111,12 @@ function buildAvailableDates() {
 function filterSessionsByDateStr(dateStr, isMonth = false) {
   return allSessions.filter(session => {
     const sessionDate = new Date(session.start_time * 1000);
+    const year = sessionDate.getFullYear();
+    const month = String(sessionDate.getMonth() + 1).padStart(2, '0');
+    const day = String(sessionDate.getDate()).padStart(2, '0');
     const sessionStr = isMonth
-      ? sessionDate.toISOString().substring(0, 7)
-      : sessionDate.toISOString().split('T')[0];
+      ? `${year}-${month}`
+      : `${year}-${month}-${day}`;
     return sessionStr === dateStr;
   });
 }
