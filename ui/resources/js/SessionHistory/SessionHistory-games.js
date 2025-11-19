@@ -189,6 +189,7 @@ function groupSessionsByDay(sessions) {
     if (!grouped[dayKey]) {
       grouped[dayKey] = {
         date: dayKey,
+        timestamp: session.start_time,
         totalDuration: 0,
         sessionCount: 0,
         sessions: []
@@ -200,9 +201,9 @@ function groupSessionsByDay(sessions) {
     grouped[dayKey].sessions.push(session);
   });
 
-  // Convert to array and sort by date
+  // Convert to array and sort by timestamp (ascending: oldest → newest)
   return Object.values(grouped).sort((a, b) =>
-    new Date(a.date) - new Date(b.date)
+    a.timestamp - b.timestamp
   );
 }
 
