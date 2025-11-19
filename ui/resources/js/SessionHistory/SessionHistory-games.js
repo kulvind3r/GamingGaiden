@@ -312,14 +312,13 @@ function updateAllTimeChart() {
 
   currentChart = new Chart(ctx, {
     type: "bar",
+    plugins: [ChartDataLabels],
     data: {
       labels: labels,
       datasets: [
         {
-          label: "Play Time (Hours)",
+          label: "Play Time",
           data: durations,
-          backgroundColor: "rgba(54, 162, 235, 0.6)",
-          borderColor: "rgba(54, 162, 235, 1)",
           borderWidth: 1
         }
       ]
@@ -336,16 +335,29 @@ function updateAllTimeChart() {
           }
         },
         legend: {
-          display: true,
-          position: "top"
+          display: false
         },
         tooltip: {
           callbacks: {
-            afterLabel: function (context) {
+            title: function (context) {
+              return context[0].label;
+            },
+            label: function (context) {
               const dayData = sessionsByDay[context.dataIndex];
               const sessionsText = dayData.sessionCount === 1 ? "session" : "sessions";
               return `${dayData.sessionCount} ${sessionsText}`;
             }
+          }
+        },
+        datalabels: {
+          anchor: "end",
+          align: "top",
+          formatter: function (value) {
+            return value != 0 ? value : "";
+          },
+          color: "#000000",
+          font: {
+            family: "monospace"
           }
         }
       },
@@ -374,6 +386,196 @@ function updateAllTimeChart() {
   });
 }
 
+// ===== DAY/NIGHT VISUALIZATION =====
+
+// Calculate approximate day/night hours based on timezone
+function getDayNightHours() {
+  const offset = new Date().getTimezoneOffset() / -60; // UTC offset in hours
+
+  // Approximate sunrise/sunset based on timezone
+  // Base assumption: UTC+0 has sunrise at 6:00, sunset at 18:00
+  // Adjust for timezone offset (simplified approximation)
+  const baseSunrise = 6;
+  const baseSunset = 18;
+
+  // Simple adjustment: shift hours slightly based on timezone
+  // Keep within reasonable bounds (4-8 for sunrise, 16-20 for sunset)
+  const dayStart = Math.max(4, Math.min(8, baseSunrise + Math.round(offset / 4)));
+  const dayEnd = Math.max(16, Math.min(20, baseSunset + Math.round(offset / 4)));
+
+  return { dayStart, dayEnd };
+}
+
+// Custom plugin for day/night background zones with gradients, stars, and symbols
+const dayNightZonesPlugin = {
+  id: 'dayNightZones',
+  beforeDraw: (chart, args, options) => {
+    if (!options.enabled) return;
+
+    const { ctx, chartArea, scales: { x } } = chart;
+    const { top, bottom, left, right } = chartArea;
+    const { dayStart, dayEnd } = options;
+    const height = bottom - top;
+
+    ctx.save();
+
+    // Color definitions
+    const nightBlue = 'rgba(10, 20, 100, 0.3)';  // More blue, darker, less gray
+    const dayYellow = 'rgba(255, 240, 200, 0.12)';  // Warm yellow
+    const transitionOrange = 'rgba(255, 140, 80, 0.2)';
+
+    // Transition boundaries (2 hour transitions for longer gradient)
+    const dawnStart = dayStart - 1;
+    const dawnEnd = dayStart + 1;
+    const duskStart = dayEnd - 1;
+    const duskEnd = dayEnd + 1;
+
+    // === DRAW ZONES ===
+
+    // 1. Early night zone (chart start to dawn start)
+    if (dawnStart > 0) {
+      const xStart = left;  // Start from chart edge, not hour 0
+      const xEnd = x.getPixelForValue(dawnStart);
+      ctx.fillStyle = nightBlue;
+      ctx.fillRect(xStart, top, xEnd - xStart, height);
+    }
+
+    // 2. Dawn transition (gradient from night to day)
+    const dawnXStart = x.getPixelForValue(Math.max(0, dawnStart));
+    const dawnXEnd = x.getPixelForValue(dawnEnd);
+    const dawnGradient = ctx.createLinearGradient(dawnXStart, 0, dawnXEnd, 0);
+    dawnGradient.addColorStop(0, nightBlue);
+    dawnGradient.addColorStop(0.5, transitionOrange);
+    dawnGradient.addColorStop(1, dayYellow);
+    ctx.fillStyle = dawnGradient;
+    ctx.fillRect(dawnXStart, top, dawnXEnd - dawnXStart, height);
+
+    // 3. Day zone (after dawn to before dusk)
+    const dayXStart = x.getPixelForValue(dawnEnd);
+    const dayXEnd = x.getPixelForValue(duskStart);
+    ctx.fillStyle = dayYellow;
+    ctx.fillRect(dayXStart, top, dayXEnd - dayXStart, height);
+
+    // 4. Dusk transition (gradient from day to night)
+    const duskXStart = x.getPixelForValue(duskStart);
+    const duskXEnd = x.getPixelForValue(Math.min(24, duskEnd));
+    const duskGradient = ctx.createLinearGradient(duskXStart, 0, duskXEnd, 0);
+    duskGradient.addColorStop(0, dayYellow);
+    duskGradient.addColorStop(0.5, transitionOrange);
+    duskGradient.addColorStop(1, nightBlue);
+    ctx.fillStyle = duskGradient;
+    ctx.fillRect(duskXStart, top, duskXEnd - duskXStart, height);
+
+    // 5. Late night zone (after dusk to chart end)
+    if (duskEnd < 24) {
+      const xStart = x.getPixelForValue(duskEnd);
+      const xEnd = right;  // Extend to chart edge, not just hour 24
+      ctx.fillStyle = nightBlue;
+      ctx.fillRect(xStart, top, xEnd - xStart, height);
+    }
+
+    // === DRAW STARS in night zones ===
+    // Generate consistent star positions using pseudo-random based on chart dimensions
+    const starCount = 20;
+    const seed = 12345; // Fixed seed for consistency
+    const starSize = Math.min(12, height * 0.04); // Scale with chart height
+
+    // Simple pseudo-random number generator
+    let random = seed;
+    const pseudoRandom = () => {
+      random = (random * 9301 + 49297) % 233280;
+      return random / 233280;
+    };
+
+    ctx.font = `${starSize}px Arial`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    // Avoid top 10% and bottom 10% of chart area
+    const safeTop = top + height * 0.1;
+    const safeHeight = height * 0.8;
+
+    // Early night zone stars - more evenly distributed
+    if (dawnStart > 0) {
+      const nightXStart = left;
+      const nightXEnd = x.getPixelForValue(dawnStart);
+      const nightWidth = nightXEnd - nightXStart;
+      const starsInZone = Math.ceil(starCount / 2);
+
+      // Create grid-based distribution with randomness
+      const cols = Math.ceil(Math.sqrt(starsInZone * (nightWidth / safeHeight)));
+      const rows = Math.ceil(starsInZone / cols);
+
+      for (let i = 0; i < starsInZone; i++) {
+        const col = i % cols;
+        const row = Math.floor(i / cols);
+        const cellWidth = nightWidth / cols;
+        const cellHeight = safeHeight / rows;
+
+        // Add randomness within each cell for natural look
+        const starX = nightXStart + col * cellWidth + pseudoRandom() * cellWidth;
+        const starY = safeTop + row * cellHeight + pseudoRandom() * cellHeight;
+        ctx.fillText('⭐', starX, starY);
+      }
+    }
+
+    // Late night zone stars - more evenly distributed
+    if (duskEnd < 24) {
+      const nightXStart = x.getPixelForValue(duskEnd);
+      const nightXEnd = right;
+      const nightWidth = nightXEnd - nightXStart;
+      const starsInZone = Math.floor(starCount / 2);
+
+      // Create grid-based distribution with randomness
+      const cols = Math.ceil(Math.sqrt(starsInZone * (nightWidth / safeHeight)));
+      const rows = Math.ceil(starsInZone / cols);
+
+      for (let i = 0; i < starsInZone; i++) {
+        const col = i % cols;
+        const row = Math.floor(i / cols);
+        const cellWidth = nightWidth / cols;
+        const cellHeight = safeHeight / rows;
+
+        // Add randomness within each cell for natural look
+        const starX = nightXStart + col * cellWidth + pseudoRandom() * cellWidth;
+        const starY = safeTop + row * cellHeight + pseudoRandom() * cellHeight;
+        ctx.fillText('⭐', starX, starY);
+      }
+    }
+
+    // === DRAW SUN AND MOON SYMBOLS ===
+    const symbolSize = Math.min(32, height * 0.15); // Scale with chart height
+    const symbolYPosition = top + height * 0.15; // Position at 15% from top
+    ctx.font = `${symbolSize}px Arial`;
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'top';
+
+    // Calculate center of day hours and 2nd hour of night
+    const dayCenter = (dawnEnd + duskStart) / 2;
+
+    // Calculate 2nd hour of night (early night zone)
+    // Night goes from 0 to dawnStart, so 2nd hour is at hour 2 (if dawnStart > 2)
+    const nightHour2 = Math.min(2, dawnStart - 1);
+
+    // Moon at 2nd hour of night
+    const moonX = x.getPixelForValue(nightHour2);
+    if (moonX >= left && moonX <= right) {
+      ctx.fillText('🌙', moonX, symbolYPosition);
+    }
+
+    // Sun at center of day hours
+    const sunX = x.getPixelForValue(dayCenter);
+    if (sunX >= left && sunX <= right) {
+      ctx.fillText('☀️', sunX, symbolYPosition);
+    }
+
+    ctx.restore();
+  }
+};
+
+// Register the plugin
+Chart.register(dayNightZonesPlugin);
+
 // Create/update the specific date bar chart (hourly view)
 function updateSpecificDateChart() {
   const ctx = document.getElementById("session-chart").getContext("2d");
@@ -389,11 +591,13 @@ function updateSpecificDateChart() {
     return;
   }
 
+  // Get day/night hours based on timezone
+  const { dayStart, dayEnd } = getDayNightHours();
+
   // Create hour buckets (0-23) and place sessions
   const hourlyData = [];
-  const sessionColors = [];
 
-  dayData.sessions.forEach((session, index) => {
+  dayData.sessions.forEach((session) => {
     const startDate = new Date(session.start_time * 1000);
     const hour = startDate.getHours();
     const minute = startDate.getMinutes();
@@ -405,27 +609,16 @@ function updateSpecificDateChart() {
       label: timeLabel,
       session: session
     });
-
-    // Alternate colors for visual distinction
-    const colors = [
-      'rgba(54, 162, 235, 0.6)',
-      'rgba(75, 192, 192, 0.6)',
-      'rgba(153, 102, 255, 0.6)',
-      'rgba(255, 159, 64, 0.6)',
-      'rgba(255, 99, 132, 0.6)'
-    ];
-    sessionColors.push(colors[index % colors.length]);
   });
 
   currentChart = new Chart(ctx, {
     type: "bar",
+    plugins: [ChartDataLabels],
     data: {
       datasets: [
         {
           label: "Session Duration (Hours)",
           data: hourlyData,
-          backgroundColor: sessionColors,
-          borderColor: sessionColors.map(c => c.replace('0.6', '1')),
           borderWidth: 1,
           barPercentage: 0.5
         }
@@ -435,6 +628,12 @@ function updateSpecificDateChart() {
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
+        dayNightZones: {
+          enabled: true,
+          dayStart: dayStart,
+          dayEnd: dayEnd,
+          nightColor: 'rgba(100, 120, 140, 0.08)'
+        },
         title: {
           display: true,
           text: `Hourly Sessions for ${selectedGame} on ${selectedDay}`,
@@ -443,19 +642,20 @@ function updateSpecificDateChart() {
           }
         },
         legend: {
-          display: true,
-          position: "top"
+          display: false
         },
         tooltip: {
-          callbacks: {
-            title: function (context) {
-              const dataPoint = context[0].raw;
-              return `Started at ${dataPoint.label}`;
-            },
-            label: function (context) {
-              const hours = context.raw.y;
-              return `Duration: ${hours} Hr`;
-            }
+          enabled: false
+        },
+        datalabels: {
+          anchor: "end",
+          align: "top",
+          formatter: function (value) {
+            return value.y != 0 ? value.y : "";
+          },
+          color: "#000000",
+          font: {
+            family: "monospace"
           }
         }
       },
@@ -486,6 +686,9 @@ function updateSpecificDateChart() {
             callback: function (value) {
               return value.toString();
             }
+          },
+          grid: {
+            offset: false
           }
         }
       }
