@@ -594,19 +594,22 @@ function updateSpecificDateChart() {
   // Get day/night hours based on timezone
   const { dayStart, dayEnd } = getDayNightHours();
 
-  // Create hour buckets (0-23) and place sessions
-  const hourlyData = [];
+  // Sort sessions chronologically and create horizontal timeline bars
+  const sortedSessions = [...dayData.sessions].sort((a, b) => a.start_time - b.start_time);
+  const timelineData = [];
 
-  dayData.sessions.forEach((session) => {
+  sortedSessions.forEach((session, index) => {
     const startDate = new Date(session.start_time * 1000);
     const hour = startDate.getHours();
     const minute = startDate.getMinutes();
-    const timeLabel = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+    const startTime = hour + (minute / 60); // Decimal hours (e.g., 14.5 for 14:30)
+    const durationHours = session.duration / 60; // Convert minutes to hours
+    const endTime = startTime + durationHours;
 
-    hourlyData.push({
-      x: hour + (minute / 60), // Position on hour axis (e.g., 14.5 for 14:30)
-      y: parseFloat((session.duration / 60).toFixed(2)), // Duration in hours (2 decimal places)
-      label: timeLabel,
+    timelineData.push({
+      y: "Timeline", // All sessions on same row
+      x: [startTime, endTime], // Floating bar: [start, end]
+      duration: parseFloat(durationHours.toFixed(2)), // For data label
       session: session
     });
   });
@@ -618,13 +621,15 @@ function updateSpecificDateChart() {
       datasets: [
         {
           label: "Session Duration (Hours)",
-          data: hourlyData,
-          borderWidth: 1,
-          barPercentage: 0.5
+          data: timelineData,
+          borderWidth: 2,
+          borderSkipped: false,
+          barThickness: 75
         }
       ]
     },
     options: {
+      indexAxis: 'y', // Horizontal bars
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
@@ -648,10 +653,11 @@ function updateSpecificDateChart() {
           enabled: false
         },
         datalabels: {
-          anchor: "end",
+          anchor: "start",
           align: "top",
+          offset: 45,
           formatter: function (value) {
-            return value.y != 0 ? value.y : "";
+            return value.duration != 0 ? value.duration + "h" : "";
           },
           color: "#000000",
           font: {
@@ -661,16 +667,17 @@ function updateSpecificDateChart() {
       },
       scales: {
         y: {
-          beginAtZero: true,
-          type: "log2",
+          type: 'category',
           title: {
-            display: true,
-            text: "Duration (Hours)"
+            display: false,
+            text: "Timeline"
           },
           ticks: {
-            callback: function (value) {
-              return value.toFixed(1) + "h";
-            }
+            autoSkip: false,
+            align: 'start'
+          },
+          grid: {
+            display: false
           }
         },
         x: {
