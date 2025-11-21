@@ -51,6 +51,7 @@ function updateChart(gameCount, labelText, stepSize = 1) {
         y: {
           ticks: {
             autoSkip: false,
+            color: '#000'
           },
         },
         // Alignment Hack: Add an identical y scale on right side, to center the graph on page.
@@ -68,6 +69,7 @@ function updateChart(gameCount, labelText, stepSize = 1) {
           type: "log2",
           ticks: {
             stepSize: stepSize,
+            color: '#000'
           },
           title: chartTitleConfig(labelText, 15),
         },

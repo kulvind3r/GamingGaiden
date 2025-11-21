@@ -86,11 +86,17 @@ function updateSummayChart() {
       scales: {
         y: {
           type: "log2",
-          title: chartTitleConfig("PlayTime (Hours)")
+          title: chartTitleConfig("PlayTime (Hours)"),
+          ticks: {
+            color: '#000'
+          }
         },
         x: {
           type: "log2",
-          title: chartTitleConfig("Game Sessions", 15)
+          title: chartTitleConfig("Game Sessions", 15),
+          ticks: {
+            color: '#000'
+          }
         },
       },
       elements: {

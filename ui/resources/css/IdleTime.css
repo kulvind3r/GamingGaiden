@@ -17,7 +17,6 @@ body {
   display: flex;
   margin-top: 20px;
   margin-bottom: 20px;
-  width: 300px;
   justify-content: space-around;
   font-family: monospace;
   font-size: 18px;

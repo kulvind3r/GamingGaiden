@@ -145,6 +145,9 @@ function updateChart(
           suggestedMax: ylimit,
           type: "log2",
           title: chartTitleConfig("PlayTime (Hours)", 15),
+          ticks: {
+            color: '#000'
+          }
         },
         // Alignment Hack: Add an identical y scale on right side, to center the graph on page.
         // Then hide the right side scale by setting label color identical to background.
@@ -171,6 +174,7 @@ function updateChart(
               if (day === 0 || day === 6) {
                 return "red";
               }
+              return "#000";
             },
           },
         },
