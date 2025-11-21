@@ -41,6 +41,7 @@ function chartTitleConfig(title, padding = 0, color = "#000") {
     font: {
       size: 18,
       family: "monospace",
+      weight: "normal"
     },
   };
 }

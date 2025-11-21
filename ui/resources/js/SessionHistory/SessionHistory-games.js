@@ -327,13 +327,7 @@ function updateAllTimeChart() {
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
-        title: {
-          display: true,
-          text: `Session History for ${selectedGame}`,
-          font: {
-            size: 16
-          }
-        },
+        title: chartTitleConfig(`Session History for ${selectedGame}`, 15),
         legend: {
           display: false
         },
@@ -347,6 +341,12 @@ function updateAllTimeChart() {
               const sessionsText = dayData.sessionCount === 1 ? "session" : "sessions";
               return `${dayData.sessionCount} ${sessionsText}`;
             }
+          },
+          bodyFont: {
+            family: "monospace"
+          },
+          titleFont: {
+            family: "monospace"
           }
         },
         datalabels: {
@@ -357,6 +357,7 @@ function updateAllTimeChart() {
           },
           color: "#000000",
           font: {
+            size: 13,
             family: "monospace"
           }
         }
@@ -365,20 +366,18 @@ function updateAllTimeChart() {
         y: {
           beginAtZero: true,
           type: "log2",
-          title: {
-            display: true,
-            text: "Hours Played"
-          },
+          title: chartTitleConfig("Hours Played", 15),
           ticks: {
             callback: function (value) {
               return value.toFixed(1) + "h";
-            }
+            },
+            color: '#000'
           }
         },
         x: {
-          title: {
-            display: true,
-            text: "Date"
+          title: chartTitleConfig("Date", 15),
+          ticks: {
+            color: '#000'
           }
         }
       }
@@ -487,7 +486,7 @@ const dayNightZonesPlugin = {
       return random / 233280;
     };
 
-    ctx.font = `${starSize}px Arial`;
+    ctx.font = `${starSize}px monospace`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
 
@@ -546,7 +545,7 @@ const dayNightZonesPlugin = {
     // === DRAW SUN AND MOON SYMBOLS ===
     const symbolSize = Math.min(32, height * 0.15); // Scale with chart height
     const symbolYPosition = top + height * 0.15; // Position at 15% from top
-    ctx.font = `${symbolSize}px Arial`;
+    ctx.font = `${symbolSize}px monospace`;
     ctx.textAlign = 'center';
     ctx.textBaseline = 'top';
 
@@ -639,18 +638,18 @@ function updateSpecificDateChart() {
           dayEnd: dayEnd,
           nightColor: 'rgba(100, 120, 140, 0.08)'
         },
-        title: {
-          display: true,
-          text: `Hourly Sessions for ${selectedGame} on ${selectedDay}`,
-          font: {
-            size: 16
-          }
-        },
+        title: chartTitleConfig(`Hourly Sessions for ${selectedGame} on ${selectedDay}`, 15),
         legend: {
           display: false
         },
         tooltip: {
-          enabled: false
+          enabled: false,
+          bodyFont: {
+            family: "monospace"
+          },
+          titleFont: {
+            family: "monospace"
+          }
         },
         datalabels: {
           anchor: "start",
@@ -661,6 +660,7 @@ function updateSpecificDateChart() {
           },
           color: "#000000",
           font: {
+            size: 13,
             family: "monospace"
           }
         }
@@ -670,11 +670,20 @@ function updateSpecificDateChart() {
           type: 'category',
           title: {
             display: false,
-            text: "Timeline"
+            text: "Timeline",
+            font: {
+              size: 18,
+              family: "monospace"
+            }
           },
           ticks: {
             autoSkip: false,
-            align: 'start'
+            align: 'start',
+            font: {
+              size: 18,
+              family: 'monospace'
+            },
+            color: '#000'
           },
           grid: {
             display: false
@@ -684,15 +693,13 @@ function updateSpecificDateChart() {
           type: 'linear',
           min: 0,
           max: 24,
-          title: {
-            display: true,
-            text: "Hour of Day"
-          },
+          title: chartTitleConfig("Hour of Day", 15),
           ticks: {
             stepSize: 1,
             callback: function (value) {
               return value.toString();
-            }
+            },
+            color: '#000'
           },
           grid: {
             offset: false
