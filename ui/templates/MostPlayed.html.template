@@ -27,6 +27,7 @@
 
   <body>
     <h1>Your Most Played Games</h1>
+    <div id="main-panel">
     <div id="chart-container">
       <canvas id="game-vs-time-chart"></canvas>
     </div>
@@ -34,6 +35,7 @@
       <div>Top</div>
       <select id="game-count"></select>
       <div>Games</div>
+    </div>
     </div>
     <div style="display: none">_GAMESPLAYTIMETABLE_</div>
     <script src="./resources/js/common.js"></script>

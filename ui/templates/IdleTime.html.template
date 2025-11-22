@@ -27,10 +27,12 @@
 
   <body>
     <h1>Time you left games Idle</h1>
+    <div id="main-panel">
     <div id="chart-container">
       <canvas id="game-vs-time-chart"></canvas>
     </div>
     <div id="total-label">Total Time Wasted: _TOTALIDLETIME_</div>
+    </div>
     <div style="display: none">_GAMESIDLETIMETABLE_</div>
     <script src="./resources/js/common.js"></script>
     <script src="./resources/js/GameVsTime.js"></script>

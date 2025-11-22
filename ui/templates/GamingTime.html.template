@@ -27,6 +27,7 @@
 
   <body>
     <h1>Time You Spent Playing Games</h1>
+    <div id="main-panel">
     <div id="chart-container">
       <canvas id="gaming-time-chart"></canvas>
     </div>
@@ -37,6 +38,7 @@
     </div>
     <div id="warn-msg"></div>
     <button class="custom-button" id="period-button">Yearly Summary</button>
+    </div>
     <div style="display: none">_DAILYPLAYTIMETABLE_</div>
     <script src="./resources/js/common.js"></script>
     <script src="./resources/js/GamingTime.js"></script>

@@ -27,8 +27,10 @@
 
   <body>
     <h1>PC Vs Emulation PlayTime</h1>
+    <div id="main-panel">
     <div id="chart-container">
       <canvas id="pc-vs-emulation-chart"></canvas>
+    </div>
     </div>
     <div style="display: none">_PCVSEMULATIONTABLE_</div>
     <script src="./resources/js/common.js"></script>

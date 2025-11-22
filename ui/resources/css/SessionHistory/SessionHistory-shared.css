@@ -16,7 +16,7 @@ h1 {
 #main-container {
   display: flex;
   gap: 20px;
-  max-width: 1820px;
+  max-width: 1840px;
   margin: 0 auto 30px auto; /* Bottom margin for nav bar */
   height: calc(93vh - 130px);
 }
