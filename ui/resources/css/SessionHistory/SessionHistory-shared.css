@@ -1,24 +1,33 @@
 /* ===== BASE STYLES ===== */
 
 body {
+  display: flex;
+  flex-direction: column;
   font-family: monospace;
+  background-color: #f5f5f5;
   margin: 0;
   padding: 20px;
+  height: 100vh;
+  overflow: hidden;
+  box-sizing: border-box;
 }
 
 h1 {
   text-align: center;
   margin-bottom: 20px;
   color: #333;
+  flex-shrink: 0;
 }
 
 /* Two-column layout */
 #main-container {
   display: flex;
   gap: 20px;
+  width: 100%;
   max-width: 1840px;
   margin: 0 auto 30px auto; /* Bottom margin for nav bar */
-  height: calc(93vh - 130px);
+  flex: 1;
+  min-height: 0;
 }
 
 /* ===== LEFT/RIGHT COLUMN STRUCTURE ===== */
@@ -30,8 +39,10 @@ h1 {
   flex-direction: row; /* Changed to row to accommodate view buttons + content */
   background: white;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,
+    rgba(45, 35, 66, 0.3) 0 7px 20px -3px;
   overflow: hidden;
+  align-self: stretch;
 }
 
 /* RIGHT COLUMN */
@@ -41,8 +52,10 @@ h1 {
   flex-direction: column;
   background: white;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,
+    rgba(45, 35, 66, 0.3) 0 7px 20px -3px;
   padding: 20px;
+  align-self: stretch;
 }
 
 /* ===== VIEW SWITCHER BUTTONS ===== */
@@ -129,6 +142,7 @@ h1 {
   display: flex;
   width: 100%;
   justify-content: space-evenly;
+  flex-shrink: 0;
 }
 
 #navigation-bar button:first-child {

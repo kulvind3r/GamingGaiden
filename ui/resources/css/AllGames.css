@@ -1,13 +1,74 @@
 body {
-  font-family: monospace;
-  font-size: 14px;
-  background-color: white;
   display: flex;
   flex-direction: column;
+  font-family: monospace;
+  background-color: #f5f5f5;
+  margin: 0;
+  padding: 20px;
+  min-height: 100vh;
+  overflow: auto;
+  box-sizing: border-box;
+}
+
+#header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 1840px;
+  margin: 0 auto 20px auto;
+  gap: 20px;
+  flex-shrink: 0;
+}
+
+#header-container h1 {
+  flex: 1;
+  text-align: center;
+  margin: 0;
+  color: #333;
+}
+
+#TotalPlaytime-placeholder {
+  flex: 0 1 auto;
+  min-width: 150px;
+}
+
+#filter-placeholder {
+  flex: 0 1 auto;
+  min-width: 200px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+  flex-shrink: 0;
+}
+
+#main-panel {
+  width: 100%;
+  background: white;
+  border-radius: 8px;
+  box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,
+    rgba(45, 35, 66, 0.3) 0 7px 20px -3px;
+  padding: 30px;
+  margin: 0 auto 30px auto;
+  max-width: 1840px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+#games-table-container {
+  width: 100%;
+  align-self: stretch;
 }
 
 table {
-  width: 97.5% !important;
+  width: 100% !important;
   border: 1px solid #333;
 }
 
@@ -84,14 +145,12 @@ td:nth-child(6) img {
 
 /* Override default data table css styles */
 #DataTables_Table_0_filter {
-  float: right;
-  margin-top: 10px;
-  margin-bottom: 20px;
-  margin-right: 1.3%;
+  margin: 0;
+  text-align: right;
 }
 
 #DataTables_Table_0_info {
-  margin-left: 24px;
+  margin-left: 0;
 }
 
 #DataTables_Table_0_paginate .disabled {
@@ -99,7 +158,7 @@ td:nth-child(6) img {
 }
 
 #DataTables_Table_0_paginate {
-  margin-right: 24px;
+  margin-right: 0;
 }
 
 /* Playtime relative bar fill */
@@ -115,29 +174,16 @@ td:nth-child(6) img {
 
 /* Other elements */
 #TotalPlaytime {
-  float: left;
   white-space: pre;
-  margin-top: 10px;
-  margin-left: 1.3%;
-  margin-bottom: 9px;
-}
-
-#AllGames {
-  position: absolute;
-  margin-top: 5px;
-  left: 50%;
-  transform: translateX(-50%);
-  font-weight: bold;
-  font-size: 20px;
-  text-transform: uppercase;
-  text-align: center;
-  white-space: pre;
+  margin: 0;
+  text-align: left;
 }
 
 #button-container {
   display: flex;
   justify-content: center;
-  margin-top: -1.25%;
+  width: 100%;
+  margin-top: 10px;
 }
 
 .custom-button {
@@ -190,8 +236,9 @@ td:nth-child(6) img {
 
 #navigation-bar {
   display: flex;
-  margin-top: 1.5%;
+  width: 100%;
   justify-content: space-evenly;
+  flex-shrink: 0;
 }
 
 #navigation-bar button:first-child {

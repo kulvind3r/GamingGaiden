@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" style="background : #ffffff">
+<html xmlns="http://www.w3.org/1999/xhtml" style="background: #f5f5f5">
   <head>
     <title>Gaming Gaiden</title>
     <link
@@ -28,7 +28,8 @@
 
   <body>
     <h1>Life Time Summary</h1>
-    <div id="summary">_SUMMARYSTATEMENT_</div>
+    <div id="main-panel">
+      <div id="summary">_SUMMARYSTATEMENT_</div>
     <div id="top-row">
       <div id="summary-chart-legend">
         <div id="legend">
@@ -78,6 +79,7 @@
           <canvas id="year-vs-playtime-chart"></canvas>
         </div>
       </div>
+    </div>
     </div>
     <div id="summary-table" style="display: none">_SUMMARYTABLE_</div>
     <div id="pc-table" style="display: none">_PCTABLE_</div>

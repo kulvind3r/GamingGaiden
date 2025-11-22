@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" style="background : #ffffff">
+<html xmlns="http://www.w3.org/1999/xhtml" style="background: #f5f5f5">
   <head>
     <title>Gaming Gaiden</title>
     <link
@@ -66,31 +66,30 @@
           ],
           ordering: true,
           paging: "numbers",
-          pageLength: 9,
+          pageLength: 8,
           lengthChange: false,
           searching: true,
         });
 
-        $("#DataTables_Table_0_wrapper")[0].insertAdjacentHTML(
-          "afterbegin",
-          '<div id="AllGames">All Games\n_TOTALGAMECOUNT_</div>'
-        );
-        $("#DataTables_Table_0_wrapper")[0].insertAdjacentHTML(
-          "afterbegin",
+        $("#TotalPlaytime-placeholder")[0].insertAdjacentHTML(
+          "beforeend",
           '<div id="TotalPlaytime">Total Playtime\n_TOTALPLAYTIME_</div>'
         );
+
+        var filterElement = $("#DataTables_Table_0_filter").detach();
+        $("#filter-placeholder").append(filterElement);
 
         document
           .getElementById("Toggle-Pagination")
           .addEventListener("click", () => {
-            if ($("table").DataTable().page.len() == 9) {
+            if ($("table").DataTable().page.len() == 8) {
               document.getElementById("Toggle-Pagination").innerText =
                 "Paginate";
               $("table").DataTable().page.len(-1).draw();
             } else {
               document.getElementById("Toggle-Pagination").innerText =
                 "Show All";
-              $("table").DataTable().page.len(9).draw();
+              $("table").DataTable().page.len(8).draw();
             }
           });
 
@@ -100,9 +99,16 @@
   </head>
 
   <body>
-    <div id="games-table-container" style="display: none">_GAMESTABLE_</div>
-    <div id="button-container">
-      <button class="custom-button" id="Toggle-Pagination">Show All</button>
+    <div id="header-container">
+      <div id="TotalPlaytime-placeholder"></div>
+      <h1>All Games</h1>
+      <div id="filter-placeholder"></div>
+    </div>
+    <div id="main-panel">
+      <div id="games-table-container" style="display: none">_GAMESTABLE_</div>
+      <div id="button-container">
+        <button class="custom-button" id="Toggle-Pagination">Show All</button>
+      </div>
     </div>
     <div id="navigation-bar">
       <button class="custom-button" id="summary-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/Summary.html';">Life Time Summary</button>

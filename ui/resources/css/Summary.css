@@ -1,16 +1,44 @@
 body {
+  display: flex;
+  flex-direction: column;
+  font-family: monospace;
+  background-color: #f5f5f5;
+  margin: 0;
+  padding: 20px;
+  height: 100vh;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+h1 {
   text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+  flex-shrink: 0;
+}
+
+#main-panel {
+  width: 100%;
+  background: white;
+  border-radius: 8px;
+  box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,
+    rgba(45, 35, 66, 0.3) 0 7px 20px -3px;
+  padding: 30px;
+  margin: 0 auto 30px auto;
+  max-width: 1840px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-family: monospace;
-  height: 98.25vh;
-  background-color: white;
+  flex: 1;
+  min-height: 0;
+  box-sizing: border-box;
 }
 
 #summary {
   font-size: 18px;
   margin: 5px;
+  flex-shrink: 0;
+  text-align: center;
 }
 
 #top-row {
@@ -18,6 +46,7 @@ body {
   width: 100%;
   margin: 5px;
   font-size: 18px;
+  flex-shrink: 0;
 }
 
 #summary-chart-legend {
@@ -139,8 +168,10 @@ body {
 
 #main-row {
   display: flex;
-  height: 72.5%;
+  flex: 1;
+  min-height: 0;
   justify-content: space-around;
+  width: 100%;
 }
 
 #summary-chart-container {
@@ -148,12 +179,21 @@ body {
   padding-left: 1%;
   max-width: 100%;
   max-height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+#summary-chart-container canvas {
+  flex: 1;
+  min-height: 0;
 }
 
 #stats-container {
   flex: 1 1 40%;
   display: flex;
   flex-direction: column;
+  min-height: 0;
 }
 
 #pc-icon img {
@@ -175,8 +215,9 @@ body {
 }
 
 #pc-stats-section {
-  height: 50%;
+  flex: 1;
   display: flex;
+  min-height: 0;
 }
 
 #pc-stats {
@@ -194,13 +235,22 @@ body {
 }
 
 #annual-time-chart-container {
-  height: 49%;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+#annual-time-chart-container canvas {
+  flex: 1;
+  min-height: 0;
 }
 
 #navigation-bar {
   display: flex;
   width: 100%;
   justify-content: space-evenly;
+  flex-shrink: 0;
 }
 
 #navigation-bar button:first-child {
