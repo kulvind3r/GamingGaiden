@@ -93,7 +93,7 @@
             }
           });
 
-        $("#games-table-container").show();
+        $("#games-table-container").addClass("ready");
       });
     </script>
   </head>
@@ -105,7 +105,7 @@
       <div id="filter-placeholder"></div>
     </div>
     <div id="main-panel">
-      <div id="games-table-container" style="display: none">_GAMESTABLE_</div>
+      <div id="games-table-container">_GAMESTABLE_</div>
       <div id="button-container">
         <button class="custom-button" id="Toggle-Pagination">Show All</button>
       </div>

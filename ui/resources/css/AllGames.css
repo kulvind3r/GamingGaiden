@@ -65,6 +65,12 @@ h1 {
 #games-table-container {
   width: 100%;
   align-self: stretch;
+  opacity: 0;
+  transition: opacity 0.3s ease-in;
+}
+
+#games-table-container.ready {
+  opacity: 1;
 }
 
 table {
