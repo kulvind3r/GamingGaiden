@@ -163,7 +163,7 @@ function updateChart(
     datasets.push({
       type: "line",
       data: datasetData,
-      borderColor: "red",
+      borderColor: "rgb(255, 99, 132)",
       borderWidth: 2,
       pointRadius: 0,
       fill: false,

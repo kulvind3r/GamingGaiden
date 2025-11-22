@@ -273,8 +273,8 @@ function updateAnnualHoursChart() {
         {
           data: annualHoursData.map((row) => row.TotalPlayTime),
           borderWidth: 2,
-          borderColor: '#2196F3',
-          backgroundColor: '#2196F3',
+          borderColor: 'rgb(255, 99, 132)',
+          backgroundColor: 'rgb(255, 99, 132)',
           tension: 0.1,
         },
       ],
