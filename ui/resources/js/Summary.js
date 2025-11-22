@@ -260,8 +260,12 @@ function updateAnnualHoursChart() {
     .getElementById("year-vs-playtime-chart")
     .getContext("2d");
 
+  // Calculate max hours and round up to nearest 100
+  const maxHours = Math.max(...annualHoursData.map((row) => row.TotalPlayTime));
+  const maxYAxis = Math.ceil(maxHours / 100) * 100;
+
   new Chart(ctx, {
-    type: "pie",
+    type: "line",
     plugins: [ChartDataLabels],
     data: {
       labels: annualHoursData.map((row) => row.Year),
@@ -269,36 +273,51 @@ function updateAnnualHoursChart() {
         {
           data: annualHoursData.map((row) => row.TotalPlayTime),
           borderWidth: 2,
+          borderColor: '#2196F3',
+          backgroundColor: '#2196F3',
+          tension: 0.1,
         },
       ],
     },
     options: {
       responsive: true,
       maintainAspectRatio: false,
+      scales: {
+        y: {
+          beginAtZero: true,
+          max: maxYAxis,
+          ticks: {
+            stepSize: 100,
+            color: '#000'
+          },
+          title: chartTitleConfig("Hours Played", 15),
+          grid: {
+            display: false
+          }
+        },
+        x: {
+          title: chartTitleConfig("Year", 15),
+          ticks: {
+            color: '#000'
+          },
+          grid: {
+            display: false
+          },
+          offset: true
+        }
+      },
       plugins: {
         title: {
-          text: "Annual Hours Played",
-          display: true,
-          position: "bottom",
-          color: "#000000",
-          font: {
-            size: 18,
-            family: "monospace",
-            weight: "normal",
-          },
+          display: false
         },
         tooltip: { enabled: false },
         legend: { display: false },
         datalabels: {
-          formatter: function (value, context) {
-            return (
-              context.chart.data.labels[context.dataIndex] +
-              "\n" +
-              Math.floor(value) +
-              " Hrs"
-            );
+          formatter: function (value) {
+            return Math.floor(value) + " Hrs";
           },
-          textAlign: "center",
+          anchor: "end",
+          align: "top",
           color: "#000000",
           font: {
             size: 14,
