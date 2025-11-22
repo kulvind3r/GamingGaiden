@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" style="background : #ffffff">
+<html xmlns="http://www.w3.org/1999/xhtml" style="background: #f5f5f5">
   <head>
     <title>Gaming Gaiden</title>
     <link
@@ -8,6 +8,7 @@
       href="./resources/images/favicon.ico"
     />
     <link rel="stylesheet" href="./resources/css/GamingTime.css" />
+    <link rel="stylesheet" href="./resources/css/GamingTime-calendar.css" />
     <script src="./resources/js/jquery-3.7.1.min.js"></script>
     <script src="./resources/js/chart.js"></script>
     <script src="./resources/js/chartjs-plugin-datalabels-2.0.0.js"></script>
@@ -28,16 +29,35 @@
   <body>
     <h1>Time You Spent Playing Games</h1>
     <div id="main-panel">
-    <div id="chart-container">
-      <canvas id="gaming-time-chart"></canvas>
-    </div>
-    <div id="chart-navigation-bar">
-      <button class="custom-button" id="prev-button">&#11164;</button>
-      <div id="time-period-display"></div>
-      <button class="custom-button" id="next-button">&#11166;</button>
-    </div>
-    <div id="warn-msg"></div>
-    <button class="custom-button" id="period-button">Yearly Summary</button>
+      <div id="calendar-column">
+        <div id="calendar-container">
+          <div id="year-navigation">
+            <button class="custom-button calendar-nav-btn" id="prev-year-button">&#11164;</button>
+            <div id="year-display"></div>
+            <button class="custom-button calendar-nav-btn" id="next-year-button">&#11166;</button>
+          </div>
+          <div id="month-grid">
+            <button class="month-btn" data-month="0">Jan</button>
+            <button class="month-btn" data-month="1">Feb</button>
+            <button class="month-btn" data-month="2">Mar</button>
+            <button class="month-btn" data-month="3">Apr</button>
+            <button class="month-btn" data-month="4">May</button>
+            <button class="month-btn" data-month="5">Jun</button>
+            <button class="month-btn" data-month="6">Jul</button>
+            <button class="month-btn" data-month="7">Aug</button>
+            <button class="month-btn" data-month="8">Sep</button>
+            <button class="month-btn" data-month="9">Oct</button>
+            <button class="month-btn" data-month="10">Nov</button>
+            <button class="month-btn" data-month="11">Dec</button>
+          </div>
+        </div>
+      </div>
+      <div id="chart-column">
+        <div id="chart-container">
+          <canvas id="gaming-time-chart"></canvas>
+        </div>
+        <div id="total-hours-display"></div>
+      </div>
     </div>
     <div style="display: none">_DAILYPLAYTIMETABLE_</div>
     <script src="./resources/js/common.js"></script>

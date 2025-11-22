@@ -1,0 +1,117 @@
+/* ===== CALENDAR COLUMN LAYOUT ===== */
+
+#calendar-column {
+  flex: 0 0 380px;
+  display: flex;
+  flex-direction: column;
+  background: #fafafa;
+  border-radius: 8px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+#calendar-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: 100%;
+  justify-content: center;
+}
+
+/* ===== YEAR NAVIGATION ===== */
+
+#year-navigation {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 2px solid #e0e0e0;
+}
+
+#year-display {
+  font-family: monospace;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  flex: 1;
+  max-width: 150px;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+#year-display:hover {
+  background-color: #e3f2fd;
+  transform: scale(1.05);
+}
+
+#year-display.yearly-mode {
+  background-color: #2196F3;
+  color: white;
+}
+
+.calendar-nav-btn {
+  height: 32px;
+  padding-left: 12px;
+  padding-right: 12px;
+  font-size: 16px;
+}
+
+/* ===== MONTH GRID ===== */
+
+#month-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 10px 0;
+}
+
+.month-btn {
+  padding: 12px;
+  font-size: 13px;
+  font-family: monospace;
+  background-color: #f5f5f5;
+  color: #666;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.month-btn:hover {
+  background-color: #e8e8e8;
+  transform: translateY(-1px);
+}
+
+.month-btn.selected {
+  background-color: #2196F3;
+  color: white;
+  font-weight: bold;
+  border-color: #1976D2;
+}
+
+.month-btn.has-data {
+  background-color: #e3f2fd;
+  border-color: #90caf9;
+}
+
+.month-btn.has-data.selected {
+  background-color: #2196F3;
+  border-color: #1976D2;
+}
+
+.month-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+/* ===== CHART COLUMN ===== */
+
+#chart-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}

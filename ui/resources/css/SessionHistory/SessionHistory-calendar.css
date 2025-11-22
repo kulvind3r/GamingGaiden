@@ -11,7 +11,7 @@
   flex-direction: column;
   gap: 15px;
   height: 100%;
-  overflow-y: auto;
+  justify-content: center;
 }
 
 /* Year Navigation */
