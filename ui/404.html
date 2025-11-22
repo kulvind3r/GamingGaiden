@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" style="background : #ffffff">
+<html xmlns="http://www.w3.org/1999/xhtml" style="background: #f5f5f5">
     <head>
         <title>Gaming Gaiden</title>
         <link
@@ -12,19 +12,44 @@
         body {
             display: flex;
             flex-direction: column;
-            justify-content: space-evenly;
             font-family: monospace;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        #main-panel {
+            width: 100%;
+            background: white;
+            border-radius: 8px;
+            box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,
+                rgba(45, 35, 66, 0.3) 0 7px 20px -3px;
+            padding: 30px;
+            margin: 0 auto 30px auto;
+            max-width: 1840px;
+            display: flex;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
+            box-sizing: border-box;
         }
 
         #banner {
             width: 26%;
             height: 26%;
+            margin-bottom: 10px;
         }
 
         p {
             font-size: 2.5vh;
             text-align: center;
+            margin: 10px 0;
+        }
+
+        #tutorial {
+            margin-top: 10px;
         }
 
         .custom-button {
@@ -77,9 +102,9 @@
 
         #navigation-bar {
             display: flex;
-            margin-top: 3%;
             justify-content: space-evenly;
             width: 100%;
+            flex-shrink: 0;
         }
 
         #navigation-bar button:first-child {
@@ -87,15 +112,18 @@
         }
     </style>
     <body>
-        <img id="banner" src="./resources/images/404.png">
-        <p>Please render this page atleast once from<br>app menu before using web ui buttons</p>
-		<img id="tutorial" src="./resources/images/404-tutorial.gif">
+        <div id="main-panel">
+            <img id="banner" src="./resources/images/404.png">
+            <p>Please render this page atleast once from<br>app menu before using web ui buttons</p>
+            <img id="tutorial" src="./resources/images/404-tutorial.gif">
+        </div>
         <div id="navigation-bar">
             <button class="custom-button" id="summary-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/Summary.html';">Life Time Summary</button>
             <button class="custom-button" id="gaming-time-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/GamingTime.html';">Time Spent Gaming</button>
             <button class="custom-button" id="most-played-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/MostPlayed.html';">Most Played</button>
             <button class="custom-button" id="all-games-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/AllGames.html';">All Games</button>
             <button class="custom-button" id="idle-time-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/IdleTime.html';">Idle Time</button>
+            <button class="custom-button" id="session-history-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/SessionHistory.html';">Session History</button>
             <button class="custom-button" id="games-per-platform-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/GamesPerPlatform.html';">Games Per Platform</button>
             <button class="custom-button" id="pc-vs-emu-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/PCvsEmulation.html';">PC vs Emulation Time</button>
         </div>
