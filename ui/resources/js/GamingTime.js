@@ -146,17 +146,38 @@ function updateChart(
 
   const ctx = document.getElementById("gaming-time-chart").getContext("2d");
 
+  // Create datasets array with bar chart
+  const datasets = [
+    {
+      type: "bar",
+      data: datasetData,
+      borderWidth: 2,
+      backgroundColor: yearlySummaryEnabled ? "rgba(135, 206, 250, 0.4)" : undefined,
+      borderColor: yearlySummaryEnabled ? "rgba(135, 206, 250, 0.6)" : undefined,
+      order: 2,
+    },
+  ];
+
+  // Add trendline only for yearly view
+  if (yearlySummaryEnabled) {
+    datasets.push({
+      type: "line",
+      data: datasetData,
+      borderColor: "red",
+      borderWidth: 2,
+      pointRadius: 0,
+      fill: false,
+      tension: 0.1,
+      order: 1,
+    });
+  }
+
   chart = new Chart(ctx, {
     type: "bar",
     plugins: [ChartDataLabels],
     data: {
       labels: labels,
-      datasets: [
-        {
-          data: datasetData,
-          borderWidth: 2,
-        },
-      ],
+      datasets: datasets,
     },
     options: {
       responsive: true,
