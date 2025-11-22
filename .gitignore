@@ -21,3 +21,4 @@ ui/*.html
 backups/*
 build/*
 ignored_*
+CLAUDE.md

@@ -51,13 +51,12 @@ h1 {
 
 #navigation-bar {
   display: flex;
+  justify-content: space-between;
   width: 100%;
-  justify-content: space-evenly;
+  max-width: 1840px;
+  margin: 0 auto;
   flex-shrink: 0;
-}
-
-#navigation-bar button:first-child {
-  margin-left: 16px
+  gap: 10px;
 }
 
 .custom-button {
