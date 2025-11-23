@@ -1,0 +1,77 @@
+/* Gaming Gaiden - Dark Theme */
+
+:root {
+  /* Background Colors */
+  --bg-primary: #1a1a1a;           /* Main body background */
+  --bg-secondary: #2a2a2a;          /* Panel backgrounds */
+  --bg-tertiary: #222222;          /* Calendar columns, secondary areas */
+  --bg-panel: #2a2a2a;              /* Main content panels */
+  --bg-button: #3a3a3a;            /* Button default background */
+  --bg-button-hover: #4a4a4a;      /* Button hover state */
+  --bg-button-active: #505050;     /* Button active state */
+  --bg-calendar-selected: #1e3a5f; /* Calendar day selection */
+  --bg-card: #2a2a2a;               /* Session cards */
+  --bg-game-item: #333333;         /* Game list items */
+  --bg-table-stripe: #2d3a47;      /* Table row striping */
+
+  /* Text Colors */
+  --text-primary: #e0e0e0;          /* Primary headings and text */
+  --text-secondary: #b0b0b0;        /* Secondary text, labels */
+  --text-tertiary: #808080;         /* Disabled, stats text */
+  --text-button: #c5c8e0;           /* Button text */
+  --text-inverse: #1a1a1a;          /* Text on light backgrounds */
+  --text-heading: #e0e0e0;          /* h1, h2, h3 */
+
+  /* Border Colors */
+  --border-primary: #555;           /* Table borders, strong dividers */
+  --border-light: #404040;         /* Section dividers, day grid */
+  --border-medium: #4a4a4a;         /* Month buttons, inputs */
+  --border-input: #555;             /* Input field borders */
+  --border-card: rgba(255,255,255,0.1); /* Card borders */
+
+  /* Shadow Colors */
+  --shadow-primary: rgba(0, 0, 0, 0.6);    /* Outer shadow (short) */
+  --shadow-secondary: rgba(0, 0, 0, 0.4);  /* Outer shadow (diffused) */
+  --shadow-inset: #1a1a2a;                  /* Button inset */
+  --shadow-image: rgba(0, 0, 0, 0.8);      /* Image drop shadows */
+  --shadow-card: rgba(0,0,0,0.3);          /* Card shadows */
+
+  /* Accent Colors - Blue (adjusted for dark mode visibility) */
+  --accent-blue: #42a5f5;
+  --accent-blue-dark: #1e88e5;
+  --accent-blue-light: #1e3a5f;
+  --accent-blue-alt: #3b8bff;
+  --accent-blue-alt2: #3680ff;
+  --accent-blue-alt3: #2d75ff;
+  --accent-blue-bright: #4db8ff;
+  --accent-blue-pale: #64b5f6;
+
+  /* Status Colors (keep similar for recognition) */
+  --status-finished: #06c930;       /* Brighter green for dark mode */
+  --status-finished-alt: #66BB6A;
+  --status-hold: #ffa726;           /* Brighter orange */
+  --status-forever: #b0b3b8;        /* Lighter gray */
+  --status-dropped: #a1694f;        /* Lighter brown */
+  --status-error: #ef5350;          /* Brighter red */
+  --status-error-dark: #c62828;
+  --status-error-light: #e57373;
+  --status-error-pale: #4a2424;
+
+  /* Chart Colors */
+  --chart-bg: #2a2a2a;              /* Chart background */
+  --chart-blue: rgba(66, 165, 245, 0.5);
+
+  /* Table Specific */
+  --table-header-bg: #1a1a1a;
+  --table-header-text: #e0e0e0;
+  --table-hover: #4a4a4a;
+
+  /* Scrollbar Colors */
+  --scrollbar-track: #2a2a2a;
+  --scrollbar-thumb: #555;
+  --scrollbar-thumb-hover: #777;
+
+  /* Interactive States */
+  --hover-overlay: rgba(255,255,255,0.05);
+  --active-overlay: rgba(255,255,255,0.1);
+}

@@ -4,7 +4,7 @@
 #_pragma title 'Gaming Gaiden: Gameplay Time Tracker'
 #_pragma product 'Gaming Gaiden'
 #_pragma copyright '© 2023 Kulvinder Singh'
-#_pragma version '2025.08.31'
+#_pragma version '2025.11.23'
 
 [System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms')    | Out-null
 [System.Reflection.Assembly]::LoadWithPartialName('System.Drawing')          | Out-null
@@ -70,6 +70,14 @@ try {
     }
     else {
         Log "HWiNFO not detected. Or Gaming Gaiden is already Integrated. Skipping Auto Integration"
+    }
+
+    #------------------------------------------
+    # Initialize theme.css on startup (default to light theme)
+    $themePath = ".\ui\resources\css\theme.css"
+    if (-not (Test-Path $themePath)) {
+        $defaultThemePath = ".\ui\resources\css\theme-light.css"
+        Copy-Item -Path $defaultThemePath -Destination $themePath -Force
     }
 
     #------------------------------------------
@@ -192,6 +200,7 @@ try {
     $menuItemSeparator5 = New-Object Windows.Forms.ToolStripSeparator
     $menuItemSeparator6 = New-Object Windows.Forms.ToolStripSeparator
     $menuItemSeparator7 = New-Object Windows.Forms.ToolStripSeparator
+    $menuItemSeparator8 = New-Object Windows.Forms.ToolStripSeparator
 
     $IconRunning = [System.Drawing.Icon]::new(".\icons\running.ico")
     $IconTracking = [System.Drawing.Icon]::new(".\icons\tracking.ico")
@@ -217,6 +226,8 @@ try {
     $editPlatformMenuItem = CreateMenuItem "Edit Emulator"
     $gamingPCMenuItem = CreateMenuItem "Gaming PCs"
     $openInstallDirectoryMenuItem = CreateMenuItem "Open Install Directory"
+    $lightThemeMenuItem = CreateMenuItem "Light Theme"
+    $darkThemeMenuItem = CreateMenuItem "Dark Theme"
     $settingsSubMenuItem.DropDownItems.Add($addGameMenuItem)
     $settingsSubMenuItem.DropDownItems.Add($editGameMenuItem)
     $settingsSubMenuItem.DropDownItems.Add($menuItemSeparator1)
@@ -225,6 +236,9 @@ try {
     $settingsSubMenuItem.DropDownItems.Add($menuItemSeparator7)
     $settingsSubMenuItem.DropDownItems.Add($gamingPCMenuItem)
     $settingsSubMenuItem.DropDownItems.Add($openInstallDirectoryMenuItem)
+    $settingsSubMenuItem.DropDownItems.Add($menuItemSeparator8)
+    $settingsSubMenuItem.DropDownItems.Add($lightThemeMenuItem)
+    $settingsSubMenuItem.DropDownItems.Add($darkThemeMenuItem)
 
     $statsSubMenuItem = CreateMenuItem "Statistics"
     $gamingTimeMenuItem = CreateMenuItem "Time Spent Gaming"
@@ -405,6 +419,18 @@ try {
     $openInstallDirectoryMenuItem.Add_Click({
             Log "Opening Install Directory"
             Invoke-Item .
+        })
+
+    $lightThemeMenuItem.Add_Click({
+            Log "Switching to light theme"
+            Set-Theme "light"
+            ShowMessage "Light Theme applied. Refresh pages for effect." "Ok" "Info"
+        })
+
+    $darkThemeMenuItem.Add_Click({
+            Log "Switching to dark theme"
+            Set-Theme "dark"
+            ShowMessage "Dark Theme applied. Refresh pages for effect." "Ok" "Info"
         })
 
     #------------------------------------------

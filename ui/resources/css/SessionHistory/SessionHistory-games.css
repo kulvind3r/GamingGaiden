@@ -2,8 +2,8 @@
 
 #search-container {
   padding: 15px;
-  border-bottom: 1px solid #e0e0e0;
-  background: #fafafa;
+  border-bottom: 1px solid var(--border-light);
+  background: var(--bg-tertiary);
 }
 
 #game-search {
@@ -11,21 +11,21 @@
   padding: 10px;
   font-size: 14px;
   font-family: monospace;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border-input);
   border-radius: 4px;
   box-sizing: border-box;
 }
 
 #game-search:focus {
   outline: none;
-  border-color: #4CAF50;
+  border-color: var(--status-finished-alt);
 }
 
 #sort-container {
   display: flex;
   gap: 0;
-  border-bottom: 1px solid #e0e0e0;
-  background: #fafafa;
+  border-bottom: 1px solid var(--border-light);
+  background: var(--bg-tertiary);
 }
 
 .sort-btn {
@@ -33,10 +33,10 @@
   padding: 10px;
   font-size: 13px;
   font-family: monospace;
-  background-color: #f5f5f5;
-  color: #666;
+  background-color: var(--bg-primary);
+  color: var(--text-secondary);
   border: none;
-  border-right: 1px solid #e0e0e0;
+  border-right: 1px solid var(--border-light);
   cursor: pointer;
   transition: background-color 0.2s;
 }
@@ -46,12 +46,12 @@
 }
 
 .sort-btn:hover {
-  background-color: #e8e8e8;
+  background-color: var(--bg-button-hover);
 }
 
 .sort-btn.active {
-  background-color: #fff;
-  color: #333;
+  background-color: var(--bg-panel);
+  color: var(--text-primary);
   font-weight: bold;
 }
 
@@ -76,7 +76,7 @@
 
 .game-list-item {
   padding: 15px;
-  border-bottom: 1px solid #e0e0e0;
+  border-bottom: 1px solid var(--border-light);
   cursor: pointer;
   transition: background-color 0.2s;
   display: flex;
@@ -85,18 +85,18 @@
 }
 
 .game-list-item:hover {
-  background-color: #f0f0f0;
+  background-color: var(--bg-game-item);
 }
 
 .game-list-item.active {
-  background-color: #e3f2fd;
-  border-left: 4px solid #2196F3;
+  background-color: var(--accent-blue-light);
+  border-left: 4px solid var(--accent-blue);
 }
 
 .game-icon {
   height: 36px;
   width: auto;
-  filter: drop-shadow(4px 4px 2px gray);
+  filter: drop-shadow(4px 4px 2px var(--shadow-image));
   flex-shrink: 0;
 }
 
@@ -109,12 +109,12 @@
   font-weight: bold;
   font-size: 14px;
   margin-bottom: 5px;
-  color: #333;
+  color: var(--text-primary);
 }
 
 .game-meta {
   font-size: 12px;
-  color: #666;
+  color: var(--text-secondary);
   display: flex;
   justify-content: space-between;
 }
@@ -124,7 +124,7 @@
 }
 
 .stats {
-  color: #999;
+  color: var(--text-tertiary);
 }
 
 /* Games View Content - inherits from .left-content */
@@ -136,20 +136,20 @@
 
 #selected-game-header {
   margin-bottom: 20px;
-  border-bottom: 2px solid #e0e0e0;
+  border-bottom: 2px solid var(--border-light);
   padding-bottom: 15px;
 }
 
 #selected-game-name {
   margin: 0 0 5px 0;
-  color: #333;
+  color: var(--text-heading);
   font-size: 20px;
 }
 
 .selected-game-icon {
   height: 120px;
   width: auto;
-  filter: drop-shadow(4px 4px 2px gray);
+  filter: drop-shadow(4px 4px 2px var(--shadow-image));
   vertical-align: middle;
   margin-left: 12px;
   float: right;
@@ -160,7 +160,7 @@
   display: flex;
   flex-direction: column;
   gap: 5px;
-  color: #666;
+  color: var(--text-secondary);
   font-size: 16px;
 }
 
@@ -172,12 +172,12 @@
 
 .stat-label {
   font-size: 16px;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 .stat-value {
   font-size: 16px;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 /* ===== GAMES VIEW - CHART CONTROLS ===== */
@@ -244,6 +244,6 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: #999;
+  color: var(--text-tertiary);
   font-size: 16px;
 }

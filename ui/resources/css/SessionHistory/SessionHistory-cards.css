@@ -2,13 +2,13 @@
 
 #cards-header {
   margin-bottom: 20px;
-  border-bottom: 2px solid #e0e0e0;
+  border-bottom: 2px solid var(--border-light);
   padding-bottom: 15px;
 }
 
 #selected-date-title {
   margin: 0 0 10px 0;
-  color: #333;
+  color: var(--text-heading);
   font-size: 20px;
 }
 
@@ -16,7 +16,7 @@
   display: flex;
   gap: 20px;
   font-size: 14px;
-  color: #666;
+  color: var(--text-secondary);
 }
 
 #date-stats span {
@@ -42,11 +42,11 @@
 }
 
 .game-card {
-  border: 1px solid #e0e0e0;
+  border: 1px solid var(--border-card);
   border-radius: 8px;
   padding: 15px;
-  background: white;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  background: var(--bg-card);
+  box-shadow: var(--shadow-card) 0 2px 4px;
   transition: transform 0.2s, box-shadow 0.2s;
   cursor: pointer;
   display: flex;
@@ -59,22 +59,22 @@
 
 .game-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-  border-color: #2196F3;
+  box-shadow: var(--shadow-card) 0 4px 8px;
+  border-color: var(--accent-blue);
 }
 
 .game-card-icon {
   height: 64px;
   width: auto;
   max-width: 100%;
-  filter: drop-shadow(4px 4px 2px gray);
+  filter: drop-shadow(4px 4px 2px var(--shadow-image));
   flex-shrink: 0;
 }
 
 .game-card-name {
   font-weight: bold;
   font-size: 14px;
-  color: #333;
+  color: var(--text-primary);
   text-align: center;
   word-wrap: break-word;
   overflow: hidden;
@@ -88,7 +88,7 @@
 
 .game-card-platform {
   font-size: 12px;
-  color: #666;
+  color: var(--text-secondary);
   font-style: italic;
   white-space: nowrap;
   overflow: hidden;
@@ -98,7 +98,7 @@
 
 .game-card-stats {
   font-size: 12px;
-  color: #999;
+  color: var(--text-tertiary);
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
@@ -113,6 +113,6 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: #999;
+  color: var(--text-tertiary);
   font-size: 16px;
 }

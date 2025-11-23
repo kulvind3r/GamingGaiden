@@ -32,6 +32,29 @@ var chartDataLabelFontConfig = {
   family: "monospace",
 };
 
+function getChartBackgroundColor() {
+  // Read the --chart-bg CSS variable from the root element
+  return getComputedStyle(document.documentElement).getPropertyValue('--chart-bg').trim();
+}
+
+// Chart.js plugin to apply theme-aware background color
+const chartBackgroundPlugin = {
+  id: 'chartBackground',
+  beforeDraw: (chart) => {
+    const ctx = chart.canvas.getContext('2d');
+    ctx.save();
+    ctx.globalCompositeOperation = 'destination-over';
+    ctx.fillStyle = getChartBackgroundColor();
+    ctx.fillRect(0, 0, chart.width, chart.height);
+    ctx.restore();
+  }
+};
+
+// Register the plugin globally when Chart is available
+if (typeof Chart !== 'undefined') {
+  Chart.register(chartBackgroundPlugin);
+}
+
 function chartTitleConfig(title, padding = 0, color = "#000") {
   return {
     display: true,
@@ -142,3 +165,5 @@ chartLegendConfig;
 chartTitleConfig;
 buildGamingData;
 Log2Axis;
+getChartBackgroundColor;
+chartBackgroundPlugin;

@@ -947,3 +947,14 @@ function RenderAddPlatformForm() {
     $addPlatformForm.ShowDialog()
     $addPlatformForm.Dispose()
 }
+
+function Set-Theme {
+    param([string]$ThemeName)
+
+    $themeDir = ".\ui\resources\css"
+    $themePath = "$themeDir\theme.css"
+    $sourceTheme = "$themeDir\theme-$ThemeName.css"
+
+    # Copy the selected theme to theme.css
+    Copy-Item -Path $sourceTheme -Destination $themePath -Force
+}

@@ -4,7 +4,7 @@
   flex: 0 0 380px;
   display: flex;
   flex-direction: column;
-  background: #fafafa;
+  background: var(--bg-tertiary);
   border-radius: 8px;
   padding: 20px;
   box-sizing: border-box;
@@ -25,7 +25,7 @@
   justify-content: space-around;
   align-items: center;
   padding: 10px 0;
-  border-bottom: 2px solid #e0e0e0;
+  border-bottom: 2px solid var(--border-light);
 }
 
 #year-display {
@@ -43,13 +43,13 @@
 }
 
 #year-display:hover {
-  background-color: #e3f2fd;
+  background-color: var(--accent-blue-light);
   transform: scale(1.05);
 }
 
 #year-display.yearly-mode {
-  background-color: #2196F3;
-  color: white;
+  background-color: var(--accent-blue);
+  color: var(--text-inverse);
 }
 
 .calendar-nav-btn {
@@ -72,34 +72,34 @@
   padding: 12px;
   font-size: 13px;
   font-family: monospace;
-  background-color: #f5f5f5;
-  color: #666;
-  border: 1px solid #ddd;
+  background-color: var(--bg-primary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-medium);
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.2s;
 }
 
 .month-btn:hover {
-  background-color: #e8e8e8;
+  background-color: var(--bg-button-hover);
   transform: translateY(-1px);
 }
 
 .month-btn.selected {
-  background-color: #2196F3;
-  color: white;
+  background-color: var(--accent-blue);
+  color: var(--text-inverse);
   font-weight: bold;
-  border-color: #1976D2;
+  border-color: var(--accent-blue-dark);
 }
 
 .month-btn.has-data {
-  background-color: #e3f2fd;
-  border-color: #90caf9;
+  background-color: var(--accent-blue-light);
+  border-color: var(--accent-blue-pale);
 }
 
 .month-btn.has-data.selected {
-  background-color: #2196F3;
-  border-color: #1976D2;
+  background-color: var(--accent-blue);
+  border-color: var(--accent-blue-dark);
 }
 
 .month-btn:disabled {

@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" style="background: #f5f5f5">
+<html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <title>Gaming Gaiden</title>
         <link
@@ -7,13 +7,14 @@
         type="image/x-icon"
         href="./resources/images/favicon.ico"
         />
+        <link rel="stylesheet" href="./resources/css/theme.css" />
     </head>
     <style>
         body {
             display: flex;
             flex-direction: column;
             font-family: monospace;
-            background-color: #f5f5f5;
+            background-color: var(--bg-primary);
             margin: 0;
             padding: 20px;
             min-height: 100vh;
@@ -22,10 +23,10 @@
 
         #main-panel {
             width: 100%;
-            background: white;
+            background: var(--bg-panel);
             border-radius: 8px;
-            box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,
-                rgba(45, 35, 66, 0.3) 0 7px 20px -3px;
+            box-shadow: var(--shadow-primary) 0 2px 4px,
+                var(--shadow-secondary) 0 7px 20px -3px;
             padding: 30px;
             margin: 0 auto 30px auto;
             max-width: 1840px;
@@ -46,6 +47,7 @@
             font-size: 2.5vh;
             text-align: center;
             margin: 10px 0;
+            color: var(--text-primary);
         }
 
         #tutorial {
@@ -55,13 +57,13 @@
         .custom-button {
             align-items: center;
             appearance: none;
-            background-color: #fcfcfd;
+            background-color: var(--bg-button);
             border-radius: 4px;
             border-width: 0;
-            box-shadow: rgba(45, 35, 66, 0.4) 0 2px 4px,
-                rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #d6d6e7 0 -3px 0 inset;
+            box-shadow: var(--shadow-primary) 0 2px 4px,
+                var(--shadow-secondary) 0 7px 13px -3px, var(--shadow-inset) 0 -3px 0 inset;
             box-sizing: border-box;
-            color: #36395a;
+            color: var(--text-button);
             cursor: pointer;
             display: inline-flex;
             font-family: monospace;
@@ -85,18 +87,18 @@
         }
 
         .custom-button:focus {
-        box-shadow: #d6d6e7 0 0 0 1.5px inset, rgba(45, 35, 66, 0.4) 0 2px 4px,
-            rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #d6d6e7 0 -3px 0 inset;
+        box-shadow: var(--shadow-inset) 0 0 0 1.5px inset, var(--shadow-primary) 0 2px 4px,
+            var(--shadow-secondary) 0 7px 13px -3px, var(--shadow-inset) 0 -3px 0 inset;
         }
 
         .custom-button:hover {
-        box-shadow: rgba(45, 35, 66, 0.4) 0 4px 8px,
-            rgba(45, 35, 66, 0.3) 0 7px 13px -3px, #d6d6e7 0 -3px 0 inset;
+        box-shadow: var(--shadow-primary) 0 4px 8px,
+            var(--shadow-secondary) 0 7px 13px -3px, var(--shadow-inset) 0 -3px 0 inset;
         transform: translateY(-2px);
         }
 
         .custom-button:active {
-        box-shadow: #d6d6e7 0 3px 7px inset;
+        box-shadow: var(--shadow-inset) 0 3px 7px inset;
         transform: translateY(2px);
         }
 
