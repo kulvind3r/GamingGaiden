@@ -1,0 +1,86 @@
+/* ===== SHARED CALENDAR CONTROLS ===== */
+/* Used by both GamingTime and SessionHistory views */
+
+/* Calendar Container */
+#calendar-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: 100%;
+  justify-content: center;
+}
+
+/* ===== YEAR NAVIGATION ===== */
+
+#year-navigation {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 10px 0;
+  border-bottom: 2px solid var(--border-light);
+}
+
+#year-display {
+  font-family: monospace;
+  font-size: 18px;
+  font-weight: bold;
+  text-align: center;
+  flex: 1;
+  max-width: 150px;
+  color: var(--text-primary);
+}
+
+.calendar-nav-btn {
+  height: 32px;
+  padding-left: 12px;
+  padding-right: 12px;
+  font-size: 16px;
+}
+
+/* ===== MONTH GRID ===== */
+
+#month-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  padding: 10px 0;
+}
+
+.month-btn {
+  padding: 12px;
+  font-size: 13px;
+  font-family: monospace;
+  background-color: var(--bg-primary);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-light);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.month-btn:hover {
+  background-color: var(--bg-button-hover);
+  transform: translateY(-1px);
+}
+
+.month-btn.selected {
+  background-color: var(--accent-blue);
+  color: var(--text-inverse);
+  font-weight: bold;
+  border-color: var(--accent-blue-dark);
+}
+
+.month-btn.has-data {
+  background-color: var(--accent-blue-light);
+  border-color: var(--accent-blue-light);
+}
+
+.month-btn.has-data.selected {
+  background-color: var(--accent-blue);
+  border-color: var(--accent-blue-dark);
+}
+
+.month-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
