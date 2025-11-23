@@ -1,3 +1,6 @@
+/*global formatMonthString, formatDateString, updateYearDisplay, setupYearNavigation, updateMonthGrid*/
+/*from calendar-controls.js*/
+
 // ===== MAIN VIEW SWITCHING =====
 
 // Setup main view buttons
@@ -52,12 +55,12 @@ function initializeByDayView() {
     calendarDay = maxDate.getDate();
   }
 
-  updateYearDisplay();
-  updateMonthGrid();
+  refreshYearDisplay();
+  refreshMonthGrid();
   updateDayGrid();
 
   // Load game cards for the most recent date
-  const dateStr = `${calendarYear}-${String(calendarMonth + 1).padStart(2, '0')}-${String(calendarDay).padStart(2, '0')}`;
+  const dateStr = formatDateString(calendarYear, calendarMonth, calendarDay);
   loadGameCardsForDate(dateStr);
 }
 
@@ -68,34 +71,26 @@ function initializeByMonthView() {
     calendarMonth = maxDate.getMonth();
   }
 
-  updateYearDisplay();
-  updateMonthGrid();
+  refreshYearDisplay();
+  refreshMonthGrid();
 
   // Load game cards for the most recent month
-  const monthStr = `${calendarYear}-${String(calendarMonth + 1).padStart(2, '0')}`;
+  const monthStr = formatMonthString(calendarYear, calendarMonth);
   loadGameCardsForMonth(monthStr);
 }
 
 // ===== CALENDAR NAVIGATION =====
 
 // Setup year navigation
-function setupYearNavigation() {
-  document.getElementById('prev-year-button').addEventListener('click', () => {
-    if (minDate && calendarYear > minDate.getFullYear()) {
-      calendarYear--;
-      updateYearDisplay();
-      updateMonthGrid();
-      if (mainView === 'byday') {
-        updateDayGrid();
-      }
-    }
-  });
-
-  document.getElementById('next-year-button').addEventListener('click', () => {
-    if (maxDate && calendarYear < maxDate.getFullYear()) {
-      calendarYear++;
-      updateYearDisplay();
-      updateMonthGrid();
+function initYearNavigation() {
+  setupYearNavigation({
+    firstYear: minDate ? minDate.getFullYear() : 0,
+    finalYear: maxDate ? maxDate.getFullYear() : 9999,
+    getCalendarYear: () => calendarYear,
+    setCalendarYear: (year) => { calendarYear = year; },
+    onYearChange: () => {
+      refreshYearDisplay();
+      refreshMonthGrid();
       if (mainView === 'byday') {
         updateDayGrid();
       }
@@ -103,50 +98,39 @@ function setupYearNavigation() {
   });
 }
 
-// Update year display
-function updateYearDisplay() {
-  document.getElementById('year-display').textContent = calendarYear;
+// Update year display (wrapper)
+function refreshYearDisplay() {
+  updateYearDisplay(calendarYear);
 }
 
-// Update month grid
-function updateMonthGrid() {
-  const monthButtons = document.querySelectorAll('.month-btn');
-
-  monthButtons.forEach((btn, index) => {
-    const monthStr = `${calendarYear}-${String(index + 1).padStart(2, '0')}`;
-    const hasData = availableMonths.has(monthStr);
-
-    // Add/remove has-data class
-    btn.classList.toggle('has-data', hasData);
-
-    // Add/remove selected class
-    btn.classList.toggle('selected', index === calendarMonth);
-
-    // Disable if no data
-    btn.disabled = !hasData;
-
-    // Click handler
-    btn.onclick = hasData ? () => {
-      calendarMonth = index;
-      updateMonthGrid();
+// Update month grid (wrapper)
+function refreshMonthGrid() {
+  updateMonthGrid({
+    calendarYear: calendarYear,
+    availableMonths: availableMonths,
+    isMonthSelected: (monthIndex) => monthIndex === calendarMonth,
+    onMonthClick: (monthIndex) => {
+      calendarMonth = monthIndex;
+      refreshMonthGrid();
 
       if (mainView === 'byday') {
         // Find first day with data in this month
         const daysInMonth = new Date(calendarYear, calendarMonth + 1, 0).getDate();
         for (let day = 1; day <= daysInMonth; day++) {
-          const dateStr = `${calendarYear}-${String(calendarMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+          const dateStr = formatDateString(calendarYear, calendarMonth, day);
           if (availableDates.has(dateStr)) {
             calendarDay = day;
             break;
           }
         }
         updateDayGrid();
-        const dateStr = `${calendarYear}-${String(calendarMonth + 1).padStart(2, '0')}-${String(calendarDay).padStart(2, '0')}`;
+        const dateStr = formatDateString(calendarYear, calendarMonth, calendarDay);
         loadGameCardsForDate(dateStr);
       } else if (mainView === 'bymonth') {
+        const monthStr = formatMonthString(calendarYear, calendarMonth);
         loadGameCardsForMonth(monthStr);
       }
-    } : null;
+    }
   });
 }
 
@@ -173,7 +157,7 @@ function updateDayGrid() {
 
   // Add day buttons
   for (let day = 1; day <= daysInMonth; day++) {
-    const dateStr = `${calendarYear}-${String(calendarMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+    const dateStr = formatDateString(calendarYear, calendarMonth, day);
     const hasData = availableDates.has(dateStr);
     const dayOfWeek = new Date(calendarYear, calendarMonth, day).getDay();
     const isWeekend = dayOfWeek === 0 || dayOfWeek === 6; // Sunday or Saturday

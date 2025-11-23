@@ -179,6 +179,7 @@
     </div>
 
     <script src="./resources/js/common.js"></script>
+    <script src="./resources/js/calendar-controls.js"></script>
     <script src="./resources/js/SessionHistory/SessionHistory-shared.js"></script>
     <script src="./resources/js/SessionHistory/SessionHistory-games.js"></script>
     <script src="./resources/js/SessionHistory/SessionHistory-calendar.js"></script>

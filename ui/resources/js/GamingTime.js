@@ -1,5 +1,6 @@
 /*global ChartDataLabels, Chart, chartTitleConfig, buildGamingData, Log2Axis, getChartTextColor, getChartGridColor, getChartBackgroundColor*/
-/*from chart.js, common.js*/
+/*global formatMonthString, formatDateString, updateYearDisplay, setupYearNavigation, updateMonthGrid*/
+/*from chart.js, common.js, calendar-controls.js*/
 
 let gamingData = [];
 let selectedYear;
@@ -265,7 +266,7 @@ function initializeCalendar() {
     const date = new Date(item.date);
     const year = date.getFullYear();
     const month = date.getMonth();
-    const monthStr = `${year}-${String(month + 1).padStart(2, '0')}`;
+    const monthStr = formatMonthString(year, month);
     availableMonths.add(monthStr);
     availableYears.add(year);
   });
@@ -273,73 +274,52 @@ function initializeCalendar() {
   // Set initial calendar year to most recent year
   calendarYear = finalYear;
 
-  updateYearDisplay();
-  updateMonthGrid();
+  refreshYearDisplay();
+  refreshMonthGrid();
 }
 
-function updateYearDisplay() {
-  const yearDisplayElement = document.getElementById('year-display');
-  yearDisplayElement.textContent = calendarYear;
-
-  // Visual indication of current mode
-  if (viewMode === 'yearly') {
-    yearDisplayElement.classList.add('yearly-mode');
-  } else {
-    yearDisplayElement.classList.remove('yearly-mode');
-  }
-}
-
-function updateMonthGrid() {
-  const monthButtons = document.querySelectorAll('.month-btn');
-
-  monthButtons.forEach((btn, index) => {
-    const monthStr = `${calendarYear}-${String(index + 1).padStart(2, '0')}`;
-    const hasData = availableMonths.has(monthStr);
-
-    btn.classList.toggle('has-data', hasData);
-    btn.classList.toggle('selected',
-      viewMode === 'monthly' && index === selectedMonth && calendarYear === selectedYear
-    );
-    btn.disabled = !hasData;
-
-    // Remove existing onclick handlers
-    btn.onclick = null;
-
-    if (hasData) {
-      btn.onclick = () => {
-        if (viewMode === 'monthly') {
-          selectedYear = calendarYear;
-          selectedMonth = index;
-          updateChart(selectedYear, selectedMonth, false);
-          updatePeriodDisplayWithMonth(selectedYear, selectedMonth);
-          updateMonthGrid(); // Refresh selection
-        }
-      };
-    }
-  });
-}
-
-function setupYearNavigation() {
-  document.getElementById('prev-year-button').addEventListener('click', () => {
-    if (calendarYear > firstYear) {
-      calendarYear--;
-      updateYearDisplay();
-      updateMonthGrid();
-
-      // If in yearly view, also update chart
+function refreshYearDisplay() {
+  updateYearDisplay(calendarYear, {
+    yearDisplayCallback: (element) => {
+      // Visual indication of current mode
       if (viewMode === 'yearly') {
-        selectedYear = calendarYear;
-        updateChart(selectedYear, selectedMonth, true);
-        updatePeriodDisplayWithYear(selectedYear);
+        element.classList.add('yearly-mode');
+      } else {
+        element.classList.remove('yearly-mode');
       }
     }
   });
+}
 
-  document.getElementById('next-year-button').addEventListener('click', () => {
-    if (calendarYear < finalYear) {
-      calendarYear++;
-      updateYearDisplay();
-      updateMonthGrid();
+function refreshMonthGrid() {
+  updateMonthGrid({
+    calendarYear: calendarYear,
+    availableMonths: availableMonths,
+    isMonthSelected: (monthIndex) => {
+      return viewMode === 'monthly' && monthIndex === selectedMonth && calendarYear === selectedYear;
+    },
+    onMonthClick: (monthIndex) => {
+      if (viewMode === 'monthly') {
+        selectedYear = calendarYear;
+        selectedMonth = monthIndex;
+        updateChart(selectedYear, selectedMonth, false);
+        updatePeriodDisplayWithMonth(selectedYear, selectedMonth);
+        refreshMonthGrid(); // Refresh selection
+      }
+    },
+    disableInteraction: viewMode === 'yearly'
+  });
+}
+
+function initYearNavigation() {
+  setupYearNavigation({
+    firstYear: firstYear,
+    finalYear: finalYear,
+    getCalendarYear: () => calendarYear,
+    setCalendarYear: (year) => { calendarYear = year; },
+    onYearChange: () => {
+      refreshYearDisplay();
+      refreshMonthGrid();
 
       // If in yearly view, also update chart
       if (viewMode === 'yearly') {
@@ -363,33 +343,21 @@ function toggleViewMode() {
     viewMode = 'yearly';
     periodLabel = 'Month of Year';
 
-    // Disable month selection in yearly view
-    document.querySelectorAll('.month-btn').forEach(btn => {
-      btn.style.pointerEvents = 'none';
-      btn.style.opacity = '0.5';
-    });
-
     selectedYear = calendarYear;
     updateChart(calendarYear, selectedMonth, true);
     updatePeriodDisplayWithYear(calendarYear);
-    updateYearDisplay(); // Update visual state
-    updateMonthGrid();
+    refreshYearDisplay(); // Update visual state
+    refreshMonthGrid();
 
   } else {
     // Switch to monthly view
     viewMode = 'monthly';
     periodLabel = 'Day of Month';
 
-    // Enable month selection in monthly view
-    document.querySelectorAll('.month-btn').forEach(btn => {
-      btn.style.pointerEvents = 'auto';
-      btn.style.opacity = '1';
-    });
-
     updateChart(selectedYear, selectedMonth, false);
     updatePeriodDisplayWithMonth(selectedYear, selectedMonth);
-    updateYearDisplay(); // Update visual state
-    updateMonthGrid();
+    refreshYearDisplay(); // Update visual state
+    refreshMonthGrid();
   }
 }
 
@@ -516,12 +484,12 @@ function loadDataFromTable() {
   // Initialize calendar
   initializeCalendar();
 
+  // Setup calendar navigation and year toggle (after data is loaded)
+  initYearNavigation();
+  setupYearToggle();
+
   updateChart(selectedYear, selectedMonth);
   updatePeriodDisplayWithMonth(selectedYear, selectedMonth);
 }
-
-// Setup calendar navigation and year toggle
-setupYearNavigation();
-setupYearToggle();
 
 loadDataFromTable();

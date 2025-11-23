@@ -22,3 +22,4 @@ backups/*
 build/*
 ignored_*
 CLAUDE.md
+.serena/

@@ -62,6 +62,7 @@
     </div>
     <div style="display: none">_DAILYPLAYTIMETABLE_</div>
     <script src="./resources/js/common.js"></script>
+    <script src="./resources/js/calendar-controls.js"></script>
     <script src="./resources/js/GamingTime.js"></script>
     <div id="navigation-bar">
       <button class="custom-button" id="summary-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/Summary.html';">Life Time Summary</button>

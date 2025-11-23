@@ -178,7 +178,7 @@ $(document).ready(function() {
   setupViewToggle();
   setupDateNavigation();
   setupMainViewButtons();
-  setupYearNavigation();
+  initYearNavigation();
 
   // Auto-select first game if available
   if (gamesList.length > 0) {
