@@ -377,6 +377,23 @@ function updateAllTimeChart() {
             color: getChartGridColor()
           }
         },
+        // Alignment Hack: Add an identical y scale on right side, to center the graph on page.
+        // Then hide the right side scale by setting label color identical to background.
+        yRight: {
+          position: 'right',
+          beginAtZero: true,
+          type: "log2",
+          title: chartTitleConfig("Hours Played", 15, getChartBackgroundColor()),
+          ticks: {
+            callback: function (value) {
+              return value.toFixed(1) + "h";
+            },
+            color: getChartBackgroundColor()
+          },
+          grid: {
+            display: false
+          }
+        },
         x: {
           title: chartTitleConfig("Date", 15),
           ticks: {
@@ -690,6 +707,33 @@ function updateSpecificDateChart() {
               family: 'monospace'
             },
             color: getChartTextColor()
+          },
+          grid: {
+            display: false
+          }
+        },
+        // Alignment Hack: Add an identical y scale on right side, to center the graph on page.
+        // Then hide the right side scale by setting label color identical to background.
+        yRight: {
+          position: 'right',
+          type: 'category',
+          title: {
+            display: false,
+            text: "Timeline",
+            font: {
+              size: 18,
+              family: "monospace"
+            },
+            color: getChartBackgroundColor()
+          },
+          ticks: {
+            autoSkip: false,
+            align: 'start',
+            font: {
+              size: 18,
+              family: 'monospace'
+            },
+            color: getChartBackgroundColor()
           },
           grid: {
             display: false
