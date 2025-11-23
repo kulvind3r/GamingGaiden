@@ -1,4 +1,4 @@
-/*global ChartDataLabels, Chart, chartTooltipConfig, chartLegendConfig, chartDataLabelFontConfig, buildGamingData*/
+/*global ChartDataLabels, Chart, chartTooltipConfig, chartLegendConfig, chartDataLabelFontConfig, buildGamingData, getChartTextColor*/
 /*from chart.js, common.js*/
 let gamingData = [];
 
@@ -43,7 +43,7 @@ function updateChart() {
         tooltip: chartTooltipConfig,
         legend: chartLegendConfig,
         datalabels: {
-          color: "#000000",
+          color: getChartTextColor(),
           font: chartDataLabelFontConfig,
         },
       },

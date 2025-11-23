@@ -1,4 +1,4 @@
-/*global ChartDataLabels, Chart, chartTooltipConfig, chartLegendConfig, chartDataLabelFontConfig, buildGamingData*/
+/*global ChartDataLabels, Chart, chartTooltipConfig, chartLegendConfig, chartDataLabelFontConfig, buildGamingData, getChartTextColor*/
 /*from chart.js, common.js*/
 
 let gamingData = [];
@@ -30,7 +30,7 @@ function updateChart() {
           formatter: function (value) {
             return value + " Hrs";
           },
-          color: "#000000",
+          color: getChartTextColor(),
           font: chartDataLabelFontConfig,
         },
       },

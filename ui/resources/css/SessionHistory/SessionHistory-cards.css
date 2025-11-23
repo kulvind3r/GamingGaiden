@@ -8,7 +8,7 @@
 
 #selected-date-title {
   margin: 0 0 10px 0;
-  color: var(--text-heading);
+  color: var(--text-primary);
   font-size: 20px;
 }
 
@@ -42,10 +42,10 @@
 }
 
 .game-card {
-  border: 1px solid var(--border-card);
+  border: 1px solid var(--border-light);
   border-radius: 8px;
   padding: 15px;
-  background: var(--bg-card);
+  background: var(--bg-panel);
   box-shadow: var(--shadow-card) 0 2px 4px;
   transition: transform 0.2s, box-shadow 0.2s;
   cursor: pointer;
@@ -98,7 +98,7 @@
 
 .game-card-stats {
   font-size: 12px;
-  color: var(--text-tertiary);
+  color: var(--text-secondary);
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
@@ -113,6 +113,6 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: var(--text-tertiary);
+  color: var(--text-secondary);
   font-size: 16px;
 }

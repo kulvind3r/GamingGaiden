@@ -30,6 +30,7 @@
   text-align: center;
   flex: 1;
   max-width: 150px;
+  color: var(--text-primary);
 }
 
 .calendar-nav-btn {
@@ -55,7 +56,7 @@
   font-family: monospace;
   background-color: var(--bg-primary);
   color: var(--text-secondary);
-  border: 1px solid var(--border-medium);
+  border: 1px solid var(--border-light);
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.2s;
@@ -75,7 +76,7 @@
 
 .month-btn.has-data {
   background-color: var(--accent-blue-light);
-  border-color: var(--accent-blue-pale);
+  border-color: var(--accent-blue-light);
 }
 
 .month-btn.has-data.selected {
@@ -102,7 +103,7 @@
   font-weight: bold;
   text-align: center;
   margin-bottom: 10px;
-  color: var(--text-heading);
+  color: var(--text-primary);
 }
 
 #day-headers {
@@ -119,7 +120,7 @@
   font-weight: bold;
   text-align: center;
   padding: 10px;
-  color: var(--text-heading);
+  color: var(--text-primary);
   border: 1px solid transparent;
   box-sizing: border-box;
 }
@@ -140,7 +141,7 @@
   font-family: monospace;
   background-color: var(--bg-primary);
   color: var(--text-secondary);
-  border: 1px solid var(--border-medium);
+  border: 1px solid var(--border-light);
   border-radius: 4px;
   cursor: pointer;
   transition: all 0.2s;
@@ -164,7 +165,7 @@
 
 .day-btn.has-data {
   background-color: var(--accent-blue-light);
-  border-color: var(--accent-blue-pale);
+  border-color: var(--accent-blue-light);
 }
 
 .day-btn.has-data.selected {

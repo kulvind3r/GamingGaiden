@@ -355,7 +355,7 @@ function updateAllTimeChart() {
           formatter: function (value) {
             return value != 0 ? value : "";
           },
-          color: "#000000",
+          color: getChartTextColor(),
           font: {
             size: 13,
             family: "monospace"
@@ -371,13 +371,19 @@ function updateAllTimeChart() {
             callback: function (value) {
               return value.toFixed(1) + "h";
             },
-            color: '#000'
+            color: getChartTextColor()
+          },
+          grid: {
+            color: getChartGridColor()
           }
         },
         x: {
           title: chartTitleConfig("Date", 15),
           ticks: {
-            color: '#000'
+            color: getChartTextColor()
+          },
+          grid: {
+            color: getChartGridColor()
           }
         }
       }
@@ -658,7 +664,7 @@ function updateSpecificDateChart() {
           formatter: function (value) {
             return value.duration != 0 ? value.duration + "h" : "";
           },
-          color: "#000000",
+          color: getChartTextColor(),
           font: {
             size: 13,
             family: "monospace"
@@ -683,7 +689,7 @@ function updateSpecificDateChart() {
               size: 18,
               family: 'monospace'
             },
-            color: '#000'
+            color: getChartTextColor()
           },
           grid: {
             display: false
@@ -699,7 +705,7 @@ function updateSpecificDateChart() {
             callback: function (value) {
               return value.toString();
             },
-            color: '#000'
+            color: getChartTextColor()
           },
           grid: {
             offset: false

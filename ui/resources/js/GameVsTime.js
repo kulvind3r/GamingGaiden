@@ -1,4 +1,4 @@
-/*global ChartDataLabels, Chart, chartTitleConfig, gamingData, Log2Axis*/
+/*global ChartDataLabels, Chart, chartTitleConfig, gamingData, Log2Axis, getChartTextColor, getChartGridColor, getChartBackgroundColor*/
 /*from chart.js, common.js and html templates*/
 
 let chart;
@@ -51,8 +51,11 @@ function updateChart(gameCount, labelText, stepSize = 1) {
         y: {
           ticks: {
             autoSkip: false,
-            color: '#000'
+            color: getChartTextColor()
           },
+          grid: {
+            color: getChartGridColor()
+          }
         },
         // Alignment Hack: Add an identical y scale on right side, to center the graph on page.
         // Then hide the right side scale by setting label color identical to background.
@@ -62,16 +65,19 @@ function updateChart(gameCount, labelText, stepSize = 1) {
             display: false,
           },
           ticks: {
-            color: "white",
+            color: getChartBackgroundColor(),
           },
         },
         x: {
           type: "log2",
           ticks: {
             stepSize: stepSize,
-            color: '#000'
+            color: getChartTextColor()
           },
           title: chartTitleConfig(labelText, 15),
+          grid: {
+            color: getChartGridColor()
+          }
         },
       },
       elements: {
@@ -89,7 +95,7 @@ function updateChart(gameCount, labelText, stepSize = 1) {
         datalabels: {
           anchor: "end",
           align: "right",
-          color: "#000000",
+          color: getChartTextColor(),
           font: {
             family: "monospace",
           },

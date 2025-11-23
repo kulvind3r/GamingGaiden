@@ -3,31 +3,22 @@
 :root {
   /* Background Colors */
   --bg-primary: #f5f5f5;           /* Main body background */
-  --bg-secondary: white;            /* Panel backgrounds */
-  --bg-tertiary: #fafafa;          /* Calendar columns, secondary areas */
-  --bg-panel: white;                /* Main content panels */
+  --bg-panel: white;                /* Panels, cards, secondary surfaces */
+  --bg-tertiary: #fafafa;          /* Calendar columns, game items, tertiary areas */
   --bg-button: #fcfcfd;            /* Button default background */
   --bg-button-hover: #e8e8e8;      /* Button hover state */
   --bg-button-active: #fff;        /* Button active state */
   --bg-calendar-selected: #e3f2fd; /* Calendar day selection */
-  --bg-card: white;                 /* Session cards */
-  --bg-game-item: #f0f0f0;         /* Game list items */
   --bg-table-stripe: #cddbe7;      /* Table row striping */
 
   /* Text Colors */
-  --text-primary: #333;             /* Primary headings and text */
-  --text-secondary: #666;           /* Secondary text, labels */
-  --text-tertiary: #999;            /* Disabled, stats text */
-  --text-button: #36395a;           /* Button text */
+  --text-primary: #333;             /* Primary text (headings, body, buttons) */
+  --text-secondary: #666;           /* Secondary text (game details, labels, stats) */
   --text-inverse: #fff;             /* Text on dark backgrounds */
-  --text-heading: #333;             /* h1, h2, h3 */
 
   /* Border Colors */
-  --border-primary: #333;           /* Table borders, strong dividers */
-  --border-light: #e0e0e0;         /* Section dividers, day grid */
-  --border-medium: #ddd;            /* Month buttons, inputs */
-  --border-input: #ccc;             /* Input field borders */
-  --border-card: rgba(0,0,0,0.1);  /* Card borders */
+  --border-primary: #333;           /* Table headers, strong dividers */
+  --border-light: #ddd;            /* All other borders, dividers, inputs */
 
   /* Shadow Colors */
   --shadow-primary: rgba(45, 35, 66, 0.4);    /* Outer shadow (short) */
@@ -40,11 +31,6 @@
   --accent-blue: #2196F3;
   --accent-blue-dark: #1976D2;
   --accent-blue-light: #e3f2fd;
-  --accent-blue-alt: #0d6efd;
-  --accent-blue-alt2: #0262ef;
-  --accent-blue-alt3: #0257d5;
-  --accent-blue-bright: #1f9afe;
-  --accent-blue-pale: #90caf9;
 
   /* Status Colors */
   --status-finished: #059b27;       /* Green - Finished games */
@@ -60,6 +46,8 @@
   /* Chart Colors */
   --chart-bg: white;                /* Chart background */
   --chart-blue: rgba(55, 162, 235, 0.5);
+  --chart-text: #000;               /* Chart text (labels, ticks) */
+  --chart-grid: rgba(0, 0, 0, 0.1); /* Chart grid lines */
 
   /* Table Specific */
   --table-header-bg: #333;

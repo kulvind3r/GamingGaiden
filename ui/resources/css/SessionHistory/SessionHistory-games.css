@@ -11,7 +11,7 @@
   padding: 10px;
   font-size: 14px;
   font-family: monospace;
-  border: 1px solid var(--border-input);
+  border: 1px solid var(--border-light);
   border-radius: 4px;
   box-sizing: border-box;
 }
@@ -85,7 +85,7 @@
 }
 
 .game-list-item:hover {
-  background-color: var(--bg-game-item);
+  background-color: var(--bg-tertiary);
 }
 
 .game-list-item.active {
@@ -124,7 +124,7 @@
 }
 
 .stats {
-  color: var(--text-tertiary);
+  color: var(--text-secondary);
 }
 
 /* Games View Content - inherits from .left-content */
@@ -142,7 +142,7 @@
 
 #selected-game-name {
   margin: 0 0 5px 0;
-  color: var(--text-heading);
+  color: var(--text-primary);
   font-size: 20px;
 }
 
@@ -244,6 +244,6 @@
   align-items: center;
   justify-content: center;
   height: 100%;
-  color: var(--text-tertiary);
+  color: var(--text-secondary);
   font-size: 16px;
 }

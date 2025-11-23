@@ -1,4 +1,4 @@
-/*global Chart*/
+/*global Chart, ChartDataLabels, chartTitleConfig, getChartTextColor, getChartGridColor*/
 
 // ===== GLOBAL STATE VARIABLES =====
 

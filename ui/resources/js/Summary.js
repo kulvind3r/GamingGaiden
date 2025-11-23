@@ -1,4 +1,4 @@
-/*global Chart, buildGamingData, chartTitleConfig, ChartDataLabels, DOMPurify, Log2Axis*/
+/*global Chart, buildGamingData, chartTitleConfig, ChartDataLabels, DOMPurify, Log2Axis, getChartTextColor, getChartGridColor*/
 /*from chart.js, common.js, purify.min.js*/
 
 let gamingData = [];
@@ -88,14 +88,20 @@ function updateSummayChart() {
           type: "log2",
           title: chartTitleConfig("PlayTime (Hours)"),
           ticks: {
-            color: '#000'
+            color: getChartTextColor()
+          },
+          grid: {
+            color: getChartGridColor()
           }
         },
         x: {
           type: "log2",
           title: chartTitleConfig("Game Sessions", 15),
           ticks: {
-            color: '#000'
+            color: getChartTextColor()
+          },
+          grid: {
+            color: getChartGridColor()
           }
         },
       },
@@ -288,7 +294,7 @@ function updateAnnualHoursChart() {
           max: maxYAxis,
           ticks: {
             stepSize: 100,
-            color: '#000'
+            color: getChartTextColor()
           },
           title: chartTitleConfig("Hours Played", 15),
           grid: {
@@ -298,7 +304,7 @@ function updateAnnualHoursChart() {
         x: {
           title: chartTitleConfig("Year", 15),
           ticks: {
-            color: '#000'
+            color: getChartTextColor()
           },
           grid: {
             display: false
@@ -318,7 +324,7 @@ function updateAnnualHoursChart() {
           },
           anchor: "end",
           align: "top",
-          color: "#000000",
+          color: getChartTextColor(),
           font: {
             size: 14,
             family: "monospace",

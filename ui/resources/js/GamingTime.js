@@ -1,4 +1,4 @@
-/*global ChartDataLabels, Chart, chartTitleConfig, buildGamingData, Log2Axis*/
+/*global ChartDataLabels, Chart, chartTitleConfig, buildGamingData, Log2Axis, getChartTextColor, getChartGridColor, getChartBackgroundColor*/
 /*from chart.js, common.js*/
 
 let gamingData = [];
@@ -189,19 +189,22 @@ function updateChart(
           type: "log2",
           title: chartTitleConfig("PlayTime (Hours)", 15),
           ticks: {
-            color: '#000'
+            color: getChartTextColor()
+          },
+          grid: {
+            color: getChartGridColor()
           }
         },
         // Alignment Hack: Add an identical y scale on right side, to center the graph on page.
         // Then hide the right side scale by setting label color identical to background.
         yRight: {
-          title: chartTitleConfig("PlayTime (Hours)", 15, "#fff"),
+          title: chartTitleConfig("PlayTime (Hours)", 15, getChartBackgroundColor()),
           position: "right",
           grid: {
             display: false,
           },
           ticks: {
-            color: "white",
+            color: getChartBackgroundColor(),
           },
         },
         x: {
@@ -217,9 +220,12 @@ function updateChart(
               if (day === 0 || day === 6) {
                 return "red";
               }
-              return "#000";
+              return getChartTextColor();
             },
           },
+          grid: {
+            color: getChartGridColor()
+          }
         },
       },
       plugins: {
@@ -239,7 +245,7 @@ function updateChart(
             }
             return formattedValue;
           },
-          color: "#000000",
+          color: getChartTextColor(),
           font: {
             family: "monospace",
           },

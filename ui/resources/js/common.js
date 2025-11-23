@@ -37,6 +37,16 @@ function getChartBackgroundColor() {
   return getComputedStyle(document.documentElement).getPropertyValue('--chart-bg').trim();
 }
 
+function getChartTextColor() {
+  // Read the --chart-text CSS variable from the root element
+  return getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim();
+}
+
+function getChartGridColor() {
+  // Read the --chart-grid CSS variable from the root element
+  return getComputedStyle(document.documentElement).getPropertyValue('--chart-grid').trim();
+}
+
 // Chart.js plugin to apply theme-aware background color
 const chartBackgroundPlugin = {
   id: 'chartBackground',
@@ -55,11 +65,11 @@ if (typeof Chart !== 'undefined') {
   Chart.register(chartBackgroundPlugin);
 }
 
-function chartTitleConfig(title, padding = 0, color = "#000") {
+function chartTitleConfig(title, padding = 0, color = null) {
   return {
     display: true,
     padding: padding,
-    color: color,
+    color: color || getChartTextColor(),
     text: title,
     font: {
       size: 18,
@@ -166,4 +176,6 @@ chartTitleConfig;
 buildGamingData;
 Log2Axis;
 getChartBackgroundColor;
+getChartTextColor;
+getChartGridColor;
 chartBackgroundPlugin;
