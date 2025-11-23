@@ -18,6 +18,7 @@ var chartLegendConfig = {
   labels: {
     boxWidth: 20,
     padding: 40,
+    color: getChartTextColor(),
     font: {
       size: 18,
       weight: "bold",
@@ -33,13 +34,13 @@ var chartDataLabelFontConfig = {
 };
 
 function getChartBackgroundColor() {
-  // Read the --chart-bg CSS variable from the root element
-  return getComputedStyle(document.documentElement).getPropertyValue('--chart-bg').trim();
+  // Read the --bg-panel CSS variable from the root element
+  return getComputedStyle(document.documentElement).getPropertyValue('--bg-panel').trim();
 }
 
 function getChartTextColor() {
-  // Read the --chart-text CSS variable from the root element
-  return getComputedStyle(document.documentElement).getPropertyValue('--chart-text').trim();
+  // Read the --text-primary CSS variable from the root element
+  return getComputedStyle(document.documentElement).getPropertyValue('--text-primary').trim();
 }
 
 function getChartGridColor() {

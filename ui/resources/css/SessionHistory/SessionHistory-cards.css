@@ -46,7 +46,7 @@
   border-radius: 8px;
   padding: 15px;
   background: var(--bg-panel);
-  box-shadow: var(--shadow-card) 0 2px 4px;
+  box-shadow: var(--shadow-secondary) 0 2px 4px;
   transition: transform 0.2s, box-shadow 0.2s;
   cursor: pointer;
   display: flex;
@@ -59,7 +59,7 @@
 
 .game-card:hover {
   transform: translateY(-2px);
-  box-shadow: var(--shadow-card) 0 4px 8px;
+  box-shadow: var(--shadow-secondary) 0 4px 8px;
   border-color: var(--accent-blue);
 }
 

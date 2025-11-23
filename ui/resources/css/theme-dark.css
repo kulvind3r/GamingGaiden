@@ -7,8 +7,6 @@
   --bg-tertiary: #222222;          /* Calendar columns, game items, tertiary areas */
   --bg-button: #3a3a3a;            /* Button default background */
   --bg-button-hover: #4a4a4a;      /* Button hover state */
-  --bg-button-active: #505050;     /* Button active state */
-  --bg-calendar-selected: #1e3a5f; /* Calendar day selection */
   --bg-table-stripe: #2d3a47;      /* Table row striping */
 
   /* Text Colors */
@@ -25,7 +23,6 @@
   --shadow-secondary: rgba(0, 0, 0, 0.4);  /* Outer shadow (diffused) */
   --shadow-inset: #1a1a2a;                  /* Button inset */
   --shadow-image: rgba(0, 0, 0, 0.8);      /* Image drop shadows */
-  --shadow-card: rgba(0,0,0,0.3);          /* Card shadows */
 
   /* Accent Colors - Blue (adjusted for dark mode visibility) */
   --accent-blue: #42a5f5;
@@ -44,22 +41,14 @@
   --status-error-pale: #4a2424;
 
   /* Chart Colors */
-  --chart-bg: #2a2a2a;              /* Chart background */
   --chart-blue: rgba(66, 165, 245, 0.5);
-  --chart-text: #e0e0e0;            /* Chart text (labels, ticks) */
   --chart-grid: rgba(255, 255, 255, 0.1); /* Chart grid lines */
 
   /* Table Specific */
   --table-header-bg: #1a1a1a;
-  --table-header-text: #e0e0e0;
-  --table-hover: #4a4a4a;
 
   /* Scrollbar Colors */
   --scrollbar-track: #2a2a2a;
   --scrollbar-thumb: #555;
   --scrollbar-thumb-hover: #777;
-
-  /* Interactive States */
-  --hover-overlay: rgba(255,255,255,0.05);
-  --active-overlay: rgba(255,255,255,0.1);
 }

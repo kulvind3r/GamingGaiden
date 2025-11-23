@@ -1,4 +1,4 @@
-/*global ChartDataLabels, Chart, chartTooltipConfig, chartLegendConfig, chartDataLabelFontConfig, buildGamingData, getChartTextColor*/
+/*global ChartDataLabels, Chart, chartTooltipConfig, chartLegendConfig, chartDataLabelFontConfig, buildGamingData, getChartTextColor, getChartBackgroundColor*/
 /*from chart.js, common.js*/
 let gamingData = [];
 
@@ -18,20 +18,21 @@ function updateChart() {
         {
           data: gamingData.map((row) => row.count),
           borderWidth: 2,
+          borderColor: getChartBackgroundColor(),
           backgroundColor: [
-            "#1ea1e6",
-            "#ff6481",
-            "#3dbebe",
-            "#ff9d4c",
-            "#9669f8",
-            "#ffca63",
-            "#c7c9cd",
+            "#ff6384",
+            "#36a2eb",
+            "#ff9f40",
             "#4e79a7",
-            "#bc80bd",
-            "#ff9da7",
-            "#fb8072",
-            "#a0cbe8",
-            "#bebada",
+            "#e91e63", 
+            "#26a69a",
+            "#7e57c2",
+            "#4caf50",
+            "#ff7043",
+            "#5c6bc0",
+            "#8e24aa",
+            "#d84315",
+            "#0288d1"
           ],
         },
       ],

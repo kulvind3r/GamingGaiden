@@ -82,7 +82,7 @@ table {
 /* Table Header styles */
 th {
   background-color: var(--table-header-bg);
-  color: var(--table-header-text);
+  color: var(--text-inverse);
   font-weight: bold;
   text-align: center !important;
 }
@@ -92,14 +92,6 @@ th:first-child {
 }
 
 /* Table Row styles */
-tr:hover {
-  background-color: var(--table-hover) !important;
-}
-
-tr:nth-child(even):hover {
-  background-color: var(--table-hover) !important;
-}
-
 tr:nth-child(even) {
   background-color: var(--bg-table-stripe) !important;
 }
@@ -154,18 +146,22 @@ td:nth-child(6) img {
 #DataTables_Table_0_filter {
   margin: 0;
   text-align: right;
+  color: var(--text-primary);
 }
 
 #DataTables_Table_0_info {
   margin-left: 0;
+  color: var(--text-primary);
 }
 
 #DataTables_Table_0_paginate .disabled {
-  color: white !important;
+  color: var(--text-secondary) !important;
+  opacity: 0.4;
 }
 
 #DataTables_Table_0_paginate {
   margin-right: 0;
+  color: var(--text-primary);
 }
 
 /* Playtime relative bar fill */
