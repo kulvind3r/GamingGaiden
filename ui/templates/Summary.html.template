@@ -55,6 +55,7 @@
           <div id="pc-name"></div>
           <button class="custom-button" id="next-button">&#11166;</button>
         </div>
+        <div id="pc-warning">_PCWARNING_</div>
       </div>
     </div>
     <div id="main-row">
@@ -69,6 +70,7 @@
             <p id="pc-in-use"></p>
             <p id="pc-lifespan"></p>
             <p id="pc-price"></p>
+            <p id="pc-games-played"></p>
             <p id="pc-hours"></p>
             <p id="pc-running-cost"></p>
             <p id="pc-stat-disclaimer" style="font-size: 11px;">

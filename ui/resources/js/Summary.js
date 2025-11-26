@@ -184,7 +184,7 @@ function loadPCDataFromTable() {
   const pcTable = document.getElementById("pc-table").querySelector("table");
   const pcRows = pcTable.querySelectorAll("tbody tr");
 
-  if (pcRows.length = 0) {
+  if (pcRows.length == 0) {
     return
   }
 
@@ -217,7 +217,8 @@ function loadPCDataFromTable() {
     }
 
     const age = row.cells[7].textContent;
-    const totalHours = row.cells[8].textContent;
+    const gamesPlayed = row.cells[8].textContent;
+    const totalHours = row.cells[9].textContent;
 
     return {
       iconUri,
@@ -228,6 +229,7 @@ function loadPCDataFromTable() {
       start_date,
       end_date,
       age,
+      gamesPlayed,
       totalHours,
     };
   });
@@ -251,12 +253,13 @@ function updatePCStatsSection(pcData) {
   $("#pc-icon").html(DOMPurify.sanitize(pcData.iconUri));
 
   $("#pc-in-use").html(DOMPurify.sanitize("<b>In Use: </b>" + pcData.start_date + " - " + pcData.end_date));
-  if (pcData.current == "TRUE") {
+  if (pcData.in_use == "TRUE") {
     $("#pc-in-use").html(DOMPurify.sanitize("<b>In Use: </b>" + pcData.start_date + " - Present"));
   }
 
   $("#pc-lifespan").html(DOMPurify.sanitize("<b>Lifespan: </b>" + pcData.age));
   $("#pc-price").html(DOMPurify.sanitize("<b>Price: </b>" + pcData.currency + pcData.cost));
+  $("#pc-games-played").html(DOMPurify.sanitize("<b>Games Played: </b>" + pcData.gamesPlayed));
   $("#pc-hours").html(DOMPurify.sanitize("<b>Hours Logged: </b>" + pcData.totalHours + "<sup> ✞</sup>"));
   $("#pc-running-cost").html(DOMPurify.sanitize("<b>Running Cost: </b>" + pcData.currency + valuePerHour + "/Hour | " + pcData.currency + valuePerMonth + "/Month"));
 }

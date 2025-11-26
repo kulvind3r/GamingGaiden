@@ -13,6 +13,25 @@
     <script src="./resources/js/jquery-3.7.1.min.js"></script>
     <script src="./resources/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript">
+      function formatPlaytime(minutes) {
+        var hours = Math.floor(minutes / 60);
+        var mins = minutes % 60;
+        return hours + " Hr " + mins + " Min";
+      }
+
+      function updateTotalPlaytime() {
+        var table = $("table").DataTable();
+        var total = 0;
+
+        table.rows({search:'applied'}).every(function() {
+          var data = this.data();
+          total += parseInt(data[3]) || 0;
+        });
+
+        var formattedTotal = formatPlaytime(total);
+        $("#TotalPlaytime").html('Total Playtime\n' + formattedTotal);
+      }
+
       $(document).ready(function () {
         $("table").each(function () {
           var tHead = $(this).find("tr:first").html();
@@ -23,7 +42,7 @@
             .before("<thead>" + tHead + "</thead>");
         });
 
-        $("table").DataTable({
+        var dataTable = $("table").DataTable({
           columnDefs: [
             {
               targets: 3,
@@ -72,9 +91,12 @@
           searching: true,
         });
 
+        dataTable.on('search.dt', updateTotalPlaytime);
+        dataTable.on('length.dt', updateTotalPlaytime);
+
         $("#TotalPlaytime-placeholder")[0].insertAdjacentHTML(
           "beforeend",
-          '<div id="TotalPlaytime">Total Playtime\n_TOTALPLAYTIME_</div>'
+          '<div id="TotalPlaytime">Total Playtime\n</div>'
         );
 
         var filterElement = $("#DataTables_Table_0_filter").detach();
@@ -92,9 +114,11 @@
                 "Show All";
               $("table").DataTable().page.len(8).draw();
             }
+            updateTotalPlaytime();
           });
 
         $("#games-table-container").addClass("ready");
+        updateTotalPlaytime();
       });
     </script>
   </head>

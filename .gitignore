@@ -22,4 +22,7 @@ backups/*
 build/*
 ignored_*
 CLAUDE.md
+coderules.md
 .serena/
+theme.css
+settings.ini

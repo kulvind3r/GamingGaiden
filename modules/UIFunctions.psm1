@@ -27,10 +27,11 @@ class GamingPC {
     [ValidateNotNullOrEmpty()][string]$StartDate
     [ValidateNotNullOrEmpty()][string]$EndDate
     [ValidateNotNullOrEmpty()][string]$Age
+    [ValidateNotNullOrEmpty()][string]$GamesPlayed
     [ValidateNotNullOrEmpty()][string]$TotalHours
-    
 
-    GamingPC($IconUri, $Name, $Current, $Cost, $Currency, $StartDate, $EndDate, $Age, $TotalHours) {
+
+    GamingPC($IconUri, $Name, $Current, $Cost, $Currency, $StartDate, $EndDate, $Age, $GamesPlayed, $TotalHours) {
         $this.IconUri = $IconUri
         $this.Name = $Name
         $this.Current = $Current
@@ -39,6 +40,7 @@ class GamingPC {
         $this.StartDate = $StartDate
         $this.EndDate = $EndDate
         $this.Age = $Age
+        $this.GamesPlayed = $GamesPlayed
         $this.TotalHours = $TotalHours
     }
 }
@@ -125,11 +127,7 @@ function RenderGameList() {
 
         # Assign to null to avoid appending output to pipeline, improves performance and resource consumption
         $null = $games.Add($currentGame)
-
-        $totalPlayTime += $gameRecord.play_time
     }
-
-    $totalPlayTimeString = PlayTimeMinsToString $totalPlayTime
 
     $table = $games | ConvertTo-Html -Fragment
 
@@ -139,7 +137,6 @@ function RenderGameList() {
     $report = $report -replace "Completed", "Status"
     $report = $report -replace "_MAXPLAYTIME_", $maxPlayTime
     $report = $report -replace "_TOTALGAMECOUNT_", $games.Count
-    $report = $report -replace "_TOTALPLAYTIME_", $totalPlayTimeString
 
     [System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $workingDirectory\ui\AllGames.html
 }
@@ -215,22 +212,15 @@ function RenderSummary() {
         return $false
     }
 
-    $getGamingPCsQuery = "SELECT gp.*,
-                            SUM(dp.play_time) / 60 AS total_hours,
-                            CAST((julianday(COALESCE(datetime(gp.end_date, 'unixepoch'), datetime('now'))) - julianday(datetime(gp.start_date, 'unixepoch'))) / 365.25 AS INTEGER) AS age_years,
-                            CAST((julianday(COALESCE(datetime(gp.end_date, 'unixepoch'), datetime('now'))) - julianday(datetime(gp.start_date, 'unixepoch'))) % 365.25 / 30.4375 AS INTEGER) AS age_months
-                        FROM 
-                            gaming_pcs gp
-                        JOIN 
-                            daily_playtime dp 
-                        ON 
-                            dp.play_date BETWEEN DATE(datetime(gp.start_date, 'unixepoch')) 
-                                            AND DATE(COALESCE(datetime(gp.end_date, 'unixepoch'), datetime('now')))
-                        GROUP BY 
-                            gp.name
-                        ORDER BY
-                            gp.current DESC, gp.end_date DESC;"
+    $getGamingPCsQuery = "SELECT * FROM gaming_pcs ORDER BY in_use DESC, end_date DESC"
     $gamingPCData = RunDBQuery $getGamingPCsQuery
+
+    # Check if PC warning should be shown
+    $currentPC = Read-Setting "current_pc"
+    $pcWarning = ""
+    if ($null -eq $currentPC -and $gamingPCData.Length -gt 1) {
+        $pcWarning = "<p style='color: red; font-size: 12px; margin: 5px 0;'>⚠ Current PC unidentified. Mark a PC as current to measure PC usage</p>"
+    }
 
     $TotalAnnualGamingHoursQuery = "SELECT 
                                     strftime('%Y', play_date) AS Year, 
@@ -260,9 +250,23 @@ function RenderSummary() {
 
         $iconBitmap.Dispose()
 
-        $pcAge = "{0} Years and {1} Months" -f $gamingPCRecord.age_years, $gamingPCRecord.age_months
+        # Calculate PC age in PowerShell
+        $startDate = (Get-Date "1970-01-01 00:00:00Z").AddSeconds($gamingPCRecord.start_date)
+        $endDate = if ($gamingPCRecord.in_use -eq 'TRUE') { Get-Date } else { (Get-Date "1970-01-01 00:00:00Z").AddSeconds($gamingPCRecord.end_date) }
+        $ageSpan = New-TimeSpan -Start $startDate -End $endDate
+        $ageYears = [Math]::Floor($ageSpan.TotalDays / 365.25)
+        $ageMonths = [Math]::Floor(($ageSpan.TotalDays % 365.25) / 30.4375)
+        $pcAge = "{0} Years and {1} Months" -f $ageYears, $ageMonths
 
-        $thisPC = [GamingPC]::new($pcIconUri, $name, $gamingPCRecord.current, $gamingPCRecord.cost, $gamingPCRecord.currency, $gamingPCRecord.start_date, $gamingPCRecord.end_date, $pcAge, $gamingPCRecord.total_hours)
+        # Get game count for this PC
+        $getGamesPlayedQuery = "SELECT COUNT(*) as game_count FROM games WHERE gaming_pc_name LIKE '%{0}%'" -f $name
+        $gamesPlayedResult = RunDBQuery $getGamesPlayedQuery
+        $gamesPlayed = $gamesPlayedResult.game_count
+
+        # Convert playtime to hours string
+        $totalHours = PlayTimeMinsToString $gamingPCRecord.total_play_time
+
+        $thisPC = [GamingPC]::new($pcIconUri, $name, $gamingPCRecord.in_use, $gamingPCRecord.cost, $gamingPCRecord.currency, $gamingPCRecord.start_date, $gamingPCRecord.end_date, $pcAge, $gamesPlayed, $totalHours)
 
         $null = $gamingPCs.add($thisPC)
     }
@@ -297,6 +301,7 @@ function RenderSummary() {
     $report = $report -replace "_SUMMARYSTATEMENT_", $summaryStatement
     $report = $report -replace "_ANNUALGAMINGHOURSTABLE_", $annualHoursTable
     $report = $report -replace "_PCTABLE_", $pcTable
+    $report = $report -replace "_PCWARNING_", $pcWarning
 
     [System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $workingDirectory\ui\Summary.html
 }

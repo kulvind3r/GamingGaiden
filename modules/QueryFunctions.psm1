@@ -178,7 +178,7 @@ function GetPCDetails($PC) {
 
     $PCDetails = RunDBQuery $getPCDetailsQuery
 
-    Log ("Found details: name: {0}, cost: {1}, start_date: {2}, end_date: {3}, current: {4}" -f $PCDetails.name, $PCDetails.cost, $PCDetails.start_date, $PCDetails.end_date, $PCDetails.current)
+    Log ("Found details: name: {0}, cost: {1}, start_date: {2}, end_date: {3}, in_use: {4}" -f $PCDetails.name, $PCDetails.cost, $PCDetails.start_date, $PCDetails.end_date, $PCDetails.in_use)
     return $PCDetails
 }
 

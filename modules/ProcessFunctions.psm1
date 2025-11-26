@@ -161,19 +161,43 @@ function MonitorGame($DetectedExe) {
         $updatedPlayTime = $recordedGamePlayTime + $currentPlayTime
         $updatedIdleTime = $recordedGameIdleTime + $currentIdleTime
 
-        UpdateGameOnSession -GameName $gameName -GamePlayTime $updatedPlayTime -GameIdleTime $updatedIdleTime -GameLastPlayDate $updatedLastPlayDate
+        # Get current PC and append if needed
+        $currentPC = Read-Setting "current_pc"
+        $updatedPCList = ""
+        if ($null -ne $currentPC) {
+            $gameNamePattern = SQLEscapedMatchPattern($gameName.Trim())
+            $getGamingPCQuery = "SELECT gaming_pc_name FROM games WHERE name LIKE '{0}'" -f $gameNamePattern
+            $existingPCs = (RunDBQuery $getGamingPCQuery).gaming_pc_name
+
+            if ([string]::IsNullOrEmpty($existingPCs)) {
+                $updatedPCList = $currentPC
+            } elseif ($existingPCs -notlike "*$currentPC*") {
+                $updatedPCList = $existingPCs + "," + $currentPC
+            }
+        }
+
+        UpdateGameOnSession -GameName $gameName -GamePlayTime $updatedPlayTime -GameIdleTime $updatedIdleTime -GameLastPlayDate $updatedLastPlayDate -GameGamingPCName $updatedPCList
     }
     else {
         Log "Detected emulated game is new and doesn't exist already. Adding to database."
 
+        $currentPC = Read-Setting "current_pc"
+        $pcNameForGame = if ($null -ne $currentPC) { $currentPC } else { "" }
+
         SaveGame -GameName $gameName -GameExeName $DetectedExe -GameIconPath "./icons/default.png" `
-            -GamePlayTime $currentPlayTime -GameIdleTime $currentIdleTime -GameLastPlayDate $updatedLastPlayDate -GameCompleteStatus 'FALSE' -GamePlatform $emulatedGameDetails.Platform -GameSessionCount 1 -GameRomBasedName $gameName
+            -GamePlayTime $currentPlayTime -GameIdleTime $currentIdleTime -GameLastPlayDate $updatedLastPlayDate -GameCompleteStatus 'FALSE' -GamePlatform $emulatedGameDetails.Platform -GameSessionCount 1 -GameRomBasedName $gameName -GameGamingPCName $pcNameForGame
     }
 
     RecordPlaytimOnDate($currentPlayTime)
 
     # Record individual session history
     RecordSessionHistory -GameName $gameName -StartTime $sessionStartTimeUnix -Duration $currentPlayTime
+
+    # Update current PC playtime
+    $currentPC = Read-Setting "current_pc"
+    if ($null -ne $currentPC) {
+        UpdatePCPlaytime -PCName $currentPC -DurationMinutes $currentPlayTime
+    }
 
     $databaseFileHashAfter = CalculateFileHash '.\GamingGaiden.db'
     Log "Database hash after: $databaseFileHashAfter"

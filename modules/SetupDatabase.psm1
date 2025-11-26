@@ -83,6 +83,54 @@
         Invoke-SqliteQuery -Query $createSessionHistoryTableQuery -SQLiteConnection $dbConnection
         # End Migration 5
 
+        # Migration 6 - Multi-PC tracking: Add gaming_pc_name, total_play_time and in_use columns
+        if (-Not $gamesTableSchema.name.Contains("gaming_pc_name")) {
+            $addGamingPCNameColumnInGamesTableQuery = "ALTER TABLE games ADD COLUMN gaming_pc_name TEXT"
+            Invoke-SqliteQuery -Query $addGamingPCNameColumnInGamesTableQuery -SQLiteConnection $dbConnection
+        }
+
+        $gamingPCsTableSchema = Invoke-SqliteQuery -query "PRAGMA table_info('gaming_pcs')" -SQLiteConnection $dbConnection
+
+        if (-Not $gamingPCsTableSchema.name.Contains("total_play_time")) {
+            Invoke-SqliteQuery -Query "ALTER TABLE gaming_pcs ADD COLUMN total_play_time INTEGER DEFAULT 0" -SQLiteConnection $dbConnection
+        }
+
+        if (-Not $gamingPCsTableSchema.name.Contains("in_use")) {
+            Invoke-SqliteQuery -Query "ALTER TABLE gaming_pcs ADD COLUMN in_use TEXT" -SQLiteConnection $dbConnection
+            Invoke-SqliteQuery -Query "UPDATE gaming_pcs SET in_use = current" -SQLiteConnection $dbConnection
+        }
+        # End Migration 6
+
+        # Migration 7 - Remove current column from gaming_pcs
+        if ($gamingPCsTableSchema.name.Contains("current")) {
+            # Create new table without current column
+            $createNewPCTableQuery = "CREATE TABLE gaming_pcs_new (
+                                name TEXT PRIMARY KEY NOT NULL,
+                                icon BLOB,
+                                cost TEXT,
+                                currency TEXT,
+                                start_date INTEGER,
+                                end_date INTEGER,
+                                in_use TEXT,
+                                total_play_time INTEGER DEFAULT 0)"
+
+            Invoke-SqliteQuery -Query $createNewPCTableQuery -SQLiteConnection $dbConnection
+
+            # Copy all data from old table to new table
+            $copyDataQuery = "INSERT INTO gaming_pcs_new (name, icon, cost, currency, start_date, end_date, in_use, total_play_time)
+                              SELECT name, icon, cost, currency, start_date, end_date, in_use, total_play_time
+                              FROM gaming_pcs"
+
+            Invoke-SqliteQuery -Query $copyDataQuery -SQLiteConnection $dbConnection
+
+            # Drop old table
+            Invoke-SqliteQuery -Query "DROP TABLE gaming_pcs" -SQLiteConnection $dbConnection
+
+            # Rename new table to original name
+            Invoke-SqliteQuery -Query "ALTER TABLE gaming_pcs_new RENAME TO gaming_pcs" -SQLiteConnection $dbConnection
+        }
+        # End Migration 7
+
         $dbConnection.Close()
         $dbConnection.Dispose()
     }
