@@ -65,7 +65,7 @@
               },
             },
             {
-              targets: 6,
+              targets: 7,
               render: function (data, type, row, meta) {
                 if (type === "display" || type === "filter") {
                   var utcSeconds = parseInt(data);
@@ -82,7 +82,7 @@
             },
           ],
           order: [
-            [6, "desc"],
+            [7, "desc"],
           ],
           ordering: true,
           paging: "numbers",

@@ -6,8 +6,9 @@
     [ValidateNotNullOrEmpty()][string]$Session_Count
     [ValidateNotNullOrEmpty()][string]$Completed
     [ValidateNotNullOrEmpty()][string]$Last_Played_On
+    [string]$Gaming_PC
 
-    Game($IconUri, $Name, $Platform, $Playtime, $SessionCount, $Completed, $LastPlayDate) {
+    Game($IconUri, $Name, $Platform, $Playtime, $SessionCount, $Completed, $LastPlayDate, $GamingPC) {
         $this.Icon = $IconUri
         $this.Name = $Name
         $this.Platform = $Platform
@@ -15,6 +16,7 @@
         $this.Session_Count = $SessionCount
         $this.Completed = $Completed
         $this.Last_Played_On = $LastPlayDate
+        $this.Gaming_PC = $GamingPC
     }
 }
 
@@ -65,7 +67,7 @@ function RenderGameList() {
 
     $workingDirectory = (Get-Location).Path
 
-    $getAllGamesQuery = "SELECT name, icon, platform, play_time, session_count, completed, last_play_date, status FROM games"
+    $getAllGamesQuery = "SELECT name, icon, platform, play_time, session_count, completed, last_play_date, status, gaming_pc_name FROM games"
     $gameRecords = RunDBQuery $getAllGamesQuery
     if ($gameRecords.Length -eq 0) {
         if(-Not $InBackground) {
@@ -109,6 +111,13 @@ function RenderGameList() {
             $iconBitmap.Dispose()
         }
 
+        # Process gaming PC names
+        $gamingPCs = ""
+        if ($null -ne $gameRecord.gaming_pc_name -and $gameRecord.gaming_pc_name -ne "") {
+            $pcArray = $gameRecord.gaming_pc_name -split ','
+            $gamingPCs = $pcArray -join '<br/>'
+        }
+
         $statusUri = "<div>Finished</div><img src=`".\resources\images\finished.png`">"
         if ($gameRecord.completed -eq 'FALSE') {
             $statusUri = "<div>Playing</div><img src=`".\resources\images\playing.png`">"
@@ -123,18 +132,19 @@ function RenderGameList() {
             $statusUri = "<div>Forever</div><img src=`".\resources\images\forever.png`">"
         }
 
-        $currentGame = [Game]::new($iconUri, $name, $gameRecord.platform, $gameRecord.play_time, $gameRecord.session_count, $statusUri, $gameRecord.last_play_date)
+        $currentGame = [Game]::new($iconUri, $name, $gameRecord.platform, $gameRecord.play_time, $gameRecord.session_count, $statusUri, $gameRecord.last_play_date, $gamingPCs)
 
         # Assign to null to avoid appending output to pipeline, improves performance and resource consumption
         $null = $games.Add($currentGame)
     }
 
-    $table = $games | ConvertTo-Html -Fragment
+    $table = $games | ConvertTo-Html -Fragment -Property Icon, Name, Platform, Playtime, Session_Count, Completed, Gaming_PC, Last_Played_On
 
     $report = (Get-Content $workingDirectory\ui\templates\AllGames.html.template) -replace "_GAMESTABLE_", $table
     $report = $report -replace "Last_Played_On", "Last Played On"
     $report = $report -replace "Session_Count", "Sessions"
     $report = $report -replace "Completed", "Status"
+    $report = $report -replace "Gaming_PC", "Gaming PC"
     $report = $report -replace "_MAXPLAYTIME_", $maxPlayTime
     $report = $report -replace "_TOTALGAMECOUNT_", $games.Count
 

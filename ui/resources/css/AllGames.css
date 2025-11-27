@@ -142,6 +142,12 @@ td:nth-child(6) img {
   display: block;
 }
 
+/* Define specific styles for the Gaming PC column */
+td:nth-child(7) {
+  width: auto;
+  line-height: 1.4;
+}
+
 /* Override default data table css styles */
 #DataTables_Table_0_filter {
   margin: 0;
