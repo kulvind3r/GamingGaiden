@@ -108,6 +108,8 @@ td {
 /* Define specific styles for the Icon column */
 td:first-child {
   width: 5%;
+  position: relative;
+  overflow: visible;
 }
 
 td:first-child img {
@@ -116,6 +118,15 @@ td:first-child img {
   margin-right: auto;
   display: block;
   filter: drop-shadow(4px 4px 2px var(--shadow-image));
+  transition: transform 0.2s ease;
+  cursor: pointer;
+  position: relative;
+}
+
+td:first-child img:hover {
+  transform: scale(2);
+  z-index: 1000;
+  filter: drop-shadow(8px 8px 4px var(--shadow-image));
 }
 
 /* Define specific styles for the Name column */

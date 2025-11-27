@@ -93,11 +93,31 @@
   border-left: 4px solid var(--accent-blue);
 }
 
+.game-list-item {
+  padding: 15px;
+  border-bottom: 1px solid var(--border-light);
+  cursor: pointer;
+  transition: background-color 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .game-icon {
   height: 36px;
   width: auto;
   filter: drop-shadow(4px 4px 2px var(--shadow-image));
   flex-shrink: 0;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.2s ease;
+}
+
+.game-icon:hover {
+  position: fixed;
+  transform: scale(3.5);
+  z-index: 10000;
+  filter: drop-shadow(8px 8px 4px var(--shadow-image));
 }
 
 .game-info {
