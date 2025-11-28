@@ -205,6 +205,15 @@ h1 {
   max-width: 90%;
   object-fit: contain;
   filter: drop-shadow(4px 4px 2px var(--shadow-image));
+  transition: transform 0.2s ease;
+  cursor: pointer;
+}
+
+#pc-icon img:hover {
+  transform: scale(2);
+  z-index: 1000;
+  outline: 1px solid white;
+  filter: drop-shadow(8px 8px 4px var(--shadow-image));
 }
 
 #pc-icon {

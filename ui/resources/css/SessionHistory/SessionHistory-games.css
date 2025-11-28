@@ -110,14 +110,6 @@
   flex-shrink: 0;
   cursor: pointer;
   position: relative;
-  transition: transform 0.2s ease;
-}
-
-.game-icon:hover {
-  position: fixed;
-  transform: scale(3.5);
-  z-index: 10000;
-  filter: drop-shadow(8px 8px 4px var(--shadow-image));
 }
 
 .game-info {
@@ -167,7 +159,7 @@
 }
 
 .selected-game-icon {
-  height: 120px;
+  height: 140px;
   width: auto;
   filter: drop-shadow(4px 4px 2px var(--shadow-image));
   vertical-align: middle;

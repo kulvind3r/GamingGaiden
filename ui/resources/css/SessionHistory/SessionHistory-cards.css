@@ -76,9 +76,10 @@
 }
 
 .game-card-icon:hover {
-  transform: scale(2);
+  transform: scale(2.19);
   z-index: 1000;
   filter: drop-shadow(8px 8px 4px var(--shadow-image));
+  outline: 1px solid white;
 }
 
 .game-card-name {
