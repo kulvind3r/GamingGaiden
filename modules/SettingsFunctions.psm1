@@ -325,12 +325,12 @@ function RenderEditGameForm($GamesList) {
 
             ShowMessage "Updated '$gameName' in Database." "OK" "Asterisk"
 
-            # Clear existing and then pre load image in ui\resources\images folder for rendering 'All Games' list faster
+            # Clear existing and then pre load image in ui\resources\images\cache folder for rendering 'All Games' list faster
             $imageFileName = ToBase64 $gameName
             $gameIconPath = $pictureBoxImagePath.Text
             $imageFileExtension = $gameIconPath.Split(".")[-1]
-            Remove-Item ".\ui\resources\images\$imageFileName.*"
-            Copy-Item -Path $gameIconPath -Destination ".\ui\resources\images\$imageFileName.$imageFileExtension"
+            Remove-Item ".\ui\resources\images\cache\$imageFileName.*"
+            Copy-Item -Path $gameIconPath -Destination ".\ui\resources\images\cache\$imageFileName.$imageFileExtension"
 
             $gamesList = (RunDBQuery "SELECT name FROM games").name
             $listBox.Items.Clear(); $listBox.Items.AddRange($gamesList);
@@ -655,10 +655,10 @@ function RenderAddGameForm() {
 
             ShowMessage "Registered '$gameName' in Database." "OK" "Asterisk"
 
-            # Pre Load image in ui\resources\images folder for rendering 'All Games' list faster
+            # Pre Load image in ui\resources\images\cache folder for rendering 'All Games' list faster
             $imageFileName = ToBase64 $gameName
             $imageFileExtension = $gameIconPath.Split(".")[-1]
-            Copy-Item -Path $gameIconPath -Destination ".\ui\resources\images\$imageFileName.$imageFileExtension"
+            Copy-Item -Path $gameIconPath -Destination ".\ui\resources\images\cache\$imageFileName.$imageFileExtension"
         })
     $addGameForm.Controls.Add($buttonOK)
 

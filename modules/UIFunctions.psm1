@@ -89,23 +89,23 @@ function RenderGameList() {
         $imageFileName = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($name))
 
         # Check if image is pre loaded for ui. Render if not found.
-        if ( (Test-Path "$workingDirectory\ui\resources\images\$imageFileName.jpg") ) {
-            $iconUri = "<img src=`".\resources\images\$imageFileName.jpg`">"
+        if ( (Test-Path "$workingDirectory\ui\resources\images\cache\$imageFileName.jpg") ) {
+            $iconUri = "<img src=`".\resources\images\cache\$imageFileName.jpg`">"
         }
-        elseif ( (Test-Path "$workingDirectory\ui\resources\images\$imageFileName.png") ) {
-            $iconUri = "<img src=`".\resources\images\$imageFileName.png`">"
+        elseif ( (Test-Path "$workingDirectory\ui\resources\images\cache\$imageFileName.png") ) {
+            $iconUri = "<img src=`".\resources\images\cache\$imageFileName.png`">"
         }
         else {
             $iconByteStream = [System.IO.MemoryStream]::new($gameRecord.icon)
             $iconBitmap = [System.Drawing.Bitmap]::FromStream($iconByteStream)
 
             if ($iconBitmap.PixelFormat -eq "Format32bppArgb") {
-                $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.png", [System.Drawing.Imaging.ImageFormat]::Png) | Out-Null
-                $iconUri = "<img src=`".\resources\images\$imageFileName.png`">"
+                $iconBitmap.Save("$workingDirectory\ui\resources\images\cache\$imageFileName.png", [System.Drawing.Imaging.ImageFormat]::Png) | Out-Null
+                $iconUri = "<img src=`".\resources\images\cache\$imageFileName.png`">"
             }
             else {
-                $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.jpg", [System.Drawing.Imaging.ImageFormat]::Jpeg) | Out-Null
-                $iconUri = "<img src=`".\resources\images\$imageFileName.jpg`">"
+                $iconBitmap.Save("$workingDirectory\ui\resources\images\cache\$imageFileName.jpg", [System.Drawing.Imaging.ImageFormat]::Jpeg) | Out-Null
+                $iconUri = "<img src=`".\resources\images\cache\$imageFileName.jpg`">"
             }
 
             $iconBitmap.Dispose()
@@ -250,12 +250,12 @@ function RenderSummary() {
         $iconBitmap = [System.Drawing.Bitmap]::FromStream($iconByteStream)
 
         if ($iconBitmap.PixelFormat -eq "Format32bppArgb") {
-            $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.png", [System.Drawing.Imaging.ImageFormat]::Png) | Out-Null
-            $pcIconUri = "<img src=`".\resources\images\$imageFileName.png`">"
+            $iconBitmap.Save("$workingDirectory\ui\resources\images\cache\$imageFileName.png", [System.Drawing.Imaging.ImageFormat]::Png) | Out-Null
+            $pcIconUri = "<img src=`".\resources\images\cache\$imageFileName.png`">"
         }
         else {
-            $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.jpg", [System.Drawing.Imaging.ImageFormat]::Jpeg) | Out-Null
-            $pcIconUri = "<img src=`".\resources\images\$imageFileName.jpg`">"
+            $iconBitmap.Save("$workingDirectory\ui\resources\images\cache\$imageFileName.jpg", [System.Drawing.Imaging.ImageFormat]::Jpeg) | Out-Null
+            $pcIconUri = "<img src=`".\resources\images\cache\$imageFileName.jpg`">"
         }
 
         $iconBitmap.Dispose()
@@ -590,11 +590,11 @@ ORDER BY sh.game_name ASC
             $imageFileName = [Convert]::ToBase64String([Text.Encoding]::Unicode.GetBytes($name))
 
             # Check if icon already exists on disk (cache check)
-            if (Test-Path "$workingDirectory\ui\resources\images\$imageFileName.jpg") {
-                $game.icon = ".\resources\images\$imageFileName.jpg"
+            if (Test-Path "$workingDirectory\ui\resources\images\cache\$imageFileName.jpg") {
+                $game.icon = ".\resources\images\cache\$imageFileName.jpg"
             }
-            elseif (Test-Path "$workingDirectory\ui\resources\images\$imageFileName.png") {
-                $game.icon = ".\resources\images\$imageFileName.png"
+            elseif (Test-Path "$workingDirectory\ui\resources\images\cache\$imageFileName.png") {
+                $game.icon = ".\resources\images\cache\$imageFileName.png"
             }
             else {
                 # Extract and save icon from BLOB
@@ -602,12 +602,12 @@ ORDER BY sh.game_name ASC
                 $iconBitmap = [System.Drawing.Bitmap]::FromStream($iconByteStream)
 
                 if ($iconBitmap.PixelFormat -eq "Format32bppArgb") {
-                    $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.png", [System.Drawing.Imaging.ImageFormat]::Png) | Out-Null
-                    $game.icon = ".\resources\images\$imageFileName.png"
+                    $iconBitmap.Save("$workingDirectory\ui\resources\images\cache\$imageFileName.png", [System.Drawing.Imaging.ImageFormat]::Png) | Out-Null
+                    $game.icon = ".\resources\images\cache\$imageFileName.png"
                 }
                 else {
-                    $iconBitmap.Save("$workingDirectory\ui\resources\images\$imageFileName.jpg", [System.Drawing.Imaging.ImageFormat]::Jpeg) | Out-Null
-                    $game.icon = ".\resources\images\$imageFileName.jpg"
+                    $iconBitmap.Save("$workingDirectory\ui\resources\images\cache\$imageFileName.jpg", [System.Drawing.Imaging.ImageFormat]::Jpeg) | Out-Null
+                    $game.icon = ".\resources\images\cache\$imageFileName.jpg"
                 }
 
                 $iconBitmap.Dispose()

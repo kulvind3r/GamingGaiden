@@ -22,20 +22,23 @@ try {
     Import-Module ".\modules\UIFunctions.psm1"
 
     #------------------------------------------
-    # Exit if Gaming Gaiden is being started from non standard location
-    $currentDirectory = (Get-Location).path
-    if ($currentDirectory -ne "C:\ProgramData\GamingGaiden") {
-        ShowMessage "Launched from non standard location. Please install and use the created shortcuts to start app." "Ok" "Error"
-        exit 1;
-    }
+    # Launch checks, disabled during development
+    if ($env:GAIDEN_DEV_MODE -ne 'true') {
+        
+        # Exit if Gaming Gaiden is being started from non standard location
+        $currentDirectory = (Get-Location).path
+        if ($currentDirectory -ne "C:\ProgramData\GamingGaiden") {
+            ShowMessage "Launched from non standard location. Please install and use the created shortcuts to start app." "Ok" "Error"
+            exit 1;
+        }
 
-    #------------------------------------------
-    # Exit if Gaming Gaiden is already Running
-    $results = [System.Diagnostics.Process]::GetProcessesByName("GamingGaiden")
-    if ($results.Length -gt 1) {
-        ShowMessage "Gaming Gaiden is already running. Check system tray.`r`nNot Starting another Instance." "Ok" "Error"
-        Log "Error: Gaming Gaiden already running. Not Starting another Instance."
-        exit 1;
+        # Exit if Gaming Gaiden is already Running
+        $results = [System.Diagnostics.Process]::GetProcessesByName("GamingGaiden")
+        if ($results.Length -gt 1) {
+            ShowMessage "Gaming Gaiden is already running. Check system tray.`r`nNot Starting another Instance." "Ok" "Error"
+            Log "Error: Gaming Gaiden already running. Not Starting another Instance."
+            exit 1;
+        }
     }
 
     #------------------------------------------
@@ -51,6 +54,13 @@ try {
     Log "Executing database setup"
     SetupDatabase
     Log "Database setup complete"
+
+    #------------------------------------------
+    # Ensure cache directory exists
+    if (-Not (Test-Path ".\ui\resources\images\cache")) {
+        New-Item -ItemType Directory -Path ".\ui\resources\images\cache" -Force | Out-Null
+        Log "Created cache directory"
+    }
 
     #------------------------------------------
     # Initialize current PC if only one PC exists
