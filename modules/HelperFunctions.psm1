@@ -179,3 +179,10 @@ function CreatePictureBox() {
 
     return $pictureBox
 }
+
+function Get-AppVersion {
+    $exePath = [System.Diagnostics.Process]::GetCurrentProcess().MainModule.FileName
+    $versionInfo = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($exePath)
+    $version = "{0}.{1}.{2}" -f $versionInfo.FileMajorPart, $versionInfo.FileMinorPart, $versionInfo.FileBuildPart
+    return "v" + $version
+}
