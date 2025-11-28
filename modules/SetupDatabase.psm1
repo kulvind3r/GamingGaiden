@@ -91,17 +91,6 @@
 
         $gamingPCsTableSchema = Invoke-SqliteQuery -query "PRAGMA table_info('gaming_pcs')" -SQLiteConnection $dbConnection
 
-        if (-Not $gamingPCsTableSchema.name.Contains("total_play_time")) {
-            Invoke-SqliteQuery -Query "ALTER TABLE gaming_pcs ADD COLUMN total_play_time INTEGER DEFAULT 0" -SQLiteConnection $dbConnection
-        }
-
-        if (-Not $gamingPCsTableSchema.name.Contains("in_use")) {
-            Invoke-SqliteQuery -Query "ALTER TABLE gaming_pcs ADD COLUMN in_use TEXT" -SQLiteConnection $dbConnection
-            Invoke-SqliteQuery -Query "UPDATE gaming_pcs SET in_use = current" -SQLiteConnection $dbConnection
-        }
-        # End Migration 6
-
-        # Migration 7 - Remove current column from gaming_pcs
         if ($gamingPCsTableSchema.name.Contains("current")) {
             # Create new table without current column
             $createNewPCTableQuery = "CREATE TABLE gaming_pcs_new (
@@ -117,8 +106,8 @@
             Invoke-SqliteQuery -Query $createNewPCTableQuery -SQLiteConnection $dbConnection
 
             # Copy all data from old table to new table
-            $copyDataQuery = "INSERT INTO gaming_pcs_new (name, icon, cost, currency, start_date, end_date, in_use, total_play_time)
-                              SELECT name, icon, cost, currency, start_date, end_date, in_use, total_play_time
+            $copyDataQuery = "INSERT INTO gaming_pcs_new (name, icon, cost, currency, start_date, end_date, in_use)
+                              SELECT name, icon, cost, currency, start_date, end_date, current
                               FROM gaming_pcs"
 
             Invoke-SqliteQuery -Query $copyDataQuery -SQLiteConnection $dbConnection
@@ -129,7 +118,7 @@
             # Rename new table to original name
             Invoke-SqliteQuery -Query "ALTER TABLE gaming_pcs_new RENAME TO gaming_pcs" -SQLiteConnection $dbConnection
         }
-        # End Migration 7
+        # End Migration 6
 
         $dbConnection.Close()
         $dbConnection.Dispose()
