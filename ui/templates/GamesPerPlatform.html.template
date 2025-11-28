@@ -9,9 +9,9 @@
     />
     <link rel="stylesheet" href="./resources/css/theme.css" />
     <link rel="stylesheet" href="./resources/css/GamesPerPlatform.css" />
-    <script src="./resources/js/jquery-3.7.1.min.js"></script>
-    <script src="./resources/js/chart.js"></script>
-    <script src="./resources/js/chartjs-plugin-datalabels-2.0.0.js"></script>
+    <script src="./resources/js/libraries/jquery-3.7.1.min.js"></script>
+    <script src="./resources/js/libraries/chart.js"></script>
+    <script src="./resources/js/libraries/chartjs-plugin-datalabels-2.0.0.js"></script>
     <script>
       $(document).ready(function () {
         $("table").each(function () {

@@ -9,9 +9,9 @@
     />
     <link rel="stylesheet" href="./resources/css/theme.css" />
     <link rel="stylesheet" href="./resources/css/AllGames.css" />
-    <link rel="stylesheet" href="./resources/css/jquery.dataTables.css" />
-    <script src="./resources/js/jquery-3.7.1.min.js"></script>
-    <script src="./resources/js/jquery.dataTables.min.js"></script>
+    <link rel="stylesheet" href="./resources/css/libraries/jquery.dataTables.css" />
+    <script src="./resources/js/libraries/jquery-3.7.1.min.js"></script>
+    <script src="./resources/js/libraries/jquery.dataTables.min.js"></script>
     <script type="text/javascript">
       function formatPlaytime(minutes) {
         var hours = Math.floor(minutes / 60);
