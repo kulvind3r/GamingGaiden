@@ -13,7 +13,7 @@ Remove-Item -Recurse .\ui\resources\images\cache -ErrorAction SilentlyContinue
 # Build
 
 # Copy source files
-$SourceFiles = ".\Install.bat", ".\modules", ".\icons", ".\ui"
+$SourceFiles = ".\Install.bat", ".\Uninstall.bat", ".\modules", ".\icons", ".\ui"
 Copy-Item -Recurse -Path $SourceFiles -Destination .\build\GamingGaiden\ -Force
 
 

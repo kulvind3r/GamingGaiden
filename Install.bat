@@ -6,7 +6,7 @@ md "%ALLUSERSPROFILE%\GamingGaiden"
 set "InstallDirectory=%ALLUSERSPROFILE%\GamingGaiden"
 set "DesktopPath=%USERPROFILE%\Desktop"
 set "StartupPath=%APPDATA%\Microsoft\Windows\Start Menu\Programs\StartUp"
-set "StartMenuPath=%APPDATA%\Microsoft\Windows\Start Menu\Programs"
+set "StartMenuPath=%APPDATA%\Microsoft\Windows\Start Menu\Programs\Gaming Gaiden"
 set "IconPath=%InstallDirectory%\icons\running.ico"
 
 REM Quit GamingGaiden if Already running
@@ -22,12 +22,18 @@ echo Copying Files
 xcopy /s/e/q/y "%CD%" "%InstallDirectory%"
 del "%InstallDirectory%\Install.bat"
 
-REM Create shortcut using powershell and copy to desktop and start menu
+REM Create shortcuts using powershell and copy to desktop and start menu
 echo.
 echo Creating Shortcuts
+
+md "%StartMenuPath%"
+
 powershell.exe -NoProfile -Command "$WshShell = New-Object -ComObject WScript.Shell; $Shortcut = $WshShell.CreateShortcut('%InstallDirectory%\Gaming Gaiden.lnk'); $Shortcut.TargetPath = '%InstallDirectory%\GamingGaiden.exe'; $Shortcut.WorkingDirectory = '%InstallDirectory%'; $Shortcut.WindowStyle = 7; $Shortcut.Save()"
 copy "%InstallDirectory%\Gaming Gaiden.lnk" "%DesktopPath%"
 copy "%InstallDirectory%\Gaming Gaiden.lnk" "%StartMenuPath%"
+
+powershell.exe -NoProfile -Command "$WshShell = New-Object -ComObject WScript.Shell; $Shortcut = $WshShell.CreateShortcut('%InstallDirectory%\Uninstall Gaming Gaiden.lnk'); $Shortcut.TargetPath = '%InstallDirectory%\Uninstall.bat'; $Shortcut.WorkingDirectory = '%InstallDirectory%'; $Shortcut.Save()"
+copy "%InstallDirectory%\Uninstall Gaming Gaiden.lnk" "%StartMenuPath%"
 
 REM Unblock all gaming gaiden files as they are downloaded from internet and blocked by default
 echo.
@@ -48,14 +54,10 @@ if /i "%AutoStartChoice%"=="Yes" (
 )
 
 echo.
-echo Installation successful at %InstallDirectory%. Run application using shortcuts on desktop / start menu.
+echo Installation successful at %InstallDirectory%. 
 echo.
-echo Your data is in 'GamingGaiden.db' file and backups are in 'backups\' folder under %InstallDirectory%.
+echo Run / Remove application using shortcuts on desktop / start menu.
 echo.
-echo Backup both to external storage regularly. Otherwise you risk loosing all your data if you reinstall Windows.
+echo You can now delete the downloaded files if you wish.
 echo.
-echo You can access %InstallDirectory% by clicking "Settings => Open Install Directory" in app menu.
-echo.
-echo You can now delete the downloaded files if you wish. Press any key to Exit.
-pause >nul
-exit /b 0
+pause
