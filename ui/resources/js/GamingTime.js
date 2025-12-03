@@ -1,5 +1,5 @@
 /*global ChartDataLabels, Chart, chartTitleConfig, buildGamingData, Log2Axis, getChartTextColor, getChartGridColor, getChartBackgroundColor*/
-/*global formatMonthString, selectedYear, updateYearDisplay, setupYearNavigation, updateMonthGrid*/
+/*global formatMonthString, updateYearDisplay, setupYearNavigation, updateMonthGrid*/
 /*from chart.js, common.js, calendar-controls.js*/
 
 let gamingData = [];
@@ -25,13 +25,13 @@ Log2Axis.defaults = {};
 
 Chart.register(Log2Axis);
 
-function updatePeriodDisplayWithMonth(selectedYear, selectedMonth) {
+function updatePeriodDisplayWithMonth() {
   // Display is now handled by calendar selection highlighting
   // Show total hours in warn message area
   updateWarnMessage(parseInt(monthTotalTime) + " Hours Played");
 }
 
-function updatePeriodDisplayWithYear(selectedYear) {
+function updatePeriodDisplayWithYear() {
   // Display is now handled by calendar year display
   // Show total hours in warn message area
   updateWarnMessage(parseInt(yearTotalTime) + " Hours Played");
@@ -303,7 +303,7 @@ function refreshMonthGrid() {
         selectedYear = calendarYear;
         selectedMonth = monthIndex;
         updateChart(selectedYear, selectedMonth, false);
-        updatePeriodDisplayWithMonth(selectedYear, selectedMonth);
+        updatePeriodDisplayWithMonth();
         refreshMonthGrid(); // Refresh selection
       }
     },
@@ -325,7 +325,7 @@ function initYearNavigation() {
       if (viewMode === 'yearly') {
         selectedYear = calendarYear;
         updateChart(selectedYear, selectedMonth, true);
-        updatePeriodDisplayWithYear(selectedYear);
+        updatePeriodDisplayWithYear();
       }
     }
   });
@@ -345,7 +345,7 @@ function toggleViewMode() {
 
     selectedYear = calendarYear;
     updateChart(calendarYear, selectedMonth, true);
-    updatePeriodDisplayWithYear(calendarYear);
+    updatePeriodDisplayWithYear();
     refreshYearDisplay(); // Update visual state
     refreshMonthGrid();
 
@@ -355,13 +355,12 @@ function toggleViewMode() {
     periodLabel = 'Day of Month';
 
     updateChart(selectedYear, selectedMonth, false);
-    updatePeriodDisplayWithMonth(selectedYear, selectedMonth);
+    updatePeriodDisplayWithMonth();
     refreshYearDisplay(); // Update visual state
     refreshMonthGrid();
   }
 }
 
-// OBSOLETE: Removed in favor of calendar month selection
 function switchToNextMonth() {
   if (selectedMonth === finalMonth && selectedYear === finalYear) {
     updateWarnMessage("No More Data");
@@ -377,7 +376,7 @@ function switchToNextMonth() {
     selectedMonth = selectedMonth + 1;
   }
   updateChart(selectedYear, selectedMonth);
-  updatePeriodDisplayWithMonth(selectedYear, selectedMonth);
+  updatePeriodDisplayWithMonth();
 }
 
 function switchToPrevMonth() {
@@ -395,7 +394,7 @@ function switchToPrevMonth() {
     selectedMonth = selectedMonth - 1;
   }
   updateChart(selectedYear, selectedMonth);
-  updatePeriodDisplayWithMonth(selectedYear, selectedMonth);
+  updatePeriodDisplayWithMonth();
 }
 
 function switchToNextYear() {
@@ -406,7 +405,7 @@ function switchToNextYear() {
     selectedYear = selectedYear + 1;
   }
   updateChart(selectedYear, selectedMonth, true);
-  updatePeriodDisplayWithYear(selectedYear);
+  updatePeriodDisplayWithYear();
 }
 
 function switchToPrevYear() {
@@ -417,7 +416,7 @@ function switchToPrevYear() {
     selectedYear = selectedYear - 1;
   }
   updateChart(selectedYear, selectedMonth, true);
-  updatePeriodDisplayWithYear(selectedYear);
+  updatePeriodDisplayWithYear();
 }
 
 function bindButtonsToMonths() {
@@ -451,7 +450,7 @@ function loadDataFromTable() {
   setupYearToggle();
 
   updateChart(selectedYear, selectedMonth);
-  updatePeriodDisplayWithMonth(selectedYear, selectedMonth);
+  updatePeriodDisplayWithMonth();
 }
 
 loadDataFromTable();
