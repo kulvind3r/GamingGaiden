@@ -184,7 +184,7 @@ function loadPCDataFromTable() {
   const pcTable = document.getElementById("pc-table").querySelector("table");
   const pcRows = pcTable.querySelectorAll("tbody tr");
 
-  if (pcRows.length == 0) {
+  if (pcRows.length === 0) {
     return
   }
 

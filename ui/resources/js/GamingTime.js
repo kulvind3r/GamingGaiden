@@ -1,5 +1,5 @@
 /*global ChartDataLabels, Chart, chartTitleConfig, buildGamingData, Log2Axis, getChartTextColor, getChartGridColor, getChartBackgroundColor*/
-/*global formatMonthString, formatDateString, updateYearDisplay, setupYearNavigation, updateMonthGrid*/
+/*global formatMonthString, selectedYear, updateYearDisplay, setupYearNavigation, updateMonthGrid*/
 /*from chart.js, common.js, calendar-controls.js*/
 
 let gamingData = [];
@@ -427,44 +427,6 @@ function bindButtonsToMonths() {
   document
     .getElementById("next-button")
     .addEventListener("click", () => switchToNextMonth());
-}
-
-function toggleSummaryPeriod() {
-  document
-    .getElementById("prev-button")
-    .replaceWith(document.getElementById("prev-button").cloneNode(true));
-  document
-    .getElementById("next-button")
-    .replaceWith(document.getElementById("next-button").cloneNode(true));
-
-  if (summaryPeriod === "monthly") {
-    document
-      .getElementById("prev-button")
-      .addEventListener("click", () => switchToPrevYear());
-    document
-      .getElementById("next-button")
-      .addEventListener("click", () => switchToNextYear());
-
-    summaryPeriod = "yearly";
-    periodLabel = "Month of Year";
-    selectedYear = finalYear;
-    selectedMonth = finalMonth;
-    document.getElementById("period-button").innerText = "Monthly Summary";
-
-    updateChart(selectedYear, selectedMonth, true);
-    updatePeriodDisplayWithYear(selectedYear);
-  } else {
-    bindButtonsToMonths();
-
-    summaryPeriod = "monthly";
-    periodLabel = "Day of Month";
-    selectedYear = finalYear;
-    selectedMonth = finalMonth;
-    document.getElementById("period-button").innerText = "Yearly Summary";
-
-    updateChart(selectedYear, selectedMonth);
-    updatePeriodDisplayWithMonth(selectedYear, selectedMonth);
-  }
 }
 
 function loadDataFromTable() {

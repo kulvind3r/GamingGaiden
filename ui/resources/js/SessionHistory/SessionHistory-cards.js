@@ -1,3 +1,6 @@
+/*global filterSessionsByDateStr, aggregateGamesBySessions */
+/* exported loadGameCardsForDate */
+
 // ===== DATA AGGREGATION FOR BY DAY/MONTH VIEWS =====
 
 // Get games played on a specific date

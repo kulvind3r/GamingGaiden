@@ -1,3 +1,5 @@
+/* exported formatDateString, updateYearDisplay, setupYearNavigation, updateMonthGrid */
+
 /**
  * Calendar Controls Module
  *
