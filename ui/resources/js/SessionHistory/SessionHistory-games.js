@@ -184,29 +184,30 @@ function selectGame(gameName) {
 
 // Group sessions by day and sum durations
 function groupSessionsByDay(sessions) {
-  const grouped = Object.create(null);
+  const grouped = new Map();
 
   sessions.forEach((session) => {
     const date = new Date(session.start_time * 1000);
     const dayKey = date.toLocaleDateString(); // e.g., "1/15/2025"
 
-    if (!grouped[dayKey]) {
-      grouped[dayKey] = {
+    if (!grouped.has(dayKey)) {
+      grouped.set(dayKey, {
         date: dayKey,
         timestamp: session.start_time,
         totalDuration: 0,
         sessionCount: 0,
         sessions: []
-      };
+      });
     }
 
-    grouped[dayKey].totalDuration += session.duration;
-    grouped[dayKey].sessionCount += 1;
-    grouped[dayKey].sessions.push(session);
+    const dayData = grouped.get(dayKey);
+    dayData.totalDuration += session.duration;
+    dayData.sessionCount += 1;
+    dayData.sessions.push(session);
   });
 
   // Convert to array and sort by timestamp (ascending: oldest → newest)
-  return Object.values(grouped).sort((a, b) =>
+  return Array.from(grouped.values()).sort((a, b) =>
     a.timestamp - b.timestamp
   );
 }
