@@ -12,17 +12,23 @@ Remove-Item -Recurse .\ui\resources\images\cache -ErrorAction SilentlyContinue
 #------------------------------------------
 # Build
 
-# Copy source files
-$SourceFiles = ".\Install.bat", ".\Uninstall.bat", ".\modules", ".\icons", ".\ui"
-Copy-Item -Recurse -Path $SourceFiles -Destination .\build\GamingGaiden\ -Force
-
-
 # Generate Manual
 pandoc.exe --ascii .\Manual.md -o .\ui\Manual.html
-$ManualHTML = Get-Content .\ui\Manual.html
+$ManualHTML = Get-Content .\ui\Manual.html -Raw
+
+# Wrap each h3 and its following content until next h3
+$ManualHTML = $ManualHTML -replace '<h3[^>]*>([^<]+)</h3>((?:(?!<h3)[\s\S])*?(?=<h3|$))', '<details><summary>$1</summary>$2</details>'
+
+# Wrap all details in a container for column layout
+$ManualHTML = $ManualHTML -replace '(<details>[\s\S]*</details>)', '<div class="faq-container">$1</div>'
+
 $ManualTemplate = Get-Content .\ui\templates\Manual.html.template
 $FinalHTML = $ManualTemplate -replace "_MARKDOWN_HTML_", $ManualHTML
 [System.Web.HttpUtility]::HtmlDecode($FinalHTML) | Out-File -encoding UTF8 .\ui\Manual.html
+
+# Copy source files
+$SourceFiles = ".\Install.bat", ".\Uninstall.bat", ".\modules", ".\icons", ".\ui"
+Copy-Item -Recurse -Path $SourceFiles -Destination .\build\GamingGaiden\ -Force
 
 # Add 404 pages
 $templateFiles = Get-ChildItem .\ui\templates\*.template -File

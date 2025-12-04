@@ -28,6 +28,7 @@
   --accent-blue: #42a5f5;
   --accent-blue-dark: #1e88e5;
   --accent-blue-light: #1e3a5f;
+  --accent-link-hover: #64b5f6;
 
   /* Status Colors (adjusted for dark mode visibility) */
   --status-finished: #06c930;       /* Brighter green for dark mode */

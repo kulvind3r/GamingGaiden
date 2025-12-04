@@ -7,10 +7,18 @@
       type="image/x-icon"
       href="./resources/images/favicon.ico"
     />
+    <link rel="stylesheet" href="./resources/css/theme.css" />
     <link rel="stylesheet" type="text/css" href="./resources/css/Manual.css" />
   </head>
 
   <body>
     _MARKDOWN_HTML_
+    <div id="modal-overlay" class="modal-overlay">
+      <div class="modal-content">
+        <span class="modal-close">&times;</span>
+        <div id="modal-body"></div>
+      </div>
+    </div>
+    <script src="./resources/js/Manual.js"></script>
   </body>
 </html>

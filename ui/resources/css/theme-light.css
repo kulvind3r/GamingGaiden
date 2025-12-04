@@ -28,6 +28,7 @@
   --accent-blue: #2196F3;
   --accent-blue-dark: #1976D2;
   --accent-blue-light: #e3f2fd;
+  --accent-link-hover: #06e;
 
   /* Status Colors */
   --status-finished: #059b27;       /* Green - Finished games */

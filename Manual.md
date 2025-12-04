@@ -1,91 +1,79 @@
-# Gaming Gaiden Manual
+# Help / FAQ
 
-### How do I track a PC game?
+### Track PC games
 1. Notify icon menu *Settings => Add Game*. 
 2. Add the executable of game using *Add Exe*.
 3. Icon should auto update. You can set a new icon by using *Search* (searches google for game icon) and *Update* (browse for image) buttons.
 4. Change the auto populated *Name* to a better one and click *Ok*.
 
-### Pre-requisite for emulated games
+### Track emulated games
 
-**Gaming Gaiden tracks emulated games automatically based on emulator *Command Line* parameters.**
+**Requires launching games via command line params** like 
 
-To use Gaming Gaiden, you must use *Command lines* to launch your emulated games. *Command lines* for emulator looks like below
+- *pcsx2-qtx64-avx2.exe %ROM%*
+- *retroarch.exe -L cores\\flycast_libretro.dll %ROM%*. 
 
-- **PCSX2** *[path]\\pcsx2-qtx64-avx2.exe %ROM%*
+Most frontends already use the above way.
 
-- **Retrorach** *[path]\\retroarch.exe -L [path]\\cores\\flycast_libretro.dll %ROM%*
+1. *Settings => Add Emulator*
+2. Enter platform (NES, Genesis, PS2, etc.)
+3. *Add Exe* - emulator executable (can add multiple per platform)
+4. For Retroarch: *Add Core* when prompted
+5. *Rom Extns* - comma-separated list without dots/spaces (zip,chd,rvg)
 
-Most Frontends like Emulation Station etc. are setup to use command lines to launch games. If you don't use a frontend, you can find online how to create desktop shortcuts for most emulators that launch games in above manner.
+**Games auto-register using ROM filename. Renaming ROM creates new entry.**
 
-### How do I track an emulated game?
-Once you have your emulation setup like above..
+### Update tracked game status, edit play time, change icon etc.
 
-1. Notify icon menu *Settings => Add Emulator*
-2. Enter platform name in *Platform* e.g. NES, Genesis, Playstation 2, Gamecube etc.
-3. Add executable of the emulator you use for the platform using *Add Exe*. You can add more than one emulator's exe for the same platform e.g. ePSXe and Duckstation for Playstation.
-4. If retroarch is detected, it will automatically ask you for the core used for the platform. Add using *Add Core* button that shows.
-5. Enter extensions you use for your game rom files e.g. zip,chd,rvg in *Rom Extns*. A comma separated list of just the extension name without the leading *"."* and no spaces.
+App menu: *Settings => Edit Game*, select game from list (searchable).
 
-Click ok to register the platform and Gaming Gaiden will now track any game you play with the added emulators automatically.
+- Change executable (after reinstall)
+- Update icon (*Search* for online, *Update* to browse - png/jpg supported)
+- Manually adjust play time
+- Change platform
+- Mark as finished / other status (checkbox)
 
-**Emulated games are auto detected and auto registered. Name of Rom File is used to track the game. If you change name of Rom file later, it will be re-detected as a brand new game.**
+### Update emulator for platform
 
-### How do I make changes to a tracked game or mark it as finished?
+*Settings => Edit Emulator*, select platform from list (searchable).
 
-1. Notify icon menu *Settings => Edit Game*. Select the game you want to change in the list that shows on right side in dialog box. You can search for game by name too.
-2. Change executable if you need to e.g. After reinstallation to a different directory.
-3. To change icon, use *Search* button to google for game icon and save it. Then click *Update* to browse and select the file. *png* and *jpg* files are supported.
-4. Update play time manually, Simply add number of hours / minutes in the already displayed playtime values.
-5. Change platform if required, although not likely.
-6. Mark the game as finished using provided checkbox.
-7. Press *Ok* to update or Cancel to close.
+- Update executable path or add new exe
+- Change Retroarch core
+- Modify ROM extensions
 
-### How do I make changes to an emulator for a platform?
+### Pause/Resume tracking
 
-1. Notify icon menu *Settings => Edit Emulator*. Select the platform you want to change in the list that shows on right side in dialog box. You can search for platform by name too.
-2. Change or add another executable to the emulator exe list or a new path if you relocated your emulator
-3. Change retorach core to a new one if you started using a different core.
-4. Add new file extensions by adding as comma separated list without spaces and leading ".", or change existing ones as required.
-5. Press *Ok* to update or *Cancel* to close.
+App menu: *Stop Tracker* to pause, *Start Tracker* to resume.
 
-### How do I pause/resume tracking?
+### Disable/Enable auto start
 
-To pause, notify icon menu => *Stop Tracker*. To resume tracking, *Start Tracker*.
+**Disable:** Press *Win+R*, enter *shell:startup*, delete *Gaming Gaiden* shortcut.
 
-### How do I disable/enable auto start?
+**Re-enable:** Run *install.bat* from install directory, choose *yes* for auto start.
 
-1. Open Run Dialog by pressing *Win+R*.
-2. Enter *shell:startup* in the dialog box and press enter.
-3. Delete the *Gaming Gaiden* shortcut from the folder that opens.
-4. To re enable auto start, just run *install.bat* again from existing install directory and choose *yes* when prompted for enabling auto start.
+### Restore data
 
-### I accidentally corrupted / lost / deleted some or all of my data. How do I restore?
+1. App menu: *Settings => Open Install Directory*. Go to *backups* folder.
+2. Exit app. 
+3. Copy database file from backup folder zip to install directory. 
+4. Restart app.
 
-Check the backup folder in the install directory, it should have backups of database. Exit the app. Copy the database file from one of the backup zip files to install directory and start the app again.
+### Games launched from emulator application directly are not tracked
 
-### Gaming Gaiden is not tracking emulated games launched from emulator application directly.
+Games launched from emulator GUI (Retroarch, PCSX2, Dolphin, Duckstation) lack command line parameters in Windows process. Use a frontend (EmulationStation, Launchbox) or desktop shortcuts with command lines.
 
-It cannot. 
+### Track multiple platforms using a single emulator
 
-Games launched directly from emulator GUI like Retroarch, PCSX2, Dolphin or Duckstation might not have *Command lines* attached in Windows process. You must either use a Frontend like EmulationStation, Launchbox etc with *Command line* or Windows desktop shortcuts to the emulators with *Command lines*
+1. Copy emulator exe with platform-specific names. Example: Copy *Dolphin.exe* to *Dolphin-Wii.exe* and *Dolphin-Gamecube.exe*. 
+2. Register each platform with its renamed exe. 
+3. Update frontend/shortcuts to use new exes.
 
-### I use a single emulator for multiple platforms. How do I track them separately?
+Alternative: Name platform *"Gamecube and Wii"* using single exe.
 
-For emulators that can play more than one platform, for e.g. Dolphin that plays both Wii and Gamecube. You need to make sure that there is some difference in the command line of the emulator when running different platform.
+### Track multiple platforms using a single Retroarch core
 
-To do this, make a copy of executable of emulator and change it's name to include platform name for e.g.
+1. Copy *retroarch.exe* with platform-specific names (e.g. *Retroarch-Genesis.exe*, *Retroarch-GameGear.exe*). 
+2. Register each platform with its renamed exe. 
+3. Update frontend/shortcuts.
 
-Make two copies of *Dolphin.exe* in the same directory and name them *Dolphin-Wii.exe* and *Dolphin-Gamecube.exe*.
-
-Now register Gamecube and Wii Platforms in Gaming Gaiden and use the new exes with the platform name for each. **Don't forget to update your frontend / shortcuts similarly to use the new exes.**
-
-This is the only way for Gaming Gaiden to register games under the correct platform. Otherwise if you don't care about which platform game belongs to. You can just name the platform *"Gamecube and Wii"* and use the single *"Dolphin.exe"*
-
-Hide the extra copies of *"Dplphin.exe"* in explorer to keep your Dolphin installation looking neat and clean.
-
-### I use the same Retroarch core for multiple platforms. How do I track them separately?
-
-Same trick as above can be applied fore retroarch as well. Use the same core, but make copies of *"retroarch.exe"* for each platform and use those as executables for different platforms.
-
-Hide the extra copies of *"retroarch.exe"* in explorer to keep your retroarch installation looking neat and clean.
+Alternative: Name platform *"Genesis & GameGear"* using single core.
