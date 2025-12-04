@@ -191,9 +191,16 @@ details summary {
 }
 
 details summary::before {
-  content: "🔗 ";
+  content: "ⓘ ";
   opacity: 0.5;
-  font-size: 0.8em;
+  font-size: 1.2em;
+}
+
+.modal-title::before {
+  content: "ⓘ ";
+  opacity: 0.5;
+  font-size: 0.9em;
+  margin-right: 0.3em;
 }
 
 details summary::-webkit-details-marker {
