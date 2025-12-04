@@ -397,15 +397,6 @@ function switchToPrevMonth() {
   updatePeriodDisplayWithMonth();
 }
 
-function bindButtonsToMonths() {
-  document
-    .getElementById("prev-button")
-    .addEventListener("click", () => switchToPrevMonth());
-  document
-    .getElementById("next-button")
-    .addEventListener("click", () => switchToNextMonth());
-}
-
 function loadDataFromTable() {
   gamingData = buildGamingData("date", "time");
 
