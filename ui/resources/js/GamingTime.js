@@ -397,28 +397,6 @@ function switchToPrevMonth() {
   updatePeriodDisplayWithMonth();
 }
 
-function switchToNextYear() {
-  if (selectedYear === finalYear) {
-    updateWarnMessage("No More Data");
-    return;
-  } else {
-    selectedYear = selectedYear + 1;
-  }
-  updateChart(selectedYear, selectedMonth, true);
-  updatePeriodDisplayWithYear();
-}
-
-function switchToPrevYear() {
-  if (selectedYear === firstYear) {
-    updateWarnMessage("No More Data");
-    return;
-  } else {
-    selectedYear = selectedYear - 1;
-  }
-  updateChart(selectedYear, selectedMonth, true);
-  updatePeriodDisplayWithYear();
-}
-
 function bindButtonsToMonths() {
   document
     .getElementById("prev-button")
