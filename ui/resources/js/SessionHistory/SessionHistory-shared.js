@@ -1,4 +1,6 @@
-/*global Chart, ChartDataLabels, chartTitleConfig, getChartTextColor, getChartGridColor*/
+/* eslint-disable no-unused-vars */
+/*global Chart, Log2Axis, ChartDataLabels, chartTitleConfig, getChartTextColor, getChartGridColor*/
+
 
 // ===== GLOBAL STATE VARIABLES =====
 

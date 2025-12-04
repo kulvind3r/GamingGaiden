@@ -1,4 +1,4 @@
-/* global filterSessionsByDateStr, aggregateGamesBySessions, updateStatsDisplay, switchMainView, selectGame */
+/* global MONTH_NAMES, filterSessionsByDateStr, aggregateGamesBySessions, updateStatsDisplay, switchMainView, selectGame */
 /* from sessionHistory-shared.js, sessionHistory-cards.js, sessionHistory-games.js */
 
 // ===== DATA AGGREGATION FOR BY DAY/MONTH VIEWS =====
