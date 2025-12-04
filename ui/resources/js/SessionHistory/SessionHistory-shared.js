@@ -1,5 +1,6 @@
 /* eslint-disable no-unused-vars */
-/*global Chart, Log2Axis, ChartDataLabels, chartTitleConfig, getChartTextColor, getChartGridColor*/
+/*global Chart, Log2Axis, ChartDataLabels, chartTitleConfig, getChartTextColor, getChartGridColor, initYearNavigation, sortGamesList, selectGame, updateGridAlignment, setupSearch, setupSorting, updateSortButtons, applySortAndRender, setupViewToggle, setupDateNavigation, setupMainViewButtons */
+/* from common.js, SessionHistory-games.js, SessionHistory-calendar.js */
 
 
 // ===== GLOBAL STATE VARIABLES =====
