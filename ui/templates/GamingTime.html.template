@@ -75,7 +75,7 @@
       <button class="custom-button" id="idle-time-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/IdleTime.html';">Idle Time</button>
       <button class="custom-button" id="session-history-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/SessionHistory.html';">Session History</button>
       <button class="custom-button" id="games-per-platform-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/GamesPerPlatform.html';">Games Per Platform</button>
-      <button class="custom-button" id="pc-vs-emu-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/PCvsEmulation.html';">PC vs Emulation Time</button>
+      <button class="custom-button" id="pc-vs-emu-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/PCvsEmulation.html';">PC vs Emulation</button>
     </div>
   </body>
 </html>

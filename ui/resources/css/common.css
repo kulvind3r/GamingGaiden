@@ -12,6 +12,7 @@
 #navigation-bar .custom-button {
   flex: 1;
   min-width: 0;
+  margin: 0 5px;
 }
 
 .help-button {
