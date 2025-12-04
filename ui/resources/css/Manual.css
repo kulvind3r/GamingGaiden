@@ -44,6 +44,7 @@ body > h1 {
   text-align: center;
   margin: 0 0 20px 0;
   flex-shrink: 0;
+  font-size: 1.7em;
 }
 
 #navigation-bar {
