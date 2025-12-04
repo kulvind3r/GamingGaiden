@@ -59,16 +59,6 @@ h1 {
   color: var(--text-primary);
 }
 
-#navigation-bar {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  max-width: 1840px;
-  margin: 0 auto;
-  flex-shrink: 0;
-  gap: 10px;
-}
-
 .custom-button {
   align-items: center;
   appearance: none;

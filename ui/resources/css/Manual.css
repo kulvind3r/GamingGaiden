@@ -48,12 +48,7 @@ body > h1 {
 }
 
 #navigation-bar {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
   margin: 20px 0 0 0;
-  flex-shrink: 0;
-  gap: 10px;
 }
 
 .custom-button {

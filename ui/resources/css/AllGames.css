@@ -256,12 +256,3 @@ td:nth-child(7) {
   transform: translateY(2px);
 }
 
-#navigation-bar {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  max-width: 1840px;
-  margin: 0 auto;
-  flex-shrink: 0;
-  gap: 10px;
-}

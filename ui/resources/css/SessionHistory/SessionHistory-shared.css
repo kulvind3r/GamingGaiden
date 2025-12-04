@@ -138,16 +138,6 @@ h1 {
 /* ===== BOTTOM NAVIGATION BAR ===== */
 
 /* Navigation Bar (consistent with other pages) */
-#navigation-bar {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-  max-width: 1840px;
-  margin: 0 auto;
-  flex-shrink: 0;
-  gap: 10px;
-}
-
 .custom-button {
   align-items: center;
   appearance: none;

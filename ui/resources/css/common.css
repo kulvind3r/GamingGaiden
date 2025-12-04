@@ -1,0 +1,23 @@
+/* Common Navigation Bar Styles */
+#navigation-bar {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 1840px;
+  margin: 0 auto;
+  flex-shrink: 0;
+  gap: 10px;
+}
+
+#navigation-bar .custom-button {
+  flex: 1;
+  min-width: 0;
+}
+
+.help-button {
+  flex: 0 0 50px !important;
+  background-color: var(--accent-blue) !important;
+  color: var(--text-inverse) !important;
+  font-weight: bold;
+  font-size: 20px !important;
+}
