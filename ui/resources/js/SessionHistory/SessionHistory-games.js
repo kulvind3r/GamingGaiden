@@ -184,7 +184,7 @@ function selectGame(gameName) {
 
 // Group sessions by day and sum durations
 function groupSessionsByDay(sessions) {
-  const grouped = {};
+  const grouped = Object.create(null);
 
   sessions.forEach((session) => {
     const date = new Date(session.start_time * 1000);
