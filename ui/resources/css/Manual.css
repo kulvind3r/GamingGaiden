@@ -1,8 +1,9 @@
 html {
   font-size: 100%;
-  overflow-y: scroll;
   -webkit-text-size-adjust: 100%;
   -ms-text-size-adjust: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 
 body {
@@ -11,10 +12,38 @@ body {
     serif;
   font-size: 12px;
   line-height: 1.7;
-  padding: 1em;
-  margin: auto;
-  max-width: 42em;
+  padding: 30px;
+  margin: 0;
+  background: var(--bg-primary);
+  height: 100vh;
+  box-sizing: border-box;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+#content-wrapper {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
+#main-panel {
+  flex: 1;
   background: var(--bg-panel);
+  border-radius: 8px;
+  box-shadow: var(--shadow-primary) 0 2px 4px,
+    var(--shadow-secondary) 0 7px 20px -3px;
+  padding: 2em;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
+
+body > h1 {
+  text-align: center;
+  margin: 0 0 20px 0;
+  flex-shrink: 0;
 }
 
 a {
@@ -347,7 +376,6 @@ table td {
 @media only screen and (min-width: 768px) {
   body {
     font-size: 16px;
-    max-width: 90%;
   }
 
   .faq-container {

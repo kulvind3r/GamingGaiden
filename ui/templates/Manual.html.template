@@ -12,7 +12,8 @@
   </head>
 
   <body>
-    _MARKDOWN_HTML_
+    <h1>Help / FAQ</h1>
+    <div id="content-wrapper">_MARKDOWN_HTML_</div>
     <div id="modal-overlay" class="modal-overlay">
       <div class="modal-content">
         <span class="modal-close">&times;</span>

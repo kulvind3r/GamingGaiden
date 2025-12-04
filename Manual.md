@@ -1,5 +1,3 @@
-# Help / FAQ
-
 ### Track PC games
 1. Notify icon menu *Settings => Add Game*. 
 2. Add the executable of game using *Add Exe*.

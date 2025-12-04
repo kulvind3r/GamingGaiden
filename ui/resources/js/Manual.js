@@ -1,4 +1,12 @@
 document.addEventListener('DOMContentLoaded', function() {
+  // Wrap content in main-panel
+  const contentWrapper = document.getElementById('content-wrapper');
+  const mainPanel = document.createElement('div');
+  mainPanel.id = 'main-panel';
+  mainPanel.innerHTML = contentWrapper.innerHTML;
+  contentWrapper.innerHTML = '';
+  contentWrapper.appendChild(mainPanel);
+
   const modal = document.getElementById('modal-overlay');
   const modalBody = document.getElementById('modal-body');
   const closeBtn = document.querySelector('.modal-close');
