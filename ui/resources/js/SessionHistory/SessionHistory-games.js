@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-/*global gamesList, allSessions, selectedGame, currentChart, currentView, selectedDay, selectedDayIndex, sessionsByDay, currentSortField, currentSortDirection, Chart, ChartDataLabels, Log2Axis, chartTitleConfig, getChartTextColor, getChartGridColor */
+/*global gamesList, allSessions, Chart, ChartDataLabels, Log2Axis, chartTitleConfig, getChartTextColor, getChartGridColor, selectedGame:writable, currentChart:writable, currentView:writable, selectedDay:writable, selectedDayIndex:writable, sessionsByDay:writable, currentSortField:writable, currentSortDirection:writable */
 /*from SessionHistory-shared.js, common.js */
 
 // ===== GAMES VIEW - LIST MANAGEMENT =====

@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-/*global formatMonthString, formatDateString, updateYearDisplay, setupYearNavigation, updateMonthGrid, mainView, calendarYear, calendarMonth, calendarDay, availableDates, availableMonths, maxDate, MONTH_NAMES, loadGameCardsForDate, loadGameCardsForMonth */
+/*global formatMonthString, formatDateString, updateYearDisplay, setupYearNavigation, updateMonthGrid, availableDates, availableMonths, maxDate, minDate, MONTH_NAMES, loadGameCardsForDate, loadGameCardsForMonth, mainView:writable, calendarYear:writable, calendarMonth:writable, calendarDay:writable */
 /*from calendar-controls.js, SessionHistory-shared.js, SessionHistory-cards.js */
 
 // ===== MAIN VIEW SWITCHING =====
