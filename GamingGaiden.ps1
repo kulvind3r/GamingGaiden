@@ -255,11 +255,12 @@ try {
     $settingsSubMenuItem.DropDownItems.Add($addPlatformMenuItem)
     $settingsSubMenuItem.DropDownItems.Add($editPlatformMenuItem)
     $settingsSubMenuItem.DropDownItems.Add($menuItemSeparator7)
-    $settingsSubMenuItem.DropDownItems.Add($gamingPCMenuItem)
-    $settingsSubMenuItem.DropDownItems.Add($openInstallDirectoryMenuItem)
-    $settingsSubMenuItem.DropDownItems.Add($menuItemSeparator8)
     $settingsSubMenuItem.DropDownItems.Add($lightThemeMenuItem)
     $settingsSubMenuItem.DropDownItems.Add($darkThemeMenuItem)
+    $settingsSubMenuItem.DropDownItems.Add($menuItemSeparator8)
+    $settingsSubMenuItem.DropDownItems.Add($gamingPCMenuItem)
+    $settingsSubMenuItem.DropDownItems.Add($openInstallDirectoryMenuItem)
+    
 
     $statsSubMenuItem = CreateMenuItem "Statistics"
     $gamingTimeMenuItem = CreateMenuItem "Time Spent Gaming"
@@ -271,11 +272,12 @@ try {
     $sessionHistoryMenuItem = CreateMenuItem "Session History"
     $statsSubMenuItem.DropDownItems.Add($summaryItem)
     $statsSubMenuItem.DropDownItems.Add($gamingTimeMenuItem)
+    $statsSubMenuItem.DropDownItems.Add($sessionHistoryMenuItem)
     $statsSubMenuItem.DropDownItems.Add($gamesPerPlatformMenuItem)
     $statsSubMenuItem.DropDownItems.Add($mostPlayedMenuItem)
     $statsSubMenuItem.DropDownItems.Add($idleTimeMenuItem)
     $statsSubMenuItem.DropDownItems.Add($pcVsEmulationMenuItem)
-    $statsSubMenuItem.DropDownItems.Add($sessionHistoryMenuItem)
+    
 
     $appContextMenu = New-Object System.Windows.Forms.ContextMenuStrip
     $appContextMenu.Items.AddRange(@($allGamesMenuItem, $menuItemSeparator2, $statsSubMenuItem, $menuItemSeparator3, $settingsSubMenuItem, $menuItemSeparator4, $StartTrackerMenuItem, $StopTrackerMenuItem, $menuItemSeparator5, $helpMenuItem, $aboutMenuItem, $menuItemSeparator6, $exitMenuItem))
