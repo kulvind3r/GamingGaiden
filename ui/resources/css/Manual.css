@@ -190,6 +190,12 @@ details summary {
   list-style: none;
 }
 
+details summary::before {
+  content: "🔗 ";
+  opacity: 0.5;
+  font-size: 0.8em;
+}
+
 details summary::-webkit-details-marker {
   display: none;
 }

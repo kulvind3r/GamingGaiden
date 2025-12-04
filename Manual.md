@@ -75,3 +75,20 @@ Alternative: Name platform *"Gamecube and Wii"* using single exe.
 3. Update frontend/shortcuts.
 
 Alternative: Name platform *"Genesis & GameGear"* using single core.
+
+### Track games on multiple pc with shared database
+
+**Requires:** Cloud sync directory (OneDrive, etc.) accessible on all PCs.
+
+1. Install app on all PCs. Pick PC with most data as database source.
+2. On source PC: *Settings => Open Install Directory*, copy *backups* and *GamingGaiden.db* to synced folder.
+3. Exit app on all PCs.
+4. Delete *backups* and *GamingGaiden.db* from each PC's install directory.
+5. Use [Link Shell Extension](https://schinagl.priv.at/nt/hardlinkshellext/linkshellextension.html) to create symlinks from install directories to files in synced folder.
+6. Start app on all PCs.
+
+### Track Gaming PC usage independently with a shared database
+
+After setting up database share, on each installation of gaming gaiden set the correct pc as the current pc in *Settings => Gaming PCs* section.
+
+Games will be correctly tagged to the gaming pc on which they are played and pc usage will be updated using session times.
