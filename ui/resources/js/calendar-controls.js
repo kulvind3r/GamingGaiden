@@ -1,4 +1,4 @@
-/* exported formatDateString, updateYearDisplay, setupYearNavigation, updateMonthGrid */
+/* eslint-disable no-unused-vars */
 
 /**
  * Calendar Controls Module
