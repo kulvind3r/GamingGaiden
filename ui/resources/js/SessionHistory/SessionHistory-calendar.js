@@ -1,5 +1,6 @@
-/*global formatMonthString, formatDateString, updateYearDisplay, setupYearNavigation, updateMonthGrid*/
-/*from calendar-controls.js*/
+/* eslint-disable no-unused-vars */
+/*global formatMonthString, formatDateString, updateYearDisplay, setupYearNavigation, updateMonthGrid, mainView, calendarYear, calendarMonth, calendarDay, availableDates, availableMonths, maxDate, MONTH_NAMES, loadGameCardsForDate, loadGameCardsForMonth */
+/*from calendar-controls.js, SessionHistory-shared.js, SessionHistory-cards.js */
 
 // ===== MAIN VIEW SWITCHING =====
 

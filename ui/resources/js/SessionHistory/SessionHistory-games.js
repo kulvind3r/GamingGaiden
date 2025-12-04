@@ -1,3 +1,7 @@
+/* eslint-disable no-unused-vars */
+/*global gamesList, allSessions, selectedGame, currentChart, currentView, selectedDay, selectedDayIndex, sessionsByDay, currentSortField, currentSortDirection, Chart, ChartDataLabels, Log2Axis, chartTitleConfig, getChartTextColor, getChartGridColor */
+/*from SessionHistory-shared.js, common.js */
+
 // ===== GAMES VIEW - LIST MANAGEMENT =====
 
 // Render games list in left column
