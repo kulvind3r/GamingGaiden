@@ -1,5 +1,4 @@
-/*global filterSessionsByDateStr, aggregateGamesBySessions */
-/* exported loadGameCardsForDate */
+/*global filterSessionsByDateStr, aggregateGamesBySessions, updateStatsDisplay, switchMainView, selectGame */
 
 // ===== DATA AGGREGATION FOR BY DAY/MONTH VIEWS =====
 
@@ -18,6 +17,7 @@ function getGamesForMonth(monthStr) {
 // ===== GAME CARDS LOADING & RENDERING =====
 
 // Load and render game cards for a specific date
+// eslint-disable-next-line no-unused-vars
 function loadGameCardsForDate(dateStr) {
   const games = getGamesForDate(dateStr);
 
@@ -39,6 +39,7 @@ function loadGameCardsForDate(dateStr) {
 }
 
 // Load and render game cards for a specific month
+// eslint-disable-next-line no-unused-vars
 function loadGameCardsForMonth(monthStr) {
   const games = getGamesForMonth(monthStr);
 
