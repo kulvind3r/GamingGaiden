@@ -266,7 +266,7 @@ try {
     $gamingTimeMenuItem = CreateMenuItem "Time Spent Gaming"
     $mostPlayedMenuItem = CreateMenuItem "Most Played"
     $idleTimeMenuItem = CreateMenuItem "Idle Time"
-    $pcVsEmulationMenuItem = CreateMenuItem "PC vs Emulation Time"
+    $pcVsEmulationMenuItem = CreateMenuItem "PC vs Emulation"
     $summaryItem = CreateMenuItem "Life Time Summary"
     $gamesPerPlatformMenuItem = CreateMenuItem "Games Per Platform"
     $sessionHistoryMenuItem = CreateMenuItem "Session History"
