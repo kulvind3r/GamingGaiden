@@ -34,6 +34,7 @@ copy "%InstallDirectory%\Gaming Gaiden.lnk" "%StartMenuPath%"
 
 powershell.exe -NoProfile -Command "$WshShell = New-Object -ComObject WScript.Shell; $Shortcut = $WshShell.CreateShortcut('%InstallDirectory%\Uninstall Gaming Gaiden.lnk'); $Shortcut.TargetPath = '%InstallDirectory%\Uninstall.bat'; $Shortcut.WorkingDirectory = '%InstallDirectory%'; $Shortcut.Save()"
 copy "%InstallDirectory%\Uninstall Gaming Gaiden.lnk" "%StartMenuPath%"
+del "%InstallDirectory%\Uninstall Gaming Gaiden.lnk"
 
 REM Unblock all gaming gaiden files as they are downloaded from internet and blocked by default
 echo.
