@@ -16,7 +16,7 @@ body {
   align-items: center;
   width: 100%;
   max-width: 1840px;
-  margin: 0 auto 20px auto;
+  margin: 0 auto 15px auto;
   gap: 20px;
   flex-shrink: 0;
 }
@@ -54,7 +54,7 @@ h1 {
   box-shadow: var(--shadow-primary) 0 2px 4px,
     var(--shadow-secondary) 0 7px 20px -3px;
   padding: 30px;
-  margin: 0 auto 30px auto;
+  margin: 0 auto 25px auto;
   max-width: 1840px;
   display: flex;
   flex-direction: column;
