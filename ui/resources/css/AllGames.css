@@ -53,8 +53,8 @@ h1 {
   border-radius: 8px;
   box-shadow: var(--shadow-primary) 0 2px 4px,
     var(--shadow-secondary) 0 7px 20px -3px;
-  padding: 30px;
-  margin: 0 auto 25px auto;
+  padding: 25px;
+  margin: 0 auto 30px auto;
   max-width: 1840px;
   display: flex;
   flex-direction: column;
