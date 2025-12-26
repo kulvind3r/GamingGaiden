@@ -16,7 +16,7 @@ body {
   align-items: center;
   width: 100%;
   max-width: 1840px;
-  margin: 0 auto 15px auto;
+  margin: 0 auto 21px auto;
   gap: 20px;
   flex-shrink: 0;
 }
