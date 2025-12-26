@@ -143,12 +143,7 @@
 
           <div id="chart-container">
             <canvas id="session-chart"></canvas>
-            <button class="custom-button" id="view-toggle-button">Specific Date</button>
-            <div id="chart-navigation-bar" style="visibility: hidden;">
-              <button class="custom-button" id="prev-date-button">&#11164;</button>
-              <div id="date-display"></div>
-              <button class="custom-button" id="next-date-button">&#11166;</button>
-            </div>
+            <button class="custom-button" id="return-button">Return</button>
           </div>
 
           <div id="no-selection-message">

@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-/*global Chart, Log2Axis, ChartDataLabels, chartTitleConfig, getChartTextColor, getChartGridColor, initYearNavigation, sortGamesList, selectGame, updateGridAlignment, setupSearch, setupSorting, updateSortButtons, applySortAndRender, setupViewToggle, setupDateNavigation, setupMainViewButtons */
+/*global Chart, Log2Axis, ChartDataLabels, chartTitleConfig, getChartTextColor, getChartGridColor, initYearNavigation, sortGamesList, selectGame, updateGridAlignment, setupSearch, setupSorting, updateSortButtons, applySortAndRender, setupReturnButton, setupMainViewButtons */
 /* from common.js, SessionHistory-games.js, SessionHistory-calendar.js, SessionHistory-cards.js */
 
 
@@ -178,8 +178,7 @@ $(document).ready(function() {
   setupSorting();
   updateSortButtons();
   applySortAndRender(); // Initial render with default sort (last played, desc)
-  setupViewToggle();
-  setupDateNavigation();
+  setupReturnButton();
   setupMainViewButtons();
   initYearNavigation();
 

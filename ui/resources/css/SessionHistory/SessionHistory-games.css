@@ -194,43 +194,14 @@
 
 /* ===== GAMES VIEW - CHART CONTROLS ===== */
 
-/* Chart Navigation Bar */
-#chart-navigation-bar {
-  display: flex;
-  margin-top: 15px;
-  margin-bottom: 10px;
-  width: 500px;
-  margin-left: auto;
-  margin-right: auto;
-  justify-content: space-around;
-  align-items: center;
-}
-
-#date-display {
-  font-family: monospace;
-  font-size: 16px;
-  text-align: center;
-  flex: 1;
-  max-width: 300px;
-  color: var(--text-primary);
-}
-
-#view-toggle-button {
+#return-button {
   display: block;
   margin-left: auto;
   margin-right: auto;
   margin-top: 10px;
 }
 
-/* Smaller button sizes for navigation and toggle */
-#chart-navigation-bar .custom-button {
-  height: 32px;
-  padding-left: 12px;
-  padding-right: 12px;
-  font-size: 16px;
-}
-
-#view-toggle-button {
+#return-button {
   height: 32px;
   padding-left: 12px;
   padding-right: 12px;

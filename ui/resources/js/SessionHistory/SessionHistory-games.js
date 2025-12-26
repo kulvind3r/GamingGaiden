@@ -174,7 +174,7 @@ function selectGame(gameName) {
 
   // Reset to all time view when selecting a new game
   currentView = 'alltime';
-  updateViewToggle();
+  toggleReturnButton();
 
   // Update chart based on current view
   updateChart();
@@ -218,78 +218,31 @@ function initializeDateSelection() {
   if (sessionsByDay.length > 0) {
     selectedDayIndex = sessionsByDay.length - 1;
     selectedDay = sessionsByDay[selectedDayIndex].date;
-    updateDateDisplay();
-  }
-}
-
-// Update the date display text
-function updateDateDisplay() {
-  const dateDisplay = document.getElementById("date-display");
-  if (sessionsByDay.length > 0) {
-    const dayData = sessionsByDay[selectedDayIndex];
-    dateDisplay.textContent = `${dayData.date} (${dayData.sessionCount} session${dayData.sessionCount > 1 ? 's' : ''})`;
   }
 }
 
 // ===== GAMES VIEW - CHART TOGGLES & NAVIGATION =====
 
 // Setup view toggle handler (single button)
-function setupViewToggle() {
-  const toggleButton = document.getElementById("view-toggle-button");
+function setupReturnButton() {
+  const returnButton = document.getElementById("return-button");
 
-  toggleButton.addEventListener("click", () => {
-    if (currentView === 'alltime') {
-      currentView = 'specificdate';
-    } else {
-      currentView = 'alltime';
-    }
-    updateViewToggle();
+  returnButton.addEventListener("click", () => {
+    currentView = 'alltime';
+    toggleReturnButton();
     updateChart();
   });
 }
 
 // Update view toggle button and navigation bar visibility
-function updateViewToggle() {
-  const toggleButton = document.getElementById("view-toggle-button");
-  const navigationBar = document.getElementById("chart-navigation-bar");
+function toggleReturnButton() {
+  const returnButton = document.getElementById("return-button");
 
   if (currentView === 'alltime') {
-    toggleButton.textContent = "Specific Date";
-    navigationBar.style.visibility = "hidden";
+    returnButton.style.visibility = "hidden";
   } else {
-    toggleButton.textContent = "All time";
-    navigationBar.style.visibility = "visible";
+    returnButton.style.visibility = "visible";
   }
-}
-
-// Navigate to next date
-function switchToNextDate() {
-  if (selectedDayIndex >= sessionsByDay.length - 1) {
-    return; // Already at most recent date
-  }
-
-  selectedDayIndex++;
-  selectedDay = sessionsByDay[selectedDayIndex].date;
-  updateDateDisplay();
-  updateChart();
-}
-
-// Navigate to previous date
-function switchToPrevDate() {
-  if (selectedDayIndex <= 0) {
-    return; // Already at oldest date
-  }
-
-  selectedDayIndex--;
-  selectedDay = sessionsByDay[selectedDayIndex].date;
-  updateDateDisplay();
-  updateChart();
-}
-
-// Setup date navigation buttons
-function setupDateNavigation() {
-  document.getElementById("prev-date-button").addEventListener("click", switchToPrevDate);
-  document.getElementById("next-date-button").addEventListener("click", switchToNextDate);
 }
 
 // Update chart based on current view
@@ -329,6 +282,23 @@ function updateAllTimeChart() {
       ]
     },
     options: {
+      onClick: (event, barElements) => {
+        if (barElements.length > 0) {
+          const date = event.chart.data.labels[barElements[0].index]
+          selectedDay = date
+          currentView = 'specificdate';
+          toggleReturnButton();
+          // milisecond wait to allow chartJs to finish handling
+          // the event before updating current chart to new state
+          setTimeout(() => {
+            updateChart();
+          }, 0);
+        }
+      },
+      interaction: {
+        mode: 'nearest',
+        intersect: false
+      },
       responsive: true,
       maintainAspectRatio: false,
       plugins: {
