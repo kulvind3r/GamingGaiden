@@ -19,7 +19,7 @@ Most frontends already use the above way.
 4. For Retroarch: *Add Core* when prompted
 5. *Rom Extns* - comma-separated list without dots/spaces (zip,chd,rvg)
 
-**Games auto-register using ROM filename. Renaming ROM creates new entry.**
+**New emulated games are auto added using ROM filename as name of Game. If ROM file is renamed, a new game entry will get auto created.**
 
 ### Update tracked game status, edit play time, change icon etc.
 
@@ -35,11 +35,11 @@ App menu: *Settings => Edit Game*, select game from list (searchable).
 
 *Settings => Edit Emulator*, select platform from list (searchable).
 
-- Update executable path or add new exe
-- Change Retroarch core
+- Update executable path or add new exe for emulator
+- Change core for Retroarch
 - Modify ROM extensions
 
-### Pause/Resume tracking
+### Pause/Resume game tracking
 
 App menu: *Stop Tracker* to pause, *Start Tracker* to resume.
 
@@ -53,7 +53,7 @@ App menu: *Stop Tracker* to pause, *Start Tracker* to resume.
 
 1. App menu: *Settings => Open Install Directory*. Go to *backups* folder.
 2. Exit app. 
-3. Copy database file from backup folder zip to install directory. 
+3. Copy database file from inside one of the backup zips to install directory. 
 4. Restart app.
 
 ### Games launched from emulator application directly are not tracked
@@ -76,19 +76,21 @@ Alternative: Name platform *"Gamecube and Wii"* using single exe.
 
 Alternative: Name platform *"Genesis & GameGear"* using single core.
 
-### Track games on multiple PCs with shared database
+### Track games on multiple PCs in a single Gaming Gaiden database
 
 **Requires:** Cloud sync directory (OneDrive, etc.) accessible on all PCs.
 
-1. Install app on all PCs. Pick PC with most data as database source.
+1. Install app on all PCs. Pick PC with most data as initial database source.
 2. On source PC: *Settings => Open Install Directory*, copy *backups* and *GamingGaiden.db* to synced folder.
 3. Exit app on all PCs.
 4. Delete *backups* and *GamingGaiden.db* from each PC's install directory.
-5. Use [Link Shell Extension](https://schinagl.priv.at/nt/hardlinkshellext/linkshellextension.html) to create symlinks from install directories to files in synced folder.
+5. Use [Link Shell Extension](https://schinagl.priv.at/nt/hardlinkshellext/linkshellextension.html) to create symbolic links (symlinks) from Gaming Gaiden install directory on each PC to the *GamingGaiden.db* file and the *backups* directory in synced folder.
 6. Start app on all PCs.
 
-### Track gaming pc usage on a shared database
+### Map games played to the right gaming pc with single database on multiple PCs
 
-After setting up database share, on each installation of gaming gaiden set the correct pc as the current pc in *Settings => Gaming PCs* section.
+After setting up database share make sure all PCs are added to Gaming Gaiden
 
-Games will be correctly tagged to the gaming pc on which they are played and pc usage will be updated using session times.
+Then, on each installation of Gaming Gaiden set the correct pc as current pc in *Settings => Gaming PCs* section.
+
+Games will be tagged to the gaming pc on which they are played and pc usage will be updated using session times.
