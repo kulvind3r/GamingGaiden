@@ -650,9 +650,10 @@ function updateSpecificDateChart() {
           }
         },
         datalabels: {
-          anchor: "start",
+          anchor: "centre",
           align: "top",
-          offset: 45,
+          offset: 35,
+		      rotation: -45,
           formatter: function (value) {
             return value.duration != 0 ? value.duration + "h" : "";
           },
