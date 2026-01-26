@@ -26,16 +26,18 @@ https://github.com/user-attachments/assets/4837b88c-e403-4069-a3f5-3f0147e9328a
 
 ## Features
 - #### Time Tracking and Emulator Support
-    - Tracks play time for PC or emulated games.
+    - Tracks play time & session history for PC or emulated games.
     - Auto tracks new roms after registering any emulator just once.
     - Supports Retroarch cores.
     - Detects and removes idle time from gaming sessions.
     - Out of box HWiNFO64 integration with session time and tracking status metrics.
+    - Install on multiple gaming pcs and share database to tracks games played, hours played for each pc separately.
 - #### UI and Statistics
     - Fast browser based UI with search and sorting. Quick view popup for recent games.
     - Multiple in depth statistics on gaming. Lifetime summary, monthly/yearly time analysis, most played games, games per emulator etc.
+    - Value for money analysis for gaming pc by calculating gaming cost per hour or per month.
     - Integrated google image search for game icons / box art.
-    - Mark games as Finished / Playing to track backlog completion.
+    - Mark games as Playing / Finished / On Hold / Dropped to track backlog completion.
 - #### Quality of Life Features
     - Small size (~7 MB). High performance (Sub 5 sec game detection). Light on cpu & ram.
     - Completely offline and portable, all data stored in local database.
@@ -54,10 +56,7 @@ https://github.com/user-attachments/assets/4837b88c-e403-4069-a3f5-3f0147e9328a
 5. Regularly backup your `GamingGaiden.db` and `backups` folder to avoid data loss. Click ***Settings => Open Install Directory*** option in app menu to find them.
 
 ## How to uninstall
-1. Save any backups if you want from the `C:\ProgramData\GamingGaiden\backups` directory.
-2. Delete the directory `C:\ProgramData\GamingGaiden`
-3. Delete the shortcuts from Start Menu and Desktop.
-4. Open Run Dialog by pressing `Win + R` , enter `"%APPDATA%\Microsoft\Windows\Start Menu\Programs\StartUp"` in the dialog (including quotes) and press enter. Delete the shortcut from the directory that opens.
+Run `Uninstall.bat` from the `Gaming Gaiden` start menu folder. `GamingGaiden.db` and `backups` are not removed for preserving data.
 
 ## Unknown Publisher
 Windows SmartScreen may warn that the application is from an ***Unknown Publisher*** because it lacks signature from a public CA. 
