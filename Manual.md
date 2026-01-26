@@ -86,6 +86,8 @@ Alternative: Name platform *"Genesis & GameGear"* using single core.
 4. Delete *backups* and *GamingGaiden.db* from each PC's install directory.
 5. Use [Link Shell Extension](https://schinagl.priv.at/nt/hardlinkshellext/linkshellextension.html) to create symbolic links (symlinks) from Gaming Gaiden install directory on each PC to the *GamingGaiden.db* file and the *backups* directory in synced folder.
 6. Start app on all PCs.
+7. Add both PCs in your "Gaming PCs" on Gaming Gaiden.
+8. Mark PC as *current* in it's Gaming Gaiden app to track games and hours played on that PC.
 
 ### Map games played to the right gaming pc with single database on multiple PCs
 
