@@ -75,6 +75,7 @@ function updateChart(
   let data = [];
   let datasetData;
   let ylimit;
+  let ymin;
 
   if (!yearlySummaryEnabled) {
     monthTotalTime = 0;
@@ -102,6 +103,7 @@ function updateChart(
 
     datasetData = data;
     ylimit = 24;
+    ymin = 0.25;
   } else {
     yearTotalTime = 0;
     labels = [
@@ -139,6 +141,7 @@ function updateChart(
 
     datasetData = data.map((row) => row.time);
     ylimit = 120;
+    ymin = 1;
   }
 
   if (chart) {
@@ -187,6 +190,7 @@ function updateChart(
         y: {
           beginAtZero: true,
           suggestedMax: ylimit,
+          suggestedMin: ymin,
           type: "log2",
           title: chartTitleConfig("PlayTime (Hours)", 15),
           ticks: {
