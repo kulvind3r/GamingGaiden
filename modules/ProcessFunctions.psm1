@@ -120,7 +120,7 @@ function MonitorGame($DetectedExe) {
 
     # Capture process start time for session history
     $processStartTime = ($null = [System.Diagnostics.Process]::GetProcessesByName($DetectedExe)).StartTime | Sort-Object | Select-Object -First 1
-    $sessionStartTimeUnix = [int](Get-Date ($processStartTime.ToUniversalTime()) -UFormat %s)
+    $sessionStartTimeUnix = (Get-Date ($processStartTime.ToUniversalTime()) -UFormat %s).Split('.').Split(',').Get(0)
 
     if (IsExeEmulator $DetectedExe) {
         $emulatedGameDetails = FindEmulatedGameDetails $DetectedExe
