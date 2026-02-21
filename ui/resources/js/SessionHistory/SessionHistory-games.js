@@ -18,6 +18,7 @@ function renderGamesList(filteredGames = null) {
 
     const hours = (game.total_duration / 60).toFixed(1);
     const sessionsText = game.session_count === 1 ? "session" : "sessions";
+    const daysText = game.days_count === 1 ? "day" : "days";
 
     li.innerHTML = `
       <img src="${game.icon}" class="game-icon" alt="${game.game_name}">
@@ -25,7 +26,7 @@ function renderGamesList(filteredGames = null) {
         <div class="game-name">${game.game_name}</div>
         <div class="game-meta">
           <span class="platform">${game.platform}</span>
-          <span class="stats">${game.session_count} ${sessionsText} • ${hours}h</span>
+          <span class="stats">${game.session_count} ${sessionsText} • ${game.days_count} ${daysText} • ${hours} h</span>
         </div>
       </div>
     `;
@@ -147,14 +148,14 @@ function selectGame(gameName) {
   // Update header
   const gameData = gamesList.find((g) => g.game_name === gameName);
   const hours = (gameData.total_duration / 60).toFixed(1);
-  const sessionsText = gameData.session_count === 1 ? "session" : "sessions";
 
   document.getElementById("selected-game-name").innerHTML =
     `${gameName}<img src="${gameData.icon}" class="selected-game-icon" alt="${gameName}">`;
 
   // Populate individual stats
   document.getElementById("stat-platform").textContent = gameData.platform;
-  document.getElementById("stat-sessions").textContent = `${gameData.session_count} ${sessionsText}`;
+  document.getElementById("stat-sessions").textContent = `${gameData.session_count}`;
+  document.getElementById("stat-days").textContent = `${gameData.days_count}`;
   document.getElementById("stat-hours").textContent = `${hours} hours`;
 
   // Filter sessions for this game

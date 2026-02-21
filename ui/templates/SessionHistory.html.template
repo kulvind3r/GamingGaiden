@@ -131,6 +131,10 @@
                 <span class="stat-value" id="stat-sessions"></span>
               </div>
               <div class="stat-item">
+                <span class="stat-label">Days:</span>
+                <span class="stat-value" id="stat-days"></span>
+              </div>
+              <div class="stat-item">
                 <span class="stat-label">Total Time:</span>
                 <span class="stat-value" id="stat-hours"></span>
               </div>

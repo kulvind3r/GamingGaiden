@@ -77,6 +77,24 @@ function parseGamesData() {
   gamesList.shift();
 }
 
+// Add days count in gameList
+function updateDaysCountInGameList() {
+  const dateTracker = {};
+  allSessions.forEach(session => {
+      const name = session.game_name;
+      const date = session.session_date;        
+      if (!dateTracker[name]) {
+          dateTracker[name] = new Set();
+      }
+      dateTracker[name].add(date);
+  });
+
+  gamesList.forEach(game => {
+      const name = game.game_name;
+      game.days_count = dateTracker[name].size;
+  });
+}
+
 // ===== DATE AVAILABILITY FUNCTIONS =====
 
 // Build available dates/months set from session data
@@ -173,6 +191,8 @@ function updateStatsDisplay(games) {
 $(document).ready(function() {
   parseSessionsData();
   parseGamesData();
+  // updateDaysCountInGameList must be run after parsingData functions
+  updateDaysCountInGameList();
   buildAvailableDates();
   setupSearch();
   setupSorting();
