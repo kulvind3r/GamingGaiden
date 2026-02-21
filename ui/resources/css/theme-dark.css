@@ -47,6 +47,7 @@
 
   /* Table Specific */
   --table-header-bg: #1a1a1a;
+  --table-header-text: #e0e0e0;
 
   /* Scrollbar Colors */
   --scrollbar-track: #2a2a2a;
