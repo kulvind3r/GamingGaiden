@@ -295,22 +295,32 @@ function updateAnnualHoursChart() {
         y: {
           beginAtZero: true,
           max: maxYAxis,
+          border: {
+            display: true,
+            color: getChartGridColor()
+          },
           ticks: {
             stepSize: 100,
             color: getChartTextColor()
           },
           title: chartTitleConfig("Hours Played", 15),
           grid: {
-            display: false
+            drawOnChartArea: false,
+			      color: getChartGridColor()
           }
         },
         x: {
           title: chartTitleConfig("Year", 15),
+          border: {
+            display: true,
+            color: getChartGridColor()
+          },
           ticks: {
             color: getChartTextColor()
           },
           grid: {
-            display: false
+            drawOnChartArea: false,
+			      color: getChartGridColor()
           },
           offset: true
         }
