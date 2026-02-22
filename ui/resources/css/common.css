@@ -13,6 +13,8 @@
   flex: 1;
   min-width: 0;
   margin: 0 5px;
+  white-space: normal;
+  font-size: clamp(10px, 1vw, 18px);
 }
 
 .help-button {

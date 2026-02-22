@@ -75,15 +75,15 @@
             padding-left: 16px;
             padding-right: 16px;
             position: relative;
-            text-align: left;
+            text-align: center;
             text-decoration: none;
             transition: box-shadow 0.15s, transform 0.15s;
             user-select: none;
             -webkit-user-select: none;
             touch-action: manipulation;
-            white-space: nowrap;
+            white-space: normal;
             will-change: box-shadow, transform;
-            font-size: 18px;
+            font-size: clamp(10px, 1vw, 18px);
         }
 
         .custom-button:focus {
@@ -125,7 +125,7 @@
             <button class="custom-button" id="all-games-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/AllGames.html';">All Games</button>
             <button class="custom-button" id="idle-time-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/IdleTime.html';">Idle Time</button>
             <button class="custom-button" id="session-history-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/SessionHistory.html';">Session History</button>
-            <button class="custom-button" id="games-per-platform-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/GamesPerPlatform.html';">Games Per Platform</button>
+            <button class="custom-button" id="games-per-platform-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/GamesPerPlatform.html';">Games / Platform</button>
             <button class="custom-button" id="pc-vs-emu-button" onclick="window.location.href='file:///C:/ProgramData/GamingGaiden/ui/PCvsEmulation.html';">PC vs Emulation</button>
         </div>
     </body>

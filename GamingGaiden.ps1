@@ -268,7 +268,7 @@ try {
     $idleTimeMenuItem = CreateMenuItem "Idle Time"
     $pcVsEmulationMenuItem = CreateMenuItem "PC vs Emulation"
     $summaryItem = CreateMenuItem "Life Time Summary"
-    $gamesPerPlatformMenuItem = CreateMenuItem "Games Per Platform"
+    $gamesPerPlatformMenuItem = CreateMenuItem "Games / Platform"
     $sessionHistoryMenuItem = CreateMenuItem "Session History"
     $statsSubMenuItem.DropDownItems.Add($summaryItem)
     $statsSubMenuItem.DropDownItems.Add($gamingTimeMenuItem)

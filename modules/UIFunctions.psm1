@@ -352,7 +352,7 @@ function RenderGamesPerPlatform() {
         [bool]$InBackground = $false
     )
 
-    Log "Rendering games per platform"
+    Log "Rendering Games / Platform"
 
     $workingDirectory = (Get-Location).Path
 
