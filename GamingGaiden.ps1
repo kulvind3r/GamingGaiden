@@ -4,7 +4,7 @@
 #_pragma title 'Gaming Gaiden: Gameplay Time Tracker'
 #_pragma product 'Gaming Gaiden'
 #_pragma copyright '© 2023 Kulvinder Singh'
-#_pragma version '2026.01.26'
+#_pragma version '2026.02.22'
 
 [System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms')    | Out-null
 [System.Reflection.Assembly]::LoadWithPartialName('System.Drawing')          | Out-null
