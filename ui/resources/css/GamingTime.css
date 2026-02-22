@@ -53,7 +53,7 @@ h1 {
 #total-hours-display {
   color: var(--accent-blue);
   font-family: monospace;
-  font-size: 18px;
+  font-size: clamp(10px, 1vw, 18px);
   height: 22px;
   flex-shrink: 0;
 }

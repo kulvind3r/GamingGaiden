@@ -35,7 +35,7 @@ h1 {
 }
 
 #summary {
-  font-size: 18px;
+  font-size: clamp(10px, 1vw, 18px);
   margin: 5px;
   flex-shrink: 0;
   text-align: center;
@@ -46,7 +46,7 @@ h1 {
   display: flex;
   width: 100%;
   margin: 5px;
-  font-size: 18px;
+  font-size: clamp(10px, 1vw, 18px);
   flex-shrink: 0;
 }
 
@@ -82,8 +82,8 @@ h1 {
 }
 
 .legend-icon {
-  width: 20px;
-  height: 20px;
+  width: 1vw;
+  height: 1vw;
   border-radius: 50%;
   margin-right: -20px;
 }
@@ -241,7 +241,7 @@ h1 {
 }
 
 #pc-stats p {
-  font-size: 17px;
+  font-size: clamp(10px, 1vw, 17px);
   margin: 5px 0;
   text-align: left;
   color: var(--text-primary);

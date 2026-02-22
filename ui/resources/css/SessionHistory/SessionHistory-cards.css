@@ -9,13 +9,13 @@
 #selected-date-title {
   margin: 0 0 10px 0;
   color: var(--text-primary);
-  font-size: 20px;
+  font-size: clamp(10px, 1vw, 20px);
 }
 
 #date-stats {
   display: flex;
   gap: 20px;
-  font-size: 14px;
+  font-size: clamp(10px, 1vw, 14px);
   color: var(--text-secondary);
 }
 
@@ -84,7 +84,7 @@
 
 .game-card-name {
   font-weight: bold;
-  font-size: 14px;
+  font-size: clamp(10px, 1vw, 14px);
   color: var(--text-primary);
   text-align: center;
   word-wrap: break-word;
@@ -98,7 +98,7 @@
 }
 
 .game-card-platform {
-  font-size: 12px;
+  font-size: clamp(10px, 1vw, 12px);
   color: var(--text-secondary);
   font-style: italic;
   white-space: nowrap;
@@ -108,7 +108,7 @@
 }
 
 .game-card-stats {
-  font-size: 12px;
+  font-size: clamp(10px, 1vw, 12px);
   color: var(--text-secondary);
   text-align: center;
   white-space: nowrap;
@@ -125,5 +125,5 @@
   justify-content: center;
   height: 100%;
   color: var(--text-secondary);
-  font-size: 16px;
+  font-size: clamp(10px, 1vw, 16px);
 }

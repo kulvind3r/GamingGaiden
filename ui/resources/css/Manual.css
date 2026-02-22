@@ -10,7 +10,7 @@ body {
   color: var(--text-primary);
   font-family: Georgia, Palatino, "Palatino Linotype", Times, "Times New Roman",
     serif;
-  font-size: 12px;
+  font-size: clamp(10px, 1vw, 12px);
   line-height: 1.7;
   padding: 30px;
   margin: 0;

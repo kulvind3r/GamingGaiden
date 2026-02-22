@@ -55,7 +55,7 @@ h1 {
   width: 200px;
   justify-content: space-around;
   font-family: monospace;
-  font-size: 18px;
+  font-size: clamp(10px, 1vw, 18px);
   flex-shrink: 0;
   color: var(--text-primary);
 }

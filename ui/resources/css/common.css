@@ -22,5 +22,5 @@
   background-color: var(--accent-blue) !important;
   color: var(--text-inverse) !important;
   font-weight: bold;
-  font-size: 20px !important;
+  font-size: clamp(10px, 1vw, 20px) !important;
 }

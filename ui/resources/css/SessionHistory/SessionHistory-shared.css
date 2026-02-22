@@ -75,7 +75,7 @@ h1 {
 .view-btn {
   flex: 1;
   padding: 15px 8px;
-  font-size: 16px;
+  font-size: clamp(10px, 1vw, 16px);
   font-family: monospace;
   background-color: var(--bg-primary);
   color: var(--text-secondary);

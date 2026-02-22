@@ -229,7 +229,7 @@ function RenderSummary() {
     $currentPC = Read-Setting "current_pc"
     $pcWarning = ""
     if ($null -eq $currentPC -and $gamingPCData.Length -gt 1) {
-        $pcWarning = "<p style='color: red; font-size: 12px; margin: 5px 0;'>⚠ Current PC unidentified. Mark a PC as current to measure PC usage</p>"
+        $pcWarning = "<p style='color: red; font-size: clamp(10px, 1vw, 12px); margin: 5px 0;'>⚠ Current PC unidentified. Mark a PC as current to measure PC usage</p>"
     }
 
     $TotalAnnualGamingHoursQuery = "SELECT 

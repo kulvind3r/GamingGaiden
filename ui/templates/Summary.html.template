@@ -74,7 +74,7 @@
             <p id="pc-games-played"></p>
             <p id="pc-hours"></p>
             <p id="pc-running-cost"></p>
-            <p id="pc-stat-disclaimer" style="font-size: 11px;">
+            <p id="pc-stat-disclaimer" style="font-size: clamp(10px, 1vw, 12px);">
               &#10014 Includes play time of games you may have deleted. Idle time is excluded.
             </p>
           </div>
