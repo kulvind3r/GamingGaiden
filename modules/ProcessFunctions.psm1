@@ -70,26 +70,31 @@ function TimeTrackerLoop($DetectedExe) {
     $idleSessionsCount = 0
     $idleSessions = New-Object int[] 100;
     $exeStartTime = ($null = [System.Diagnostics.Process]::GetProcessesByName($DetectedExe)).StartTime | Sort-Object | Select-Object -First 1
+    $idleTimeSetting = ReadGGConfig "idle_time_enabled"
+    $idleTimeEnabled = ($null -ne $idleTimeSetting -and $idleTimeSetting.ToLower() -eq "true")
 
     while ($null = [System.Diagnostics.Process]::GetProcessesByName($DetectedExe)) {
         $playTimeForCurrentSession = [int16] (New-TimeSpan -Start $exeStartTime).TotalMinutes
-        $idleTime = [int16] ([PInvoke.Win32.UserInput]::IdleTime).Minutes
+        
+        # Monitor Idle time if enabled
+        if ($idleTimeEnabled) {
+            $idleTime = [int16] ([PInvoke.Win32.UserInput]::IdleTime).Minutes
+            if ($idleTime -ge 10) {
+                # Entered idle Session
+                while ($idleTime -ge 5) {
+                    # Track idle Time for current Idle Session
+                    $idleSessions[$idleSessionsCount] = $idleTime
+                    $idleTime = [int16] ([PInvoke.Win32.UserInput]::IdleTime).Minutes
 
-        if ($idleTime -ge 10) {
-            # Entered idle Session
-            while ($idleTime -ge 5) {
-                # Track idle Time for current Idle Session
-                $idleSessions[$idleSessionsCount] = $idleTime
-                $idleTime = [int16] ([PInvoke.Win32.UserInput]::IdleTime).Minutes
+                    # Keep the hwinfo sensor updated to current play time session length while tracking idle session
+                    $playTimeForCurrentSession = [int16] (New-TimeSpan -Start $exeStartTime).TotalMinutes
+                    Set-Itemproperty -path $hwInfoSensorSession -Name 'Value' -value $playTimeForCurrentSession
 
-                # Keep the hwinfo sensor updated to current play time session length while tracking idle session
-                $playTimeForCurrentSession = [int16] (New-TimeSpan -Start $exeStartTime).TotalMinutes
-                Set-Itemproperty -path $hwInfoSensorSession -Name 'Value' -value $playTimeForCurrentSession
-
-                Start-Sleep -s 5
+                    Start-Sleep -s 5
+                }
+                # Exited Idle Session, increment idle session counter for storing next idle sessions's length
+                $idleSessionsCount++
             }
-            # Exited Idle Session, increment idle session counter for storing next idle sessions's length
-            $idleSessionsCount++
         }
 
         Set-Itemproperty -path $hwInfoSensorSession -Name 'Value' -value $playTimeForCurrentSession
@@ -107,6 +112,10 @@ function TimeTrackerLoop($DetectedExe) {
 
 function MonitorGame($DetectedExe) {
     Log "Starting monitoring for $DetectedExe"
+    $idleTimeEnabled = ReadGGConfig "idle_time_enabled"
+    if ($null -ne $idleTimeEnabled -and $idleTimeEnabled.ToLower() -eq "false") {
+        Log "Idle time tracking is disabled."
+    }
 
     $databaseFileHashBefore = CalculateFileHash '.\GamingGaiden.db'
     Log "Database hash before: $databaseFileHashBefore"
@@ -163,7 +172,7 @@ function MonitorGame($DetectedExe) {
         $updatedIdleTime = $recordedGameIdleTime + $currentIdleTime
 
         # Get current PC and append if needed
-        $currentPC = Read-Setting "current_pc"
+        $currentPC = ReadGGConfig "current_pc"
         $updatedPCList = ""
         if ($null -ne $currentPC) {
             $gameNamePattern = SQLEscapedMatchPattern($gameName.Trim())
@@ -182,7 +191,7 @@ function MonitorGame($DetectedExe) {
     else {
         Log "Detected emulated game is new and doesn't exist already. Adding to database."
 
-        $currentPC = Read-Setting "current_pc"
+        $currentPC = ReadGGConfig "current_pc"
         $pcNameForGame = if ($null -ne $currentPC) { $currentPC } else { "" }
 
         SaveGame -GameName $gameName -GameExeName $DetectedExe -GameIconPath "./icons/default.png" `
@@ -195,7 +204,7 @@ function MonitorGame($DetectedExe) {
     RecordSessionHistory -GameName $gameName -StartTime $sessionStartTimeUnix -Duration $currentPlayTime
 
     # Update current PC playtime
-    $currentPC = Read-Setting "current_pc"
+    $currentPC = ReadGGConfig "current_pc"
     if ($null -ne $currentPC) {
         UpdatePCPlaytime -PCName $currentPC -DurationMinutes $currentPlayTime
     }

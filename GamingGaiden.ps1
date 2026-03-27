@@ -64,11 +64,11 @@ try {
 
     #------------------------------------------
     # Initialize current PC if only one PC exists
-    if (-Not (Read-Setting "current_pc")) {
+    if (-Not (ReadGGConfig "current_pc")) {
         $pcCount = (RunDBQuery "SELECT COUNT(*) as count FROM gaming_pcs").count
         if ($pcCount -eq 1) {
             $pc = (RunDBQuery "SELECT name FROM gaming_pcs LIMIT 1").name
-            Write-Setting "current_pc" $pc
+            WriteGGConfig "current_pc" $pc
             Log "Initialized current PC to $pc (only PC in database)"
         }
     }

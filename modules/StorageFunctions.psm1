@@ -372,33 +372,15 @@ VALUES (@GameName, @StartTime, @Duration)
     }
 }
 
-function Read-Setting($Key) {
-    $settingsPath = ".\settings.ini"
+function WriteGGConfig($Key, $Value) {
+    $ggConfigPath = ".\config.ini"
 
-    if (-Not (Test-Path $settingsPath)) {
-        Log "Settings file not found at $settingsPath"
-        return $null
+    if (-Not (Test-Path $ggConfigPath)) {
+        New-Item -Path $ggConfigPath -ItemType File -Force | Out-Null
+        Log "Created config file at $ggConfigPath"
     }
 
-    $content = Get-Content -Path $settingsPath -Raw
-    $pattern = "(?m)^$Key\s*=\s*(.+)$"
-
-    if ($content -match $pattern) {
-        return $Matches[1].Trim()
-    }
-
-    return $null
-}
-
-function Write-Setting($Key, $Value) {
-    $settingsPath = ".\settings.ini"
-
-    if (-Not (Test-Path $settingsPath)) {
-        New-Item -Path $settingsPath -ItemType File -Force | Out-Null
-        Log "Created settings file at $settingsPath"
-    }
-
-    $content = Get-Content -Path $settingsPath -Raw
+    $content = Get-Content -Path $ggConfigPath -Raw
     $pattern = "(?m)^$Key\s*=\s*.+$"
 
     if ($content -match $pattern) {
@@ -408,8 +390,8 @@ function Write-Setting($Key, $Value) {
         $newContent = $content + "$Key=$Value`n"
     }
 
-    Set-Content -Path $settingsPath -Value $newContent -Force
-    Log "Setting updated: $Key=$Value"
+    Set-Content -Path $ggConfigPath -Value $newContent -Force
+    Log "Config updated: $Key=$Value"
 }
 
 function UpdatePCPlaytime($PCName, $DurationMinutes) {

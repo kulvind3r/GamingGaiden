@@ -193,3 +193,21 @@ function GetPlatformDetails($Platform) {
     Log ("Found details: name: {0}, exe_name: {1}, core: {2}" -f $platformDetails.name, $platformDetails.exe_name, $platformDetails.core)
     return $platformDetails
 }
+
+function ReadGGConfig($Key) {
+    $ggConfigPath = ".\config.ini"
+
+    if (-Not (Test-Path $ggConfigPath)) {
+        Log "Config file not found at $ggConfigPath"
+        return $null
+    }
+
+    $content = Get-Content -Path $ggConfigPath -Raw
+    $pattern = "(?m)^$Key\s*=\s*(.+)$"
+
+    if ($content -match $pattern) {
+        return $Matches[1].Trim()
+    }
+
+    return $null
+}

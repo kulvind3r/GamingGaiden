@@ -22,7 +22,7 @@ function RefreshPCListBox {
     )
 
     $PCList = (RunDBQuery "SELECT name FROM gaming_pcs").name
-    $currentPC = Read-Setting "current_pc"
+    $currentPC = ReadGGConfig "current_pc"
     $displayList = @()
 
     foreach ($pc in $PCList) {
@@ -81,7 +81,7 @@ function RenderEditGameForm($GamesList) {
     $listboxGamingPC.Size = New-Object System.Drawing.Size(200, 80)
     $listboxGamingPC.SelectionMode = [System.Windows.Forms.SelectionMode]::MultiSimple
 
-    $currentPC = Read-Setting "current_pc"
+    $currentPC = ReadGGConfig "current_pc"
     $pcList = (RunDBQuery "SELECT name FROM gaming_pcs ORDER BY in_use DESC, name ASC").name
 
     if ($pcList.Length -gt 0) {
@@ -188,7 +188,7 @@ function RenderEditGameForm($GamesList) {
             $listboxGamingPC.ClearSelected()
             if ($null -ne $selectedGame.gaming_pc_name -and $selectedGame.gaming_pc_name -ne "") {
                 $gamePCs = $selectedGame.gaming_pc_name -split ','
-                $currentPC = Read-Setting "current_pc"
+                $currentPC = ReadGGConfig "current_pc"
 
                 for ($i = 0; $i -lt $listboxGamingPC.Items.Count; $i++) {
                     $item = $listboxGamingPC.Items[$i]
@@ -551,7 +551,7 @@ function RenderAddGameForm() {
     $dropdownGamingPC.Size = New-Object System.Drawing.Size(200, 20)
     $dropdownGamingPC.DropDownStyle = [System.Windows.Forms.ComboBoxStyle]::DropDownList
 
-    $currentPC = Read-Setting "current_pc"
+    $currentPC = ReadGGConfig "current_pc"
     $pcList = (RunDBQuery "SELECT name FROM gaming_pcs").name
 
     if ($pcList.Length -gt 0) {
@@ -689,7 +689,7 @@ function RenderGamingPCForm($PCList) {
     $labelList = Createlabel "Your PCs" 565 30; $gamingPCForm.Controls.Add($labelList)
 
     # Check if warning should be shown
-    $currentPC = Read-Setting "current_pc"
+    $currentPC = ReadGGConfig "current_pc"
     $showWarning = ($null -eq $currentPC -and $PCList.Length -gt 1)
     $warningLabel = $null
 
@@ -759,7 +759,7 @@ function RenderGamingPCForm($PCList) {
 
             # If checked, mark this PC as current for tracking
             if ($checkboxCurrentPC.Checked -and $textName.Text -ne "") {
-                Write-Setting "current_pc" $textName.Text
+                WriteGGConfig "current_pc" $textName.Text
 
                 # Hide warning if it exists
                 if ($showWarning -and $null -ne $warningLabel) {
@@ -772,7 +772,7 @@ function RenderGamingPCForm($PCList) {
             }
             else {
                 # Clear current_pc setting when unchecked
-                Write-Setting "current_pc" ""
+                WriteGGConfig "current_pc" ""
 
                 # Refresh listbox to remove current PC indicator
                 $currentlySelected = $listBox.SelectedItem
@@ -804,7 +804,7 @@ function RenderGamingPCForm($PCList) {
             # Update "Current PC" checkbox status from settings.ini
             # Disable handler to prevent updating settings file
             $disableCurrentPCCheckBoxHandler = $true
-            $currentPC = Read-Setting "current_pc"
+            $currentPC = ReadGGConfig "current_pc"
             $checkboxCurrentPC.Checked = ($selectedPC.name -eq $currentPC)
             $disableCurrentPCCheckBoxHandler = $false
 

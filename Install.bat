@@ -15,7 +15,7 @@ taskkill /f /im GamingGaiden.exe
 
 REM Cleanup Install directory before installation
 echo Cleaning install directory
-powershell.exe -NoProfile -Command "Get-ChildItem '%InstallDirectory%' -Exclude backups,GamingGaiden.db | Remove-Item -recurse -force"
+powershell.exe -NoProfile -Command "Get-ChildItem '%InstallDirectory%' -Exclude backups,GamingGaiden.db,config.ini | Remove-Item -recurse -force"
 
 REM Install to C:\ProgramData\GamingGaiden
 echo Copying Files
