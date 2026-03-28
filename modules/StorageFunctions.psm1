@@ -372,28 +372,6 @@ VALUES (@GameName, @StartTime, @Duration)
     }
 }
 
-function WriteGGConfig($Key, $Value) {
-    $ggConfigPath = ".\config.ini"
-
-    if (-Not (Test-Path $ggConfigPath)) {
-        New-Item -Path $ggConfigPath -ItemType File -Force | Out-Null
-        Log "Created config file at $ggConfigPath"
-    }
-
-    $content = Get-Content -Path $ggConfigPath -Raw
-    $pattern = "(?m)^$Key\s*=\s*.+$"
-
-    if ($content -match $pattern) {
-        $newContent = $content -replace $pattern, "$Key=$Value"
-    }
-    else {
-        $newContent = $content + "$Key=$Value`n"
-    }
-
-    Set-Content -Path $ggConfigPath -Value $newContent -Force
-    Log "Config updated: $Key=$Value"
-}
-
 function UpdatePCPlaytime($PCName, $DurationMinutes) {
     if ([string]::IsNullOrEmpty($PCName)) {
         return

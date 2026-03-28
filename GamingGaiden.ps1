@@ -6,6 +6,8 @@
 #_pragma copyright '© 2023 Kulvinder Singh'
 #_pragma version '2026.02.22'
 
+# Enums for configuration settings require that `using module` is used for the module housing the enums
+using module ".\modules\ConfigFunctions.psm1"
 [System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms')    | Out-null
 [System.Reflection.Assembly]::LoadWithPartialName('System.Drawing')          | Out-null
 [System.Reflection.Assembly]::LoadWithPartialName('System.Web')          	 | Out-null
@@ -113,22 +115,28 @@ try {
         Import-Module ".\modules\UserInput.psm1";
     }
 
-    $TrackerJobScript = {
-        try {
-            while ($true) {
-                $detectedExe = DetectGame
-                MonitorGame $detectedExe
-                UpdateAllStatsInBackground
-            }
-        }
-        catch {
-            $timestamp = (Get-date -f %d-%M-%y`|%H:%m:%s)
-            Write-Output "$timestamp : Error: A user or system error has caused an exception. Check log for details." >> ".\GamingGaiden.log"
-            Write-Output "$timestamp : Exception: $($_.Exception.Message)" >> ".\GamingGaiden.log"
-            Write-Output "$timestamp : Error: Tracker job has failed. Please restart from app menu to continue detection." >> ".\GamingGaiden.log"
-            exit 1;
-        }
+    # Enums for configuration settings require that `using module` is used for the module housing the enums
+    # `using module` has to be first line of tracker job script, but the parser of GamingGaiden ps1 throws an error
+    # as it is not the first line of GamingGaide ps1. So tracker job script has to be written as a string and then
+    # converted to a script block
+    $TrackerJobScriptString = @"
+using module ".\modules\ConfigFunctions.psm1"
+try {
+    while (`$true) {
+        `$detectedExe = DetectGame
+        MonitorGame `$detectedExe
+        UpdateAllStatsInBackground
     }
+}
+catch {
+    `$timestamp = (Get-date -f %d-%M-%y`|%H:%m:%s)
+    Write-Output "`$timestamp : Error: A user or system error has caused an exception. Check log for details." >> ".\GamingGaiden.log"
+    Write-Output "`$timestamp : Exception: `$(`$_.Exception.Message)" >> ".\GamingGaiden.log"
+    Write-Output "`$timestamp : Error: Tracker job has failed. Please restart from app menu to continue detection." >> ".\GamingGaiden.log"
+    exit 1;
+}
+"@
+    $TrackerJobScriptBlock = [scriptblock]::Create($TrackerJobScriptString)
 
     #------------------------------------------
     # Functions
@@ -141,7 +149,7 @@ try {
     }
 
     function  StartTrackerJob() {
-        Start-ThreadJob -InitializationScript $TrackerJobInitializationScript -ScriptBlock $TrackerJobScript -Name "TrackerJob"
+        Start-ThreadJob -InitializationScript $TrackerJobInitializationScript -ScriptBlock $TrackerJobScriptBlock -Name "TrackerJob"
         $StopTrackerMenuItem.Enabled = $true
         $StartTrackerMenuItem.Enabled = $false
 
@@ -247,21 +255,18 @@ try {
     $editPlatformMenuItem = CreateMenuItem "Edit Emulator"
     $gamingPCMenuItem = CreateMenuItem "Gaming PCs"
     $openInstallDirectoryMenuItem = CreateMenuItem "Open Install Directory"
-    $lightThemeMenuItem = CreateMenuItem "Light Theme"
-    $darkThemeMenuItem = CreateMenuItem "Dark Theme"
+    $configurationMenuItem = CreateMenuItem "Configuration"
     $settingsSubMenuItem.DropDownItems.Add($addGameMenuItem)
     $settingsSubMenuItem.DropDownItems.Add($editGameMenuItem)
     $settingsSubMenuItem.DropDownItems.Add($menuItemSeparator1)
     $settingsSubMenuItem.DropDownItems.Add($addPlatformMenuItem)
     $settingsSubMenuItem.DropDownItems.Add($editPlatformMenuItem)
     $settingsSubMenuItem.DropDownItems.Add($menuItemSeparator7)
-    $settingsSubMenuItem.DropDownItems.Add($lightThemeMenuItem)
-    $settingsSubMenuItem.DropDownItems.Add($darkThemeMenuItem)
-    $settingsSubMenuItem.DropDownItems.Add($menuItemSeparator8)
     $settingsSubMenuItem.DropDownItems.Add($gamingPCMenuItem)
+    $settingsSubMenuItem.DropDownItems.Add($menuItemSeparator8)
+    $settingsSubMenuItem.DropDownItems.Add($configurationMenuItem)
     $settingsSubMenuItem.DropDownItems.Add($openInstallDirectoryMenuItem)
     
-
     $statsSubMenuItem = CreateMenuItem "Statistics"
     $gamingTimeMenuItem = CreateMenuItem "Time Spent Gaming"
     $mostPlayedMenuItem = CreateMenuItem "Most Played"
@@ -444,16 +449,9 @@ try {
             Invoke-Item .
         })
 
-    $lightThemeMenuItem.Add_Click({
-            Log "Switching to light theme"
-            Set-Theme "light"
-            ShowMessage "Light Theme applied. Refresh pages for effect." "Ok" "Info"
-        })
-
-    $darkThemeMenuItem.Add_Click({
-            Log "Switching to dark theme"
-            Set-Theme "dark"
-            ShowMessage "Dark Theme applied. Refresh pages for effect." "Ok" "Info"
+    $configurationMenuItem.Add_Click({
+            Log "Rendering Configuration Dialog"
+            ExecuteSettingsFunction -SettingsFunctionToCall $function:RenderConfigureForm
         })
 
     #------------------------------------------

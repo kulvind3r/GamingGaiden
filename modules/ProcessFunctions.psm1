@@ -70,8 +70,8 @@ function TimeTrackerLoop($DetectedExe) {
     $idleSessionsCount = 0
     $idleSessions = New-Object int[] 100;
     $exeStartTime = ($null = [System.Diagnostics.Process]::GetProcessesByName($DetectedExe)).StartTime | Sort-Object | Select-Object -First 1
-    $idleTimeSetting = ReadGGConfig "idle_time_enabled"
-    $idleTimeEnabled = ($null -ne $idleTimeSetting -and $idleTimeSetting.ToLower() -eq "true")
+    $idleTimeConfig = ReadGGConfig ([IdleTimeConfig].Name) -AsType ([IdleTimeConfig])
+    $idleTimeEnabled = ($null -ne $idleTimeConfig -and $idleTimeConfig -eq [IdleTimeConfig]::Enabled)
 
     while ($null = [System.Diagnostics.Process]::GetProcessesByName($DetectedExe)) {
         $playTimeForCurrentSession = [int16] (New-TimeSpan -Start $exeStartTime).TotalMinutes
@@ -112,8 +112,8 @@ function TimeTrackerLoop($DetectedExe) {
 
 function MonitorGame($DetectedExe) {
     Log "Starting monitoring for $DetectedExe"
-    $idleTimeEnabled = ReadGGConfig "idle_time_enabled"
-    if ($null -ne $idleTimeEnabled -and $idleTimeEnabled.ToLower() -eq "false") {
+    $idleTimeConfig = ReadGGConfig ([IdleTimeConfig].Name) -AsType ([IdleTimeConfig])
+    if ($null -ne $idleTimeConfig -and $idleTimeConfig -eq [IdleTimeConfig]::Disabled) {
         Log "Idle time tracking is disabled."
     }
 

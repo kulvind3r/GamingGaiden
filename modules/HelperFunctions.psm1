@@ -158,6 +158,54 @@ function CreateButton($Text, $DrawX, $DrawY) {
     return $button
 }
 
+function createRadioGroup {
+    param(
+        [Parameter(Mandatory=$true)]
+        [string[]]$Options,
+        
+        [string]$GroupTitle = "Selection",
+        [int]$Padding = 20,
+        [int]$XOffset = 10
+    )
+
+    # Create the GroupBox container
+    $GroupBox = New-Object System.Windows.Forms.GroupBox
+    $GroupBox.Text = $GroupTitle
+    $GroupBox.AutoSize = $false
+    
+    $currentX = $XOffset
+    $maxHeight = 35 # Default height for a single row
+    
+    # Tool for measuring text width accurately
+    $graphics = [System.Drawing.Graphics]::FromHwnd([IntPtr]::Zero)
+    $font = New-Object System.Drawing.Font("Segoe UI", 9)
+
+    foreach ($opt in $Options) {
+        $radioButton = New-Object System.Windows.Forms.RadioButton
+        $radioButton.Text = $opt
+        $radioButton.Font = $font
+        $radioButton.AutoSize = $true
+        
+        # Measure text to determine button width (+25px for the actual circle)
+        $textSize = $graphics.MeasureString($opt, $font)
+        $buttonWidth = [int]$textSize.Width + 25
+        
+        $radioButton.Location = New-Object System.Drawing.Point($currentX, 20)
+        
+        # Add to GroupBox
+        $GroupBox.Controls.Add($radioButton)
+        
+        # Increment X position for the next button
+        $currentX += $buttonWidth + $Padding
+    }
+
+    # Set final GroupBox size based on total width calculated
+    $GroupBox.Size = New-Object System.Drawing.Size ($currentX + $XOffset), ($maxHeight + 20)
+    
+    $graphics.Dispose()
+    return $GroupBox
+}
+
 function CreatePictureBox() {
     param(
         [string]$ImagePath,

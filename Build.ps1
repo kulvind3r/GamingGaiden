@@ -27,7 +27,7 @@ $FinalHTML = $ManualTemplate -replace "_MARKDOWN_HTML_", $ManualHTML
 [System.Web.HttpUtility]::HtmlDecode($FinalHTML) | Out-File -encoding UTF8 .\ui\Manual.html
 
 # Copy source files
-$SourceFiles = ".\Install.bat", ".\Uninstall.bat", ".\modules", ".\icons", ".\ui"
+$SourceFiles = ".\Install.bat", ".\Uninstall.bat", ".\modules", ".\icons", ".\ui", ".\config.ini"
 Copy-Item -Recurse -Path $SourceFiles -Destination .\build\GamingGaiden\ -Force
 
 # Add 404 pages

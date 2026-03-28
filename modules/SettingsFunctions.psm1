@@ -1124,12 +1124,85 @@ function RenderAddPlatformForm() {
 }
 
 function Set-Theme {
-    param([string]$ThemeName)
+    param(
+        [Parameter(Mandatory)]
+        [ThemeConfig]$Theme
+    )
 
+    $ThemeName = $Theme.ToString().ToLower()
     $themeDir = ".\ui\resources\css"
     $themePath = "$themeDir\theme.css"
     $sourceTheme = "$themeDir\theme-$ThemeName.css"
 
     # Copy the selected theme to theme.css
     Copy-Item -Path $sourceTheme -Destination $themePath -Force
+
+    Log "Switched to $ThemeName theme"
+}
+
+function RenderConfigureForm() {
+    $configureForm =	CreateForm "Gaming Gaiden: Configure" 395 260 ".\icons\running.ico"
+
+    $table = New-Object System.Windows.Forms.TableLayoutPanel
+    $table.Height = 150
+    $table.Dock = "Top"
+    $table.ColumnCount = 1
+    $table.RowCount = 2
+    $table.Padding = New-Object System.Windows.Forms.Padding(0, 25, 0, 0)
+
+    $idleTimeConfig = ReadGGConfig ([IdleTimeConfig].Name) -AsType ([IdleTimeConfig])
+    $themeConfig = ReadGGConfig ([ThemeConfig].Name) -AsType ([ThemeConfig])
+    
+    $themeOptions = @([ThemeConfig]::Light, [ThemeConfig]::Dark)
+    $radioGroupTheme = createRadioGroup -Options $themeOptions -GroupTitle "Theme:"
+    if($null -ne $themeConfig) {
+        $buttonToSelect = $radioGroupTheme.Controls | Where-Object { $_.Text -eq $themeConfig }
+        $buttonToSelect.Checked = $true
+    }
+    $radioGroupTheme.Anchor = "None" 
+    $table.Controls.Add($radioGroupTheme, 0, 0)
+
+    $idleTimeOptions = @([IdleTimeConfig]::Enabled, [IdleTimeConfig]::Disabled)
+    $radioGroupIdleTime = createRadioGroup -Options $idleTimeOptions -GroupTitle "Idle Time:"
+    if($null -ne $idleTimeConfig) {
+        $buttonToSelect = $radioGroupIdleTime.Controls | Where-Object { $_.Text -eq $idleTimeConfig }
+        $buttonToSelect.Checked = $true
+    }
+    $radioGroupIdleTime.Anchor = "None"
+    $table.Controls.Add($radioGroupIdleTime, 0, 1)
+
+    $configureForm.Controls.Add($table)
+
+    $buttonOK = CreateButton "OK" 90 175
+    $buttonOK.Add_Click({
+
+        $selectedTheme = $radioGroupTheme.Controls | Where-Object { $_.Checked -eq $true }
+
+        if ($null -ne $selectedTheme) {
+            $selectedValue = [ThemeConfig]$selectedTheme.Text
+            WriteGGConfig ([ThemeConfig].Name) $selectedValue
+            Set-Theme -Theme $selectedValue
+        } else {
+            Log "No Change in Theme configuration"
+        }
+
+        $idleTimeChoice = $radioGroupIdleTime.Controls | Where-Object { $_.Checked -eq $true }
+
+        if ($null -ne $idleTimeChoice) {
+            $selectedValue = [IdleTimeConfig] $idleTimeChoice.Text
+            WriteGGConfig ([IdleTimeConfig].Name) $selectedValue
+        } else {
+            Log "No Change in Idle Time configuration"
+        }
+
+        ShowMessage "Configuration Saved." "OK" "Asterisk"
+
+        $configureForm.Close() | Out-Null
+    })
+    $configureForm.Controls.Add($buttonOK)
+
+    $buttonCancel = CreateButton "Cancel" 215 175; $buttonCancel.Add_Click({ $configureForm.Dispose() }); $configureForm.Controls.Add($buttonCancel)
+
+    $configureForm.ShowDialog()
+    $configureForm.Dispose()
 }
