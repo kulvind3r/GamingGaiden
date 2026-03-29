@@ -676,7 +676,7 @@ function RenderAddGameForm() {
 
 function RenderGamingPCForm($PCList) {
 
-    $gamingPCForm = CreateForm "Gaming Gaiden: Gaming PCs" 690 310 ".\icons\running.ico"
+    $gamingPCForm = CreateForm "Gaming Gaiden: Gaming PCs" 685 305 ".\icons\running.ico"
 
     $imagePath = "./icons/pc.png"
 
@@ -686,7 +686,7 @@ function RenderGamingPCForm($PCList) {
     $textOriginalPCName = CreateTextBox "" 664 264 1 1; $textOriginalPCName.hide(); $gamingPCForm.Controls.Add($textOriginalPCName)
     # Hidden fields end
 
-    $labelList = Createlabel "Your PCs" 545 20; $gamingPCForm.Controls.Add($labelList)
+    $labelList = Createlabel "Your PCs" 545 25; $gamingPCForm.Controls.Add($labelList)
 
     # Check if warning should be shown
     $currentPC = ReadGGConfig "current_pc"
@@ -702,55 +702,55 @@ function RenderGamingPCForm($PCList) {
     }
 
     $listBox = New-Object System.Windows.Forms.ListBox
-    $listBox.Location = New-Object System.Drawing.Point(485, 45)
+    $listBox.Location = New-Object System.Drawing.Point(485, 50)
     $listBox.Size = New-Object System.Drawing.Size(175, 20)
     $listBox.Height = 160
 
     # Add current PC indicator
     RefreshPCListBox -listBox $listBox
 
-    $labelName = Createlabel "Name:" 170 20; $gamingPCForm.Controls.Add($labelName)
-    $textName = CreateTextBox "" 240 20 225 20;	$gamingPCForm.Controls.Add($textName)
+    $labelName = Createlabel "Name:" 170 30; $gamingPCForm.Controls.Add($labelName)
+    $textName = CreateTextBox "" 240 30 225 20;	$gamingPCForm.Controls.Add($textName)
 
-    $labelTotalPlaytime = Createlabel "Playtime:" 170 50; $gamingPCForm.Controls.Add($labelTotalPlaytime)
-    $textTotalPlaytime = CreateTextBox "0 Hr 0 Min" 240 50 225 20; $gamingPCForm.Controls.Add($textTotalPlaytime)
+    $labelTotalPlaytime = Createlabel "Playtime:" 170 65; $gamingPCForm.Controls.Add($labelTotalPlaytime)
+    $textTotalPlaytime = CreateTextBox "0 Hr 0 Min" 240 65 225 20; $gamingPCForm.Controls.Add($textTotalPlaytime)
 
-    $labelCurrency = Createlabel "Currency:" 170 80; $gamingPCForm.Controls.Add($labelCurrency)
-    $textCurrency = CreateTextBox "" 240 80 55 20;	$gamingPCForm.Controls.Add($textCurrency)
+    $labelCurrency = Createlabel "Currency:" 170 100; $gamingPCForm.Controls.Add($labelCurrency)
+    $textCurrency = CreateTextBox "" 240 100 55 20;	$gamingPCForm.Controls.Add($textCurrency)
 
-    $labelCost = Createlabel "Cost:" 345 80; $gamingPCForm.Controls.Add($labelCost)
-    $textCost = CreateTextBox "" 385 80 80 20;	$gamingPCForm.Controls.Add($textCost)
+    $labelCost = Createlabel "Cost:" 345 100; $gamingPCForm.Controls.Add($labelCost)
+    $textCost = CreateTextBox "" 385 100 80 20;	$gamingPCForm.Controls.Add($textCost)
 
-    $labelStartDate = Createlabel "Start Date" 190 110; $gamingPCForm.Controls.Add($labelStartDate)
+    $labelStartDate = Createlabel "Start Date" 190 135; $gamingPCForm.Controls.Add($labelStartDate)
     $startDatePicker = New-Object Windows.Forms.DateTimePicker
-    $startDatePicker.Location = "170, 130"
+    $startDatePicker.Location = "170, 155"
     $startDatePicker.Width = "100"
     $startDatePicker.MaxDate = [DateTime]::Today
     $startDatePicker.Format = [windows.forms.datetimepickerFormat]::custom
     $startDatePicker.CustomFormat = "dd/MM/yyyy"
     $gamingPCForm.Controls.Add($startDatePicker)
 
-    $labelEndDate = Createlabel "End Date" 390 110; $gamingPCForm.Controls.Add($labelEndDate)
+    $labelEndDate = Createlabel "End Date" 390 135; $gamingPCForm.Controls.Add($labelEndDate)
     $endDatePicker = New-Object Windows.Forms.DateTimePicker
-    $endDatePicker.Location = "365, 130"
+    $endDatePicker.Location = "365, 155"
     $endDatePicker.Width = “100”
     $endDatePicker.MaxDate = [DateTime]::Today
     $endDatePicker.Format = [windows.forms.datetimepickerFormat]::custom
     $endDatePicker.CustomFormat = “dd/MM/yyyy”
     $gamingPCForm.Controls.Add($endDatePicker)
 
-    $labelInUse = Createlabel "In Use" 250 170; $gamingPCForm.Controls.Add($labelInUse)
+    $labelInUse = Createlabel "In Use" 250 195; $gamingPCForm.Controls.Add($labelInUse)
     $checkboxInUse = New-Object Windows.Forms.CheckBox
-    $checkboxInUse.Top = 165
+    $checkboxInUse.Top = 190
     $checkboxInUse.Left = 230
     $checkboxInUse.Add_CheckedChanged({
             $endDatePicker.Enabled = (-Not $checkboxInUse.Checked)
         })
     $gamingPCForm.Controls.Add($checkboxInUse)
 
-    $labelCurrentPC = Createlabel "Current" 365 170; $gamingPCForm.Controls.Add($labelCurrentPC)
+    $labelCurrentPC = Createlabel "Current" 365 195; $gamingPCForm.Controls.Add($labelCurrentPC)
     $checkboxCurrentPC = New-Object Windows.Forms.CheckBox
-    $checkboxCurrentPC.Top = 165
+    $checkboxCurrentPC.Top = 190
     $checkboxCurrentPC.Left = 345
     $disableCurrentPCCheckBoxHandler = $false
     $checkboxCurrentPCHandler = {
