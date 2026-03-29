@@ -6,8 +6,7 @@ using System.Management.Automation;
 using System.Management.Automation.Runspaces;
 
 // General Information about an assembly
-[assembly: AssemblyTitle("Gaming Gaiden")]
-[assembly: AssemblyDescription("Gaming Gaiden: Gameplay Time Tracker")]
+[assembly: AssemblyTitle("Gaming Gaiden: Gameplay Time Tracker")]
 [assembly: AssemblyCompany("Kulvinder Singh")]
 [assembly: AssemblyProduct("Gaming Gaiden")]
 [assembly: AssemblyCopyright("© 2023 Kulvinder Singh")]
