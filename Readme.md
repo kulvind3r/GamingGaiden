@@ -22,7 +22,7 @@ A Tale; Side Story;
 
 A small powershell tray application for windows os to track gaming time. Helps you record your gaming story over the years.
 
-https://github.com/user-attachments/assets/4837b88c-e403-4069-a3f5-3f0147e9328a
+![Gaming Gaiden Demo](./readme-files/Demo.gif)
 
 ## Features
 - #### Time Tracking and Emulator Support
