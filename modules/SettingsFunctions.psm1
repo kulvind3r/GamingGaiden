@@ -725,7 +725,7 @@ function RenderGamingPCForm($PCList) {
     $startDatePicker = New-Object Windows.Forms.DateTimePicker
     $startDatePicker.Location = "170, 155"
     $startDatePicker.Width = "100"
-    $startDatePicker.MaxDate = [DateTime]::Today
+    $startDatePicker.MaxDate = [DateTime]::Today.AddDays(1).AddTicks(-1)
     $startDatePicker.Format = [windows.forms.datetimepickerFormat]::custom
     $startDatePicker.CustomFormat = "dd/MM/yyyy"
     $gamingPCForm.Controls.Add($startDatePicker)
@@ -734,7 +734,7 @@ function RenderGamingPCForm($PCList) {
     $endDatePicker = New-Object Windows.Forms.DateTimePicker
     $endDatePicker.Location = "365, 155"
     $endDatePicker.Width = “100”
-    $endDatePicker.MaxDate = [DateTime]::Today
+    $endDatePicker.MaxDate = [DateTime]::Today.AddDays(1).AddTicks(-1)
     $endDatePicker.Format = [windows.forms.datetimepickerFormat]::custom
     $endDatePicker.CustomFormat = “dd/MM/yyyy”
     $gamingPCForm.Controls.Add($endDatePicker)
