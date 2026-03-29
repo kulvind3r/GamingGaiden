@@ -401,7 +401,7 @@ catch {
     $editGameMenuItem.Add_Click({
             Log "Starting game editing"
 
-            $gamesList = (RunDBQuery "SELECT name FROM games").name
+            $gamesList = @((RunDBQuery "SELECT name FROM games").name)
             if ($gamesList.Length -eq 0) {
                 ShowMessage "No Games found in database. Please add few games first." "OK" "Error"
                 Log "Error: Games list empty. Returning"
@@ -417,7 +417,7 @@ catch {
     $editPlatformMenuItem.Add_Click({
             Log "Starting platform editing"
 
-            $platformsList = (RunDBQuery "SELECT name FROM emulated_platforms").name
+            $platformsList = @((RunDBQuery "SELECT name FROM emulated_platforms").name)
             if ($platformsList.Length -eq 0) {
                 ShowMessage "No Platforms found in database. Please add few emulators first." "OK" "Error"
                 Log "Error: Platform list empty. Returning"
@@ -430,7 +430,7 @@ catch {
     $gamingPCMenuItem.Add_Click({
             Log "Starting Gaming PC registration"
 
-            $PCList = (RunDBQuery "SELECT name FROM gaming_pcs").name
+            $PCList = @((RunDBQuery "SELECT name FROM gaming_pcs").name)
 
             ExecuteSettingsFunction -SettingsFunctionToCall $function:RenderGamingPCForm -EntityList $PCList
 

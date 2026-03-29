@@ -64,7 +64,7 @@ function FindEmulatedGame($DetectedEmulatorExe, $EmulatorCommandLine) {
 
     $pattern = SQLEscapedMatchPattern $DetectedEmulatorExe.Trim()
     $getRomExtensionsQuery = "SELECT rom_extensions FROM emulated_platforms WHERE exe_name LIKE '%{0}%'" -f $pattern
-    $romExtensions = (RunDBQuery $getRomExtensionsQuery).rom_extensions.Split(',')
+    $romExtensions = @((RunDBQuery $getRomExtensionsQuery).rom_extensions.Split(','))
 
     $romName = $null
     foreach ($romExtension in $romExtensions) {
@@ -89,7 +89,7 @@ function FindEmulatedGameCore($DetectedEmulatorExe, $EmulatorCommandLine) {
 
     $pattern = SQLEscapedMatchPattern $DetectedEmulatorExe.Trim()
     $getCoresQuery = "SELECT core FROM emulated_platforms WHERE exe_name LIKE '%{0}%'" -f $pattern
-    $cores = (RunDBQuery $getCoresQuery).core
+    $cores = @((RunDBQuery $getCoresQuery).core)
     if ( $cores.Length -le 1) {
         $coreName = $cores[0]
     }
