@@ -676,7 +676,7 @@ function RenderAddGameForm() {
 
 function RenderGamingPCForm($PCList) {
 
-    $gamingPCForm = CreateForm "Gaming Gaiden: Gaming PCs" 710 295 ".\icons\running.ico"
+    $gamingPCForm = CreateForm "Gaming Gaiden: Gaming PCs" 690 310 ".\icons\running.ico"
 
     $imagePath = "./icons/pc.png"
 
@@ -686,7 +686,7 @@ function RenderGamingPCForm($PCList) {
     $textOriginalPCName = CreateTextBox "" 664 264 1 1; $textOriginalPCName.hide(); $gamingPCForm.Controls.Add($textOriginalPCName)
     # Hidden fields end
 
-    $labelList = Createlabel "Your PCs" 565 30; $gamingPCForm.Controls.Add($labelList)
+    $labelList = Createlabel "Your PCs" 545 20; $gamingPCForm.Controls.Add($labelList)
 
     # Check if warning should be shown
     $currentPC = ReadGGConfig "current_pc"
@@ -702,7 +702,7 @@ function RenderGamingPCForm($PCList) {
     }
 
     $listBox = New-Object System.Windows.Forms.ListBox
-    $listBox.Location = New-Object System.Drawing.Point(505, 55)
+    $listBox.Location = New-Object System.Drawing.Point(485, 45)
     $listBox.Size = New-Object System.Drawing.Size(175, 20)
     $listBox.Height = 160
 
@@ -710,16 +710,16 @@ function RenderGamingPCForm($PCList) {
     RefreshPCListBox -listBox $listBox
 
     $labelName = Createlabel "Name:" 170 20; $gamingPCForm.Controls.Add($labelName)
-    $textName = CreateTextBox "" 240 20 245 20;	$gamingPCForm.Controls.Add($textName)
+    $textName = CreateTextBox "" 240 20 225 20;	$gamingPCForm.Controls.Add($textName)
 
     $labelTotalPlaytime = Createlabel "Playtime:" 170 50; $gamingPCForm.Controls.Add($labelTotalPlaytime)
-    $textTotalPlaytime = CreateTextBox "0 Hr 0 Min" 240 50 245 20; $gamingPCForm.Controls.Add($textTotalPlaytime)
+    $textTotalPlaytime = CreateTextBox "0 Hr 0 Min" 240 50 225 20; $gamingPCForm.Controls.Add($textTotalPlaytime)
 
     $labelCurrency = Createlabel "Currency:" 170 80; $gamingPCForm.Controls.Add($labelCurrency)
     $textCurrency = CreateTextBox "" 240 80 55 20;	$gamingPCForm.Controls.Add($textCurrency)
 
-    $labelCost = Createlabel "Cost:" 365 80; $gamingPCForm.Controls.Add($labelCost)
-    $textCost = CreateTextBox "" 405 80 80 20;	$gamingPCForm.Controls.Add($textCost)
+    $labelCost = Createlabel "Cost:" 345 80; $gamingPCForm.Controls.Add($labelCost)
+    $textCost = CreateTextBox "" 385 80 80 20;	$gamingPCForm.Controls.Add($textCost)
 
     $labelStartDate = Createlabel "Start Date" 190 110; $gamingPCForm.Controls.Add($labelStartDate)
     $startDatePicker = New-Object Windows.Forms.DateTimePicker
@@ -730,28 +730,28 @@ function RenderGamingPCForm($PCList) {
     $startDatePicker.CustomFormat = "dd/MM/yyyy"
     $gamingPCForm.Controls.Add($startDatePicker)
 
-    $labelEndDate = Createlabel "End Date" 410 110; $gamingPCForm.Controls.Add($labelEndDate)
+    $labelEndDate = Createlabel "End Date" 390 110; $gamingPCForm.Controls.Add($labelEndDate)
     $endDatePicker = New-Object Windows.Forms.DateTimePicker
-    $endDatePicker.Location = "385, 130"
+    $endDatePicker.Location = "365, 130"
     $endDatePicker.Width = “100”
     $endDatePicker.MaxDate = [DateTime]::Today
     $endDatePicker.Format = [windows.forms.datetimepickerFormat]::custom
     $endDatePicker.CustomFormat = “dd/MM/yyyy”
     $gamingPCForm.Controls.Add($endDatePicker)
 
-    $labelInUse = Createlabel "In Use" 320 135; $gamingPCForm.Controls.Add($labelInUse)
+    $labelInUse = Createlabel "In Use" 250 170; $gamingPCForm.Controls.Add($labelInUse)
     $checkboxInUse = New-Object Windows.Forms.CheckBox
-    $checkboxInUse.Top = 130
-    $checkboxInUse.Left = 300
+    $checkboxInUse.Top = 165
+    $checkboxInUse.Left = 230
     $checkboxInUse.Add_CheckedChanged({
             $endDatePicker.Enabled = (-Not $checkboxInUse.Checked)
         })
     $gamingPCForm.Controls.Add($checkboxInUse)
 
-    $labelCurrentPC = Createlabel "Current" 320 170; $gamingPCForm.Controls.Add($labelCurrentPC)
+    $labelCurrentPC = Createlabel "Current" 365 170; $gamingPCForm.Controls.Add($labelCurrentPC)
     $checkboxCurrentPC = New-Object Windows.Forms.CheckBox
     $checkboxCurrentPC.Top = 165
-    $checkboxCurrentPC.Left = 300
+    $checkboxCurrentPC.Left = 345
     $disableCurrentPCCheckBoxHandler = $false
     $checkboxCurrentPCHandler = {
             # if handler is disabled return
@@ -840,7 +840,7 @@ function RenderGamingPCForm($PCList) {
         })
     $gamingPCForm.Controls.Add($listBox)
     
-    $buttonUpdateImage = CreateButton "Update Image" 40 220
+    $buttonUpdateImage = CreateButton "PC Image" 40 185
     $buttonUpdateImage.Size = New-Object System.Drawing.Size(90, 23)
     $buttonUpdateImage.Add_Click({
             $downloadsDirectoryPath = (New-Object -ComObject Shell.Application).Namespace('shell:Downloads').Self.Path
@@ -856,7 +856,7 @@ function RenderGamingPCForm($PCList) {
         })
     $gamingPCForm.Controls.Add($buttonUpdateImage)
 
-    $buttonRemove = CreateButton "Delete" 410 180
+    $buttonRemove = CreateButton "Delete" 417 230
     $buttonRemove.Add_Click({
             $PCName = $textName.Text
 
@@ -878,7 +878,7 @@ function RenderGamingPCForm($PCList) {
         })
     $gamingPCForm.Controls.Add($buttonRemove)
 
-    $buttonUpdate = CreateButton "Update" 290 220
+    $buttonUpdate = CreateButton "Update" 177 230
     $buttonUpdate.Add_Click({
             $currentlySelectedIndex = $listBox.SelectedIndex
 
@@ -962,7 +962,7 @@ function RenderGamingPCForm($PCList) {
         })
     $gamingPCForm.Controls.Add($buttonUpdate)
 
-    $buttonReset = CreateButton "Reset" 170 180; $buttonReset.Add_Click({
+    $buttonReset = CreateButton "Reset" 55 230; $buttonReset.Add_Click({
             $textName.Clear(); $textCost.Clear(); $textCurrency.Clear(); $textTotalPlaytime.Text = "0 Hr 0 Min";
 
             $PCList = (RunDBQuery "SELECT name FROM gaming_pcs").name
@@ -988,13 +988,13 @@ function RenderGamingPCForm($PCList) {
         }); 
     $gamingPCForm.Controls.Add($buttonReset)
 
-    $buttonAddNew = CreateButton "Add New" 170 220; $buttonAddNew.Add_Click({
+    $buttonAddNew = CreateButton "Add New" 297 230; $buttonAddNew.Add_Click({
             $checkboxNew.Checked = $true
             $buttonUpdate.PerformClick() | Out-Null
         }); 
     $gamingPCForm.Controls.Add($buttonAddNew)
 
-    $buttonCancel = CreateButton "Cancel" 410 220; $buttonCancel.Add_Click({ 
+    $buttonCancel = CreateButton "Cancel" 540 230; $buttonCancel.Add_Click({ 
             $listBox.Remove_SelectedIndexChanged({})
             $pictureBox.Image.Dispose(); $pictureBox.Dispose();
             $gamingPCForm.Dispose()
