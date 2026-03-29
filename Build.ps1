@@ -27,7 +27,7 @@ $FinalHTML = $ManualTemplate -replace "_MARKDOWN_HTML_", $ManualHTML
 [System.Web.HttpUtility]::HtmlDecode($FinalHTML) | Out-File -encoding UTF8 .\ui\Manual.html
 
 # Copy source files
-$SourceFiles = ".\Install.bat", ".\Uninstall.bat", ".\modules", ".\icons", ".\ui", ".\config.ini"
+$SourceFiles = ".\Install.bat", ".\Uninstall.bat", ".\modules", ".\icons", ".\ui", ".\config.ini", ".\GamingGaiden.ps1"
 Copy-Item -Recurse -Path $SourceFiles -Destination .\build\GamingGaiden\ -Force
 
 # Add 404 pages
@@ -40,7 +40,13 @@ foreach ($template in $templateFiles) {
 }
 
 # Generate exe
-ps12exe -inputFile ".\GamingGaiden.ps1" -outputFile ".\build\GamingGaiden\GamingGaiden.exe"
+$csc = "C:\Windows\Microsoft.NET\Framework64\v4.0.30319\csc.exe"
+$ref = "C:\Windows\Microsoft.NET\assembly\GAC_MSIL\System.Management.Automation\v4.0_3.0.0.0__31bf3856ad364e35\System.Management.Automation.dll"
+& $csc /target:exe `
+       /out:".\build\GamingGaiden\GamingGaiden.exe" `
+       /win32icon:".\build\GamingGaiden\icons\running.ico" `
+       /reference:$ref `
+       GamingGaiden.cs
 
 # Package
 Compress-Archive -Force -Path .\build\GamingGaiden -DestinationPath .\build\GamingGaiden.zip

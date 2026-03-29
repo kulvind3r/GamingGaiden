@@ -1,11 +1,5 @@
 ﻿#Requires -Version 5.1
 
-#_pragma iconFile '.\build\GamingGaiden\icons\running.ico'
-#_pragma title 'Gaming Gaiden: Gameplay Time Tracker'
-#_pragma product 'Gaming Gaiden'
-#_pragma copyright '© 2023 Kulvinder Singh'
-#_pragma version '2026.02.22'
-
 # Enums for configuration settings require that `using module` is used for the module housing the enums
 using module ".\modules\ConfigFunctions.psm1"
 [System.Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms')    | Out-null

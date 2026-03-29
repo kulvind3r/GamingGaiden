@@ -73,7 +73,6 @@ GamingGaiden performs following tasks that are similar to common malware behavio
 - Adding registry entries for HWinfo64 integration.
 - Periodically sleeping to conserve resources.
 - Monitoring user activity to detect idle time.
-- Packaged as an executable using ps12exe.
 
 Its PowerShell-based implementation also raises flags as powershell scripts can be used maliciously and have low trust in tech community.
 
@@ -87,7 +86,6 @@ Please remember that open-source software comes without any support or warrantie
 Made with love using 
 
 - [PSSQLite](https://www.powershellgallery.com/packages/PSSQLite) by [Warren Frame](https://github.com/RamblingCookieMonster)
-- [ps12exe](https://github.com/steve02081504/ps12exe) by [Steve Green](https://github.com/steve02081504)
 - [DOMPurify](https://github.com/cure53/DOMPurify) by [Cure53](https://github.com/cure53)
 - [DataTables](https://datatables.net/)
 - [Jquery](https://jquery.com/)
