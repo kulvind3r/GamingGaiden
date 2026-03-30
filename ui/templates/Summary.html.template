@@ -32,6 +32,38 @@
     <h1>Life Time Summary</h1>
     <div id="main-panel">
       <div id="summary">_SUMMARYSTATEMENT_</div>
+      <div
+        id="summary-day-night-play-bar"
+        class="day-night-play-bar"
+        style="display: none"
+        aria-label="Play time by session start (all games): night vs day"
+      >
+        <span class="day-night-play-bar__moon" aria-hidden="true">
+          <svg class="day-night-play-bar__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+            <path fill="#E8DFC0" stroke="#5E6369" stroke-width="1.45" stroke-linejoin="round" stroke-linecap="round"
+              d="M18.36 4.64A9 9 0 1 0 21 12a6.5 6.5 0 1 1 -2.64 -7.36z"/>
+            <circle fill="#C4B799" cx="8.2" cy="5.1" r="0.55"/>
+            <circle fill="#C4B799" cx="6" cy="10.2" r="1.2"/>
+            <circle fill="#C4B799" cx="7.4" cy="15" r="0.85"/>
+            <circle fill="#C4B799" cx="12.2" cy="18.5" r="0.65"/>
+          </svg>
+        </span>
+        <div class="day-night-play-bar__track">
+          <div class="day-night-play-bar__night">
+            <span id="summary-day-night-play-night-label" class="day-night-play-bar__label"></span>
+          </div>
+          <div class="day-night-play-bar__twilight" aria-hidden="true"></div>
+          <div class="day-night-play-bar__day">
+            <span id="summary-day-night-play-day-label" class="day-night-play-bar__label"></span>
+          </div>
+        </div>
+        <span class="day-night-play-bar__sun" aria-hidden="true">
+          <svg class="day-night-play-bar__icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" focusable="false" aria-hidden="true">
+            <path fill="#FEF8C8" stroke="#5E6369" stroke-width="1.45" stroke-linejoin="round" stroke-linecap="round"
+              d="M12 1.8 15.38 4.97 19.97 5.64 19.6 10.26 21.94 14.27 18.1 16.86 16.43 21.19 12 19.8 7.57 21.19 5.9 16.86 2.06 14.27 4.4 10.26 4.03 5.64 8.62 4.97z"/>
+          </svg>
+        </span>
+      </div>
     <div id="top-row">
       <div id="summary-chart-legend">
         <div id="legend">
@@ -88,6 +120,7 @@
     <div id="summary-table" style="display: none">_SUMMARYTABLE_</div>
     <div id="pc-table" style="display: none">_PCTABLE_</div>
     <div id="annual-gaming-hours-table" style="display: none">_ANNUALGAMINGHOURSTABLE_</div>
+    <div id="summary-sessions-data" style="display: none">_SUMMARYSESSIONSTABLE_</div>
     <script src="./resources/js/common.js"></script>
     <script src="./resources/js/Summary.js"></script>
     <div id="navigation-bar">

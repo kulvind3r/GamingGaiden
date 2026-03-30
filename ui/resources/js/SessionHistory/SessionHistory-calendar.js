@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-/*global formatMonthString, formatDateString, updateYearDisplay, setupYearNavigation, updateMonthGrid, availableDates, availableMonths, maxDate, minDate, MONTH_NAMES, loadGameCardsForDate, loadGameCardsForMonth, mainView:writable, calendarYear:writable, calendarMonth:writable, calendarDay:writable */
+/*global formatMonthString, formatDateString, updateYearDisplay, setupYearNavigation, updateMonthGrid, availableDates, availableMonths, maxDate, minDate, MONTH_NAMES, loadGameCardsForDate, loadGameCardsForMonth, loadGameCardsForYear, mainView:writable, sessionHistoryByMonthMode:writable, calendarYear:writable, calendarMonth:writable, calendarDay:writable */
 /*from calendar-controls.js, SessionHistory-shared.js, SessionHistory-cards.js */
 
 // ===== MAIN VIEW SWITCHING =====
@@ -67,6 +67,8 @@ function initializeByDayView() {
 
 // Initialize By Month view with most recent month
 function initializeByMonthView() {
+  sessionHistoryByMonthMode = 'monthly';
+
   if (maxDate) {
     calendarYear = maxDate.getFullYear();
     calendarMonth = maxDate.getMonth();
@@ -82,6 +84,25 @@ function initializeByMonthView() {
 
 // ===== CALENDAR NAVIGATION =====
 
+/** Latest month index (0–11) in `year` with session data, or null if none */
+function latestMonthIndexWithDataForYear(year) {
+  for (let m = 11; m >= 0; m--) {
+    if (availableMonths.has(formatMonthString(year, m))) {
+      return m;
+    }
+  }
+  return null;
+}
+
+/** By Month + monthly: after year changes, pick latest month with data, else January */
+function applyMonthSelectionAfterYearChangeForByMonth() {
+  if (mainView !== 'bymonth' || sessionHistoryByMonthMode !== 'monthly') {
+    return;
+  }
+  const latest = latestMonthIndexWithDataForYear(calendarYear);
+  calendarMonth = latest !== null ? latest : 0;
+}
+
 // Setup year navigation
 function initYearNavigation() {
   setupYearNavigation({
@@ -90,26 +111,66 @@ function initYearNavigation() {
     getCalendarYear: () => calendarYear,
     setCalendarYear: (year) => { calendarYear = year; },
     onYearChange: () => {
+      applyMonthSelectionAfterYearChangeForByMonth();
       refreshYearDisplay();
       refreshMonthGrid();
       if (mainView === 'byday') {
         updateDayGrid();
+      } else if (mainView === 'bymonth') {
+        if (sessionHistoryByMonthMode === 'yearly') {
+          loadGameCardsForYear(calendarYear);
+        } else {
+          const monthStr = formatMonthString(calendarYear, calendarMonth);
+          loadGameCardsForMonth(monthStr);
+        }
       }
     }
   });
 }
 
+// Toggle monthly vs yearly game list in By Month view (click year — same idea as Gaming Time)
+function setupByMonthYearToggle() {
+  document.getElementById('year-display').addEventListener('click', () => {
+    if (mainView !== 'bymonth') {
+      return;
+    }
+    if (sessionHistoryByMonthMode === 'monthly') {
+      sessionHistoryByMonthMode = 'yearly';
+      loadGameCardsForYear(calendarYear);
+    } else {
+      sessionHistoryByMonthMode = 'monthly';
+      const monthStr = formatMonthString(calendarYear, calendarMonth);
+      loadGameCardsForMonth(monthStr);
+    }
+    refreshYearDisplay();
+    refreshMonthGrid();
+  });
+}
+
 // Update year display (wrapper)
 function refreshYearDisplay() {
-  updateYearDisplay(calendarYear);
+  updateYearDisplay(calendarYear, {
+    yearDisplayCallback: (element) => {
+      if (mainView === 'bymonth' && sessionHistoryByMonthMode === 'yearly') {
+        element.classList.add('yearly-mode');
+      } else {
+        element.classList.remove('yearly-mode');
+      }
+    }
+  });
 }
 
 // Update month grid (wrapper)
 function refreshMonthGrid() {
+  const byMonthYearly =
+    mainView === 'bymonth' && sessionHistoryByMonthMode === 'yearly';
+
   updateMonthGrid({
     calendarYear: calendarYear,
     availableMonths: availableMonths,
-    isMonthSelected: (monthIndex) => monthIndex === calendarMonth,
+    isMonthSelected: (monthIndex) =>
+      !byMonthYearly && monthIndex === calendarMonth,
+    disableInteraction: byMonthYearly,
     onMonthClick: (monthIndex) => {
       calendarMonth = monthIndex;
       refreshMonthGrid();
@@ -128,8 +189,10 @@ function refreshMonthGrid() {
         const dateStr = formatDateString(calendarYear, calendarMonth, calendarDay);
         loadGameCardsForDate(dateStr);
       } else if (mainView === 'bymonth') {
+        sessionHistoryByMonthMode = 'monthly';
         const monthStr = formatMonthString(calendarYear, calendarMonth);
         loadGameCardsForMonth(monthStr);
+        refreshYearDisplay();
       }
     }
   });

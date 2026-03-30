@@ -10,6 +10,25 @@
   padding: 15px;
 }
 
+/* Year label: click toggles monthly ↔ yearly game list (By Month), like Gaming Time */
+#calendar-container #year-display {
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s;
+  padding: 5px 10px;
+  border-radius: 4px;
+}
+
+#calendar-container #year-display:hover {
+  background-color: var(--accent-blue-light);
+  transform: scale(1.05);
+}
+
+#calendar-container #year-display.yearly-mode {
+  background-color: var(--accent-blue);
+  color: var(--text-inverse);
+}
+
 /* ===== CALENDAR VIEW - DAY GRID ===== */
 
 /* Day Grid Container */

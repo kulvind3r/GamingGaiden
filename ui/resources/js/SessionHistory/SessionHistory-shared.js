@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-/*global Chart, Log2Axis, ChartDataLabels, chartTitleConfig, getChartTextColor, getChartGridColor, initYearNavigation, sortGamesList, selectGame, updateGridAlignment, setupSearch, setupSorting, updateSortButtons, applySortAndRender, setupReturnButton, setupMainViewButtons */
+/*global Chart, Log2Axis, ChartDataLabels, chartTitleConfig, getChartTextColor, getChartGridColor, initYearNavigation, setupByMonthYearToggle, sortGamesList, selectGame, updateGridAlignment, setupSearch, setupSorting, updateSortButtons, applySortAndRender, setupReturnButton, setupMainViewButtons */
 /* from common.js, SessionHistory-games.js, SessionHistory-calendar.js, SessionHistory-cards.js */
 
 
@@ -14,11 +14,15 @@ let currentView = 'alltime'; // 'alltime' or 'specificdate'
 let selectedDay = null;
 let selectedDayIndex = 0;
 let sessionsByDay = [];
-let currentSortField = 'lastPlayed'; // 'name' or 'lastPlayed'
+/** Cached in selectGame — all sessions for the currently selected game */
+let gameSessions = [];
+let currentSortField = 'lastPlayed'; // 'name' | 'lastPlayed' | 'hours' | 'days'
 let currentSortDirection = 'desc'; // 'asc' or 'desc'
 
 // New state variables for view switching and calendar
 let mainView = 'games'; // 'games', 'byday', or 'bymonth'
+/** 'monthly' = one month of games; 'yearly' = all games in calendar year (By Month view only) */
+let sessionHistoryByMonthMode = 'monthly';
 let calendarYear = new Date().getFullYear();
 let calendarMonth = new Date().getMonth();
 let calendarDay = null;
@@ -142,6 +146,14 @@ function filterSessionsByDateStr(dateStr, isMonth = false) {
   });
 }
 
+// Filter sessions in a given calendar year
+function filterSessionsByYear(year) {
+  return allSessions.filter(session => {
+    const sessionDate = new Date(session.start_time * 1000);
+    return sessionDate.getFullYear() === year;
+  });
+}
+
 // Group sessions by game and aggregate stats
 function aggregateGamesBySessions(sessions) {
   const gameMap = {};
@@ -201,6 +213,7 @@ $(document).ready(function() {
   setupReturnButton();
   setupMainViewButtons();
   initYearNavigation();
+  setupByMonthYearToggle();
 
   // Auto-select first game if available
   if (gamesList.length > 0) {

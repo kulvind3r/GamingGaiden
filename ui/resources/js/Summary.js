@@ -138,6 +138,119 @@ function updateSummayChart() {
   });
 }
 
+function parseSummarySessionsData() {
+  const wrap = document.getElementById("summary-sessions-data");
+  if (!wrap) {
+    return [];
+  }
+  const table = wrap.querySelector("table");
+  if (!table) {
+    return [];
+  }
+  const rows = table.querySelectorAll("tbody tr");
+  return Array.from(rows)
+    .map((row) => ({
+      id: row.cells[0].textContent,
+      game_name: row.cells[1].textContent,
+      platform: row.cells[2].textContent,
+      session_date: row.cells[3].textContent,
+      start_time: parseInt(row.cells[4].textContent, 10),
+      duration: parseFloat(row.cells[5].textContent),
+    }))
+    .filter(
+      (s) =>
+        Number.isFinite(s.start_time) &&
+        s.start_time > 0 &&
+        Number.isFinite(s.duration)
+    );
+}
+
+function getDayNightHours() {
+  const offset = new Date().getTimezoneOffset() / -60;
+  const baseSunrise = 6;
+  const baseSunset = 18;
+  const dayStart = Math.max(4, Math.min(8, baseSunrise + Math.round(offset / 4)));
+  const dayEnd = Math.max(16, Math.min(20, baseSunset + Math.round(offset / 4)));
+  return { dayStart, dayEnd };
+}
+
+function sumDayNightPlayMinutesForSessions(sessions) {
+  const { dayStart, dayEnd } = getDayNightHours();
+  const dawnEnd = dayStart + 1;
+  const duskStart = dayEnd - 1;
+  let nightMinutes = 0;
+  let dayMinutes = 0;
+  for (let i = 0; i < sessions.length; i++) {
+    const session = sessions[i];
+    const d = new Date(session.start_time * 1000);
+    const hour = d.getHours() + d.getMinutes() / 60;
+    if (hour >= dawnEnd && hour < duskStart) {
+      dayMinutes += session.duration;
+    } else {
+      nightMinutes += session.duration;
+    }
+  }
+  return { nightMinutes, dayMinutes };
+}
+
+function updateSummaryDayNightPlayBar(sessions) {
+  const root = document.getElementById("summary-day-night-play-bar");
+  if (!root) {
+    return;
+  }
+  const { nightMinutes, dayMinutes } = sumDayNightPlayMinutesForSessions(sessions);
+  const total = nightMinutes + dayMinutes;
+  if (total <= 0) {
+    root.style.display = "none";
+    return;
+  }
+
+  root.style.display = "flex";
+  const nightEl = root.querySelector(".day-night-play-bar__night");
+  const dayEl = root.querySelector(".day-night-play-bar__day");
+  const moonEl = root.querySelector(".day-night-play-bar__moon");
+  const sunEl = root.querySelector(".day-night-play-bar__sun");
+  const twilightEl = root.querySelector(".day-night-play-bar__twilight");
+  const nightLabel = document.getElementById("summary-day-night-play-night-label");
+  const dayLabel = document.getElementById("summary-day-night-play-day-label");
+
+  nightLabel.textContent = `${(nightMinutes / 60).toFixed(1)} h`;
+  dayLabel.textContent = `${(dayMinutes / 60).toFixed(1)} h`;
+
+  const clearSegStyles = (el) => {
+    el.style.flex = "";
+    el.style.minWidth = "";
+    el.style.overflow = "";
+    el.style.display = "";
+  };
+
+  const allDay = nightMinutes === 0;
+  const allNight = dayMinutes === 0;
+
+  moonEl.style.display = allDay ? "none" : "";
+  sunEl.style.display = allNight ? "none" : "";
+
+  if (allDay) {
+    twilightEl.style.display = "none";
+    clearSegStyles(nightEl);
+    clearSegStyles(dayEl);
+    nightEl.style.display = "none";
+    dayEl.style.flex = "1 1 0%";
+  } else if (allNight) {
+    twilightEl.style.display = "none";
+    clearSegStyles(nightEl);
+    clearSegStyles(dayEl);
+    dayEl.style.display = "none";
+    nightEl.style.flex = "1 1 0%";
+  } else {
+    twilightEl.style.display = "";
+    clearSegStyles(nightEl);
+    clearSegStyles(dayEl);
+    nightEl.style.flex = `${nightMinutes} 1 0%`;
+    dayEl.style.flex = `${dayMinutes} 1 0%`;
+  }
+}
+
 function loadSummaryDataFromTable() {
   const summaryTable = $("#summary-table").find("table");
   const summaryRows = summaryTable.find("tbody tr");
@@ -379,3 +492,7 @@ if (pcData.length > 0) {
 
 updateAnnualHoursChart();
 updateSummayChart();
+
+$(document).ready(function () {
+  updateSummaryDayNightPlayBar(parseSummarySessionsData());
+});

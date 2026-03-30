@@ -1,4 +1,4 @@
-﻿class Game {
+class Game {
     [ValidateNotNullOrEmpty()][string]$Icon
     [ValidateNotNullOrEmpty()][string]$Name
     [ValidateNotNullOrEmpty()][string]$Platform
@@ -232,6 +232,14 @@ function RenderSummary() {
         $pcWarning = "<p style='color: red; font-size: clamp(10px, 1vw, 12px); margin: 5px 0;'>⚠ Current PC unidentified. Mark a PC as current to measure PC usage</p>"
     }
 
+    # Config current_pc (Settings) should appear first; keep existing order for the rest
+    if (-not [string]::IsNullOrWhiteSpace($currentPC) -and $gamingPCData.Length -gt 0) {
+        $currentPcRow = @($gamingPCData | Where-Object { $_.name -eq $currentPC })
+        if ($currentPcRow.Count -gt 0) {
+            $gamingPCData = $currentPcRow + @($gamingPCData | Where-Object { $_.name -ne $currentPC })
+        }
+    }
+
     $TotalAnnualGamingHoursQuery = "SELECT 
                                     strftime('%Y', play_date) AS Year, 
                                     SUM(ROUND(play_time/60.0,2)) AS TotalPlaytime 
@@ -303,6 +311,21 @@ function RenderSummary() {
 
     $summaryStatement = "<b>Duration: </b>$startDate - $endDate. <b>Games: </b>$($gamesSummaryData.total_games). <b>Sessions: </b>$($gamesSummaryData.total_sessions).<br><br><b>Play time: </b>$totalPlayTime. <b>Idle time: </b>$totalIdleTime."
 
+    $getSummarySessionHistoryQuery = @"
+SELECT
+    sh.id,
+    sh.game_name,
+    g.platform,
+    DATE(sh.start_time, 'unixepoch', 'localtime') AS session_date,
+    sh.start_time,
+    sh.duration
+FROM session_history sh
+LEFT JOIN games g ON sh.game_name = g.name
+ORDER BY sh.start_time DESC
+"@
+    $summarySessionData = @(RunDBQuery $getSummarySessionHistoryQuery)
+    $summarySessionsTable = $summarySessionData | ConvertTo-Html -Fragment
+
     $summaryTable = $gamesPlayTimeVsSessionData | ConvertTo-Html -Fragment
     $pcTable = $gamingPCs | ConvertTo-Html -Fragment
     $annualHoursTable = $totalAnnualGamingHoursData | ConvertTo-Html -Fragment
@@ -312,6 +335,7 @@ function RenderSummary() {
     $report = $report -replace "_ANNUALGAMINGHOURSTABLE_", $annualHoursTable
     $report = $report -replace "_PCTABLE_", $pcTable
     $report = $report -replace "_PCWARNING_", $pcWarning
+    $report = $report -replace "_SUMMARYSESSIONSTABLE_", $summarySessionsTable
 
     [System.Web.HttpUtility]::HtmlDecode($report) | Out-File -encoding UTF8 $workingDirectory\ui\Summary.html
 }
@@ -558,11 +582,6 @@ ORDER BY sh.start_time DESC
         return $false
     }
 
-    # Ensure array format
-    if ($sessionData -isnot [System.Array]) {
-        $sessionData = @($sessionData)
-    }
-
     # Get unique games with session counts for the left panel
     $getGamesWithSessionsQuery = @"
 SELECT
@@ -578,10 +597,6 @@ ORDER BY sh.game_name ASC
 "@
 
     $gamesWithSessions = @(RunDBQuery $getGamesWithSessionsQuery)
-
-    if ($gamesWithSessions -isnot [System.Array]) {
-        $gamesWithSessions = @($gamesWithSessions)
-    }
 
     # Process icons for games data (icons will be used in sidebar and header)
     foreach ($game in $gamesWithSessions) {

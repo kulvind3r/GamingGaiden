@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-/*global gamesList, allSessions, Chart, ChartDataLabels, Log2Axis, chartTitleConfig, getChartTextColor, getChartGridColor, selectedGame:writable, currentChart:writable, currentView:writable, selectedDay:writable, selectedDayIndex:writable, sessionsByDay:writable, currentSortField:writable, currentSortDirection:writable */
+/*global gamesList, allSessions, Chart, ChartDataLabels, Log2Axis, chartTitleConfig, getChartTextColor, getChartGridColor, selectedGame:writable, currentChart:writable, currentView:writable, selectedDay:writable, selectedDayIndex:writable, sessionsByDay:writable, gameSessions:writable, currentSortField:writable, currentSortDirection:writable */
 /*from SessionHistory-shared.js, common.js */
 
 // ===== GAMES VIEW - LIST MANAGEMENT =====
@@ -48,9 +48,11 @@ function setupSearch() {
       return;
     }
 
-    const filtered = gamesList.filter((game) =>
-      game.game_name.toLowerCase().includes(searchTerm)
-    );
+    const filtered = gamesList.filter((game) => {
+      const name = game.game_name.toLowerCase();
+      const platform = (game.platform || "").toLowerCase();
+      return name.includes(searchTerm) || platform.includes(searchTerm);
+    });
 
     const sorted = sortGamesList(filtered, currentSortField, currentSortDirection);
     renderGamesList(sorted);
@@ -73,52 +75,52 @@ function sortGamesList(games, field, direction) {
         .filter(s => s.game_name === b.game_name)
         .map(s => s.start_time));
       comparison = aLastPlayed - bLastPlayed;
+    } else if (field === 'hours') {
+      comparison = a.total_duration - b.total_duration;
+    } else if (field === 'days') {
+      comparison = (a.days_count ?? 0) - (b.days_count ?? 0);
     }
 
     return direction === 'asc' ? comparison : -comparison;
   });
 }
 
-// Setup sorting button handlers
-function setupSorting() {
-  document.getElementById('sort-by-name').addEventListener('click', () => {
-    if (currentSortField === 'name') {
+function wireSortButton(buttonId, field, defaultWhenSwitching) {
+  document.getElementById(buttonId).addEventListener('click', () => {
+    if (currentSortField === field) {
       currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
     } else {
-      currentSortField = 'name';
-      currentSortDirection = 'asc';
-    }
-    updateSortButtons();
-    applySortAndRender();
-  });
-
-  document.getElementById('sort-by-last-played').addEventListener('click', () => {
-    if (currentSortField === 'lastPlayed') {
-      currentSortDirection = currentSortDirection === 'asc' ? 'desc' : 'asc';
-    } else {
-      currentSortField = 'lastPlayed';
-      currentSortDirection = 'desc';
+      currentSortField = field;
+      currentSortDirection = defaultWhenSwitching;
     }
     updateSortButtons();
     applySortAndRender();
   });
 }
 
+// Setup sorting button handlers
+function setupSorting() {
+  wireSortButton('sort-by-name', 'name', 'asc');
+  wireSortButton('sort-by-last-played', 'lastPlayed', 'desc');
+  wireSortButton('sort-by-hours', 'hours', 'desc');
+  wireSortButton('sort-by-days', 'days', 'desc');
+}
+
 // Update sort button states and arrows
 function updateSortButtons() {
-  const nameBtn = document.getElementById('sort-by-name');
-  const lastPlayedBtn = document.getElementById('sort-by-last-played');
-
-  // Update active state
-  nameBtn.classList.toggle('active', currentSortField === 'name');
-  lastPlayedBtn.classList.toggle('active', currentSortField === 'lastPlayed');
-
-  // Update arrows
-  const nameArrow = nameBtn.querySelector('.sort-arrow');
-  const lastPlayedArrow = lastPlayedBtn.querySelector('.sort-arrow');
-
-  nameArrow.textContent = currentSortField === 'name' ? (currentSortDirection === 'asc' ? '▲' : '▼') : '▼';
-  lastPlayedArrow.textContent = currentSortField === 'lastPlayed' ? (currentSortDirection === 'asc' ? '▲' : '▼') : '▼';
+  [
+    ['sort-by-name', 'name'],
+    ['sort-by-last-played', 'lastPlayed'],
+    ['sort-by-hours', 'hours'],
+    ['sort-by-days', 'days'],
+  ].forEach(([id, field]) => {
+    const btn = document.getElementById(id);
+    btn.classList.toggle('active', currentSortField === field);
+    const arrow = btn.querySelector('.sort-arrow');
+    arrow.textContent = currentSortField === field
+      ? (currentSortDirection === 'asc' ? '▲' : '▼')
+      : '▼';
+  });
 }
 
 // Apply current sort and render
@@ -158,8 +160,8 @@ function selectGame(gameName) {
   document.getElementById("stat-days").textContent = `${gameData.days_count}`;
   document.getElementById("stat-hours").textContent = `${hours} hours`;
 
-  // Filter sessions for this game
-  const gameSessions = allSessions.filter((s) => s.game_name === gameName);
+  // Filter sessions for this game (cached for charts and day/night bar)
+  gameSessions = allSessions.filter((s) => s.game_name === gameName);
 
   // Group sessions by day
   sessionsByDay = groupSessionsByDay(gameSessions);
@@ -382,6 +384,8 @@ function updateAllTimeChart() {
       }
     }
   });
+
+  updateDayNightPlayBar();
 }
 
 // ===== DAY/NIGHT VISUALIZATION =====
@@ -402,6 +406,88 @@ function getDayNightHours() {
   const dayEnd = Math.max(16, Math.min(20, baseSunset + Math.round(offset / 4)));
 
   return { dayStart, dayEnd };
+}
+
+// Sum play durations by session start (local time). Day = plugin's core day band [dawnEnd, duskStart).
+function sumDayNightPlayMinutesForSessions(sessions) {
+  const { dayStart, dayEnd } = getDayNightHours();
+  const dawnEnd = dayStart + 1;
+  const duskStart = dayEnd - 1;
+  let nightMinutes = 0;
+  let dayMinutes = 0;
+  for (let i = 0; i < sessions.length; i++) {
+    const session = sessions[i];
+    const d = new Date(session.start_time * 1000);
+    const hour = d.getHours() + d.getMinutes() / 60;
+    if (hour >= dawnEnd && hour < duskStart) dayMinutes += session.duration;
+    else nightMinutes += session.duration;
+  }
+  return { nightMinutes, dayMinutes };
+}
+
+function updateDayNightPlayBar() {
+  const root = document.getElementById('day-night-play-bar');
+  if (!root) return;
+  root.style.display = 'flex';
+  const { nightMinutes, dayMinutes } = sumDayNightPlayMinutesForSessions(gameSessions);
+  const total = nightMinutes + dayMinutes;
+  const nightEl = root.querySelector('.day-night-play-bar__night');
+  const dayEl = root.querySelector('.day-night-play-bar__day');
+  const moonEl = root.querySelector('.day-night-play-bar__moon');
+  const sunEl = root.querySelector('.day-night-play-bar__sun');
+  const twilightEl = root.querySelector('.day-night-play-bar__twilight');
+  const nightLabel = document.getElementById('day-night-play-night-label');
+  const dayLabel = document.getElementById('day-night-play-day-label');
+  nightLabel.textContent = `${(nightMinutes / 60).toFixed(1)} h`;
+  dayLabel.textContent = `${(dayMinutes / 60).toFixed(1)} h`;
+
+  const clearSegStyles = (el) => {
+    el.style.flex = '';
+    el.style.minWidth = '';
+    el.style.overflow = '';
+    el.style.display = '';
+  };
+
+  if (total > 0) {
+    const allDay = nightMinutes === 0;
+    const allNight = dayMinutes === 0;
+
+    moonEl.style.display = allDay ? 'none' : '';
+    sunEl.style.display = allNight ? 'none' : '';
+
+    if (allDay) {
+      twilightEl.style.display = 'none';
+      clearSegStyles(nightEl);
+      clearSegStyles(dayEl);
+      nightEl.style.display = 'none';
+      dayEl.style.flex = '1 1 0%';
+    } else if (allNight) {
+      twilightEl.style.display = 'none';
+      clearSegStyles(nightEl);
+      clearSegStyles(dayEl);
+      dayEl.style.display = 'none';
+      nightEl.style.flex = '1 1 0%';
+    } else {
+      twilightEl.style.display = '';
+      clearSegStyles(nightEl);
+      clearSegStyles(dayEl);
+      nightEl.style.flex = `${nightMinutes} 1 0%`;
+      dayEl.style.flex = `${dayMinutes} 1 0%`;
+    }
+  } else {
+    moonEl.style.display = '';
+    sunEl.style.display = '';
+    twilightEl.style.display = '';
+    clearSegStyles(nightEl);
+    clearSegStyles(dayEl);
+    nightEl.style.flex = '1 1 0%';
+    dayEl.style.flex = '1 1 0%';
+  }
+}
+
+function hideDayNightPlayBar() {
+  const root = document.getElementById('day-night-play-bar');
+  if (root) root.style.display = 'none';
 }
 
 // Custom plugin for day/night background zones with gradients, stars, and symbols
@@ -576,6 +662,8 @@ Chart.register(dayNightZonesPlugin);
 
 // Create/update the specific date bar chart (hourly view)
 function updateSpecificDateChart() {
+  hideDayNightPlayBar();
+
   const ctx = document.getElementById("session-chart").getContext("2d");
 
   // Destroy existing chart if it exists

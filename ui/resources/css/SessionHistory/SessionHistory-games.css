@@ -216,6 +216,87 @@
   flex-direction: column;
 }
 
+.day-night-play-bar {
+  display: none;
+  flex-direction: row;
+  align-items: center;
+  gap: 0.3rem;
+  margin-bottom: 8px;
+  flex-shrink: 0;
+  width: 50%;
+  max-width: 50%;
+  align-self: center;
+}
+
+.day-night-play-bar__moon,
+.day-night-play-bar__sun {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  line-height: 0;
+}
+
+.day-night-play-bar__icon {
+  width: clamp(15px, 1.8vw, 20px);
+  height: clamp(15px, 1.8vw, 20px);
+  display: block;
+  flex-shrink: 0;
+}
+
+.day-night-play-bar__track {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  height: 22px;
+  border-radius: 5px;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--text-secondary) 25%, transparent);
+}
+
+.day-night-play-bar__night,
+.day-night-play-bar__day {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  padding: 0 4px;
+  font-family: monospace;
+  font-size: clamp(9px, 0.85vw, 12px);
+  font-weight: 600;
+}
+
+.day-night-play-bar__night {
+  background: rgba(10, 20, 100, 0.55);
+  color: rgba(255, 255, 255, 0.96);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.45);
+}
+
+.day-night-play-bar__day {
+  background: rgba(255, 240, 200, 0.42);
+  color: var(--text-primary);
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.35);
+}
+
+.day-night-play-bar__twilight {
+  flex: 0 0 5px;
+  min-width: 5px;
+  background: linear-gradient(
+    to right,
+    rgba(10, 20, 100, 0.55),
+    rgba(255, 140, 80, 0.62),
+    rgba(255, 240, 200, 0.42)
+  );
+}
+
+.day-night-play-bar__label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 #session-chart {
   flex: 1;
   min-height: 0;
