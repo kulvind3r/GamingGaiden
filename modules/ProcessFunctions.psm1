@@ -5,8 +5,8 @@
     $getGameExesQuery = "SELECT exe_name FROM games ORDER BY last_play_date DESC"
     $getEmulatorExesQuery = "SELECT exe_name FROM emulated_platforms"
 
-    $gameExeList = @((RunDBQuery $getGameExesQuery).exe_name)
-    $rawEmulatorExes = @((RunDBQuery $getEmulatorExesQuery).exe_name)
+    $gameExeList = @((RunDBQuery $getGameExesQuery).exe_name | Where-Object { $null -ne $_ })
+    $rawEmulatorExes = @((RunDBQuery $getEmulatorExesQuery).exe_name | Where-Object { $null -ne $_ })
 
     # Flatten the returned result rows containing multiple emulator exes into list with one exe per item
     $emulatorExeList = ($rawEmulatorExes -join ',') -split ','
@@ -22,10 +22,14 @@
     if ($exeList.length -le 35) {
         # If exeList is of size 35 or less. process whole list in every batch
         while ($true) {
-            foreach ($exe in $exeList) {
-                if ($null = [System.Diagnostics.Process]::GetProcessesByName($exe)) {
-                    Log "Found $exe running. Exiting detection"
-                    return $exe
+            # Check process only if $exeList contains atleast one non whitespace string
+            # Skips process check for array with empty or white space strings.
+            if($exeList -match '\S') {
+                foreach ($exe in $exeList) {
+                    if ($null = [System.Diagnostics.Process]::GetProcessesByName($exe)) {
+                        Log "Found $exe running. Exiting detection"
+                        return $exe
+                    }
                 }
             }
             Start-Sleep -s 5

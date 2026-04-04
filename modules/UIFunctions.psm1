@@ -576,7 +576,7 @@ ORDER BY sh.start_time DESC
 
     if ($sessionData.Length -eq 0) {
         if (-Not $InBackground) {
-            ShowMessage "No session history found. Play some games first!" "OK" "Info"
+            ShowMessage "No session history found. Please play some games first!" "OK" "Error"
         }
         Log "No session data available"
         return $false

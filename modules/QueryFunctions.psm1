@@ -64,16 +64,30 @@ function FindEmulatedGame($DetectedEmulatorExe, $EmulatorCommandLine) {
 
     $pattern = SQLEscapedMatchPattern $DetectedEmulatorExe.Trim()
     $getRomExtensionsQuery = "SELECT rom_extensions FROM emulated_platforms WHERE exe_name LIKE '%{0}%'" -f $pattern
-    $romExtensions = @((RunDBQuery $getRomExtensionsQuery).rom_extensions.Split(','))
+    $romExtensionsResult = @((RunDBQuery $getRomExtensionsQuery).rom_extensions | Where-Object { $null -ne $_ })
+    
+    if ($romExtensionsResult.Length -eq 0) {
+        Log ("Error: No Rom Extensions Found. Cannot Find emulated game. Bailing with empty game name.")
+        return ""
+    }
+
+    # if multiple platforms have the same emulator executable db query array of results need to be flattened
+    # Flatten the returned result rows containing multiple extensions into list with one extension per item
+    $romExtensions = (($romExtensionsResult -join ',') -split ',' | Where-Object { -not [string]::IsNullOrWhiteSpace($_) } | Select-Object -Unique)
 
     $romName = $null
     foreach ($romExtension in $romExtensions) {
         $romName = [System.Text.RegularExpressions.Regex]::Match($EmulatorCommandLine, "[^`"\\]*\.$romExtension").Value
 
         if ($romName -ne "") {
-            $romName = $romName -replace ".$romExtension", ""
+            $romName = $romName -replace "\.$romExtension", ""
             break
         }
+    }
+
+    if ([string]::IsNullOrWhiteSpace($romName)) {
+        Log ("Error: Couldn't extract rom based game name from command line. Bailing with empty game name")
+        return ""
     }
 
     $romBasedGameName = [regex]::Replace($romName, '\([^)]*\)|\[[^\]]*\]', "")
@@ -89,8 +103,14 @@ function FindEmulatedGameCore($DetectedEmulatorExe, $EmulatorCommandLine) {
 
     $pattern = SQLEscapedMatchPattern $DetectedEmulatorExe.Trim()
     $getCoresQuery = "SELECT core FROM emulated_platforms WHERE exe_name LIKE '%{0}%'" -f $pattern
-    $cores = @((RunDBQuery $getCoresQuery).core)
-    if ( $cores.Length -le 1) {
+    $cores = @((RunDBQuery $getCoresQuery).core | Where-Object { $null -ne $_ })
+
+    if ($cores.Length -eq 0) {
+        Log "Error: No Core detected. Bailing with null return."
+        return $null
+    }
+
+    if ( $cores.Length -eq 1 ) {
         $coreName = $cores[0]
     }
     else {
