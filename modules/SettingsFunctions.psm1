@@ -163,7 +163,7 @@ function RenderEditGameForm($GamesList) {
     $editGameForm.Controls.Add($checkboxForever)
 
     $labelPictureBox = Createlabel "Game Icon" 57 200; $editGameForm.Controls.Add($labelPictureBox)
-    $pictureBox = CreatePictureBox $imagePath 15 40 140 140
+    $pictureBox = CreatePictureBox $imagePath 15 40 145 145
     $editGameForm.Controls.Add($pictureBox)
 
     $listBox.Add_SelectedIndexChanged({
