@@ -189,7 +189,7 @@ td:nth-child(7) {
     var(--chart-blue)
   );
   background-repeat: no-repeat;
-  background-position-x: 8px;
+  background-position-x: 4.5px;
   background-position-y: 6px;
 }
 
