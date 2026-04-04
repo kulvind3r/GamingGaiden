@@ -690,11 +690,11 @@ function RenderGamingPCForm($PCList) {
 
     # Check if warning should be shown
     $currentPC = ReadGGConfig "current_pc"
-    $showWarning = ($null -eq $currentPC -and $PCList.Length -gt 1)
+    $showWarning = ([String]::IsNullOrEmpty($currentPC) -and $PCList.Length -gt 1)
     $warningLabel = $null
 
     if ($showWarning) {
-        $warningLabel = CreateLabel "⚠ Current PC unidentified. Mark a PC as current to track PC usage" 165 2
+        $warningLabel = CreateLabel "!! Current PC unidentified. Mark a PC as current to track PC usage" 165 2
         $warningLabel.ForeColor = [System.Drawing.Color]::Red
         $warningLabel.Font = New-Object System.Drawing.Font("Arial", 8)
         $warningLabel.AutoSize = $true
@@ -725,7 +725,8 @@ function RenderGamingPCForm($PCList) {
     $startDatePicker = New-Object Windows.Forms.DateTimePicker
     $startDatePicker.Location = "170, 155"
     $startDatePicker.Width = "100"
-    $startDatePicker.MaxDate = [DateTime]::Today.AddDays(1).AddTicks(-1)
+    # Ensure Unix timestamp is strictly within today to avoid edge case bugs
+    $startDatePicker.MaxDate = [DateTime]::Today.AddDays(1).AddHours(-1)
     $startDatePicker.Format = [windows.forms.datetimepickerFormat]::custom
     $startDatePicker.CustomFormat = "dd/MM/yyyy"
     $gamingPCForm.Controls.Add($startDatePicker)
@@ -734,7 +735,8 @@ function RenderGamingPCForm($PCList) {
     $endDatePicker = New-Object Windows.Forms.DateTimePicker
     $endDatePicker.Location = "365, 155"
     $endDatePicker.Width = “100”
-    $endDatePicker.MaxDate = [DateTime]::Today.AddDays(1).AddTicks(-1)
+    # Ensure Unix timestamp is strictly within today to avoid edge case bugs
+    $endDatePicker.MaxDate = [DateTime]::Today.AddDays(1).AddHours(-1)
     $endDatePicker.Format = [windows.forms.datetimepickerFormat]::custom
     $endDatePicker.CustomFormat = “dd/MM/yyyy”
     $gamingPCForm.Controls.Add($endDatePicker)
@@ -898,7 +900,8 @@ function RenderGamingPCForm($PCList) {
                 }
                 return
             }
-            $PCStartDate = (Get-Date ($startDatePicker.Value) -UFormat %s).Split('.').Get(0)
+            # Capture one hour less than current unix time to avoid edge case bugs
+            $PCStartDate = (Get-Date ($startDatePicker.Value) -UFormat %s).Split('.').Get(0) - 3600
 
             $PCCurrency = $textCurrency.Text
             if ( -Not ($PCCurrency -match '\D{1,3}') ) {
@@ -934,7 +937,8 @@ function RenderGamingPCForm($PCList) {
                 $PCCurrentStatus = "TRUE";
             }
             else {
-                $PCEndDate = (Get-Date ($endDatePicker.Value) -UFormat %s).Split('.').Get(0)
+                # Capture one hour less than current unix time to avoid edge case bugs
+                $PCEndDate = (Get-Date ($endDatePicker.Value) -UFormat %s).Split('.').Get(0) - 3600
                 $PCCurrentStatus = "FALSE";
                 if ( $endDatePicker.Value -gt [DateTime]::Today -or $PCStartDate -gt $PCEndDate) {
                     ShowMessage "End Date Cannot be in Future or before Start Date'." "OK" "Error"
