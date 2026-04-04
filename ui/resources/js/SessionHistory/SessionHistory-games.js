@@ -343,6 +343,8 @@ function updateAllTimeChart() {
       scales: {
         y: {
           beginAtZero: true,
+          suggestedMax: 24,
+          suggestedMin: 0.25,
           type: "log2",
           title: chartTitleConfig("Hours Played", 15),
           ticks: {
