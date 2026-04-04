@@ -281,8 +281,8 @@
 }
 
 .day-night-play-bar__twilight {
-  flex: 0 0 5px;
-  min-width: 5px;
+  flex: 0 0 100px;
+  min-width: 100px;
   background: linear-gradient(
     to right,
     rgba(10, 20, 100, 0.55),
