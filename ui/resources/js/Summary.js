@@ -355,10 +355,7 @@ function updatePCStatsSection(pcData) {
   let valuePerHour = Math.floor(
     parseInt(pcData.cost) / parseInt(pcData.totalHours)
   );
-  let ageInMonths = parseInt(pcData.age.split(" ")[0]) * 12 +
-                    parseInt(pcData.age.split(" ")[3]);
-  let valuePerMonth = Math.floor(parseInt(pcData.cost) / ageInMonths);
-
+  
   document.getElementById("pc-name").innerText = pcData.name;
 
   // Use DomPurify with Jquery $().html() instead of plain document.getElementByID().innerHTML()
@@ -374,7 +371,7 @@ function updatePCStatsSection(pcData) {
   $("#pc-price").html(DOMPurify.sanitize("<b>Price: </b>" + pcData.currency + pcData.cost));
   $("#pc-games-played").html(DOMPurify.sanitize("<b>Games Played: </b>" + pcData.gamesPlayed));
   $("#pc-hours").html(DOMPurify.sanitize("<b>Hours Logged: </b>" + pcData.totalHours + "<sup> ✞</sup>"));
-  $("#pc-running-cost").html(DOMPurify.sanitize("<b>Running Cost: </b>" + pcData.currency + valuePerHour + "/Hour | " + pcData.currency + valuePerMonth + "/Month"));
+  $("#pc-running-cost").html(DOMPurify.sanitize("<b>Running Cost: </b>" + pcData.currency + valuePerHour + "/Hour"));
 }
 
 function updateAnnualHoursChart() {
