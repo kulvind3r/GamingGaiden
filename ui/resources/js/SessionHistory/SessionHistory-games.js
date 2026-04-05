@@ -151,10 +151,12 @@ function selectGame(gameName) {
   const gameData = gamesList.find((g) => g.game_name === gameName);
   const hours = (gameData.total_duration / 60).toFixed(1);
 
-  document.getElementById("selected-game-name").innerHTML =
-    `${gameName}<img src="${gameData.icon}" class="selected-game-icon" alt="${gameName}">`;
+  // Populate icon
+  document.getElementById("selected-game-icon").innerHTML =
+    `<img src="${gameData.icon}" class="selected-game-icon" alt="${gameName}">`;
 
   // Populate individual stats
+  document.getElementById("selected-game-name").innerHTML = `${gameName}`;
   document.getElementById("stat-platform").textContent = gameData.platform;
   document.getElementById("stat-sessions").textContent = `${gameData.session_count}`;
   document.getElementById("stat-days").textContent = `${gameData.days_count}`;

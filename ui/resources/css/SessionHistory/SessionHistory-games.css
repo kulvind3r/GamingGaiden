@@ -150,6 +150,9 @@
   margin-bottom: 20px;
   border-bottom: 2px solid var(--border-light);
   padding-bottom: 15px;
+  display: flex;
+  justify-content: center;
+  gap: 5vw;
 }
 
 #selected-game-name {
@@ -163,8 +166,6 @@
   width: auto;
   filter: drop-shadow(4px 4px 2px var(--shadow-image));
   vertical-align: middle;
-  margin-left: 12px;
-  float: right;
 }
 
 #selected-game-stats {

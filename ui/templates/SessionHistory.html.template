@@ -126,8 +126,9 @@
         <!-- Games View: Chart -->
         <div id="games-view-right" class="right-content">
           <div id="selected-game-header">
-            <h2 id="selected-game-name">Select a game to view sessions</h2>
+            <div id="selected-game-icon"></div>
             <div id="selected-game-stats">
+              <h2 id="selected-game-name">Select a game to view sessions</h2>
               <div class="stat-item">
                 <span class="stat-label">Platform:</span>
                 <span class="stat-value" id="stat-platform"></span>
