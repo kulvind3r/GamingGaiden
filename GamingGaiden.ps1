@@ -90,12 +90,21 @@ try {
     }
 
     #------------------------------------------
-    # Initialize theme.css on startup (default to light theme)
+    # Initialize theme.css on startup from configuration if not set
     $themePath = ".\ui\resources\css\theme.css"
-    if (-not (Test-Path $themePath)) {
-        $defaultThemePath = ".\ui\resources\css\theme-light.css"
-        Copy-Item -Path $defaultThemePath -Destination $themePath -Force
+
+    if(-not (Test-Path $themePath)) {
+        Log "No theme set. Initializing Theme based on config."
+        # Default to Light Theme
+        $configuredThemeFilePath = ".\ui\resources\css\theme-light.css"
+        # Change to Dark if so configured
+        $themeConfig = ReadGGConfig ([ThemeConfig].Name) -AsType ([ThemeConfig])
+        if ($themeConfig -eq [ThemeConfig]::Dark) {
+            $configuredThemeFilePath = ".\ui\resources\css\theme-dark.css"
+        }
+        Copy-Item -Path $configuredThemeFilePath -Destination $themePath -Force
     }
+    
 
     #------------------------------------------
     # Tracker Job Scripts

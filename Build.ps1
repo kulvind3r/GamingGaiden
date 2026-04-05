@@ -7,6 +7,7 @@ Remove-Item -Recurse .\build\GamingGaiden.zip
 mkdir -f .\build\GamingGaiden
 
 Get-ChildItem -File .\ui\*.html -Exclude 404.html | Remove-Item
+Remove-Item .\ui\resources\css\theme.css -ErrorAction SilentlyContinue
 Remove-Item -Recurse .\ui\resources\images\cache -ErrorAction SilentlyContinue
 
 #------------------------------------------
