@@ -64,7 +64,7 @@ function FindEmulatedGame($DetectedEmulatorExe, $EmulatorCommandLine) {
 
     $pattern = SQLEscapedMatchPattern $DetectedEmulatorExe.Trim()
     $getRomExtensionsQuery = "SELECT rom_extensions FROM emulated_platforms WHERE exe_name LIKE '%{0}%'" -f $pattern
-    $romExtensionsResult = @((RunDBQuery $getRomExtensionsQuery).rom_extensions | Where-Object { $null -ne $_ })
+    $romExtensionsResult = @(RunDBQuery $getRomExtensionsQuery).rom_extensions
     
     if ($romExtensionsResult.Length -eq 0) {
         Log ("Error: No Rom Extensions Found. Cannot Find emulated game. Bailing with empty game name.")
@@ -103,7 +103,7 @@ function FindEmulatedGameCore($DetectedEmulatorExe, $EmulatorCommandLine) {
 
     $pattern = SQLEscapedMatchPattern $DetectedEmulatorExe.Trim()
     $getCoresQuery = "SELECT core FROM emulated_platforms WHERE exe_name LIKE '%{0}%'" -f $pattern
-    $cores = @((RunDBQuery $getCoresQuery).core | Where-Object { $null -ne $_ })
+    $cores = @(RunDBQuery $getCoresQuery).core
 
     if ($cores.Length -eq 0) {
         Log "Error: No Core detected. Bailing with null return."

@@ -19,7 +19,7 @@ powershell.exe -NoProfile -Command "Get-ChildItem '%InstallDirectory%' -Exclude 
 
 REM Install to C:\ProgramData\GamingGaiden
 echo Copying Files
-xcopy /s/e/q/y "%CD%" "%InstallDirectory%"
+echo n | xcopy /s/e/q/-y "%CD%" "%InstallDirectory%"
 del "%InstallDirectory%\Install.bat"
 
 REM Create shortcuts using powershell and copy to desktop and start menu
