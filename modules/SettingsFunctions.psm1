@@ -725,8 +725,8 @@ function RenderGamingPCForm($PCList) {
     $startDatePicker = New-Object Windows.Forms.DateTimePicker
     $startDatePicker.Location = "170, 155"
     $startDatePicker.Width = "100"
-    # Ensure Unix timestamp is strictly within today to avoid edge case bugs
-    $startDatePicker.MaxDate = [DateTime]::Today.AddDays(1).AddHours(-1)
+    # Ensure max allowed date is up to the very end of the day, to avoid edge case bugs
+    $startDatePicker.MaxDate = [DateTime]::Today.AddDays(1).AddTicks(-1)
     $startDatePicker.Format = [windows.forms.datetimepickerFormat]::custom
     $startDatePicker.CustomFormat = "dd/MM/yyyy"
     $gamingPCForm.Controls.Add($startDatePicker)
@@ -735,8 +735,8 @@ function RenderGamingPCForm($PCList) {
     $endDatePicker = New-Object Windows.Forms.DateTimePicker
     $endDatePicker.Location = "365, 155"
     $endDatePicker.Width = “100”
-    # Ensure Unix timestamp is strictly within today to avoid edge case bugs
-    $endDatePicker.MaxDate = [DateTime]::Today.AddDays(1).AddHours(-1)
+    # Ensure max allowed date is up to the very end of the day, to avoid edge case bugs
+    $endDatePicker.MaxDate = [DateTime]::Today.AddDays(1).AddTicks(-1)
     $endDatePicker.Format = [windows.forms.datetimepickerFormat]::custom
     $endDatePicker.CustomFormat = “dd/MM/yyyy”
     $gamingPCForm.Controls.Add($endDatePicker)
@@ -900,8 +900,8 @@ function RenderGamingPCForm($PCList) {
                 }
                 return
             }
-            # Capture one hour less than current unix time to avoid edge case bugs
-            $PCStartDate = (Get-Date ($startDatePicker.Value) -UFormat %s).Split('.').Get(0) - 3600
+            
+            $PCStartDate = ([System.DateTimeOffset]($startDatePicker.Value.Date)).ToUnixTimeSeconds()
 
             $PCCurrency = $textCurrency.Text
             if ( -Not ($PCCurrency -match '\D{1,3}') ) {
@@ -937,11 +937,10 @@ function RenderGamingPCForm($PCList) {
                 $PCCurrentStatus = "TRUE";
             }
             else {
-                # Capture one hour less than current unix time to avoid edge case bugs
-                $PCEndDate = (Get-Date ($endDatePicker.Value) -UFormat %s).Split('.').Get(0) - 3600
+                $PCEndDate = ([System.DateTimeOffset]($endDatePicker.Value.Date)).ToUnixTimeSeconds()
                 $PCCurrentStatus = "FALSE";
-                if ( $endDatePicker.Value -gt [DateTime]::Today -or $PCStartDate -gt $PCEndDate) {
-                    ShowMessage "End Date Cannot be in Future or before Start Date'." "OK" "Error"
+                if ($PCStartDate -gt $PCEndDate) {
+                    ShowMessage "PC Start Date cannot be after End Date'." "OK" "Error"
                     if ($listBox.Items.Count -gt 0) {
                         $listBox.SetSelected($currentlySelectedIndex, $true)
                     }
