@@ -150,15 +150,14 @@
   margin-bottom: 20px;
   border-bottom: 2px solid var(--border-light);
   padding-bottom: 15px;
-  display: flex;
-  justify-content: center;
-  gap: 5vw;
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Two equal halves */
+  align-items: center;
+  gap: 1vw;
 }
 
-#selected-game-name {
-  margin: 0 0 5px 0;
-  color: var(--text-primary);
-  font-size: clamp(10px, 1vw, 20px);
+#selected-game-icon {
+  justify-self: end; /* Move icon right towards grid end / header center */
 }
 
 .selected-game-icon {
@@ -167,6 +166,7 @@
   filter: drop-shadow(4px 4px 2px var(--shadow-image));
   vertical-align: middle;
   margin-top: 0.15vw;
+  margin-right: 2.5vw;
 }
 
 #selected-game-stats {
@@ -175,6 +175,13 @@
   gap: 5px;
   color: var(--text-secondary);
   font-size: clamp(10px, 1vw, 16px);
+  justify-self: start; /* Move stats left towards grid start / header center */
+}
+
+#selected-game-name {
+  margin: 0 0 5px 0;
+  color: var(--text-primary);
+  font-size: clamp(10px, 1vw, 20px);
 }
 
 .stat-item {
