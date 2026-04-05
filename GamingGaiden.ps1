@@ -104,8 +104,11 @@ try {
         }
         Copy-Item -Path $configuredThemeFilePath -Destination $themePath -Force
     }
-    
 
+    #------------------------------------------
+    # Refresh all stats in background on startup
+    UpdateAllStatsInBackground
+    
     #------------------------------------------
     # Tracker Job Scripts
     $TrackerJobInitializationScript = {
