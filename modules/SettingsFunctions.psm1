@@ -82,7 +82,7 @@ function RenderEditGameForm($GamesList) {
     $listboxGamingPC.SelectionMode = [System.Windows.Forms.SelectionMode]::MultiSimple
 
     $currentPC = ReadGGConfig "current_pc"
-    $pcList = @(RunDBQuery "SELECT name FROM gaming_pcs ORDER BY in_use DESC, name ASC").name
+    $pcList = @((RunDBQuery "SELECT name FROM gaming_pcs ORDER BY in_use DESC, name ASC").name | Where-Object { $null -ne $_ })
 
     if ($pcList.Length -gt 0) {
         $currentPCIndex = 0
@@ -273,7 +273,7 @@ function RenderEditGameForm($GamesList) {
                 ShowMessage "Removed '$gameName' from Database." "OK" "Asterisk"
                 Log "Removed '$gameName' from Database."
 
-                $gamesList = @(RunDBQuery "SELECT name FROM games").name
+                $gamesList = @((RunDBQuery "SELECT name FROM games").name | Where-Object { $null -ne $_ })
                 if ($gamesList.Length -eq 0) {
                     ShowMessage "No more games in Database. Closing Edit Form." "OK" "Asterisk"
                     $editGameForm.Close() | Out-Null
@@ -472,7 +472,7 @@ function RenderEditPlatformForm($PlatformsList) {
                 ShowMessage "Removed '$platformName' from Database." "OK" "Asterisk"
                 Log "Removed '$platformName' from Database."
 
-                $platformsList = @(RunDBQuery "SELECT name FROM emulated_platforms").name
+                $platformsList = @((RunDBQuery "SELECT name FROM emulated_platforms").name | Where-Object { $null -ne $_ })
                 if ($platformsList.Length -eq 0) {
                     ShowMessage "No more platforms in Database. Closing Edit Form." "OK" "Asterisk"
                     $editPlatformForm.Close() | Out-Null
@@ -552,7 +552,7 @@ function RenderAddGameForm() {
     $dropdownGamingPC.DropDownStyle = [System.Windows.Forms.ComboBoxStyle]::DropDownList
 
     $currentPC = ReadGGConfig "current_pc"
-    $pcList = @(RunDBQuery "SELECT name FROM gaming_pcs").name
+    $pcList = @((RunDBQuery "SELECT name FROM gaming_pcs").name | Where-Object { $null -ne $_ })
 
     if ($pcList.Length -gt 0) {
         foreach ($pc in $pcList) {
@@ -873,7 +873,7 @@ function RenderGamingPCForm($PCList) {
                 RemovePC $PCName
                 ShowMessage "Removed '$PCName' from Database." "OK" "Asterisk"
                 Log "Removed $PCName from Database."
-                $PCList = @(RunDBQuery "SELECT name FROM gaming_pcs").name
+                $PCList = @((RunDBQuery "SELECT name FROM gaming_pcs").name | Where-Object { $null -ne $_ })
                 $listBox.Items.Clear();
                 if ($PCList.Length -gt 0) {
                     $listBox.Items.AddRange($PCList);
@@ -974,7 +974,7 @@ function RenderGamingPCForm($PCList) {
     $buttonReset = CreateButton "Reset" 55 230; $buttonReset.Add_Click({
             $textName.Clear(); $textCost.Clear(); $textCurrency.Clear(); $textTotalPlaytime.Text = "0 Hr 0 Min";
 
-            $PCList = @(RunDBQuery "SELECT name FROM gaming_pcs").name
+            $PCList = @((RunDBQuery "SELECT name FROM gaming_pcs").name | Where-Object { $null -ne $_ })
             $listBox.Items.Clear(); 
             if ($PCList.Length -gt 0) {
                 $listBox.Items.AddRange($PCList);
