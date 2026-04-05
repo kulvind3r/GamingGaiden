@@ -690,7 +690,7 @@ function RenderGamingPCForm($PCList) {
 
     # Check if warning should be shown
     $currentPC = ReadGGConfig "current_pc"
-    $showWarning = ([String]::IsNullOrEmpty($currentPC) -and $PCList.Length -gt 1)
+    $showWarning = ([String]::IsNullOrEmpty($currentPC) -and $PCList.Length -gt 0)
     $warningLabel = $null
 
     if ($showWarning) {
@@ -759,26 +759,28 @@ function RenderGamingPCForm($PCList) {
             # if handler is disabled return
             if ($disableCurrentPCCheckBoxHandler) { return }
 
-            # If checked, mark this PC as current for tracking
-            if ($checkboxCurrentPC.Checked -and $textName.Text -ne "") {
-                WriteGGConfig "current_pc" $textName.Text
+            if ($textName.Text -ne "") {
+                # If checked, mark this PC as current for tracking
+                if ($checkboxCurrentPC.Checked) {
+                    WriteGGConfig "current_pc" $textName.Text
 
-                # Hide warning if it exists
-                if ($showWarning -and $null -ne $warningLabel) {
-                    $warningLabel.Visible = $false
+                    # Hide warning if it exists
+                    if ($showWarning -and $null -ne $warningLabel) {
+                        $warningLabel.Visible = $false
+                    }
+
+                    # Refresh listbox to show current PC indicator
+                    $currentlySelected = $listBox.SelectedItem
+                    RefreshPCListBox -listBox $listBox -selectedPCName $currentlySelected
                 }
+                else {
+                    # Clear current_pc setting when unchecked
+                    WriteGGConfig "current_pc" ""
 
-                # Refresh listbox to show current PC indicator
-                $currentlySelected = $listBox.SelectedItem
-                RefreshPCListBox -listBox $listBox -selectedPCName $currentlySelected
-            }
-            else {
-                # Clear current_pc setting when unchecked
-                WriteGGConfig "current_pc" ""
-
-                # Refresh listbox to remove current PC indicator
-                $currentlySelected = $listBox.SelectedItem
-                RefreshPCListBox -listBox $listBox -selectedPCName $currentlySelected
+                    # Refresh listbox to remove current PC indicator
+                    $currentlySelected = $listBox.SelectedItem
+                    RefreshPCListBox -listBox $listBox -selectedPCName $currentlySelected
+                }
             }
         }
     $checkboxCurrentPC.Add_CheckedChanged($checkboxCurrentPCHandler)
@@ -864,6 +866,10 @@ function RenderGamingPCForm($PCList) {
 
             $userInput = [microsoft.visualbasic.interaction]::MsgBox("All Data about '$PCName' will be lost.`r`nAre you sure?", "YesNo,Question", "Confirm PC Removal").ToString()
             if ($userInput.ToLower() -eq 'yes')	{
+                $currentPC = ReadGGConfig "current_pc"
+                if($currentPC -eq $PCName) {
+                    WriteGGConfig "current_pc" ""
+                }
                 RemovePC $PCName
                 ShowMessage "Removed '$PCName' from Database." "OK" "Asterisk"
                 Log "Removed $PCName from Database."

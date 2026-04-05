@@ -21,17 +21,22 @@ function WriteGGConfig() {
         Log "Created config file at $ggConfigPath"
     }
 
-    $content = Get-Content -Path $ggConfigPath -Raw
-    $pattern = "(?m)^$Key\s*=\s*.+$"
-
-    if ($content -match $pattern) {
-        $newContent = $content -replace $pattern, "$Key=$Value"
+    $lines = @(Get-Content -Path $ggConfigPath)
+    $found = $false
+    $newLine = "$Key=$Value"
+    for ($i = 0; $i -lt $lines.Count; $i++) {
+        if ($lines[$i] -match "^$Key\s*=") {
+            $lines[$i] = $newLine
+            $found = $true
+            break
+        }
     }
-    else {
-        $newContent = $content + "$Key=$Value`n"
+
+    if (-not $found) {
+        $lines += $newLine
     }
 
-    Set-Content -Path $ggConfigPath -Value $newContent -Force -NoNewline
+    $lines | Set-Content -Path $ggConfigPath
     Log "Config updated: $Key=$Value"
 }
 
