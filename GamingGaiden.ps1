@@ -106,7 +106,8 @@ try {
     }
 
     #------------------------------------------
-    # Refresh all stats in background on startup
+    # Stats Refresh
+    Log "Refresh all stats in background on startup"
     UpdateAllStatsInBackground
     
     #------------------------------------------
