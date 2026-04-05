@@ -166,10 +166,10 @@
   width: auto;
   filter: drop-shadow(4px 4px 2px var(--shadow-image));
   vertical-align: middle;
+  margin-top: 0.15vw;
 }
 
 #selected-game-stats {
-  margin: 10px 0 0 0;
   display: flex;
   flex-direction: column;
   gap: 5px;
