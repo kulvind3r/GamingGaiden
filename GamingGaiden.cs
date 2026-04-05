@@ -11,8 +11,8 @@ using System.Management.Automation.Runspaces;
 [assembly: AssemblyProduct("Gaming Gaiden")]
 [assembly: AssemblyCopyright("© 2023 Kulvinder Singh")]
 
-// Version information
-[assembly: AssemblyFileVersion("2026.02.22")]
+// Version information Year.Month.Day
+[assembly: AssemblyFileVersion("2026.04.05")]
 
 // Setting ComVisible to false makes the types in this assembly not visible to COM components
 [assembly: ComVisible(false)]

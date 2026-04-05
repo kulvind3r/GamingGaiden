@@ -59,26 +59,6 @@ Run `Uninstall Gaming Gaiden` from the `Gaming Gaiden` start menu folder. `Gamin
 Windows SmartScreen may warn that the application is from an ***Unknown Publisher*** because it lacks signature from a public CA. 
 Signing cost for apps is hundreds of dollars per year. Can't afford them.
 
-## Antivirus False Positives
-> :hearts:
-> Anitvirus false positives are hard to fight.
-> If you have found the app useful and safe. Please leave a star on github to increase trust.
-
-GamingGaiden performs following tasks that are similar to common malware behavior, leading it to be flagged as malware by antivirus software.
-
-- Scanning running programs to detect and track games.
-- Adding registry entries for HWinfo64 integration.
-- Periodically sleeping to conserve resources.
-- Monitoring user activity to detect idle time.
-
-Its PowerShell-based implementation also raises flags as powershell scripts can be used maliciously and have low trust in tech community.
-
-Antivirus flag such behavior to keep users safe without doing actual verification of malicious actiity. Fixing false positives requires manually requesting antivirus providers to unflag GamingGaiden or rewriting it in a compiled language like C#. Even then there is no guarantee of a fix due to it's functionality being process scanning.
-
-Given that I wrote it for personal use, above is not something I can work on atleast for some time. The source code is open and available for anyone to review and ensure nothing wrong is happening. Users are responsible for their own safety and actions when using the program. 
-
-Please remember that open-source software comes without any support or warranties.
-
 ## Attributions
 Made with love using 
 
