@@ -25,11 +25,11 @@ Most frontends already use the above way.
 
 App menu: *Settings => Edit Game*, select game from list (searchable).
 
-- Change executable (after reinstall)
-- Update icon (*Search* for online, *Update* to browse - png/jpg supported)
+- Change executable
+- Update icon (Use *Search* for online images, *Update* to choose image - png/jpg supported)
 - Manually adjust play time
 - Change platform
-- Mark as finished / other status (checkbox)
+- Checkbox to mark as finished or any other status
 
 ### Update emulator for platform
 
@@ -47,7 +47,7 @@ App menu: *Stop Tracker* to pause, *Start Tracker* to resume.
 
 **Disable:** Press *Win+R*, enter *shell:startup*, delete *Gaming Gaiden* shortcut.
 
-**Re-enable:** Run *install.bat* from install directory, choose *yes* for auto start.
+**Re-enable:** Reinstall app, choose *yes* for auto start.
 
 ### Restore data
 
@@ -62,19 +62,15 @@ Games launched from emulator GUI (Retroarch, PCSX2, Dolphin, Duckstation) lack c
 
 ### Track multiple platforms using a single emulator
 
-1. Copy emulator exe with platform-specific names. Example: Copy *Dolphin.exe* to *Dolphin-Wii.exe* and *Dolphin-Gamecube.exe*. 
-2. Register each platform with its renamed exe. 
-3. Update frontend/shortcuts to use new exes.
+1. Create copies of emulator exe with platform-specific names. Example: Copy *Dolphin.exe* to *Dolphin-Wii.exe* and *Dolphin-Gamecube.exe*. 
+2. Register each platform with its separate renamed exe. 
+3. Update frontend/shortcuts to use the new exes.
 
-Alternative: Name platform *"Gamecube and Wii"* using single exe.
+### Track multiple platforms using same Retroarch core
 
-### Track multiple platforms using a single Retroarch core
-
-1. Copy *retroarch.exe* with platform-specific names (e.g. *Retroarch-Genesis.exe*, *Retroarch-GameGear.exe*). 
-2. Register each platform with its renamed exe. 
+1. Create copies of *retroarch.exe* with platform-specific names (e.g. *Retroarch-Genesis.exe*, *Retroarch-GameGear.exe*). 
+2. Register each platform with its separate renamed exe. 
 3. Update frontend/shortcuts.
-
-Alternative: Name platform *"Genesis & GameGear"* using single core.
 
 ### Track games on multiple PCs in a single Gaming Gaiden database
 
@@ -94,5 +90,7 @@ Alternative: Name platform *"Genesis & GameGear"* using single core.
 After setting up database share make sure all PCs are added to Gaming Gaiden
 
 Then, on each installation of Gaming Gaiden set the correct pc as current pc in *Settings => Gaming PCs* section.
+
+*Current PC = PC on which current instance of app is installed* 
 
 Games will be tagged to the gaming pc on which they are played and pc usage will be updated using session times.
