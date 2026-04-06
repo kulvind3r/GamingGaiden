@@ -18,6 +18,7 @@ using System.Management.Automation.Runspaces;
 [assembly: ComVisible(false)]
 
 class Program {
+    [STAThread]
     static void Main(string[] args) {
         // 1. Locate the script file relative to the EXE location
         string exePath = AppDomain.CurrentDomain.BaseDirectory;
@@ -33,6 +34,7 @@ class Program {
 
         // 3. Create the PowerShell runspace inside this process
         using (Runspace rs = RunspaceFactory.CreateRunspace()) {
+            rs.ApartmentState = System.Threading.ApartmentState.STA;
             rs.Open();
             using (PowerShell ps = PowerShell.Create()) {
                 ps.Runspace = rs;
