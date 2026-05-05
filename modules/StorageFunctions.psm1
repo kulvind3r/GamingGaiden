@@ -221,6 +221,12 @@ function UpdateGameOnEdit() {
                 -GamePlayTime $GamePlayTime -GameIdleTime $gameIdleTime -GameLastPlayDate $gameLastPlayDate -GameCompleteStatus $GameCompleteStatus -GamePlatform $GamePlatform -GameSessionCount $gameSessionCount -GameStatus $GameStatus -GameGamingPCName $GameGamingPCName
         }
 
+        # Update session history with new game name to keep the history linked to the game even after renaming
+        $updateSessionHistoryQuery = "UPDATE session_history SET game_name = @NewGameName WHERE game_name LIKE '{0}'" -f $gameNamePattern
+        RunDBQuery $updateSessionHistoryQuery @{
+            NewGameName = $GameName.Trim()
+        }
+
         RemoveGame($OriginalGameName)
     }
 }
