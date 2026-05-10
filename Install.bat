@@ -1,6 +1,18 @@
 @echo off
 setlocal enabledelayedexpansion
 
+REM Switch to scripts directory
+cd /d "%~dp0"
+
+REM Safely Exit if script is running as admin
+net session >nul 2>&1
+if %errorLevel% == 0 (
+    echo [ERROR] This script is designed to run WITHOUT administrative rights.
+    echo Please run it by simply double-clicking the file.
+    pause
+    exit /b
+)
+
 md "%ALLUSERSPROFILE%\GamingGaiden"
 
 set "InstallDirectory=%ALLUSERSPROFILE%\GamingGaiden"
@@ -19,7 +31,7 @@ powershell.exe -NoProfile -Command "Get-ChildItem '%InstallDirectory%' -Exclude 
 
 REM Install to C:\ProgramData\GamingGaiden
 echo Copying Files
-echo n | xcopy /s/e/q/-y "%CD%" "%InstallDirectory%"
+echo n | xcopy /s/e/q/-y "%~dp0" "%InstallDirectory%"
 del "%InstallDirectory%\Install.bat"
 
 REM Create shortcuts using powershell and copy to desktop and start menu
