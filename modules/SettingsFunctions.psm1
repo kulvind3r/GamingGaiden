@@ -257,7 +257,7 @@ function RenderEditGameForm($GamesList) {
             $openFileDialog = OpenFileDialog "Select Executable" 'Executable (*.exe)|*.exe'
             $result = $openFileDialog.ShowDialog()
             if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
-                $textExe.Text = (Get-Item $openFileDialog.FileName).Name
+                $textExe.Text = (Get-Item -LiteralPath $openFileDialog.FileName).Name
                 $openFileDialog.Dispose()
             }
         })
@@ -432,7 +432,7 @@ function RenderEditPlatformForm($PlatformsList) {
             $openFileDialog = OpenFileDialog "Select Retroarch Core" 'DLL (*.dll)|*.dll'
             $result = $openFileDialog.ShowDialog()
             if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
-                $textCore.Text = (Get-Item $openFileDialog.FileName).Name
+                $textCore.Text = (Get-Item -LiteralPath $openFileDialog.FileName).Name
                 $openFileDialog.Dispose()
             }
         })
@@ -444,7 +444,7 @@ function RenderEditPlatformForm($PlatformsList) {
             $result = $openFileDialog.ShowDialog()
             if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
                 $existingExes = $textExe.Text
-                $selectedExe = (Get-Item $openFileDialog.FileName).Name
+                $selectedExe = (Get-Item -LiteralPath $openFileDialog.FileName).Name
                 if ($existingExes -eq "") {
                     $textExe.Text = $selectedExe
                 }
@@ -612,7 +612,7 @@ function RenderAddGameForm() {
 
             if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
                 $textExe.Text = $openFileDialog.FileName
-                $gameExeFile = Get-Item $textExe.Text
+                $gameExeFile = Get-Item -LiteralPath $textExe.Text
                 $gameExeName = $gameExeFile.BaseName
 
                 if ($textName.Text -eq "") { $textName.Text = $gameExeName }
@@ -644,7 +644,7 @@ function RenderAddGameForm() {
                 return
             }
             $gameName = $textName.Text
-            $gameExeFile = Get-Item $textExe.Text
+            $gameExeFile = Get-Item -LiteralPath $textExe.Text
             $gameExeName = $gameExeFile.BaseName
             $gameIconPath = $pictureBoxImagePath.Text
             $gameLastPlayDate = (Get-Date ([datetime]::UtcNow) -UFormat "%s").Split('.').Get(0)
@@ -1036,7 +1036,7 @@ function RenderAddPlatformForm() {
             $openFileDialog = OpenFileDialog "Select Retroarch Core" 'DLL (*.dll)|*.dll'
             $result = $openFileDialog.ShowDialog()
             if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
-                $textCore.Text = (Get-Item $openFileDialog.FileName).Name
+                $textCore.Text = (Get-Item -LiteralPath $openFileDialog.FileName).Name
                 $openFileDialog.Dispose()
             }
         })
@@ -1050,7 +1050,7 @@ function RenderAddPlatformForm() {
             if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
                 $existingExes = $textExe.Text
 
-                $selectedExe = (Get-Item $openFileDialog.FileName).Name
+                $selectedExe = (Get-Item -LiteralPath $openFileDialog.FileName).Name
                 if ($existingExes -eq "") {
                     $textExe.Text = $selectedExe
                 }

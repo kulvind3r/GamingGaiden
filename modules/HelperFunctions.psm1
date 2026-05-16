@@ -86,7 +86,7 @@ function ShowMessage($Msg, $Buttons, $Type) {
 }
 
 function CalculateFileHash ($FilePath) {
-    $fileName = (Get-Item $FilePath).Name
+    $fileName = (Get-Item -LiteralPath $FilePath).Name
     Copy-Item $FilePath "$env:TEMP\$fileName"
 
     $fileHash = Get-FileHash "$env:TEMP\$fileName"
