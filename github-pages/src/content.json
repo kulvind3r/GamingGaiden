@@ -3,24 +3,24 @@
   "featuresEyebrow": "Features",
   "features": [
     {
-      "icon": "clock",
+      "icon": "fa-solid fa-clock",
       "title": "Auto Time Tracking",
       "description": "Tracks playtime & sessions, strips idle time automatically"
     },
     {
-      "icon": "chartBars",
+      "icon": "fa-solid fa-chart-column",
       "title": "In-Depth Statistics",
       "description": "Lifetime, monthly & yearly breakdowns plus cost-per-hour analysis"
     },
     {
-      "icon": "monitor",
+      "icon": "fa-solid fa-desktop",
       "title": "PC & Emulators",
-      "description": "Retroarch cores supported — register once, track all ROMs forever"
+      "description": "Track PC & Emulated games. Supports Retroarch and Standalone Emulators."
     },
     {
-      "icon": "shield",
+      "icon": "fa-solid fa-shield-halved",
       "title": "Offline & Private",
-      "description": "No cloud, no accounts — data lives in a local SQLite database"
+      "description": "No cloud, no accounts — data lives completely offline in local SQLite database"
     }
   ],
   "slides": [

@@ -1,25 +1,13 @@
 /**
  * Landing page bootstrap. Expects content.json next to index.html.
- *
- * Schema (content.json):
- *   slides[]     — { image?, title, description }
- *   features[]   — { icon, title, description }; icon keys match DEFAULT_FEATURE_ICONS or iconPresets
- *   shields[]    — { src, alt, href? }
- *   tagline?, featuresEyebrow?, iconPresets?
  */
 
 const CAROUSEL_SELECTOR = '[data-landing-carousel]';
 const SLIDE_TRANSITION_MS = 420;
 const SWIPE_THRESHOLD_PX = 45;
 
-const DEFAULT_FEATURE_ICONS = {
-    clock: '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
-    chartBars: '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>',
-    monitor: '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>',
-    shield: '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>'
-};
-
-const ICON_FALLBACK = '<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/></svg>';
+// Fallback if an icon isn't specified or falls through
+const ICON_FALLBACK = '<i class="fa-solid fa-circle-question"></i>';
 
 function escapeHtml(text) {
     return String(text)
@@ -95,10 +83,10 @@ async function initLandingPage() {
         }).join('');
     }
 
+    // UPDATED: Dynamically generates Font Awesome element markup from your string name
     function buildFeatures(content) {
         if (!featureListEl) return;
         const features = content.features || [];
-        const iconMap = { ...DEFAULT_FEATURE_ICONS, ...(content.iconPresets || {}) };
 
         if (featuresEyebrowEl && content.featuresEyebrow) {
             featuresEyebrowEl.textContent = content.featuresEyebrow;
@@ -112,7 +100,9 @@ async function initLandingPage() {
         setLeftColumnVisible(true);
 
         featureListEl.innerHTML = features.map(f => {
-            const iconHtml = iconMap[f.icon] || ICON_FALLBACK;
+            // Safe fallback rule if icon name is completely empty
+            const iconHtml = f.icon ? `<i class="${escapeHtml(f.icon)}"></i>` : ICON_FALLBACK;
+            
             return `<li>
                 <span class="feat-icon">${iconHtml}</span>
                 <div>
