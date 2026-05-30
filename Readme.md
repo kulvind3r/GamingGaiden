@@ -1,9 +1,9 @@
 <div align="center">
 
-[![GitHub stars](https://img.shields.io/github/stars/kulvind3r/gaminggaiden)](https://github.com/kulvind3r/gaminggaiden/stargazers)
-[![GitHub Downloads (latest)](https://img.shields.io/github/downloads/kulvind3r/gaminggaiden/latest/total?label=Downloads%20-%20Latest&color=blue)](https://github.com/kulvind3r/GamingGaiden/releases/latest)
-![GitHub Downloads (all)](https://img.shields.io/github/downloads/kulvind3r/gaminggaiden/total?label=Downloads%20-%20Total&color=blue)
-[![Codacy Quality](https://app.codacy.com/project/badge/Grade/c4a01f22c3864d8c80b8c6891a6feb5f)](https://app.codacy.com/gh/kulvind3r/GamingGaiden/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+[![GitHub stars](https://img.shields.io/github/stars/kulvind3r/gaminggaiden?style=flat-square&logo=github&labelColor=16161f&color=f59e0b&logoColor=fbbf24)](https://github.com/kulvind3r/gaminggaiden/stargazers)
+[![GitHub Downloads (latest)](https://img.shields.io/github/downloads/kulvind3r/gaminggaiden/latest/total?label=Downloads%20-%20Latest&style=flat-square&labelColor=16161f&color=3b82f6&logoColor=e2e8f0)](https://github.com/kulvind3r/GamingGaiden/releases/latest)
+![GitHub Downloads (all)](https://img.shields.io/github/downloads/kulvind3r/gaminggaiden/total?label=Downloads%20-%20Total&style=flat-square&labelColor=16161f&color=3b82f6&logoColor=e2e8f0)
+[![Codacy Quality](https://img.shields.io/codacy/grade/c4a01f22c3864d8c80b8c6891a6feb5f?style=flat-square&logo=codacy&labelColor=16161f&color=10b981&logoColor=white)](https://app.codacy.com/gh/kulvind3r/GamingGaiden/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
 ![Gaming Gaiden](./readme-files/GamingGaidenBanner.png)
 

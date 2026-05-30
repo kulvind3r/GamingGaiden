@@ -1,0 +1,65 @@
+{
+  "tagline": "A lightweight Windows tray app to track your gaming time, sessions, and statistics — completely offline and portable.",
+  "featuresEyebrow": "Features",
+  "features": [
+    {
+      "icon": "clock",
+      "title": "Auto Time Tracking",
+      "description": "Tracks playtime & sessions, strips idle time automatically"
+    },
+    {
+      "icon": "chartBars",
+      "title": "In-Depth Statistics",
+      "description": "Lifetime, monthly & yearly breakdowns plus cost-per-hour analysis"
+    },
+    {
+      "icon": "monitor",
+      "title": "PC & Emulators",
+      "description": "Retroarch cores supported — register once, track all ROMs forever"
+    },
+    {
+      "icon": "shield",
+      "title": "Offline & Private",
+      "description": "No cloud, no accounts — data lives in a local SQLite database"
+    }
+  ],
+  "slides": [
+    {
+      "image": "resources/screenshots/time-tracking.png",
+      "title": "Automatic Time Tracking",
+      "description": "Tracks playtime and session history for PC and emulated games. Detects and removes idle time automatically. Register any emulator once and all its ROMs are tracked forever."
+    },
+    {
+      "image": "resources/screenshots/statistics.png",
+      "title": "In-Depth Statistics",
+      "description": "Lifetime summaries, monthly and yearly breakdowns, most-played games, and value-for-money analysis. See exactly how much your gaming PC costs per hour of fun."
+    },
+    {
+      "image": "resources/screenshots/ui-overview.png",
+      "title": "Fast Browser UI",
+      "description": "Search, sort, and manage your entire library. Mark games as Playing, Finished, On Hold, or Dropped to stay on top of your backlog. Integrated Google image search for box art."
+    },
+    {
+      "image": "resources/screenshots/session-history.png",
+      "title": "Sessions History",
+      "description": "Have a record of every single session you played."
+    }
+  ],
+  "shields": [
+    {
+      "alt": "GitHub stars",
+      "href": "https://github.com/kulvind3r/GamingGaiden/stargazers",
+      "src": "https://img.shields.io/github/stars/kulvind3r/gaminggaiden?style=flat-square&logo=github&labelColor=16161f&color=f59e0b&logoColor=fbbf24"
+    },
+    {
+      "alt": "GitHub downloads (total)",
+      "href": "https://github.com/kulvind3r/GamingGaiden/releases",
+      "src": "https://img.shields.io/github/downloads/kulvind3r/gaminggaiden/total?style=flat-square&label=downloads&labelColor=16161f&color=3b82f6&logoColor=e2e8f0"
+    },
+    {
+      "alt": "Codacy code quality",
+      "href": "https://app.codacy.com/gh/kulvind3r/GamingGaiden/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade",
+      "src": "https://img.shields.io/codacy/grade/c4a01f22c3864d8c80b8c6891a6feb5f?style=flat-square&logo=codacy&labelColor=16161f&color=10b981&logoColor=white"
+    }
+  ]
+}
