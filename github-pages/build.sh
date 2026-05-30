@@ -12,7 +12,7 @@ FINGERPRINT_FILES=("script.js" "style.css")
 # Assets copied as-is (no fingerprinting needed)
 COPY_FILES=("favicon.ico" "banner.png")
 
-echo "[BUILD] Starting Gaming Gaiden website build..."
+echo "[BUILD] Starting Gaming Gaiden github-pages build..."
 echo "--------------------------------------------------"
 
 # --- CLEAN & PREPARE BUILD DIRECTORIES ---

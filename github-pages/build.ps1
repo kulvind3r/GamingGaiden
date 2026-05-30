@@ -10,7 +10,7 @@ $fingerprintFiles = @("script.js", "style.css")
 # Assets copied as-is (no fingerprinting needed)
 $copyFiles = @("favicon.ico", "banner.png")
 
-Write-Host "[BUILD] Starting Gaming Gaiden website build..." -ForegroundColor Cyan
+Write-Host "[BUILD] Starting Gaming Gaiden github-pages build..." -ForegroundColor Cyan
 Write-Host "--------------------------------------------------"
 
 # --- CLEAN & PREPARE BUILD DIRECTORIES ---

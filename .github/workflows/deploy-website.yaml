@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'website/**'
+      - 'github-pages/**'
 
 permissions:
   contents: read
@@ -30,7 +30,7 @@ jobs:
         uses: actions/configure-pages@v4
 
       - name: Build Website
-        working-directory: website
+        working-directory: github-pages
         run: |
           chmod +x build.sh
           ./build.sh
@@ -38,7 +38,7 @@ jobs:
       - name: Upload Build Artifacts
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './website/build'
+          path: './github-pages/build'
 
       - name: Deploy to GitHub Pages
         id: deployment

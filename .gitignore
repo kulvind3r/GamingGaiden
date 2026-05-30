@@ -10,7 +10,7 @@ ui/*.html
 !ui/404.html
 backups/*
 build/*
-website/build/
+github-pages/build/
 ignored_*
 CLAUDE.md
 coderules.md
