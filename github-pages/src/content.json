@@ -15,7 +15,7 @@
     {
       "icon": "fa-solid fa-shield-halved",
       "title": "Offline & Private",
-      "description": "No cloud, no accounts — data lives in local SQLite database"
+      "description": "No cloud, no accounts — data lives in local SQLite database."
     },
     {
       "icon": "fa-solid fa-feather",
