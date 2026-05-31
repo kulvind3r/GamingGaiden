@@ -5,7 +5,7 @@
     {
       "icon": "fa-solid fa-chart-column",
       "title": "In Depth Analytics",
-      "description": "Stats on everything imaginable. Day, Month & Annual playtimes, Sessions, Completion states, Day vs Night Gaming, $/hr cost of PC."
+      "description": "Every imaginable Stat. Day, Month & Annual playtimes, Sessions, Completion status, PC $/hr cost, Day vs Night Gaming."
     },
     {
       "icon": "fa-solid fa-gauge-high",
@@ -26,6 +26,11 @@
       "icon": "fa-solid fa-feather",
       "title": "Extremely Lightweight",
       "description": "Leaves resources to games. < 50 MB RAM and almost nil CPU usage."
+    },
+    {
+      "icon": "fa-solid fa-network-wired",
+      "title": "Multi PC Support",
+      "description": "Track games across all your gaming PCs in a single Database."
     },
     {
       "icon": "fa-brands fa-osi",
