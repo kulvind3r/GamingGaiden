@@ -23,7 +23,7 @@
       "description": "No cloud, no accounts — data lives in local SQLite database."
     },
     {
-      "icon": "fa-solid fa-feather",
+      "icon": "fa-solid fa-feather-pointed",
       "title": "Extremely Lightweight",
       "description": "Leaves resources to games. < 50 MB RAM and almost nil CPU usage."
     },
