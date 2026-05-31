@@ -3,6 +3,11 @@
   "featuresEyebrow": "Features",
   "features": [
     {
+      "icon": "fa-solid fa-chart-column",
+      "title": "In Depth Analytics",
+      "description": "Stats on everything imaginable. Day, Month & Annual playtimes, Sessions, Completion states, Day vs Night Gaming, $/hr cost of PC."
+    },
+    {
       "icon": "fa-solid fa-gauge-high",
       "title": "Fast & Responsive",
       "description": "Sub 5 sec game detection, even with large libraries. Blazing fast browser UI."
