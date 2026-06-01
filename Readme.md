@@ -7,17 +7,16 @@
 
 ![Gaming Gaiden](./readme-files/GamingGaidenBanner.png)
 
+[kulvind3r.github.io/GamingGaiden](https://kulvind3r.github.io/GamingGaiden/)
+
+
 </div>
 
 ### 外伝 (Gaiden)
 
-Japanese
+Japanese | noun (common) | A Tale; Side Story;
 
-noun (common)
-
-A Tale; Side Story;
-
-A small powershell tray application for windows os to track gaming time. Helps you record your gaming story over the years.
+Tiny tray application for windows to track gaming time. Helps you record your gaming story over the years.
 
 ![Gaming Gaiden Demo](./readme-files/Demo.gif)
 
@@ -31,8 +30,8 @@ A small powershell tray application for windows os to track gaming time. Helps y
     - Install on multiple gaming pcs and share database to tracks games played, hours played for each pc separately.
 - #### UI and Statistics
     - Fast browser based UI with search and sorting. Quick view popup for recent games.
-    - Multiple in depth statistics on gaming. Lifetime summary, monthly/yearly time analysis, most played games, games per emulator etc.
-    - Value for money analysis for gaming pc by calculating gaming cost per hour or per month.
+    - Multiple in depth statistics on gaming. Lifetime summary, Session count and lenght, Daily/Monthly/Yearly time analysis, most played games, games per emulator etc.
+    - Value for money analysis for gaming pc, gaming cost per hour.
     - Integrated google image search for game icons / box art.
     - Mark games as Playing / Finished / On Hold / Dropped to track backlog completion.
 - #### Quality of Life Features
