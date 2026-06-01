@@ -1,26 +1,26 @@
 {
-  "tagline": "The ultimate open-source gaming time tracker for Windows.",
+  "tagline": "The ultimate open-source gaming time tracker.",
   "featuresEyebrow": "Features",
   "features": [
     {
       "icon": "fa-solid fa-chart-column",
-      "title": "In Depth Analytics",
-      "description": "Every imaginable Stat. Day, Month & Annual playtimes, Sessions, Completion status, PC $/hr cost, Day vs Night Gaming."
+      "title": "Every stat you can think of",
+      "description": "Daily, Monthly & Annual playtimes, Sessions, Completion status, $/hr cost, Day/Night playtime ratio and more."
     },
     {
       "icon": "fa-solid fa-gauge-high",
       "title": "Fast & Responsive",
-      "description": "Sub 5 sec game detection, even with large libraries. Blazing fast browser UI."
+      "description": "Blazing fast in-browser UI. Sub 5 sec game detection, even with large libraries."
     },
     {
       "icon": "fa-solid fa-desktop",
-      "title": "PC & Emulators",
-      "description": "Track PC & Emulated games. Supports Retroarch and Standalone Emulators."
+      "title": "Track PC & Emulated games",
+      "description": "Supports Retroarch and Standalone Emulators. Auto Tracks new roms when you play."
     },
     {
       "icon": "fa-solid fa-shield-halved",
       "title": "Offline & Private",
-      "description": "No cloud, no accounts — data lives in local SQLite database."
+      "description": "No cloud, no accounts. You data lives in local SQLite database."
     },
     {
       "icon": "fa-solid fa-feather-pointed",
