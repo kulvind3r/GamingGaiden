@@ -5,7 +5,7 @@
     {
       "icon": "fa-solid fa-chart-column",
       "title": "Every stat you can think of",
-      "description": "Daily, Monthly & Annual playtimes, Session Lengths, Completion status, Day/Night playtime ratio, Cost per hour and more."
+      "description": "Daily, monthly & annual playtimes, Session lengths, Completion status, Day/Night playtime ratio, Cost per hour and more."
     },
     {
       "icon": "fa-solid fa-gauge-high",
@@ -15,7 +15,7 @@
     {
       "icon": "fa-solid fa-desktop",
       "title": "Track PC & Emulated games",
-      "description": "Supports Retroarch and Standalone Emulators. Auto Tracks new roms when you play."
+      "description": "Supports Retroarch and standalone emulators. Auto tracks new roms when you play."
     },
     {
       "icon": "fa-solid fa-shield-halved",
