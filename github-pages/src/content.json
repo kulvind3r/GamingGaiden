@@ -5,12 +5,12 @@
     {
       "icon": "fa-solid fa-chart-column",
       "title": "Every stat you can think of",
-      "description": "Daily, Monthly & Annual playtimes, Sessions, Completion status, $/hr cost, Day/Night playtime ratio and more."
+      "description": "Daily, Monthly & Annual playtimes, Session Lengths, Completion status, Day/Night playtime ratio, Cost per hour and more."
     },
     {
       "icon": "fa-solid fa-gauge-high",
       "title": "Fast & Responsive",
-      "description": "Blazing fast in-browser UI. Sub 5 sec game detection, even with large libraries."
+      "description": "Blazing fast in-browser UI. Sub 5 sec game detection, even in libraries with 100s of games."
     },
     {
       "icon": "fa-solid fa-desktop",
@@ -20,12 +20,12 @@
     {
       "icon": "fa-solid fa-shield-halved",
       "title": "Offline & Private",
-      "description": "No cloud, no accounts. You data lives in local SQLite database."
+      "description": "No cloud, no accounts. Your data lives in local SQLite database."
     },
     {
       "icon": "fa-solid fa-feather-pointed",
       "title": "Extremely Lightweight",
-      "description": "Leaves resources to games. < 50 MB RAM and almost nil CPU usage."
+      "description": "Leaves resources to games. Less than 50 MB RAM and almost nil CPU usage."
     },
     {
       "icon": "fa-solid fa-network-wired",
