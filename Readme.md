@@ -9,7 +9,6 @@
 
 [kulvind3r.github.io/GamingGaiden](https://kulvind3r.github.io/GamingGaiden/)
 
-
 </div>
 
 ### 外伝 (Gaiden)
