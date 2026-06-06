@@ -95,18 +95,18 @@ Then, on each installation of Gaming Gaiden set the correct pc as current pc in 
 
 Games will be tagged to the gaming pc on which they are played and pc usage will be updated using session times.
 
-### Why can't i change Platform value in Edit Game Dialog?
+### Why can't platform value in edit game dialog be changed?
 
-Platform is tied to mode of addition for a game. A PC Game is added explicitly while Emulator games are added automatically on detection.
+Platform is tied to mode of addition for a game. A PC game is added explicitly while emulator games are added automatically on detection.
 
-Platform is auto updated for Emulator games based on which Emulator the game was being played on.
+Platform is auto updated for emulator games based on which emulator the game was being played on.
 
 Allowing platform to be editable can lead to intentional or accidental bad updates causing statistics to be get mis labelled and bad data to be recorded.
 
-### Why can't i change Exe list value in Edit Game Dialog for Non PC Games?
+### Why can't exe list value in edit game dialog be changed for non PC games?
 
-Emulated games belong to a certain platform and the Exes mapped against the emulated games are the exes of that emulated platform.
+Emulated games belong to a particular platform and the exes mapped against the emulated games are the emulator exes of that platform.
 
-Editing the list of exes for emulated games will break game detection & record logic for that game.
+Editing the list of exes for an emulated game will break game detection and data recording logic for that game.
 
-To make an emulated game be detected from a different emulator exe, register the new exe against the game's platform and simply play the game from that emulator.
+To make an emulated game be detected from a different emulator exe, register the new exe against the game's platform and simply play the game using that emulator.
