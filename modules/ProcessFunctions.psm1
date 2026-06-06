@@ -8,6 +8,9 @@
     $gameExeList = @((RunDBQuery $getGameExesQuery).exe_name | Where-Object { $null -ne $_ })
     $rawEmulatorExes = @((RunDBQuery $getEmulatorExesQuery).exe_name | Where-Object { $null -ne $_ })
 
+    # Flatten game rows that may contain multiple exes as a comma-separated list
+    $gameExeList = ($gameExeList -join ',') -split ',' | Where-Object { $_ -ne "" }
+
     # Flatten the returned result rows containing multiple emulator exes into list with one exe per item
     $emulatorExeList = ($rawEmulatorExes -join ',') -split ','
 
@@ -150,7 +153,7 @@ function MonitorGame($DetectedExe) {
         $entityFound = DoesEntityExists "games" "rom_based_name" $romBasedName
     }
     else {
-        $entityFound = DoesEntityExists "games" "exe_name" $DetectedExe
+        $entityFound = FindGameByExeName $DetectedExe
     }
 
     if ($null -ne $entityFound) {

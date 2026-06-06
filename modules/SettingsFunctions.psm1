@@ -66,7 +66,7 @@ function RenderEditGameForm($GamesList) {
     $labelName = Createlabel "Name:" 170 20; $editGameForm.Controls.Add($labelName)
     $textName = CreateTextBox "" 245 20 300 20;	$editGameForm.Controls.Add($textName)
 
-    $labelExe = Createlabel "Exe:" 170 60; $editGameForm.Controls.Add($labelExe)
+    $labelExe = Createlabel "Game`nExe List:" 170 60; $editGameForm.Controls.Add($labelExe)
     $textExe = CreateTextBox "" 245 60 200 20; $textExe.ReadOnly = $true; $editGameForm.Controls.Add($textExe)
 
     $labelPlatform = Createlabel "Platform:" 170 100; $editGameForm.Controls.Add($labelPlatform)
@@ -171,7 +171,7 @@ function RenderEditGameForm($GamesList) {
 
             $textName.Text = $selectedGame.name
             $textOriginalGameName.Text = $selectedGame.name
-            $textExe.Text = ($selectedGame.exe_name + ".exe")
+            $textExe.Text = ($selectedGame.exe_name -split ',' | ForEach-Object { $_.Trim() + ".exe" }) -join ','
             $textPlatform.Text = $selectedGame.platform
             $checkboxCompleted.Checked = ($selectedGame.completed -eq 'TRUE')
             $checkboxDropped.Checked = ($selectedGame.status -eq 'dropped')
@@ -252,18 +252,39 @@ function RenderEditGameForm($GamesList) {
         })
     $editGameForm.Controls.Add($buttonUpdateIcon)
 
-    $buttonUpdateExe = CreateButton "Edit Exe" 470 60
+    $buttonUpdateExe = CreateButton "Add Exe" 470 45
     $buttonUpdateExe.Add_Click({
             $openFileDialog = OpenFileDialog "Select Executable" 'Executable (*.exe)|*.exe'
             $result = $openFileDialog.ShowDialog()
             if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
-                $textExe.Text = (Get-Item -LiteralPath $openFileDialog.FileName).Name
+                $selectedExe     = (Get-Item -LiteralPath $openFileDialog.FileName).Name
+                $selectedExeBase = (Get-Item -LiteralPath $openFileDialog.FileName).BaseName
+
+                $entityFound = FindGameByExeName $selectedExeBase
+                if ($null -ne $entityFound -and $entityFound.name -ne $textOriginalGameName.Text) {
+                    ShowMessage "Executable $selectedExe is already mapped to game $($entityFound.name). Cannot Add." "OK" "Asterisk"
+                    return
+                }
+
+                $existingExes = $textExe.Text
+                if ($existingExes -eq "") {
+                    $textExe.Text = $selectedExe
+                }
+                else {
+                    $textExe.Text = ("$existingExes,$selectedExe" -split ',' | Select-Object -Unique) -join ','
+                }
                 $openFileDialog.Dispose()
             }
         })
     $editGameForm.Controls.Add($buttonUpdateExe)
 
-    $buttonRemove = CreateButton "Delete" 470 100
+    $buttonClearExe = CreateButton "Clear List" 470 73
+    $buttonClearExe.Add_Click({
+            $textExe.Text = ""
+        })
+    $editGameForm.Controls.Add($buttonClearExe)
+
+    $buttonRemove = CreateButton "Delete" 470 137
     $buttonRemove.Add_Click({
             $gameName = $textName.Text
 
@@ -536,7 +557,7 @@ function RenderAddGameForm() {
     $labelName = Createlabel "Name:" 170 20; $addGameForm.Controls.Add($labelName)
     $textName = CreateTextBox "" 245 20 300 20;	$addGameForm.Controls.Add($textName)
 
-    $labelExe = Createlabel "Exe:" 170 60; $addGameForm.Controls.Add($labelExe)
+    $labelExe = Createlabel "Game`nExe List:" 170 60; $addGameForm.Controls.Add($labelExe)
     $textExe = CreateTextBox "" 245 60 200 20; $textExe.ReadOnly = $true; $addGameForm.Controls.Add($textExe)
 
     $labelPlatform = Createlabel "Platform:" 170 100; $addGameForm.Controls.Add($labelPlatform)
@@ -605,37 +626,50 @@ function RenderAddGameForm() {
         })
     $addGameForm.Controls.Add($buttonUpdateIcon)
 
-    $buttonUpdateExe = CreateButton "Add Exe" 470 60
+    $buttonUpdateExe = CreateButton "Add Exe" 470 45
     $buttonUpdateExe.Add_Click({
             $openFileDialog = OpenFileDialog "Select Executable" 'Executable (*.exe)|*.exe'
             $result = $openFileDialog.ShowDialog()
 
             if ($result -eq [System.Windows.Forms.DialogResult]::OK) {
-                $textExe.Text = $openFileDialog.FileName
-                $gameExeFile = Get-Item -LiteralPath $textExe.Text
-                $gameExeName = $gameExeFile.BaseName
+                $gameExeFile = Get-Item -LiteralPath $openFileDialog.FileName
+                $selectedExeName = $gameExeFile.Name
+                $selectedExeBaseName = $gameExeFile.BaseName
 
-                if ($textName.Text -eq "") { $textName.Text = $gameExeName }
-
-                $entityFound = DoesEntityExists "games" "exe_name" $gameExeName
+                $entityFound = FindGameByExeName $selectedExeBaseName
                 if ($null -ne $entityFound) {
-                    ShowMessage "Another Game with Executable $gameExeName.exe already exists`r`nSee Games List." "OK" "Asterisk"
-                    $textExe.Text = ""
+                    ShowMessage "Executable $selectedExeName is already mapped to game $($entityFound.name). Cannot Add." "OK" "Asterisk"
                     return
                 }
 
-                $gameIconPath = "$env:TEMP\GmGdn-{0}.jpg" -f $(Get-Random)
-                $gameIcon = [System.Drawing.Icon]::ExtractAssociatedIcon($gameExeFile)
-                $gameIcon.ToBitmap().save($gameIconPath)
+                $existingExes = $textExe.Text
+                if ($existingExes -eq "") {
+                    $textExe.Text = $selectedExeName
 
-                $pictureBoxImagePath.Text = $gameIconPath
-                $pictureBox.Image.Dispose()
-                $pictureBox.Image = [System.Drawing.Image]::FromFile($gameIconPath)
+                    if ($textName.Text -eq "") { $textName.Text = $selectedExeBaseName }
+
+                    $gameIconPath = "$env:TEMP\GmGdn-{0}.jpg" -f $(Get-Random)
+                    $gameIcon = [System.Drawing.Icon]::ExtractAssociatedIcon($openFileDialog.FileName)
+                    $gameIcon.ToBitmap().save($gameIconPath)
+
+                    $pictureBoxImagePath.Text = $gameIconPath
+                    $pictureBox.Image.Dispose()
+                    $pictureBox.Image = [System.Drawing.Image]::FromFile($gameIconPath)
+                }
+                else {
+                    $textExe.Text = ("$existingExes,$selectedExeName" -split ',' | Select-Object -Unique) -join ','
+                }
 
                 $openFileDialog.Dispose()
             }
         })
     $addGameForm.Controls.Add($buttonUpdateExe)
+
+    $buttonClearExe = CreateButton "Clear List" 470 75
+    $buttonClearExe.Add_Click({
+            $textExe.Text = ""
+        })
+    $addGameForm.Controls.Add($buttonClearExe)
 
     $buttonOK = CreateButton "OK" 245 220
     $buttonOK.Add_Click({
@@ -644,8 +678,7 @@ function RenderAddGameForm() {
                 return
             }
             $gameName = $textName.Text
-            $gameExeFile = Get-Item -LiteralPath $textExe.Text
-            $gameExeName = $gameExeFile.BaseName
+            $gameExeName = $textExe.Text -replace '\.exe'
             $gameIconPath = $pictureBoxImagePath.Text
             $gameLastPlayDate = (Get-Date ([datetime]::UtcNow) -UFormat "%s").Split('.').Get(0)
             $gameGamingPCName = if ($dropdownGamingPC.SelectedItem -eq "") { "" } else { $dropdownGamingPC.SelectedItem }

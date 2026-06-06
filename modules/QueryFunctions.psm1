@@ -10,6 +10,18 @@
     return ($exesFound -gt 0)
 }
 
+function FindGameByExeName($ExeName) {
+    Log "Finding game by exe name: $ExeName"
+
+    $pattern = SQLEscapedMatchPattern($ExeName.Trim())
+    $query = "SELECT * FROM games WHERE ',' || exe_name || ',' LIKE '%,{0},%'" -f $pattern
+
+    $gameFound = RunDBQuery $query
+
+    Log "Found game: $($gameFound.name)"
+    return $gameFound
+}
+
 function DoesEntityExists($Table, $Column, $EntityName) {
     Log "Does $EntityName exists in $Table ?"
 
