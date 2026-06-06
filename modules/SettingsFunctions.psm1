@@ -70,7 +70,7 @@ function RenderEditGameForm($GamesList) {
     $textExe = CreateTextBox "" 245 60 200 20; $textExe.ReadOnly = $true; $editGameForm.Controls.Add($textExe)
 
     $labelPlatform = Createlabel "Platform:" 170 100; $editGameForm.Controls.Add($labelPlatform)
-    $textPlatform = CreateTextBox "" 245 100 200 20; $editGameForm.Controls.Add($textPlatform)
+    $textPlatform = CreateTextBox "" 245 100 200 20; $textPlatform.ReadOnly = $true; $editGameForm.Controls.Add($textPlatform)
 
     $labelPlayTime = Createlabel "PlayTime:" 170 140; $editGameForm.Controls.Add($labelPlayTime)
     $textPlayTime = CreateTextBox "" 245 140 200 20; $editGameForm.Controls.Add($textPlayTime)
@@ -181,6 +181,9 @@ function RenderEditGameForm($GamesList) {
             if ($checkboxForever.Checked -or $checkboxHold.Checked -or $checkboxDropped.Checked) {
                 $checkboxCompleted.Enabled = $false
             }
+
+            $buttonUpdateExe.Enabled = ($selectedGame.platform -eq "PC")
+            $buttonClearExe.Enabled = ($selectedGame.platform -eq "PC")
 
             $textPlayTime.Text = PlayTimeMinsToString $selectedGame.play_time
 
@@ -310,8 +313,8 @@ function RenderEditGameForm($GamesList) {
     $buttonOK.Add_Click({
             $currentlySelectedIndex = $listBox.SelectedIndex
 
-            if ($textName.Text -eq "" -Or $textPlatform.Text -eq "" -Or $textPlayTime.Text -eq "")	{
-                ShowMessage "Name, Platform, Playtime fields cannot be empty. Try Again." "OK" "Error"
+            if ($textName.Text -eq "" -Or $textExe.Text -eq "" -Or $textPlayTime.Text -eq "")	{
+                ShowMessage "Name, Exe and Playtime fields cannot be empty. Try Again." "OK" "Error"
                 $listBox.SetSelected($currentlySelectedIndex, $true)
                 return
             }
@@ -674,7 +677,7 @@ function RenderAddGameForm() {
     $buttonOK = CreateButton "OK" 245 220
     $buttonOK.Add_Click({
             if ($textExe.Text -eq "" -Or $textName.Text -eq "" ) {
-                ShowMessage "Name, Exe fields cannot be empty. Try Again." "OK" "Error"
+                ShowMessage "Name and Exe fields cannot be empty. Try Again." "OK" "Error"
                 return
             }
             $gameName = $textName.Text
