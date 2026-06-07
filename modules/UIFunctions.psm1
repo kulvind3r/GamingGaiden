@@ -123,7 +123,7 @@ function RenderGameList() {
             $statusUri = "<div>Playing</div><img src=`".\resources\images\playing.png`">"
         }
         if ($gameRecord.status -eq 'dropped') {
-            $statusUri = "<div>Dropped</div><img title=`"Utter Garbage!!`" src=`".\resources\images\dropped.png`">"
+            $statusUri = "<div>Dropped</div><a href='https://kulvind3r.github.io/DontGitGud'><img title=`"Click To Find Solution For Your Disappointment!!`" src=`".\resources\images\dropped.png`"></a>"
         }
         if ($gameRecord.status -eq 'hold') {
             $statusUri = "<div>Pick Later</div><img src=`".\resources\images\hold.png`">"

@@ -148,7 +148,7 @@ td:nth-child(6) {
 }
 
 td:nth-child(6) img {
-  height: inherit;
+  height: 100%;
   margin-left: auto;
   margin-right: auto;
   display: block;

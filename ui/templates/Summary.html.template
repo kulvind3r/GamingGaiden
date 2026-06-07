@@ -78,7 +78,7 @@
           <div id="forever-icon" class="legend-icon"></div>
           <div id="forever-count" style="color: #94979c"></div>
           <div id="dropped-icon" class="legend-icon"></div>
-          <div id="dropped-count" style="color: #662f13"></div>
+          <a href='https://kulvind3r.github.io/DontGitGud' style='text-decoration: none;' title='Click To Find Solution For Your Disappointment!!'><div id="dropped-count" style="color: #662f13"></div></a>
         </div>
       </div>
       <div id="pc-title-column">
