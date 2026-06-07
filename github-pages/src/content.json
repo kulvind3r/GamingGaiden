@@ -40,24 +40,69 @@
   ],
   "slides": [
     {
-      "image": "resources/screenshots/time-tracking.png",
-      "title": "Automatic Time Tracking",
-      "description": "Tracks playtime and session history for PC and emulated games. Detects and removes idle time automatically. Register any emulator once and all its ROMs are tracked forever."
-    },
-    {
-      "image": "resources/screenshots/statistics.png",
-      "title": "In-Depth Statistics",
-      "description": "Lifetime summaries, monthly and yearly breakdowns, most-played games, and value-for-money analysis. See exactly how much your gaming PC costs per hour of fun."
-    },
-    {
-      "image": "resources/screenshots/ui-overview.png",
+      "image": "resources/screenshots/ui-all-games.png",
       "title": "Fast Browser UI",
-      "description": "Search, sort, and manage your entire library. Mark games as Playing, Finished, On Hold, or Dropped to stay on top of your backlog. Integrated Google image search for box art."
+      "description": "All your games at a glance with cover art, status icons, playtime, session count, last played date and gaming PC used."
     },
     {
       "image": "resources/screenshots/session-history.png",
       "title": "Sessions History",
-      "description": "Have a record of every single session you played."
+      "description": "Have a record of every single session you played for every game."
+    },
+    {
+      "image": "resources/screenshots/session-day-night.png",
+      "title": "Day & Night gaming",
+      "description": "Record gaming time based on local timezone. Are you a night owl or morning lark?."
+    },
+    {
+      "image": "resources/screenshots/year-in-review.png",
+      "title": "Gaming Year in Review",
+      "description": "Your local year in review available any time, stop waiting for Steam to publish theirs."
+    },
+    {
+      "image": "resources/screenshots/life-time-summary.png",
+      "title": "Life Time Summary",
+      "description": "One view to rule them all. See everything at a glance, including cost analysis of your gaming PCs."
+    },
+    {
+      "image": "resources/screenshots/playtime-daily.png",
+      "title": "Daily Playtime Every Month",
+      "description": "Calendar view with daily play time bar chart, with marked weekends."
+    },
+    {
+      "image": "resources/screenshots/games-per-platform.png",
+      "title": "Games By Platform",
+      "description": "See how many games you have played on different consoles."
+    },
+    {
+      "image": "resources/screenshots/most-played.png",
+      "title": "Most Played Games",
+      "description": "Check your top 10, 20, 30... most played games anytime."
+    },
+    {
+      "image": "resources/screenshots/pc-vs-emulation.png",
+      "title": "PC vs Emulation",
+      "description": "Ratio of time you spend playing PC games vs Emulated games."
+    },
+    {
+      "image": "resources/screenshots/playtime-monthly.png",
+      "title": "Annual Playtime Breakdown By Months",
+      "description": "Vacations vs Work, which months were you most active in your hobby."
+    },
+    {
+      "image": "resources/screenshots/search.png",
+      "title": "Search",
+      "description": "Instant search across all columns with fuzzy matching."
+    },
+    {
+      "image": "resources/screenshots/sort.png",
+      "title": "Sort",
+      "description": "Sort by any column, check highest played, highest sessions, recently played and more."
+    },
+    {
+      "image": "resources/screenshots/help-manual.png",
+      "title": "Detailed Help Manual",
+      "description": "Answers to most confusions and questions available at click of button."
     }
   ],
   "shields": [

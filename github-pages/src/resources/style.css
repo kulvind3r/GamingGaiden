@@ -470,6 +470,7 @@ a:hover { text-decoration: underline; }
     color: var(--muted);
     text-decoration: none;
     transition: color 0.2s;
+    margin-top: 5px;
 }
 .github-link:hover { color: var(--accent); text-decoration: none; }
 
