@@ -109,12 +109,12 @@
     {
       "alt": "GitHub stars",
       "href": "https://github.com/kulvind3r/GamingGaiden/stargazers",
-      "src": "https://img.shields.io/github/stars/kulvind3r/gaminggaiden?style=flat-square&logo=github&labelColor=16161f&color=f59e0b&logoColor=fbbf24"
+      "src": "https://kulvind3r.github.io/GamingGaiden/resources/badges/stars.svg"
     },
     {
       "alt": "GitHub downloads (total)",
       "href": "https://github.com/kulvind3r/GamingGaiden/releases",
-      "src": "https://img.shields.io/github/downloads/kulvind3r/gaminggaiden/total?style=flat-square&label=downloads&labelColor=16161f&color=3b82f6&logoColor=e2e8f0"
+      "src": "https://kulvind3r.github.io/GamingGaiden/resources/badges/downloads-total.svg"
     },
     {
       "alt": "Codacy code quality",
