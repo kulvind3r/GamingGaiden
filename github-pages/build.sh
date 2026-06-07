@@ -6,6 +6,10 @@ BUILD_DIR="build"
 RES_DIR="resources"
 INDEX_FILE="index.html"
 
+# Repository identifier for badges
+BADGE_REPO="kulvind3r/gaminggaiden"
+BADGES_SUBDIR="badges"
+
 # JS and CSS assets to fingerprint (cache-bust on content change)
 FINGERPRINT_FILES=("script.js" "style.css")
 
@@ -22,6 +26,7 @@ if [ -d "$BUILD_DIR" ]; then
 fi
 echo "[DIR] Creating fresh '$BUILD_DIR' and subdirectories..."
 mkdir -p "$BUILD_DIR/$RES_DIR/screenshots"
+mkdir -p "$BUILD_DIR/$RES_DIR/$BADGES_SUBDIR"
 
 # --- COPY INDEX.HTML ---
 if [ -f "$SRC_DIR/$INDEX_FILE" ]; then
@@ -61,6 +66,68 @@ if [ -d "$SRC_DIR/$RES_DIR/screenshots" ]; then
         echo "[INFO] No screenshots found in screenshots/ - directory created but empty."
     fi
 fi
+
+# --- NATIVE LOCAL BADGE GENERATOR ---
+echo "[BUILD] Generating native SVG badges locally..."
+
+# Pure Bash Function to build flat-square SVGs dynamically
+generate_flat_badge() {
+    local label="$1"
+    local value="$2"
+    local label_color="$3"
+    local value_color="$4"
+    local out_file="$5"
+
+    local label_len=${#label}
+    local value_len=${#value}
+    
+    # Calculate widths dynamically (approx 7px per character + padding)
+    local label_width=$((label_len * 7 + 14))
+    local value_width=$((value_len * 7 + 14))
+    local total_width=$((label_width + value_width))
+    
+    # Text positioning anchors
+    local label_text_x=$((label_width * 5))
+    local value_text_x=$((label_width * 10 + value_width * 5))
+
+    cat <<EOF > "$out_file"
+<svg xmlns="http://www.w3.org/2000/svg" width="$total_width" height="20" role="img" aria-label="$label: $value">
+  <g shape-rendering="crispEdges">
+    <rect width="$label_width" height="20" fill="$label_color"/>
+    <rect x="$label_width" width="$value_width" height="20" fill="$value_color"/>
+  </g>
+  <g fill="#fff" text-anchor="middle" font-family="Verdana,Geneva,sans-serif" text-rendering="geometricPrecision" font-size="110">
+    <text x="$label_text_x" y="140" transform="scale(.1)" fill="#fff" textLength="$((label_len * 65))">$label</text>
+    <text x="$value_text_x" y="140" transform="scale(.1)" fill="#fff" textLength="$((value_len * 65))">$value</text>
+  </g>
+</svg>
+EOF
+    echo "[BADGE] Created $(basename "$out_file") ($label: $value)"
+}
+
+# Setup GitHub API Authentication Header using Environment Secret
+AUTH_HEADER=""
+if [ -n "$GITHUB_TOKEN" ]; then
+    AUTH_HEADER="Authorization: token $GITHUB_TOKEN"
+else
+    echo "[WARN] GITHUB_TOKEN environment variable is missing. Proceeding unauthenticated (subject to lower API limits)."
+fi
+
+# Fetch raw metrics directly via native GitHub API REST endpoints
+REPO_DATA=$(curl -s -H "$AUTH_HEADER" "https://api.github.com/repos/$BADGE_REPO")
+RELEASES_DATA=$(curl -s -H "$AUTH_HEADER" "https://api.github.com/repos/$BADGE_REPO/releases")
+
+# Parse metrics out using jq (Standard utility available on GitHub runners)
+STARS_COUNT=$(echo "$REPO_DATA" | jq -r '.stargazers_count // "0"')
+LATEST_DOWNLOADS=$(echo "$RELEASES_DATA" | jq -r 'if .[0] then [.[0].assets[].download_count] | add else 0 end')
+TOTAL_DOWNLOADS=$(echo "$RELEASES_DATA" | jq -r '[.[].assets[].download_count] | add // 0')
+
+BADGES_DIR="$BUILD_DIR/$RES_DIR/$BADGES_SUBDIR"
+
+# Generate the three flat-square SVGs completely offline
+generate_flat_badge "stars" "$STARS_COUNT" "#16161f" "#f59e0b" "$BADGES_DIR/stars.svg"
+generate_flat_badge "Downloads - Latest" "$LATEST_DOWNLOADS" "#16161f" "#3b82f6" "$BADGES_DIR/downloads-latest.svg"
+generate_flat_badge "Downloads - Total" "$TOTAL_DOWNLOADS" "#16161f" "#3b82f6" "$BADGES_DIR/downloads-total.svg"
 
 # --- FINGERPRINT JS & CSS ---
 echo "[BUILD] Processing fingerprinted assets..."
