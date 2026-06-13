@@ -451,7 +451,7 @@ function RenderAboutDialog() {
     $labelHome.Location = New-Object Drawing.Point(160, 140)
     $labelHome.AutoSize = $true
     $labelHome.Add_LinkClicked({
-            Start-Process "https://github.com/kulvind3r/GamingGaiden"
+            Start-Process "https://kulvind3r.github.io/GamingGaiden/"
         })
     $aboutForm.Controls.Add($labelHome)
 
