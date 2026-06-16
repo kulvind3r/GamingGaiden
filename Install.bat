@@ -13,6 +13,10 @@ if %errorLevel% == 0 (
     exit /b
 )
 
+REM Set execution policy to allow powershell modules to load (does not require admin)
+echo Setting PowerShell execution policy...
+powershell.exe -NoProfile -Command "Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force"
+
 md "%ALLUSERSPROFILE%\GamingGaiden"
 
 set "InstallDirectory=%ALLUSERSPROFILE%\GamingGaiden"
