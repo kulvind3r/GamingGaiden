@@ -1,13 +1,7 @@
 /* global MONTH_NAMES, filterSessionsByDateStr, filterSessionsByYear, aggregateGamesBySessions, updateStatsDisplay, switchMainView, selectGame */
 /* from sessionHistory-shared.js, sessionHistory-cards.js, sessionHistory-games.js */
 
-// ===== DATA AGGREGATION FOR BY DAY/MONTH VIEWS =====
-
-// Get games played on a specific date
-function getGamesForDate(dateStr) {
-  const sessionsOnDate = filterSessionsByDateStr(dateStr, false);
-  return aggregateGamesBySessions(sessionsOnDate);
-}
+// ===== DATA AGGREGATION FOR BY MONTH VIEW =====
 
 // Get games played in a specific month
 function getGamesForMonth(monthStr) {
@@ -22,28 +16,6 @@ function getGamesForYear(year) {
 }
 
 // ===== GAME CARDS LOADING & RENDERING =====
-
-// Load and render game cards for a specific date
-// eslint-disable-next-line no-unused-vars
-function loadGameCardsForDate(dateStr) {
-  const games = getGamesForDate(dateStr);
-
-  // Update header
-  const date = new Date(dateStr);
-  const dateDisplay = date.toLocaleDateString('en-US', {
-    weekday: 'long',
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric'
-  });
-
-  document.getElementById('selected-date-title').textContent =
-    `Games Played on ${dateDisplay}`;
-
-  // Update stats and render
-  updateStatsDisplay(games);
-  renderGameCards(games);
-}
 
 // Load and render game cards for a specific month
 // eslint-disable-next-line no-unused-vars

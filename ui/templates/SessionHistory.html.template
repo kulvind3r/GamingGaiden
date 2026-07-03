@@ -38,7 +38,6 @@
         <!-- View Switcher Buttons -->
         <div id="view-buttons">
           <button class="view-btn active" data-view="games">Games</button>
-          <button class="view-btn" data-view="byday">By Day</button>
           <button class="view-btn" data-view="bymonth">By Month</button>
         </div>
 
@@ -75,7 +74,7 @@
           </div>
         </div>
 
-        <!-- Calendar View Content (for By Day and By Month) -->
+        <!-- Calendar View Content (for By Month) -->
         <div id="calendar-view-content" class="left-content" style="display: none;">
           <div id="calendar-container">
             <!-- Year Navigation -->
@@ -101,22 +100,6 @@
               <button class="month-btn" data-month="11">Dec</button>
             </div>
 
-            <!-- Day Grid (only shown in By Day view) -->
-            <div id="day-grid-container">
-              <div id="selected-month-display"></div>
-              <div id="day-headers">
-                <div class="day-header weekend">Su</div>
-                <div class="day-header">Mo</div>
-                <div class="day-header">Tu</div>
-                <div class="day-header">We</div>
-                <div class="day-header">Th</div>
-                <div class="day-header">Fr</div>
-                <div class="day-header weekend">Sa</div>
-              </div>
-              <div id="day-grid">
-                <!-- Populated by JavaScript -->
-              </div>
-            </div>
           </div>
         </div>
       </div>
@@ -189,7 +172,7 @@
           </div>
         </div>
 
-        <!-- Day/Month View: Game Cards Grid -->
+        <!-- Month View: Game Cards Grid -->
         <div id="cards-view-right" class="right-content" style="display: none;">
           <div id="cards-header">
             <h2 id="selected-date-title">Games Played</h2>

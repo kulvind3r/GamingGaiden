@@ -20,13 +20,11 @@ let currentSortField = 'lastPlayed'; // 'name' | 'lastPlayed' | 'hours' | 'days'
 let currentSortDirection = 'desc'; // 'asc' or 'desc'
 
 // New state variables for view switching and calendar
-let mainView = 'games'; // 'games', 'byday', or 'bymonth'
+let mainView = 'games'; // 'games' or 'bymonth'
 /** 'monthly' = one month of games; 'yearly' = all games in calendar year (By Month view only) */
 let sessionHistoryByMonthMode = 'monthly';
 let calendarYear = new Date().getFullYear();
 let calendarMonth = new Date().getMonth();
-let calendarDay = null;
-let availableDates = new Set(); // Set of 'YYYY-MM-DD' strings
 let availableMonths = new Set(); // Set of 'YYYY-MM' strings
 let minDate = null;
 let maxDate = null;
@@ -101,9 +99,8 @@ function updateDaysCountInGameList() {
 
 // ===== DATE AVAILABILITY FUNCTIONS =====
 
-// Build available dates/months set from session data
+// Build available months set from session data
 function buildAvailableDates() {
-  availableDates.clear();
   availableMonths.clear();
 
   let minTimestamp = Infinity;
@@ -113,21 +110,18 @@ function buildAvailableDates() {
     const date = new Date(session.start_time * 1000);
     const year = date.getFullYear();
     const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    const dateStr = `${year}-${month}-${day}`; // YYYY-MM-DD
     const monthStr = `${year}-${month}`; // YYYY-MM
 
-    availableDates.add(dateStr);
     availableMonths.add(monthStr);
 
     if (session.start_time < minTimestamp) minTimestamp = session.start_time;
     if (session.start_time > maxTimestamp) maxTimestamp = session.start_time;
-  });
+   });
 
   if (minTimestamp !== Infinity) {
     minDate = new Date(minTimestamp * 1000);
     maxDate = new Date(maxTimestamp * 1000);
-  }
+   }
 }
 
 // ===== SHARED HELPER FUNCTIONS =====
