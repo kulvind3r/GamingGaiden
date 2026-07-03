@@ -53,6 +53,19 @@
             <button class="month-btn" data-month="10">Nov</button>
             <button class="month-btn" data-month="11">Dec</button>
           </div>
+          <div id="day-grid-container">
+            <div id="selected-month-display"></div>
+            <div id="day-headers">
+              <div class="day-header">Su</div>
+              <div class="day-header">Mo</div>
+              <div class="day-header">Tu</div>
+              <div class="day-header">We</div>
+              <div class="day-header">Th</div>
+              <div class="day-header">Fr</div>
+              <div class="day-header">Sa</div>
+            </div>
+            <div id="day-grid"></div>
+          </div>
         </div>
       </div>
       <div id="chart-column">

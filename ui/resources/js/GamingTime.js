@@ -2,6 +2,9 @@
 /*global formatMonthString, updateYearDisplay, setupYearNavigation, updateMonthGrid*/
 /*from chart.js, common.js, calendar-controls.js*/
 
+const MONTH_NAMES = ['January', 'February', 'March', 'April', 'May', 'June',
+                      'July', 'August', 'September', 'October', 'November', 'December'];
+
 let gamingData = [];
 let selectedYear;
 let selectedMonth;
@@ -17,6 +20,7 @@ let monthTotalTime;
 let calendarYear;
 let availableMonths = new Set();
 let availableYears = new Set();
+let availableDates = new Set();
 
 $("table")[0].setAttribute("id", "data-table");
 
@@ -265,21 +269,24 @@ function updateChart(
 
 // Calendar functions
 function initializeCalendar() {
-  // Build availableMonths and availableYears sets from gamingData
+   // Build availableMonths, availableYears, and availableDates sets from gamingData
   gamingData.forEach(item => {
     const date = new Date(item.date);
     const year = date.getFullYear();
     const month = date.getMonth();
     const monthStr = formatMonthString(year, month);
+    const dateStr = formatDateString(year, month, date.getDate());
     availableMonths.add(monthStr);
     availableYears.add(year);
-  });
+    availableDates.add(dateStr);
+   });
 
-  // Set initial calendar year to most recent year
+   // Set initial calendar year to most recent year
   calendarYear = finalYear;
 
   refreshYearDisplay();
   refreshMonthGrid();
+  updateDayGrid();
 }
 
 function refreshYearDisplay() {
@@ -301,7 +308,7 @@ function refreshMonthGrid() {
     availableMonths: availableMonths,
     isMonthSelected: (monthIndex) => {
       return viewMode === 'monthly' && monthIndex === selectedMonth && calendarYear === selectedYear;
-    },
+     },
     onMonthClick: (monthIndex) => {
       if (viewMode === 'monthly') {
         selectedYear = calendarYear;
@@ -309,10 +316,63 @@ function refreshMonthGrid() {
         updateChart(selectedYear, selectedMonth, false);
         updatePeriodDisplayWithMonth();
         refreshMonthGrid(); // Refresh selection
-      }
-    },
+        updateDayGrid();
+       }
+     },
     disableInteraction: viewMode === 'yearly'
-  });
+   });
+}
+
+// Update day grid for selected month (non-interactive visual representation)
+function updateDayGrid() {
+  const dayGrid = document.getElementById('day-grid');
+  const dayGridContainer = document.getElementById('day-grid-container');
+  const selectedMonthDisplay = document.getElementById('selected-month-display');
+
+  // Show/hide day grid based on view mode
+  if (viewMode === 'yearly') {
+    dayGridContainer.style.display = 'none';
+    return;
+  }
+
+  dayGridContainer.style.display = 'block';
+  dayGrid.innerHTML = '';
+
+  // Update selected month display
+  selectedMonthDisplay.textContent = `${MONTH_NAMES[selectedMonth]} ${selectedYear}`;
+
+  // Get first day of month and number of days
+  const firstDay = new Date(selectedYear, selectedMonth, 1).getDay();
+  const daysInMonth = new Date(selectedYear, selectedMonth + 1, 0).getDate();
+
+  // Add empty cells for days before month starts
+  for (let i = 0; i < firstDay; i++) {
+    const emptyCell = document.createElement('div');
+    emptyCell.className = 'day-cell empty';
+    dayGrid.appendChild(emptyCell);
+  }
+
+  // Add day cells
+  for (let day = 1; day <= daysInMonth; day++) {
+    const dateStr = formatDateString(selectedYear, selectedMonth, day);
+    const hasData = availableDates.has(dateStr);
+    const dayOfWeek = new Date(selectedYear, selectedMonth, day).getDay();
+    const isWeekend = dayOfWeek === 0 || dayOfWeek === 6; // Sunday or Saturday
+
+    const dayCell = document.createElement('div');
+    dayCell.className = 'day-cell';
+    dayCell.textContent = day;
+
+    if (hasData) {
+      dayCell.classList.add('has-data');
+     }
+
+    if (isWeekend) {
+      dayCell.classList.add('weekend');
+     }
+
+    dayGrid.appendChild(dayCell);
+  }
 }
 
 function initYearNavigation() {
@@ -325,14 +385,17 @@ function initYearNavigation() {
       refreshYearDisplay();
       refreshMonthGrid();
 
-      // If in yearly view, also update chart
+       // If in yearly view, also update chart
       if (viewMode === 'yearly') {
         selectedYear = calendarYear;
         updateChart(selectedYear, selectedMonth, true);
         updatePeriodDisplayWithYear();
+        } else {
+         // In monthly view, update the day grid for the new year
+        updateDayGrid();
+        }
       }
-    }
-  });
+    });
 }
 
 function setupYearToggle() {
@@ -343,7 +406,7 @@ function setupYearToggle() {
 
 function toggleViewMode() {
   if (viewMode === 'monthly') {
-    // Switch to yearly view
+     // Switch to yearly view
     viewMode = 'yearly';
     periodLabel = 'Month of Year';
 
@@ -352,9 +415,10 @@ function toggleViewMode() {
     updatePeriodDisplayWithYear();
     refreshYearDisplay(); // Update visual state
     refreshMonthGrid();
+    updateDayGrid();
 
-  } else {
-    // Switch to monthly view
+    } else {
+     // Switch to monthly view
     viewMode = 'monthly';
     periodLabel = 'Day of Month';
 
@@ -362,7 +426,8 @@ function toggleViewMode() {
     updatePeriodDisplayWithMonth();
     refreshYearDisplay(); // Update visual state
     refreshMonthGrid();
-  }
+    updateDayGrid();
+    }
 }
 
 function switchToNextMonth() {
