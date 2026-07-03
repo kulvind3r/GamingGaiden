@@ -100,12 +100,15 @@ function renderGameCards(games) {
     noGamesMsg.style.display = 'flex';
     gridElement.classList.remove('centered');
     return;
-  }
+   }
 
   noGamesMsg.style.display = 'none';
   gridElement.innerHTML = '';
 
-  games.forEach(game => {
+  // Sort games by playtime (totalDuration) in descending order - most playtime first
+ const sortedGames = [...games].sort((a, b) => b.totalDuration - a.totalDuration);
+
+  sortedGames.forEach(game => {
     const card = document.createElement('div');
     card.className = 'game-card';
     card.dataset.gameName = game.game_name;
