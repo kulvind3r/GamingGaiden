@@ -34,7 +34,7 @@
     <div id="main-panel">
       <div id="calendar-column">
         <div id="calendar-container">
-          <div id="controls-guide" style="align-self: center;">
+          <div id="controls-guide" style="align-self: center; color: var(--text-primary);">
               <p>Click on desired Month / Year</p>
           </div>
           <div id="year-navigation">
