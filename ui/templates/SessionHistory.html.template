@@ -38,7 +38,7 @@
         <!-- View Switcher Buttons -->
         <div id="view-buttons">
           <button class="view-btn active" data-view="games">Games</button>
-          <button class="view-btn" data-view="bymonth">By Month</button>
+          <button class="view-btn" data-view="bymonth">By Month / Year</button>
         </div>
 
         <!-- Games View Content -->
@@ -77,6 +77,9 @@
         <!-- Calendar View Content (for By Month) -->
         <div id="calendar-view-content" class="left-content" style="display: none;">
           <div id="calendar-container">
+            <div id="controls-guide" style="align-self: center;">
+              <p>Click on desired Month / Year</p>
+            </div>
             <!-- Year Navigation -->
             <div id="year-navigation">
               <button class="custom-button calendar-nav-btn" id="prev-year-button">&#11164;</button>
@@ -178,6 +181,7 @@
             <h2 id="selected-date-title">Games Played</h2>
             <div id="date-stats">
               <span id="total-games-count"></span>
+              <span id="total-sessions-count"></span>
               <span id="total-time-played"></span>
             </div>
           </div>

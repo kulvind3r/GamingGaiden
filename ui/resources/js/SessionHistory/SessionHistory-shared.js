@@ -182,11 +182,14 @@ function aggregateGamesBySessions(sessions) {
 // Update total games and hours stats in UI
 function updateStatsDisplay(games) {
   const totalGames = games.length;
+  const totalSessions = games.reduce((sum, game) => sum + game.sessionCount, 0);
   const totalMinutes = games.reduce((sum, game) => sum + game.totalDuration, 0);
   const totalHours = (totalMinutes / 60).toFixed(1);
 
   document.getElementById('total-games-count').textContent =
     `${totalGames} game${totalGames !== 1 ? 's' : ''}`;
+  document.getElementById('total-sessions-count').textContent =
+    `${totalSessions} session${totalSessions !== 1 ? 's' : ''}`;
   document.getElementById('total-time-played').textContent =
     `${totalHours}h total`;
 }

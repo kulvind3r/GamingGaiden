@@ -1,9 +1,9 @@
 /* ===== BY DAY/MONTH VIEWS - HEADER & STATS ===== */
 
 #cards-header {
-  margin-bottom: 20px;
+  margin-bottom: 10px;
   border-bottom: 2px solid var(--border-light);
-  padding-bottom: 15px;
+  padding-bottom: 10px;
 }
 
 #selected-date-title {
@@ -31,6 +31,7 @@
   grid-auto-rows: 190px;
   gap: 20px;
   padding: 10px;
+  padding-top: 25px;
   overflow-y: auto;
   flex: 1;
   align-content: start;

@@ -34,6 +34,9 @@
     <div id="main-panel">
       <div id="calendar-column">
         <div id="calendar-container">
+          <div id="controls-guide" style="align-self: center;">
+              <p>Click on desired Month / Year</p>
+          </div>
           <div id="year-navigation">
             <button class="custom-button calendar-nav-btn" id="prev-year-button">&#11164;</button>
             <div id="year-display"></div>

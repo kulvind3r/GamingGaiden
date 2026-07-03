@@ -40,7 +40,7 @@ function loadGameCardsForYear(year) {
   const games = getGamesForYear(year);
 
   document.getElementById('selected-date-title').textContent =
-    `Games Played in ${year}`;
+    `Games Played in Year ${year}`;
 
   updateStatsDisplay(games);
   renderGameCards(games);
