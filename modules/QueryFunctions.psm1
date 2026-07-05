@@ -99,6 +99,8 @@ function FindEmulatedGame($DetectedEmulatorExe, $EmulatorCommandLine) {
 
     if ([string]::IsNullOrWhiteSpace($romName)) {
         Log ("Error: Couldn't extract rom based game name from command line. Bailing with empty game name")
+        Log ("Error: Possible Cause 1: Emulated game run directly from emulator GUI. You must run emulated games with command line to track. See Help/FAQ for more info.")
+        Log ("Error: Possible Cause 2: Emulator is running with admin level. Run emulator without admin level to fix the issue.")
         return ""
     }
 
