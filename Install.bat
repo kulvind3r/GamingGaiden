@@ -5,7 +5,7 @@ REM Switch to scripts directory
 cd /d "%~dp0"
 
 REM Safely Exit if script is running as admin
-net session >nul 2>&1
+fltmc >nul 2>&1
 if %errorLevel% == 0 (
     echo [ERROR] This script is designed to run WITHOUT administrative rights.
     echo Please run it by simply double-clicking the file.
