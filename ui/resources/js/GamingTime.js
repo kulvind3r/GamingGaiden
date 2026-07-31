@@ -324,35 +324,39 @@ function refreshMonthGrid() {
 }
 
 // Update day grid for selected month (non-interactive visual representation)
+// Always renders exactly 42 cells (6 rows x 7 columns) to prevent layout shifting
 function updateDayGrid() {
   const dayGrid = document.getElementById('day-grid');
   const dayGridContainer = document.getElementById('day-grid-container');
   const selectedMonthDisplay = document.getElementById('selected-month-display');
 
-  // Show/hide day grid based on view mode
+   // Show/hide day grid based on view mode
   if (viewMode === 'yearly') {
     dayGridContainer.style.display = 'none';
     return;
-  }
+    }
 
   dayGridContainer.style.display = 'block';
   dayGrid.innerHTML = '';
 
-  // Update selected month display
+   // Update selected month display
   selectedMonthDisplay.textContent = `${MONTH_NAMES[selectedMonth]} ${selectedYear}`;
 
-  // Get first day of month and number of days
+   // Get first day of month and number of days
   const firstDay = new Date(selectedYear, selectedMonth, 1).getDay();
   const daysInMonth = new Date(selectedYear, selectedMonth + 1, 0).getDate();
 
-  // Add empty cells for days before month starts
+   // Total cells needed for a fixed 6-row grid
+  const TOTAL_CELLS = 42; // 6 rows x 7 columns
+
+   // Add empty cells for days before month starts
   for (let i = 0; i < firstDay; i++) {
     const emptyCell = document.createElement('div');
     emptyCell.className = 'day-cell empty';
     dayGrid.appendChild(emptyCell);
-  }
+    }
 
-  // Add day cells
+   // Add day cells
   for (let day = 1; day <= daysInMonth; day++) {
     const dateStr = formatDateString(selectedYear, selectedMonth, day);
     const hasData = availableDates.has(dateStr);
@@ -365,14 +369,23 @@ function updateDayGrid() {
 
     if (hasData) {
       dayCell.classList.add('has-data');
-     }
+      }
 
     if (isWeekend) {
       dayCell.classList.add('weekend');
-     }
+      }
 
     dayGrid.appendChild(dayCell);
-  }
+    }
+
+   // Add empty cells after the last day to fill the grid to 6 rows (42 cells total)
+  const totalCellsAdded = firstDay + daysInMonth;
+  const remainingCells = TOTAL_CELLS - totalCellsAdded;
+  for (let i = 0; i < remainingCells; i++) {
+    const emptyCell = document.createElement('div');
+    emptyCell.className = 'day-cell empty';
+    dayGrid.appendChild(emptyCell);
+    }
 }
 
 function initYearNavigation() {

@@ -71,6 +71,7 @@
 #day-grid {
   display: grid;
   grid-template-columns: repeat(7, 1fr);
+  grid-template-rows: repeat(6, 1fr);
   gap: 5px;
 }
 
@@ -91,7 +92,7 @@
 
 .day-cell.has-data {
   background-color: var(--accent-blue-light);
-  border-color: var(--accent-blue-light);
+  border-color: var(--accent-blue);
 }
 
 .day-cell.weekend.has-data {
@@ -102,6 +103,18 @@
 .day-cell.empty {
   opacity: 0.2;
   background-color: var(--bg-tertiary);
+  cursor: default;
+}
+
+.day-cell.selected {
+  background-color: var(--accent-blue);
+  color: var(--text-inverse);
+  border-color: var(--accent-blue);
+}
+
+.day-cell.weekend.selected {
+  background-color: var(--status-error);
+  color: var(--text-inverse);
 }
 
 /* ===== CHART COLUMN ===== */
