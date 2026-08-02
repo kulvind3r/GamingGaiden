@@ -12,7 +12,7 @@ using System.Management.Automation.Runspaces;
 [assembly: AssemblyCopyright("© 2023 Kulvinder Singh")]
 
 // Version information Year.Month.Day
-[assembly: AssemblyFileVersion("2026.07.31")]
+[assembly: AssemblyFileVersion("2026.08.02")]
 
 // Setting ComVisible to false makes the types in this assembly not visible to COM components
 [assembly: ComVisible(false)]

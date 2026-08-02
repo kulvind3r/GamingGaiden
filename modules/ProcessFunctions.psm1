@@ -1,20 +1,23 @@
 ﻿function DetectGame() {
     Log "Starting game detection"
 
-    # Fetch games in order of most recent to least recent
-    $getGameExesQuery = "SELECT exe_name FROM games ORDER BY last_play_date DESC"
-    $getEmulatorExesQuery = "SELECT exe_name FROM emulated_platforms"
+     # Fetch PC game executables (platform = 'PC') in order of most recent to least recent
+     $getPCGameExesQuery = "SELECT exe_name FROM games WHERE platform LIKE 'PC' ORDER BY last_play_date DESC"
+     $getEmulatorExesQuery = "SELECT exe_name FROM emulated_platforms"
 
-    $gameExeList = @((RunDBQuery $getGameExesQuery).exe_name | Where-Object { $null -ne $_ })
-    $rawEmulatorExes = @((RunDBQuery $getEmulatorExesQuery).exe_name | Where-Object { $null -ne $_ })
+     $pcGameExeList = @((RunDBQuery $getPCGameExesQuery).exe_name | Where-Object { $null -ne $_ })
+     $rawEmulatorExes = @((RunDBQuery $getEmulatorExesQuery).exe_name | Where-Object { $null -ne $_ })
 
-    # Flatten game rows that may contain multiple exes as a comma-separated list
-    $gameExeList = ($gameExeList -join ',') -split ',' | Where-Object { $_ -ne "" }
+     # Flatten PC game rows that may contain multiple exes as a comma-separated list
+     $pcGameExeList = ($pcGameExeList -join ',') -split ',' | Where-Object { $_ -ne "" }
 
-    # Flatten the returned result rows containing multiple emulator exes into list with one exe per item
-    $emulatorExeList = ($rawEmulatorExes -join ',') -split ','
-
-    $exeList = [string[]] (($gameExeList + $emulatorExeList) | Select-Object -Unique)
+     # Flatten the returned result rows containing multiple emulator exes into list with one exe per item
+     $emulatorExeList = ($rawEmulatorExes -join ',') -split ','
+    
+     # Append emulator executables before pc games to make sure they always get detected in first batch
+     # appending them at end would cause even most recent emulated games to be detected in the end
+     # breaking the sub 5 second game detection target SLA.
+     $exeList = [string[]] (($emulatorExeList + $pcGameExeList) | Select-Object -Unique)
 
     # PERFORMANCE OPTIMIZATION: CPU & MEMORY
     # Process games in batches of 35 with most recent 10 games processed every batch. 5 sec wait b/w every batch.
