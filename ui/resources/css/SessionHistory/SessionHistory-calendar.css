@@ -93,8 +93,14 @@
 }
 
 .day-cell:hover:not(.empty):not(.selected) {
+  background-color: var(--bg-button-hover);
+  transform: translateY(-1px);
+  cursor: not-allowed;
+}
+
+.day-cell.has-data:hover:not(.selected) {
   background-color: var(--accent-blue-light);
-  transform: scale(1.05);
+  cursor: pointer;
 }
 
 .day-cell.has-data {
